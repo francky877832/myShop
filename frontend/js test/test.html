@@ -1,0 +1,34 @@
+
+
+    <form method="post" id="myForm">
+        <input type="text" name="title" id="title"required  />
+        <textarea name="desc" id="desc" required ></textarea>
+        <input type="submit" name="sb" id="sb" />
+    </form>
+    
+ 
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            fetch('http://localhost:3000/api/datas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+                .then(data => {
+                    console.log('Succès:', data);
+                    alert('Formulaire soumis avec succès');
+                })
+                .catch((error) => {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la soumission du formulaire');
+            });
+        });
+    </script>
