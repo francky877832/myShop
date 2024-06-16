@@ -5,11 +5,11 @@ const auth = require('../middleware/auth');
 
 const prodCtrl = require('../controllers/productController');
 
-router.get('/', prodCtrl.getAllProduct);
-router.post('/', prodCtrl.createProduct);
-router.get('/:id', prodCtrl.getOneProduct);
-router.put('/:id', prodCtrl.modifyProduct);
-router.delete('/:id', prodCtrl.deleteProduct);
+router.get('/products/', prodCtrl.getAllProduct);
+router.get('/product/:id', prodCtrl.getOneProduct);
+router.post('/product/', prodCtrl.createProduct);
+router.put('/product/:id', prodCtrl.modifyProduct);
+router.delete('/product/:id', prodCtrl.deleteProduct);
 /*
 router.get('/', auth, prodCtrl.getAllStuff);
 router.post('/', auth, prodCtrl.createThing);

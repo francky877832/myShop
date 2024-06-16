@@ -83,3 +83,40 @@ exports.deleteProduct  = (req, res, next) => {
 };
 
 
+//Search products by names, category
+//historique de recherhce
+//resultats de recherches, puis avec filtres
+exports.getSearchedProducts = (req, res, next) => {
+  var filters = {};
+  if(req.body.name)
+  {
+    filters = { ...filters, name : { $regex: new RegExp(searchTerm, 'i') }}
+  }
+
+  if(req.body.category)
+  {
+    filters = { ...filters, category : req.body.category }
+  }
+
+  if(req.body.price)
+  {
+    filters = { ...filters, price : {$gte : req.body.minPrice, $lte : req.body.maxPrice }, }
+  }
+
+  if(req.body.condition)
+  {
+    filters = { ...filters, condition : req.body.condition }
+  }
+
+  if(req.body.condition)
+  {
+      filters = { ...filters,   feesBy : req.body.feesBy }
+  }
+  Product.find(filters)
+  .then( (products) => {
+      res.status(200).json(products);
+  })
+  .catch( (error) => {
+      res.status(400).json({ error: error });
+  });
+};
