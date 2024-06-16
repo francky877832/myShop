@@ -1,85 +1,6 @@
 const Product = require('../models/productModel');
 
-/*
-exports.createThing = (req, res, next) => {
-  const thing = new Thing({
-    title: req.body.title,
-    description: req.body.description,
-    imageUrl: req.body.imageUrl,
-    price: req.body.price,
-    userId: req.body.userId
-  });
-  thing.save().then(
-    () => {
-      res.status(201).json({
-        message: 'Post saved successfully!'
-      });
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
-};
 
-exports.getOneThing = (req, res, next) => {
-  Thing.findOne({
-    _id: req.params.id
-  }).then(
-    (thing) => {
-      res.status(200).json(thing);
-    }
-  ).catch(
-    (error) => {
-      res.status(404).json({
-        error: error
-      });
-    }
-  );
-};
-
-exports.modifyThing = (req, res, next) => {
-  const thing = new Thing({
-    _id: req.params.id,
-    title: req.body.title,
-    description: req.body.description,
-    imageUrl: req.body.imageUrl,
-    price: req.body.price,
-    userId: req.body.userId
-  });
-  Thing.updateOne({_id: req.params.id}, thing).then(
-    () => {
-      res.status(201).json({
-        message: 'Thing updated successfully!'
-      });
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
-};
-
-exports.deleteThing = (req, res, next) => {
-  Thing.deleteOne({_id: req.params.id}).then(
-    () => {
-      res.status(200).json({
-        message: 'Deleted!'
-      });
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
-};
-*/
 exports.createProduct = (req, res, next) => {
   const product = new Product(
     {
@@ -95,7 +16,7 @@ exports.createProduct = (req, res, next) => {
   .then(
     () => {
       res.end("Sauvegarde reussie");
-      //res.status(200).json(products);
+      res.status(200).json({ message: "Success" });
     })
   .catch(
     (error) => {
@@ -108,16 +29,57 @@ exports.createProduct = (req, res, next) => {
   );
 };
 
+
 exports.getAllProduct = (req, res, next) => {
-  Product.find().then(
-    (products) => {
-      res.end("Test reussi");
-      //res.status(200).json(products);
-    }
-  ).catch(
-    (error) => {
-      res.end("Test echoue");
-      //res.status(400).json({ error: error });
-    }
-  );
+  Product.find()
+  .then( (products) => {
+      res.status(200).json(products);
+  })
+  .catch( (error) => {
+      res.status(400).json({ error: error });
+  });
 };
+
+exports.getOneProduct  = (req, res, next) => {
+  Product.findOne({ _id : req.params.id })
+  .then( (product) => { 
+      res.status(200).json(product);
+   })
+  .catch( (error) => { 
+      //res.end("erreur");
+      res.status(400).json({ error: error, message : "go" });
+   });
+};
+
+
+exports.modifyProduct = (req, res, next) => {
+  const product = new Product({
+      _id : req.params.id,
+      title: req.body.title,
+      description: req.body.desc,
+      imageUrl: "non def",
+      userId: "req.body.user",
+      price: 55,
+    });
+
+  Product.updateOne({ _id : req.params.id }, product)
+  .then( () => { 
+      res.status(200).json({ message: 'Produit mis a jour avec success' });
+  })
+  .catch( (error) => { 
+      res.status(400).json({error: error});
+   });
+};
+
+
+exports.deleteProduct  = (req, res, next) => {
+  Product.deleteOne({ _id : req.params.id })
+  .then( () => { 
+      res.status(200).json({ message: 'Deleted!'});
+   })
+  .catch( (error) => { 
+      res.status(400).json({ error: error });
+   });
+};
+
+
