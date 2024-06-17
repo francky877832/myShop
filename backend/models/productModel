@@ -16,9 +16,11 @@ const productSchema = new Schema({
     couleur : [{ type : String, required : false}],
     images : [{ type : String, required : true}],
     feesBy : { type : String, enum : ['seller', 'buyer'], default : "buyer" },
+    garanti : { type : Number, enum : [0, 1], default : 0 },
     stock : { type : Number },
     likes : { type : Number, default : 0 },
     inBasket : { type : Number, default : 0 },
+    vendu : { type : Number, enum : [0, 1], default : 0 },
 
     createdAt : { type : Date, default : Date.now },
     updatedAt : { type : Date, default : Date.now }

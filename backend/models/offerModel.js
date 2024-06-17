@@ -9,6 +9,8 @@ const offerSchema = new Schema({
     realPrice: { type: Numner, required: true },
     offerPrice: { type: Number, required : true },
 
+    hasGotRespond : { type: Number, enum : [0, 1, 2], required : true },
+
     createdAt : { type : Date, default : Date.now },
     updatedAt : { type : Date, default : Date.now }
 });

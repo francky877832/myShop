@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 //
 const notificatonSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    type : { type : String, enum: ['normal', 'campagne', 'suggestion'], defualt : "normal", required : true },
+    type : { type : String, enum: ['normal', 'campagne', 'suggestion', 'modal'], defualt : "normal", required : true },
     message : { type : String, required : true },
     link : { type : String, required : true },
     
