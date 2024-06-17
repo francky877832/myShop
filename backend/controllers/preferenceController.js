@@ -18,9 +18,9 @@ exports.addUserPreferences = (req, res, next) => {
                     })
 }
 
-exports.modifyUserPreferences = (req, res, next) => {
+exports.updateUserPreferences = (req, res, next) => {
     
-    Preference.find({user : req.params.id})
+    Preference.find({user : req.body.user})
     .then(
         (preferences) => 
         {
@@ -38,7 +38,7 @@ exports.modifyUserPreferences = (req, res, next) => {
             {
                 let pref = preferences
                 pref[0].preferences.push({category : req.body.preferences[0].category})
-                Preference.updateOne({ user : req.params.id },  { preferences : pref[0].preferences })
+                Preference.updateOne({ user : req.body.user },  { preferences : pref[0].preferences })
                     .then(
                         () => {
                             res.status(200).json({message : "Preference utilisateur mise a jour avec succes."});

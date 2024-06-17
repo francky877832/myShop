@@ -5,12 +5,14 @@ const Schema = mongoose.Schema
 const searchHistorytSchema = new Schema({
     user : { type : Schema.Types.ObjectId, ref : 'User', required : true },  
     filters : [{ 
-                    keyWords : { type : String, required : true },
-                    condition : { type : String, enum : ['new', 'used'] },
+                    keyword : { type : String, required : true },
+                   /* condition : { type : String, enum : ['new', 'used'] },
                     category : { type : Schema.Types.ObjectId, ref : 'Category'},
                     minPrice : { type : Number },
                     maxPrice : { type : Number },
-                    feesBy : { type : String, enum : ['seller', 'buyer'] },
+                    feesBy : { type : String, enum : ['seller', 'buyer'] },*/
+                    createdAt : { type : Date, default : Date.now },
+                    updatedAt : { type : Date, default : Date.now }
                 }],
     createdAt : { type : Date, default : Date.now },
     updatedAt : { type : Date, default : Date.now }
