@@ -7,9 +7,9 @@ exports.addProductUser = (req, res, next) => {
   delete datas._id;
   delete datas.seller;
 
-  //const imageFiles = req.files
-  //let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/assets/images/${file.filename}`})
-  
+  const imageFiles = req.files
+  let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/userApp/assets/images/${file.filename}`})
+  console.log(imageNames)
   const product = new Product(
     {
       ...datas,
@@ -24,7 +24,7 @@ exports.addProductUser = (req, res, next) => {
       category : datas.category,
       brand : datas.brand,
       couleur : datas.couleur,
-      images : `${req.protocol}://${req.get('host')}/assets/images/${req.file.filename}`,
+      images : imageNames,
       feesBy : datas.feesBy,
       garanti : datas.garanti,
       stock : datas.stock,

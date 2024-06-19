@@ -1,35 +1,16 @@
-
-
-    <form method="post" id="myForm">
-        <input type="text" name="title" id="title"required  />
-        <textarea name="desc" id="desc" required ></textarea>
-        <input type="submit" name="sb" id="sb" />
-    </form>
-    
- 
-    <script>
-	console.log(Date.now())
-        document.getElementById('myForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Empêche le rechargement de la page
-
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData.entries());
-
-            fetch('http://localhost:3000/api/datas', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-                .then(data => {
-                    console.log('Succès:', data);
-                    alert('Formulaire soumis avec succès');
-                })
-                .catch((error) => {
-                console.error('Erreur:', error);
-                alert('Erreur lors de la soumission du formulaire');
-            });
-        });
-    </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload multiple images</title>
+</head>
+<body>
+  <form action="http://localhost:3000/api/datas/products/add" method="post" enctype="multipart/form-data">
+    <input type="text" name="name" placeholder="Product Name">
+    <input type="text" name="description" placeholder="Product Description">
+    <input type="file" name="images" multiple>
+    <button type="submit">Upload</button>
+  </form>
+</body>
+</html>
