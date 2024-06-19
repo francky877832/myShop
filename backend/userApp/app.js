@@ -1,8 +1,7 @@
 const express = require('express');
 const {connectDB, mongoose} = require('../shared/db');
 const routes = require('./routes');
-
-const appRoutes = require('./routes/appRoutes');
+const path = require('path');
 const userRoutes = require('./routes/userRoutes.js');
 const bodyParser = require('body-parser');
 
@@ -21,6 +20,7 @@ app.use(bodyParser.json());
 
 
 app.use('/api/datas', routes);
+app.use('/assets/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth', userRoutes);
 
 

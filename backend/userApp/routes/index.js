@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const auth = require('../middleware/auth');
+const auth = require('../middlewares/auth');
 
 const productRoutes = require('./productRoutes');
 const commentRoutes = require('./commentRoutes');
@@ -12,6 +12,8 @@ const complaintRoutes = require('./complaintRoutes');
 const notificaitonRoutes = require('./notificaitonRoutes');
 const basketRoutes = require('./basketRoutes');
 const searchRoutes = require('./searchRoutes');
+const orderRoutes = require('./orderRoutes');
+
 
 
 //router.use('/products', auth,  productRoutes);
@@ -25,6 +27,7 @@ router.use('/complaints', complaintRoutes);
 router.use('/notifications', notificaitonRoutes);
 router.use('/basket', basketRoutes);
 router.use('/search', searchRoutes);
+router.use('/orders', orderRoutes);
 
 
 module.exports = router;

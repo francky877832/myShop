@@ -2,7 +2,9 @@ const Comment = require('../models/commentModel');
 
 
 exports.addProductComment = (req, res, next) => {
-
+    //const commentObject = req.body.comment
+    //delete commentObject._id
+    //delete commentObject.user
     const comment = new Comment({
         user : req.body.user,
         product : req.body.product,

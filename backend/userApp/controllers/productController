@@ -1,34 +1,106 @@
 const Product = require('../models/productModel');
 
 
-exports.createProduct = (req, res, next) => {
+exports.addProductUser = (req, res, next) => {
+  console.log("ok");
+  const datas = req.body;
+  delete datas._id;
+  delete datas.seller;
+
+  //const imageFiles = req.files
+  //let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/assets/images/${file.filename}`})
+  
   const product = new Product(
     {
-      title: req.body.title,
-      description: req.body.desc,
-      imageUrl: "non def",
-      userId: "req.body.user",
-      price: 55,
-    }
-  )
+      ...datas,
+      name : datas.name,
+      description : datas.description,
+      price : datas.price,
+      newPrice : datas.newPrice,
+      minPrice : datas.minPrice,
+      maxPrice : datas.maxPrice,
+      condition : datas.condition,
+      seller : datas.seller, //req.auth.userId
+      category : datas.category,
+      brand : datas.brand,
+      couleur : datas.couleur,
+      images : `${req.protocol}://${req.get('host')}/assets/images/${req.file.filename}`,
+      feesBy : datas.feesBy,
+      garanti : datas.garanti,
+      stock : datas.stock,
+      visibility : datas.visibility
+    })
 
   product.save()
   .then(
     () => {
-      res.end("Sauvegarde reussie");
-      res.status(200).json({ message: "Success" });
+      res.status(200).json({ message: "Produit cree avec success" });
     })
   .catch(
     (error) => {
-      //res.end("sauvegarde echouee", error);
-      console.log(req.body);
-
-      //res.end("Sauvegarde echoue");
       res.status(400).json({ error: error });
     }
   );
 };
 
+
+
+exports.updateProduct = (req, res, next) => {
+  const datas = req.body
+  delete datas._id
+  delete datas.seller
+  const product = {
+      name : datas.name,
+      description : datas.description,
+      price : datas.price,
+      newPrice : datas.newPrice,
+      minPrice : datas.minPrice,
+      maxPrice : datas.maxPrice,
+      condition : datas.condition,
+      seller : datas.seller,
+      category : datas.category,
+      brand : datas.brand,
+      couleur : datas.couleur,
+      images : datas.images,
+      feesBy : datas.feesBy,
+      garanti : datas.garanti,
+      stock : datas.stock,
+      visibility : datas.visibility
+  }
+  Product.updateOne({ _id : req.params.id }, product)
+  .then( () => { 
+      res.status(200).json({ message: 'Produit mis a jour avec success' });
+  })
+  .catch( (error) => { 
+      res.status(400).json({error: error});
+   });
+};
+
+
+exports.updateProductVisibility = (req, res, next) => {
+  const datas = req.body 
+  Product.updateOne({ _id : req.params.id }, { visibility : datas.visibility })
+  .then( () => { 
+      res.status(200).json({ message: 'Visibilite du roduit mis a jour avec success' });
+  })
+  .catch( (error) => { 
+      res.status(400).json({error: error});
+   });
+};
+
+
+
+
+exports.removeProduct  = (req, res, next) => {
+  const datas = req.body 
+  Product.deleteOne({ _id : req.params.id })
+  .then( () => { 
+      res.status(200).json({ message: 'Produit supprime avec succes.'});
+   })
+  .catch( (error) => { 
+      res.status(400).json({ error: error });
+   });
+};
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -52,52 +124,9 @@ exports.getProduct  = (req, res, next) => {
    });
 };
 
-
-exports.updateProduct = (req, res, next) => {
-  const product = {
-      title: req.body.title,
-      description: req.body.desc,
-      imageUrl: "non def",
-      userId: "req.body.user",
-      price: 55,
-    };
-  Product.updateOne({ _id : req.params.id }, product)
-  .then( () => { 
-      res.status(200).json({ message: 'Produit mis a jour avec success' });
-  })
-  .catch( (error) => { 
-      res.status(400).json({error: error});
-   });
-};
-
-
-exports.updateProductVisibility = (req, res, next) => {
-  
-  Product.updateOne({ _id : req.params.id }, { visibility : req.body.visibility })
-  .then( () => { 
-      res.status(200).json({ message: 'Visibilite du roduit mis a jour avec success' });
-  })
-  .catch( (error) => { 
-      res.status(400).json({error: error});
-   });
-};
-
-
-
-
-exports.removeProduct  = (req, res, next) => {
-  Product.deleteOne({ _id : req.params.id })
-  .then( () => { 
-      res.status(200).json({ message: 'Produit supprime avec succes.'});
-   })
-  .catch( (error) => { 
-      res.status(400).json({ error: error });
-   });
-};
-
-
 exports.getProductsFromCategories  = (req, res, next) => {
-  Product.find({ category : { $in : req.body.category } })
+  const datas = req.body 
+  Product.find({ category : { $in : datas.category } })
   .then( (products) => { 
     console.log(products)
       res.status(200).json(products);
@@ -107,6 +136,27 @@ exports.getProductsFromCategories  = (req, res, next) => {
    });
 };
 
+exports.getProductsUser  = (req, res, next) => {
+  Product.find({ seller : req.params.user })
+  .then( (products) => { 
+      res.status(200).json(products);
+   })
+  .catch( (error) => { 
+      res.status(400).json({ error: error });
+   });
+};
+
+//Cest mieux de gerer cette fonctionnalite cote backend
+exports.getUserProductsFromCategory  = (req, res, next) => {
+  const datas = req.body 
+  Product.find({ user : datas.user, category : datas.category })
+  .then( (products) => { 
+      res.status(200).json(products);
+   })
+  .catch( (error) => { 
+      res.status(400).json({ error: error });
+   });
+};
 
 
 
@@ -114,30 +164,31 @@ exports.getProductsFromCategories  = (req, res, next) => {
 //historique de recherhce
 //resultats de recherches, puis avec filtres
 exports.getSearchedProducts = (req, res, next) => {
+  const datas = req.body 
   let filters = {};
-  if(req.body.name)
+  if(datas.name)
   {
-    filters = { ...filters, name : { $regex: new RegExp(".*"+req.body.name+".*", 'i') }}
+    filters = { ...filters, name : { $regex: new RegExp(".*"+datas.name+".*", 'i') }}
   }
 
-  if(req.body.category)
+  if(datas.category)
   {
-    filters = { ...filters, category : req.body.category }
+    filters = { ...filters, category : datas.category }
   }
 
-  if(req.body.price)
+  if(datas.price)
   {
-    filters = { ...filters, price : {$gte : req.body.minPrice, $lte : req.body.maxPrice }, }
+    filters = { ...filters, price : {$gte : datas.minPrice, $lte : datas.maxPrice }, }
   }
 
-  if(req.body.condition)
+  if(datas.condition)
   {
-    filters = { ...filters, condition : req.body.condition }
+    filters = { ...filters, condition : datas.condition }
   }
 
-  if(req.body.feesBy)
+  if(datas.feesBy)
   {
-      filters = { ...filters,   feesBy : req.body.feesBy }
+      filters = { ...filters,   feesBy : datas.feesBy }
   }
   Product.find(filters)
   .then( (products) => {
@@ -160,9 +211,9 @@ exports.getProductNumLikes  = (req, res, next) => {
 };
 
 exports.updateProductNumLikes  = (req, res, next) => {
-  Product.updateOne({ _id : req.params.id }, { $inc : { likes : req.body.updateLikes } } )
+  Product.updateOne({ _id : req.params.id }, { $inc : { likes : datas.updateLikes } } )
       .then( () => { 
-          res.status(200).json({ message : (req.body.updateLikes==1) ? "Le produit a recu un nouveau like." : "Le produit a perdu un like." });
+          res.status(200).json({ message : (datas.updateLikes==1) ? "Le produit a recu un nouveau like." : "Le produit a perdu un like." });
       })
       .catch( (error) => { 
           res.status(400).json({ error: error });

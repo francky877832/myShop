@@ -77,13 +77,13 @@ exports.removeBasketProduct  = (req, res, next) => {
 
 
 exports.getBasketProducts = (req, res, next) => {
-    Basket.find({user : req.params.id})
+    Basket.find({ user : req.body.user })
     .then( (products) => {
         res.status(200).json(products);
     })
     .catch( (error) => {
         res.status(400).json({ error: error });
     });
-  };
+};
 
 

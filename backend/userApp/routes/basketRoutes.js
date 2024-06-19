@@ -4,7 +4,7 @@ const basketCtrl = require('../controllers/basketController');
 
 
 //Basket route
-router.get('/get/:id', basketCtrl.getBasketProducts);
+router.get('/get', basketCtrl.getBasketProducts);
 router.post('/add', basketCtrl.addBasketProduct);
 router.put('/update/:user', basketCtrl.updateBasketProduct);
 router.put('/remove/:user', basketCtrl.removeBasketProduct);

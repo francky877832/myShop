@@ -12,7 +12,7 @@ const productSchema = new Schema({
     seller : { type : Schema.Types.ObjectId, ref : 'User', required : true },
     category : { type : Schema.Types.ObjectId, ref : 'Category', required : true  },
     //category : { type : String, required : false },
-    marque : { type : String, required : false },
+    brand : { type : String, required : false },
     couleur : [{ type : String, required : false}],
     images : [{ type : String, required : true}],
     feesBy : { type : String, enum : ['seller', 'buyer'], default : "buyer" },
