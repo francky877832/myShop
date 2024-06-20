@@ -1,34 +1,23 @@
+const fs = require('fs');
+
 const Product = require('../models/productModel');
+
 
 
 exports.addProductUser = (req, res, next) => {
   console.log("ok");
-  const datas = req.body;
+  const datas = JSON.parse(req.body.product);
   delete datas._id;
   delete datas.seller;
 
   const imageFiles = req.files
   let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/userApp/assets/images/${file.filename}`})
-  console.log(imageNames)
+  
   const product = new Product(
     {
       ...datas,
-      name : datas.name,
-      description : datas.description,
-      price : datas.price,
-      newPrice : datas.newPrice,
-      minPrice : datas.minPrice,
-      maxPrice : datas.maxPrice,
-      condition : datas.condition,
       seller : datas.seller, //req.auth.userId
-      category : datas.category,
-      brand : datas.brand,
-      couleur : datas.couleur,
       images : imageNames,
-      feesBy : datas.feesBy,
-      garanti : datas.garanti,
-      stock : datas.stock,
-      visibility : datas.visibility
     })
 
   product.save()
@@ -38,7 +27,8 @@ exports.addProductUser = (req, res, next) => {
     })
   .catch(
     (error) => {
-      res.status(400).json({ error: error });
+      console.log("error")
+      res.status(400).json({ error: "trop erreur?" });
     }
   );
 };
@@ -46,27 +36,15 @@ exports.addProductUser = (req, res, next) => {
 
 
 exports.updateProduct = (req, res, next) => {
+  const product = req.file ? {
+        ...JSON.parse(req.body.product),
+        imageUrl: `${req.protocol}://${req.get('host')}/userApp/assets/images/${req.file.filename}`
+     } : { ...req.body };
   const datas = req.body
   delete datas._id
   delete datas.seller
-  const product = {
-      name : datas.name,
-      description : datas.description,
-      price : datas.price,
-      newPrice : datas.newPrice,
-      minPrice : datas.minPrice,
-      maxPrice : datas.maxPrice,
-      condition : datas.condition,
-      seller : datas.seller,
-      category : datas.category,
-      brand : datas.brand,
-      couleur : datas.couleur,
-      images : datas.images,
-      feesBy : datas.feesBy,
-      garanti : datas.garanti,
-      stock : datas.stock,
-      visibility : datas.visibility
-  }
+
+//if product.seller eq auth.user
   Product.updateOne({ _id : req.params.id }, product)
   .then( () => { 
       res.status(200).json({ message: 'Produit mis a jour avec success' });
@@ -93,9 +71,23 @@ exports.updateProductVisibility = (req, res, next) => {
 
 exports.removeProduct  = (req, res, next) => {
   const datas = req.body 
-  Product.deleteOne({ _id : req.params.id })
-  .then( () => { 
-      res.status(200).json({ message: 'Produit supprime avec succes.'});
+
+  Product.find({ _id : req.params.id })
+  .then( (product) => {
+//controle de securite
+      for(let i in product.images)
+      {
+          const filename = product.images[i].split('/images/')[1];
+          s.unlink(`./userApp/assets/images/${filename}`, () => {})
+      }
+
+      Product.deleteOne({ _id : req.params.id })
+      .then( () => { 
+        res.status(200).json({ message: 'Produit supprime avec succes.'});
+      })
+      .catch( (error) => { 
+        res.status(400).json({ error: error });
+      });
    })
   .catch( (error) => { 
       res.status(400).json({ error: error });
