@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 //apres le middleware auth
+const auth = require('../middlewares/auth');
 const multer = require('../middlewares/multer-config');
 
 const prodCtrl = require('../controllers/productController');
 
 
 
-router.get('/get', prodCtrl.getProducts);
+router.get('/get', auth, prodCtrl.getProducts);
 router.get('/get/user/:user', prodCtrl.getProductsUser);
 router.get('/search', prodCtrl.getSearchedProducts);
 router.get('/likes/get/:id', prodCtrl.getProductNumLikes);

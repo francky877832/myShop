@@ -1,6 +1,8 @@
 const http = require('http');
 const userApp = require('./userApp/app');
 
+require('dotenv').config({ path: './shared/.env' });
+
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
@@ -12,7 +14,7 @@ const normalizePort = val => {
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || process.env.USERAPP_PORT);
 userApp.set('port', port);
 //app2.set('port', port);
 const errorHandler = error => {
