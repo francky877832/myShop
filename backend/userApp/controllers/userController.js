@@ -35,8 +35,9 @@ exports.signupUser = (req, res, next) => {
                             { userId: user._id },
                             'RANDOM_TOKEN_SECRET',
                             { expiresIn: '24h' }
-                        )
-                    });
+                        ),
+                        message: "connecter avec succes"
+                    }) ;
                 })
                 .catch(error => res.status(500).json({ error }));
         })

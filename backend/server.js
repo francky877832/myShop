@@ -1,18 +1,20 @@
 const http = require('http');
 const userApp = require('./userApp/app');
+  
+
 
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
   if (isNaN(port)) {
-    return val;
+    return val;run 
   }
   if (port >= 0) {
     return port;
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.USERAPP_PORT || '3000');
 userApp.set('port', port);
 //app2.set('port', port);
 const errorHandler = error => {

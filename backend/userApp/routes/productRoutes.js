@@ -4,7 +4,7 @@ const router = express.Router();
 //apres le middleware auth
 const multer = require('../middlewares/multer-config');
 
-const prodCtrl = require('../controllers/productController');
+const prodCtrl = require('../controllers/productController.js');
 
 
 

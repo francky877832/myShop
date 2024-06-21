@@ -131,7 +131,11 @@ exports.getProductsFromCategories  = (req, res, next) => {
 exports.getProductsUser  = (req, res, next) => {
   Product.find({ seller : req.params.user })
   .then( (products) => { 
-      res.status(200).json(products);
+      res.status(200).json({
+        products ,
+         message:"all good"
+        });
+      
    })
   .catch( (error) => { 
       res.status(400).json({ error: error });
@@ -195,7 +199,7 @@ exports.getSearchedProducts = (req, res, next) => {
 exports.getProductNumLikes  = (req, res, next) => {
   Product.findOne({ _id : req.params.id })
       .then( (product) => { 
-          res.status(200).json(product);
+          res.status(200).json(product.likes);
       })
       .catch( (error) => { 
           res.status(400).json({ error: error });
