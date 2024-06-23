@@ -1,9 +1,10 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable} from 'react-native';
-
 import { Ionicons } from '@expo/vector-icons';
 
+
 import { productStyles } from '../../styles/productStyles';
+
 
 const Product = (props) => {
     const { item } = props.details;

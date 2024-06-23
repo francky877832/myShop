@@ -50,8 +50,8 @@ export default function MainNavigation() {
         })}
         
       >
-        <Tab.Screen name="Home" component={Preferences} />
-        <Tab.Screen name="Favourites" component={Preferences} />
+        <Tab.Screen name="Home" component={HomeNavigation} />
+        <Tab.Screen name="Favourites" component={HomeNavigation} />
         <Tab.Screen name="Shop" component={HomeNavigation} />
         <Tab.Screen name="Basket" component={HomeNavigation} />
         <Tab.Screen name="Account" component={HomeNavigation} />

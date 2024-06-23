@@ -10,6 +10,7 @@ import { Entypo } from '@expo/vector-icons';
 
 import BadgeIcon from '../components/common/BadgeIcon';
 import Preferences from '../components/specific/Preferences';
+import Search from '../components/specific/Search';
 
 const Stack = createStackNavigator();
 
@@ -39,9 +40,9 @@ const Screen4 = () => (
 
 
 const HomeNavigation = () => (
-  <Stack.Navigator initialRouteName="Preferences">
-    <Stack.Screen name="Preferences" component={Preferences} options={{ title: 'Overview', headerShown : false, }} />
-    <Stack.Screen name="Screen4" component={Screen4}  options={{ title: 'Overview', headerShown : false, }} />
+  <Stack.Navigator initialRouteName="Search">
+    <Stack.Screen name="Preferences" component={Preferences} options={{ title: 'Preferences', headerShown : false, }} />
+    <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
   </Stack.Navigator>
 );
 

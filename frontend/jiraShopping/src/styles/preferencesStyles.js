@@ -1,29 +1,22 @@
-import { StyleSheet } from "react-native";
-import { appColors } from "./commonStyles";
+import { StyleSheet, } from "react-native";
+import { appColors, appFont } from "./commonStyles";
 
-import { paddingForProductContainer } from "./productStyles";
+
+
 
 export const preferencesStyles = StyleSheet.create({
-    container : {
-        flexDirection : "column",
-        flex: 1,
-        backgroundColor : appColors.mainColor,
-
+    container : 
+    {
+        flex : 1,
+        top : 5,
     },
-
-    preferences :{
-        flexDirection : "column",
-        alignItems : "center",
-        alignSelf : "center",
+    top :
+    {
+        
     },
-
-    flatlist :{
-        flex: 1,
-        flexDirection : "column",
-        backgroundColor : appColors.mainColor,
-        justifyContent : "center",
-        paddingHorizontal : paddingForProductContainer.horizontal,
+    list :
+    {
+        top : 25,  
     },
-
 
 })
