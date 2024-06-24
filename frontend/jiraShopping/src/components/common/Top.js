@@ -12,7 +12,7 @@ const Top = (props) => {
     return(
         <View style={[topStyles.container, ]} >
             <Pressable  style={[topStyles.pressableBar, ]} onPress={() => {}}>
-                <SearchBar placeholder="Rechercher un produit" />
+                <SearchBar placeholder="Rechercher un produit" styles={topStyles} isPrev={false} />
             </Pressable>
 
             <Pressable  style={[topStyles.notification, ]}onPress = { ()=>{ console.log("Notifications")} }>

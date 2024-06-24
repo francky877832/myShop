@@ -13,10 +13,14 @@ export const searchStyles = StyleSheet.create({
     searchBar : 
     {
         width : "100%",
+        justifyContent : "center",
+        alignItems : "center",
     },
     searchBarContainer :
     {
         width : "101%",
+        justifyContent : "center",
+        alignItems : "center",
     },
     searchBarInput :
     {

@@ -52,7 +52,7 @@ const Search = (props) => {
     return(
         <SafeAreaView style={searchStyles.container}>
             <View style={searchStyles.searchBar}>
-               <SearchBar ref={searchBarRef}  placeholder="Rechercher un produit" placeholderTextColor={appColors.mainColor} styles={searchStyles}  />
+               <SearchBar ref={searchBarRef}  placeholder="Rechercher un produit" placeholderTextColor={appColors.mainColor} styles={searchStyles} isPrev={false}  />
             </View>
             <ScrollView style={{}}>
 

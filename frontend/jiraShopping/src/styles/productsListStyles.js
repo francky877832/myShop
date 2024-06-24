@@ -12,6 +12,7 @@ export const productsListStyles = StyleSheet.create({
     },
 
     productList :{
+        flex: 1,
         flexDirection : "column",
         alignItems : "center",
         alignSelf : "center",

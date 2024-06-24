@@ -8,6 +8,8 @@ export const searchBarStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: appColors.mainColor,
         backgroundColor : appColors.white,
+        justifyContent : "center",
+        alignItems : "center",
     },
     input : 
     {
@@ -23,6 +25,8 @@ export const searchBarStyles = StyleSheet.create({
         flex : 1,
         fontFamily : appFont.mainFontFamily,
         justifyContent : "center",
+        alignItems : "center",
+        alignSelf : "center",
     },
     inputFocused : 
     {

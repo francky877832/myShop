@@ -12,6 +12,17 @@ export const topStyles = StyleSheet.create({
         paddingHorizontal : 10,
         
     },
+    searchBarContainer : 
+    {
+        backgroundColor : appColors.mainColor,
+        borderRadius : 40,
+    },
+    searchBarInput : 
+    {
+        borderWidth : 0,
+        borderRadius : 20,
+        backgroundColor : appColors.white,
+    },
     pressableBar : 
     {
         width : "90%"

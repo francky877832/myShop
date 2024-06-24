@@ -10,7 +10,7 @@ import { searchBarStyles } from '../../styles/searchBarStyles';
 
 //custom app datas
 const SearchBar =  forwardRef((props, ref) => {
-    const { value, onChangeText, placeholder, placeholderTextColor, styles } = props
+    const { value, onChangeText, placeholder, placeholderTextColor, styles, isPrev } = props
     const [isFocused, setIsFocused] = useState(false)
     return (
         <View style={[searchBarStyles.container, styles.searchBarContainer]}>
@@ -19,11 +19,13 @@ const SearchBar =  forwardRef((props, ref) => {
                 style = {[searchBarStyles.input, isFocused && searchBarStyles.inputFocused, styles.searchBarInput]}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
-                leftIcon={
+                underlineColorAndroid='transparent'
+                inputContainerStyle={ { borderBottomWidth: isPrev ? 1 : 0 }}
+                leftIcon={ !isPrev ? false :
                     <Pressable onPress={() => {console.log("Go")}}>
                         <Icon name='arrow-back' type='ionicon' />
                     </Pressable>
-            }
+                }
 
             />
       </View>

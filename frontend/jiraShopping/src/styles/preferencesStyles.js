@@ -16,7 +16,8 @@ export const preferencesStyles = StyleSheet.create({
     },
     list :
     {
-        top : 25,  
+        top : 20, 
+        flex : 1, 
     },
 
 })

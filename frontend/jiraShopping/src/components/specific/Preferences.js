@@ -23,15 +23,15 @@ const Preferences = (props) => {
 
     return(
         <SafeAreaView>
-            <View style={preferencesStyles.container}>
-                <View style={preferencesStyles.top}>
-                    <Top />
-                </View>
+                <View style={preferencesStyles.container} nestedScrollEnabled={true}>
+                    <View style={preferencesStyles.top}>
+                        <Top />
+                    </View>
 
-                <View style={preferencesStyles.list}>
-                    <ProductList datas={datas} />
+                    <ScrollView style={preferencesStyles.list}>
+                        <ProductList datas={datas} />
+                    </ScrollView>
                 </View>
-            </View>
         </SafeAreaView>
     )
 }
