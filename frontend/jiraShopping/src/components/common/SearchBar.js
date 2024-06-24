@@ -1,6 +1,6 @@
-import React, { useState,  } from 'react';
-import { View, Text, TextInput } from 'react-native';
-import { Input } from 'react-native-elements';
+import React, { forwardRef, useState,  } from 'react';
+import { View, Text, TextInput, Pressable } from 'react-native';
+import { Input, Icon } from 'react-native-elements';
 
 
 //custom styles
@@ -9,20 +9,27 @@ import { searchBarStyles } from '../../styles/searchBarStyles';
 
 
 //custom app datas
-const SearchBar =  (props) => {
-    const { value, onChangeText, placeholder, styles } = props
+const SearchBar =  forwardRef((props, ref) => {
+    const { value, onChangeText, placeholder, placeholderTextColor, styles } = props
     const [isFocused, setIsFocused] = useState(false)
     return (
         <View style={[searchBarStyles.container, styles.searchBarContainer]}>
-            <TextInput placeholder={placeholder} value={value} onChangeText={onChangeText}
-                placeholderTextColor={appColors.mainColor}
+            <Input placeholder={placeholder} value={value} onChangeText={onChangeText} ref={ref}
+                placeholderTextColor={placeholderTextColor}
                 style = {[searchBarStyles.input, isFocused && searchBarStyles.inputFocused, styles.searchBarInput]}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                leftIcon={
+                    <Pressable onPress={() => {console.log("Go")}}>
+                        <Icon name='arrow-back' type='ionicon' />
+                    </Pressable>
+            }
+
             />
       </View>
+
     )
-};
+});
     
 
 

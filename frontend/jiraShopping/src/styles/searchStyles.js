@@ -14,6 +14,16 @@ export const searchStyles = StyleSheet.create({
     {
         width : "100%",
     },
+    searchBarContainer :
+    {
+        width : "101%",
+    },
+    searchBarInput :
+    {
+        borderWidth : 0,
+        width : "100%",
+        borderColor: "#fff",
+    },
 
     filter : 
     {
@@ -87,25 +97,28 @@ export const searchStyles = StyleSheet.create({
         flexDirection:"row", 
         justifyContent:"space-around", 
     },
-
-    searchBarContainer :
-    {
-        width : "101%",
-    },
-    searchBarInput :
-    {
-        borderWidth : 0,
-        width : "100%",
-        borderColor: "#fff",
-    },
    
     categorySeparator :
     {
         width: 10,
     },
+
+    categoryFocused :
+    {
+        backgroundColor : appColors.secondaryColor1,
+        borderWidth : 1,
+        borderColor : appColors.white,
+    },
+    textCategoryFocused :
+    {
+        color : appColors.white,
+    },
+
     label :
     {
-       
+       fontFamily : appFont.secondaryFontFamily3,
+       fontWeight : "bold",
+       color : appColors.secondaryColor5,
     },
     categoryContainer :
     {
@@ -141,7 +154,7 @@ export const searchStyles = StyleSheet.create({
     historyContainer :
     {
        flex : 1,
-       top : 20, 
+       top : 40, 
     },
 
     historyLabelContainer:
@@ -158,7 +171,7 @@ export const searchStyles = StyleSheet.create({
         flexDirection:"row", 
         justifyContent:"flex-start",
         alignItems : "center",
-        paddingVertical : 20,
+        paddingVertical : 15,
         paddingHorizontal : 10,
 
     },
@@ -166,22 +179,55 @@ export const searchStyles = StyleSheet.create({
     {
         flex : 1, 
         backgroundColor : "#fff",
+        paddingLeft : 10,
+        marginTop : 10,
     },
     textHistory :
     {
         color : "#555",
-        fontFamily : appFont.mainFontFamily,
+        fontFamily : appFont.secondaryFontFamily3,
         fontWeight : "bold",
+        marginLeft : 10,
     },
     historySeparator:
     {
         width:"80%", 
-        alignSelf : "center",
+        marginLeft : "10%",
         borderBottomWidth : 1,
-        borderBottomColor : appColors.secondaryColor3,
+        borderBottomColor : appColors.secondaryColor4,
+    },
+
+    historiqueLabel:
+    {
+        
+    },
+    vider:
+    {
+        color : appColors.secondaryColor1,
     },
     
-
+    submit:
+    {
+        width : "100%",
+        top : 20,
+        bottom : 20, 
+        flexDirection : "row",
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+    },
+    pressableSubmit:
+    {
+        flex : 1,
+        backgroundColor : appColors.secondaryColor1,
+        paddingVertical : 20,
+    },
+    textSubmit:
+    {
+        flex : 1,
+        color : "#fff",
+        textAlign : "center",
+    },
     
 
     
