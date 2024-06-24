@@ -1,0 +1,47 @@
+<View style={searchStyles.categoryContainer}>
+                    <View style={{alignSelf : "center",}}>
+                        <Text style={searchStyles.label}>Categories</Text>
+                    </View>
+
+                    <View style={searchStyles.flatlist}>
+                        <FlatList
+                            data={datas}
+                            renderItem={ ({item}) => { console.log(item.item); return (
+                                <Pressable style={[productStyles.card, searchStyles.category, ]} >
+                                    <Text style={searchStyles.textCategory}>{item.email}</Text>
+                                </Pressable> 
+                            )} }
+                            keyExtractor={ (item) => { return item.id_.toString(); } }
+                            ItemSeparatorComponent ={ (item) => { return <View style={searchStyles.categorySeparator}></View> }}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{}}
+                        />
+                    </View>
+                </View>
+
+
+
+                <View style={searchStyles.historyContainer}>
+                    <View style={searchStyles.historyLabelContainer}>
+                        <Text style={searchStyles.label}>Historique de recherche</Text>
+                        <Text style={searchStyles.label}>Vider</Text>
+                    </View>
+
+                    <View style={searchStyles.flatlist}>
+                        <FlatList
+                            data={datas}
+                            renderItem={ ({item}) => { console.log(item.item); return (
+                                <Pressable style={[productStyles.card, searchStyles.history, ]} >
+                                    <Ionicons name="close" size={24} color="black" />
+                                    <Text style={searchStyles.textHistory}>{item.email}</Text>
+                                </Pressable> 
+                            )} }
+                            keyExtractor={ (item) => { return item.id_.toString(); } }
+                            ItemSeparatorComponent ={ (item) => { return <View style={searchStyles.historySeparator}></View> }}
+                            horizontal={false}
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{}}
+                        />
+                    </View>
+                </View>

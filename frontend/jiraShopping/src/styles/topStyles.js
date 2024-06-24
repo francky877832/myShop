@@ -23,6 +23,12 @@ export const topStyles = StyleSheet.create({
        
         
     },
+    
+    searchBar : 
+    {
+        borderRadius: 5, 
+    },
+    
 
 
 })

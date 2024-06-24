@@ -23,9 +23,9 @@ const ProductsList = (props) => {
             <View style={productsListStyles.container}>
                 <View style={productsListStyles.productList}>
                     <FlatList
-                        data = {datas}
+                        data={datas}
                         renderItem={ (item) => { return <Product details={item} style={productsListStyles.listItem} /> } }
-                        keyExtractor={ (item) => { return item.id_; } }
+                        keyExtractor={ (item) => { return item.id_.toString(); } }
                         horizontal={false}
                         numColumns={ numProduct }
                         ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}

@@ -8,8 +8,6 @@ export const searchBarStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: appColors.mainColor,
         borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical : 5,
     },
     input : 
     {
@@ -17,7 +15,6 @@ export const searchBarStyles = StyleSheet.create({
         height: 35,
         borderColor: "gray",
         borderWidth: 1,
-        borderRadius: 20,
         paddingVertical: 10,
         paddingHorizontal : 20,
         fontSize: 16,
@@ -31,5 +28,6 @@ export const searchBarStyles = StyleSheet.create({
     {
         borderColor: appColors.secondaryColor1,
     },
+
     
 })

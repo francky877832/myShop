@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import {StyleSheet, Platform } from "react-native";
+
 
 export const appColors = {
     mainColor : "#F0F0F0",
@@ -8,5 +9,8 @@ export const appColors = {
 }
 
 export const appFont = {
-    mainFontFamily : "sans-serif",
+    mainFontFamily : Platform.select({
+        ios: 'Helvetica', // Use Helvetica on iOS
+        android: 'Roboto', // Use Roboto on Android
+      }),
 }
