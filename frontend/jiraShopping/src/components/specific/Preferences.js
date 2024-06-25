@@ -23,7 +23,7 @@ const Preferences = (props) => {
 
     return(
         <SafeAreaView>
-                <View style={preferencesStyles.container} nestedScrollEnabled={true}>
+                <View style={preferencesStyles.container}>
                     <View style={preferencesStyles.top}>
                         <Top />
                     </View>

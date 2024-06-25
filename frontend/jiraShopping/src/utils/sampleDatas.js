@@ -17,6 +17,7 @@ export const datas = [{
     "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjcxNWY5MWQzYjUxZWU5MmMxZGMwMTciLCJpYXQiOjE3MTg5MDcwMjEsImV4cCI6MTcxOTUxMTgyMX0.lDehBpyXYjmkqPHjnrVGWIzRE-Yv95ZyJjIu26zm4XU",
     "username" : "Frack",
     "text" : "Jaime ce produit. Comment faire ?",
+    "image" : '../../assets/images/product5.png',
 },
 {
     "buyer" : "66715deae5f65636347e7f9e",
@@ -40,6 +41,7 @@ export const datas = [{
     "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjcxNWY5MWQzYjUxZWU5MmMxZGMwMTciLCJpYXQiOjE3MTg5MDcwMjEsImV4cCI6MTcxOTUxMTgyMX0.lDehBpyXYjmkqPHjnrVGWIzRE-Yv95ZyJjIu26zm4XU",
     "username" : "Frack",
     "text" : "Jaime ce produit. Comment faire ?",
+    "image" : '../../assets/images/product.png',
 },
 {
     "buyer" : "66715deae5f65636347e7f9e",
@@ -63,6 +65,7 @@ export const datas = [{
     "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjcxNWY5MWQzYjUxZWU5MmMxZGMwMTciLCJpYXQiOjE3MTg5MDcwMjEsImV4cCI6MTcxOTUxMTgyMX0.lDehBpyXYjmkqPHjnrVGWIzRE-Yv95ZyJjIu26zm4XU",
     "username" : "Frack",
     "text" : "Jaime ce produit. Comment faire ?",
+    "image" : '../../assets/images/product5.png',
 },
 {
     "buyer" : "66715deae5f65636347e7f9e",
@@ -82,6 +85,7 @@ export const datas = [{
     "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjcxNWY5MWQzYjUxZWU5MmMxZGMwMTciLCJpYXQiOjE3MTg5MDcwMjEsImV4cCI6MTcxOTUxMTgyMX0.lDehBpyXYjmkqPHjnrVGWIzRE-Yv95ZyJjIu26zm4XU",
     "username" : "Frack",
     "text" : "Jaime ce produit. Comment faire ?",
+    "image" : '../../assets/images/product.png',
 },
 {
     "buyer" : "66715deae5f65636347e7f9e",
@@ -101,5 +105,6 @@ export const datas = [{
     "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjcxNWY5MWQzYjUxZWU5MmMxZGMwMTciLCJpYXQiOjE3MTg5MDcwMjEsImV4cCI6MTcxOTUxMTgyMX0.lDehBpyXYjmkqPHjnrVGWIzRE-Yv95ZyJjIu26zm4XU",
     "username" : "Frack",
     "text" : "Jaime ce produit. Comment faire ?",
+    "image" : '../../assets/images/product5.png',
 }
 ]

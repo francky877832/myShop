@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 //custom component
 import SearchBar from '../common/SearchBar';
-import EmptyLit from '../common/emptyList';
+import EmptyLit from '../common/EmptyList';
 
 //custom styles
 import { appColors, appFont } from '../../styles/commonStyles';

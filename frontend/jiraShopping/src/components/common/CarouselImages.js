@@ -1,0 +1,36 @@
+import React, { useState, forwardRef, useRef } from 'react';
+import { View, Text, Pressable, StyleSheet, Dimensions, Image } from 'react-native';
+import Carousel from 'react-native-reanimated-carousel';
+
+
+import { caourselImageStyles } from '../../styles/carouselImageStyles';
+
+import { datas } from '../../utils/sampleDatas';
+
+
+const { width: screenWidth } = Dimensions.get('window');
+
+const CarouselImage = () =>
+{
+    const carouselRef = useRef(null);
+    const [index, setIndex] = useState(0);
+    const image = "../../assets/images/product.png"
+
+  console.log(screenWidth)
+  const renderItem = ({ item, index }) => (
+    <View style={caourselImageStyles.itemContainer} key={index}>
+      <Image source={require(image)} style={caourselImageStyles.image} />
+    </View> 
+  )
+
+
+  return (
+    <View style={caourselImageStyles.container}>
+      <Carousel loop={true} width={screenWidth} height={400} autoPlay={true} data={datas} scrollAnimationDuration={1000} renderItem={renderItem}/>
+    </View>
+  );
+
+}
+
+
+export default CarouselImage
