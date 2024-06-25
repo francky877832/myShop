@@ -2,9 +2,10 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+import { LikeButton, } from "./CommonSimpleComponents"
 
 import { productStyles } from '../../styles/productStyles';
-
+import { customText } from '../../styles/commonStyles';
 
 const Product = (props) => {
     const { item } = props.details;
@@ -39,14 +40,13 @@ const Product = (props) => {
                                  <Text style={{color:"#fff", fontSize:12, top:3,}}>{item.feesBy ? "Gratuit"  : "Reduction"} </Text>
                             </Pressable>
 
-                            <Pressable style={[productStyles.likeIcon, productStyles.card]} onPress = { ()=>{ console.log("likes"); setLikeIcon(like ? false : true)} }>
-                                {like ? <Ionicons name="heart-outline" size={24} color="#fff" /> : <Ionicons name="heart-sharp" size={24} color="#fff" />}
-                            </Pressable>
+                            <LikeButton hasLiked={item.liked}/>
+
                         </View>
                     
                         <View style={[productStyles.bottom, productStyles.card] } >
                             <Pressable onPress = { ()=>{ console.log("transport")} } >
-                                <Text numberOfLines={1} style={productStyles.category}>Ajouter Au Panier</Text>
+                                <Text numberOfLines={1} style={[customText.text, productStyles.category]}>Ajouter Au Panier</Text>
                             </Pressable>
                         </View>
                     </View>

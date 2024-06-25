@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, SafeAreaView, TextInput, FlatList, Pressable, TouchableHighlight, ScrollView } from 'react-native';
-import { CheckBox } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 
 
 //custom component
 import SearchBar from '../common/SearchBar';
 import EmptyLit from '../common/EmptyList';
+import { ConditionChoice } from "../common/CommonSimpleComponents"
 
 //custom styles
 import { appColors, appFont } from '../../styles/commonStyles';
@@ -20,10 +20,9 @@ import { datas } from '../../utils/sampleDatas';
 const Search = (props) => {
     const [isMinPriceFocused, setIsMinPriceFocused] = useState(false)
     const [isMaxPriceFocused, setIsMaxPriceFocused] = useState(false)
-    const [isNewFocused, setIsNewPriceFocused] = useState(true)
-    const [isOldFocused, setIsOldPriceFocused] = useState(true)
     const [selectedCategories, setSelectCategories] = useState({})
-
+    const [isNewFocused, setIsNewFocused] = useState(true)
+    const [isOldFocused, setIsOldFocused] = useState(true)
 
     const searchBarRef = useRef(null)
     const scrollViewRef = useRef(null)
@@ -88,15 +87,12 @@ const Search = (props) => {
                         </View>
                     </View>
 
+
                     <View style={searchStyles.conditionContainer}>
                         <View style={{alignSelf : "center",}}>
                             <Text style={searchStyles.label}>Condition</Text>
                         </View>
-
-                        <View style={searchStyles.checkBox}>
-                            <CheckBox  title='Neuf' checked={isNewFocused} onPress={() => { setIsNewPriceFocused(!isNewFocused);  }} />
-                            <CheckBox title='Utilisé' checked={isOldFocused} onPress={() => { setIsOldPriceFocused(!isOldFocused); }} />
-                        </View>
+                        <ConditionChoice styles={{}} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
                     </View>
 
                     <View style={searchStyles.categoryContainer}>

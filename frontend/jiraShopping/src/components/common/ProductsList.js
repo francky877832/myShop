@@ -9,7 +9,6 @@ import { numProduct } from '../../styles/productStyles';
 
 
 
-
 const ProductsList = (props) => {
 {/*
                             numColumns={ calculateNumColumns() }

@@ -16,7 +16,7 @@ export const commentStyles = StyleSheet.create({
       borderRadius: 5,
       height: 500,
       padding: 2,
-      width: screenWidth,
+      width: "100%",
       borderWidth : 1,
     },
     image: 

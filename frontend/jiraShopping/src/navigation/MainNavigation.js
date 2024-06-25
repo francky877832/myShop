@@ -11,6 +11,8 @@ import BadgeIcon from '../components/common/BadgeIcon';
 import Preferences from '../components/specific/Preferences';
 import HomeNavigation from '../navigation/HomeNavigation';
 
+import badgeIconStyles from '../styles/badgeIconStyles';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -45,7 +47,7 @@ export default function MainNavigation() {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
               badgeCount = 3;
             }
-            return <BadgeIcon name={iconName} size={size} color={color} badgeCount={badgeCount} />;
+            return <BadgeIcon name={iconName} size={size} color={color} badgeCount={badgeCount} styles={badgeIconStyles} />;
           },
         })}
         
@@ -70,3 +72,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
+

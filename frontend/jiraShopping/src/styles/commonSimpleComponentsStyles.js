@@ -6,7 +6,16 @@ import { appColors, appFont } from "./commonStyles";
 
 export const commonSimpleComponentsStyles = StyleSheet.create({
     
-    likes : 
+    likeButton : 
+    {
+        likeIcon :
+        {
+            width : 25,
+            height : 25,
+        },
+        
+    },
+    shareButton : 
     {
         container :
         {
@@ -16,6 +25,7 @@ export const commonSimpleComponentsStyles = StyleSheet.create({
         },
         
     },
+
     prevButton : 
     {
         container :
@@ -39,11 +49,10 @@ export const commonSimpleComponentsStyles = StyleSheet.create({
 
     conditionChoice : 
     {
-        container :
+        checkBox : 
         {
-            flex : 1,
-            flexDirection : "row",
-            paddingHorizontal : 10,
+            flexDirection:"row", 
+            justifyContent:"space-around", 
         },
         
     },

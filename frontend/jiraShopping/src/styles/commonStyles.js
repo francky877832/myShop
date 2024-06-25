@@ -13,6 +13,7 @@ export const appColors = {
     green : "green",
     orange : "orange",
     white : "#fff",
+    lightBlack : "rgba(0, 0, 0, 0.2)",
 }
 
 export const appFont = {
@@ -25,4 +26,17 @@ export const appFont = {
     secondaryFontFamily3 : "Verdana",
     secondaryFontFamily4 : "Courier",
 
+}
+
+export const appFontSize = {
+    mainFontSize : 14,
+
+}
+export const customText = {
+    text :
+    {
+        fontFamily : appFont.secondaryFontFamily3,
+        fontSize : appFontSize.mainFontSize,
+        color : appColors.black,
+    },
 }

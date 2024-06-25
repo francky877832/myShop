@@ -94,12 +94,6 @@ export const productStyles = StyleSheet.create({
         top : 3,
     },
 
-    likeIcon :
-    {
-        width : 25,
-        height : 25,
-    },
-
 
     card : 
     {

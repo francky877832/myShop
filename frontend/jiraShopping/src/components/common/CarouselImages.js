@@ -4,7 +4,7 @@ import Carousel from 'react-native-reanimated-carousel';
 
 
 import { caourselImageStyles } from '../../styles/carouselImageStyles';
-
+import { productStyles } from '../../styles/productStyles';
 import { datas } from '../../utils/sampleDatas';
 
 
@@ -14,11 +14,11 @@ const CarouselImage = () =>
 {
     const carouselRef = useRef(null);
     const [index, setIndex] = useState(0);
-    const image = "../../assets/images/product.png"
+    const image = "../../assets/images/product5.png"
 
   console.log(screenWidth)
   const renderItem = ({ item, index }) => (
-    <View style={caourselImageStyles.itemContainer} key={index}>
+    <View style={[caourselImageStyles.itemContainer, productStyles.card, {borderRadius:0}]} key={index}>
       <Image source={require(image)} style={caourselImageStyles.image} />
     </View> 
   )

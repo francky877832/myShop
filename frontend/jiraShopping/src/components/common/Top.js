@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Pressable } from '
 
 import BadgeIcon from './BadgeIcon';
 import SearchBar from './SearchBar';
+import badgeIconStyles from '../../styles/badgeIconStyles';
 
 import { topStyles } from '../../styles/topStyles';
 import { appColors, appFont } from '../../styles/commonStyles';
@@ -16,7 +17,7 @@ const Top = (props) => {
             </Pressable>
 
             <Pressable  style={[topStyles.notification, ]}onPress = { ()=>{ console.log("Notifications")} }>
-                <BadgeIcon name="notifications" size={24} color="black" badgeCount={5} />
+                <BadgeIcon name="notifications" size={24} color="black" badgeCount={5} styles={badgeIconStyles} />
             </Pressable>
         </View>
     )

@@ -96,11 +96,6 @@ export const searchStyles = StyleSheet.create({
         backgroundColor : appColors.mainColor,
         marginTop : 25,
     },
-    checkBox : 
-    {
-        flexDirection:"row", 
-        justifyContent:"space-around", 
-    },
    
     categorySeparator :
     {
