@@ -38,7 +38,7 @@ export const productDetailsStyles = StyleSheet.create({
     },
     underCaroussel :
     {
-        flex : 1,
+        //flex : 1,
         backgroundColor : appColors.white, 
         paddingHorizontal : 10,
         paddingTop : 5,
@@ -63,21 +63,57 @@ export const productDetailsStyles = StyleSheet.create({
     },
     description :
     {
-        top : 30, 
-        
-        
+      paddingTop : 25,
+      paddingBottom : 20,
     },
     descriptionBox : 
     {
         flexDirection : "row",
         backgroundColor : appColors.secondaryColor3,
         padding : 10,
+        top : 5,
         borderRadius : 5,
         width : "100%",
     },
     commentsContainer : 
     {
+        //flex : 1,
+        width : "100%",
+        paddingHorizontal : 10,
+        paddingBottom : 10,
+        backgroundColor : appColors.white,
+        top : 10,
+        paddingTop : 10,
+    },
+
+    similarContainer : 
+    {
+        top : 50,
+        paddingLeft: 10,
+    },
+
+    bottom :
+    {
+        flexDirection : "row",
+        justifyContent : "center",
+        alignItems : "center",
+        position : "absolute",
+        left : 0,
+        right : 0,
+        bottom : 0,
+    },
+    price :
+    {
         
-    }
+    },
+    acheter :
+    {
+        
+    },
+    panier :
+    {
+        
+    },
+
 
 })

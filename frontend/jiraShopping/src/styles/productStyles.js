@@ -10,7 +10,8 @@ const screenWidth = Dimensions.get('window').width;
 const cardWidth = (screenWidth/numProduct) - marginHorizontal - paddingForProductContainer.horizontal;
 
 export const productStyles = StyleSheet.create({
-    container : {
+    container : 
+    {
         backgroundColor : appColors.secondaryColor2,
         width : cardWidth,
         //height : 100,
@@ -18,6 +19,23 @@ export const productStyles = StyleSheet.create({
         marginVertical : marginVertical,
         paddingBottom : 5,
     },
+    containerHorizontal : 
+    {
+        backgroundColor : appColors.secondaryColor2,
+        width : screenWidth/2,
+        //height : 100,
+        marginHorizontal : marginHorizontal,
+        marginVertical : marginVertical,
+        paddingBottom : 5,
+    },
+    imageHorizontal : 
+    {
+        width : "100%",
+        //height: 300 * 1.2,
+        borderRadius: 8,
+    },
+
+
     pressable :
     {
         flex : 1 ,

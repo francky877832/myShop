@@ -17,7 +17,7 @@ export const caourselImageStyles = StyleSheet.create({
     {
       backgroundColor: '#fff',
       borderRadius: 5,
-      height: 500,
+      height: screenWidth*1.2,
       padding: 2,
       width: screenWidth,
       borderWidth : 1,

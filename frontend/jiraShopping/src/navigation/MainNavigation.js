@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import {useSegments} from "expo-router"
 
 import BadgeIcon from '../components/common/BadgeIcon';
 import Preferences from '../components/specific/Preferences';
@@ -18,6 +19,8 @@ const Tab = createBottomTabNavigator();
 
 
 export default function MainNavigation() {
+  const hide = false
+
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -25,7 +28,8 @@ export default function MainNavigation() {
           headerShown : false,
           tabBarActiveTintColor: "blue",
           tabBarInactiveTintColor: "gray",
-          tabBarStyle: [{"display": "flex"}, null],
+          tabBarStyle: [{"display": root.name == "Home" ? 'none' : 'flex',}, null],
+
 
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;

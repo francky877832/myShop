@@ -14,6 +14,8 @@ export const appColors = {
     orange : "orange",
     white : "#fff",
     lightBlack : "rgba(0, 0, 0, 0.2)",
+    black : "rgba(0, 0, 0, 0.9)",
+    clearBlack : "rgba(0, 0, 0, 0.7)",
 }
 
 export const appFont = {

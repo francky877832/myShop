@@ -47,9 +47,9 @@ exports.reshapeComments = (datas) => {
     let newComments = []
     for(let i in comments)
     {
-        comments[i]==true ? newComments.push(comments[i]) : false
         let subComment = []
-        for(let j in comments)
+        let j = i
+        for( j in comments)
         {
             if(i != j)
             {
@@ -57,15 +57,18 @@ exports.reshapeComments = (datas) => {
                 {
                     if(comments[i].id_ == comments[j].id)
                     {
-                        comments[j] = {...comments[j], subComment : true}
-                    }
-                    else
-                    {
-                        comments[j] = {...comments[j], subComment : false}
+                        subComment.push(comments[j])
+                        comments[i] = {...comments[i], subComment : subComment}
+                        //comments.splice(j, 1)
+                        delete comments[j]
                     }
                 }
             }
-        } 
+        }
+        console.log(i)     
     }
-    return comments;
+    for(let j in comments)
+        if(comments[j] != undefined)
+            newComments.push(comments[j])
+    return newComments;
 }

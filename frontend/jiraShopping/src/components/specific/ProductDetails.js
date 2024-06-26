@@ -1,10 +1,11 @@
 import React, { useState, forwardRef } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 
 
 import CarouselImage from '../common/CarouselImages';
-import {    PrevButton, ShareButton, LikeButton } from "../common/CommonSimpleComponents"
+import {    PrevButton, ShareButton, LikeButton, CustomButton } from "../common/CommonSimpleComponents"
 import Comments from './Comments';
 
 import { productDetailsStyles } from '../../styles/productDetailsStyles';
@@ -15,13 +16,15 @@ import { sinceDate, truncateText } from '../../utils/commonAppFonctions';
 import { datas } from '../../utils/sampleDatas';
 import BadgeIcon from '../common/BadgeIcon';
 
+import ProductsList from '../common/ProductsList';
+
 const ProductDetails = () =>
 {
     const data = datas[0]
     const numChars = 10
     const [description, setDescription] = useState(truncateText(data.text, numChars))
     return(
-        <SafeAreaView>
+        <ScrollView>
             <View style={productDetailsStyles.container}>
 
                 <View style={productDetailsStyles.buttonContainer}>
@@ -104,11 +107,39 @@ const ProductDetails = () =>
                 </View>
 
                 <View style={[productDetailsStyles.commentsContainer]}>
+                    <Pressable>
+                        <Text style={[customText.text, {fontWeight:"bold",fontSize:20,color:appColors.black}]}>Une Questions ?</Text>
+                    </Pressable>
                     <Comments />
-                    <Text>Ok</Text>
                 </View>
+
+                <View style={[productDetailsStyles.similarContainer]}>
+                    <View style={{}}>
+                        <Text style={[customText.text, {fontWeight:"bold",fontSize:20,color:appColors.black}]}>Produits Similaires</Text>
+                    </View>
+                    <View style={{}}>
+                        <ProductsList datas={datas} horizontal={true} />
+                    </View>
+                </View>
+
             </View>
-        </SafeAreaView>
+
+                <View style={[productDetailsStyles.bottom]}>
+                    <View style={[productDetailsStyles.price]}>
+                        <Text style={[customText.text, {color:appColors.secondaryColor1}]}>{data.price}</Text>
+                    </View>
+
+                    <View style={[productDetailsStyles.acheter]}>
+                        <CustomButton text="Acheter" color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{}} />
+                    </View>
+
+                    <View style={[productDetailsStyles.panier]}>
+                        <CustomButton text="Ajouter au panier" color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{}}/>
+                    </View>
+                </View>
+
+
+        </ScrollView>
     )
 }
 

@@ -41,7 +41,7 @@ export const datas = [{
     "password" : "oooooooo",
     "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjcxNWY5MWQzYjUxZWU5MmMxZGMwMTciLCJpYXQiOjE3MTg5MDcwMjEsImV4cCI6MTcxOTUxMTgyMX0.lDehBpyXYjmkqPHjnrVGWIzRE-Yv95ZyJjIu26zm4XU",
     "username" : "Frack",
-    "text" : "Jaime ce produit. Comment faire ?",
+    "text" : "Reponse a 1 Jaime ce produit. Comment faire ?",
     "image" : '../../assets/images/product.png',
     "updatedAt" : "20023-12-03",
 },
@@ -86,7 +86,7 @@ export const datas = [{
     "password" : "oooooooo",
     "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjcxNWY5MWQzYjUxZWU5MmMxZGMwMTciLCJpYXQiOjE3MTg5MDcwMjEsImV4cCI6MTcxOTUxMTgyMX0.lDehBpyXYjmkqPHjnrVGWIzRE-Yv95ZyJjIu26zm4XU",
     "username" : "Frack",
-    "text" : "Jaime ce produit. Comment faire ?",
+    "text" : "Reponse a 2 Jaime ce produit. Comment faire ?",
     "image" : '../../assets/images/product.png',
 },
 {
@@ -106,7 +106,7 @@ export const datas = [{
     "password" : "oooooooo",
     "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjcxNWY5MWQzYjUxZWU5MmMxZGMwMTciLCJpYXQiOjE3MTg5MDcwMjEsImV4cCI6MTcxOTUxMTgyMX0.lDehBpyXYjmkqPHjnrVGWIzRE-Yv95ZyJjIu26zm4XU",
     "username" : "Frack",
-    "text" : "Jaime ce produit. Comment faire ?",
+    "text" : "reponse a 2 Jaime ce produit. Comment faire ?",
     "image" : '../../assets/images/product5.png',
 }
 ]

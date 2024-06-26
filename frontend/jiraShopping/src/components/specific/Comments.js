@@ -1,10 +1,11 @@
 import React, { useState, forwardRef } from 'react';
-import { View, Text, Pressable, FlatList } from 'react-native';
+import { View, Text, Pressable, FlatList, ScrollView, } from 'react-native';
+import { Input } from 'react-native-elements';
 
-
-import { appColors, appFont } from '../../styles/commonStyles';
-import { commentStyles } from '../../styles/commentsStyles';
+import { appColors, appFont, customText } from '../../styles/commonStyles';
+import { commentsStyles } from '../../styles/commentsStyles';
 import { reshapeComments } from '../../utils/commonAppFonctions';
+import { Icon } from 'react-native-elements';
 
 import { datas } from '../../utils/sampleDatas';
 
@@ -14,28 +15,60 @@ const Comments = () =>
     const reshapedComments = reshapeComments(comments)
     console.log(reshapedComments)
 
+    const [isFocused, setIsFocused] = useState(false)
+
     const Comment = (props) => {
-        const { comment } = props
-        return (
-            <Pressable>
-                <Text>{comment.text}</Text>
-            </Pressable>
-        )
+        const { comment, styles } = props
+            return (
+                    <View style={[styles.commentContainer, ]} >
+                        <Pressable style={[styles.comment, ]} onPress={()=>{console.log(comment.id_)}}>
+                            <Text style={[commentsStyles.commentText]} >{comment.text}</Text>
+                        </Pressable>
+                    
+                    {
+                        comment.subComment && comment.subComment.length > 0
+                        ?
+                        comment.subComment.map((item)=>{
+                            return (
+                                <Pressable onPress={()=>{console.log(comment.id_)}} style={[styles.comment, styles.subComment]} key={item.id_.toString()}>
+                                    <Text style={[commentsStyles.commentText]} >{item.text}</Text>
+                                </Pressable>
+                            )
+                        })
+                        :
+                        false
+                    }
+                </View>
+                );
+            
     }
 
 
     return(
-        <View style={[commentStyles.container]}>
-            <View>
+        <View style={{}}>
                 <FlatList
-                    data={datas}
-                    renderItem={ ({item}) => { return <Comment comment={item} style={commentStyles.listItem} /> } }
+                    data={reshapedComments}
+                    renderItem={ ({item}) => { return <Comment comment={item} styles={ {comment : {...commentsStyles.comment}, subComment : {...commentsStyles.subComment}}} /> } }
                     keyExtractor={ (item) => { return item.id_.toString(); } }
                     horizontal={false}
                     numColumns={ 1 }
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={commentStyles.flatlist}
+                    contentContainerStyle={[commentsStyles.flatlistContainer]}
+                />
+            <View style={commentsStyles.inputContainer}>
+               <Input placeholder="Posez une question sur le produit" onChangeText={(text)=>{}}
+                    placeholderTextColor={appColors.lightBlack}
+                    style = {[commentsStyles.input, isFocused && commentsStyles.inputFocused, commentsStyles.searchBarInput]}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    underlineColorAndroid='transparent'
+                    inputContainerStyle={ { borderBottomWidth: 1 }}
+                    rightIcon={ 
+                        <Pressable onPress={() => {console.log("Go")}}>
+                            <Icon name='arrow-back' type='ionicon' />
+                        </Pressable>
+                    }
                 />
             </View>
         </View>

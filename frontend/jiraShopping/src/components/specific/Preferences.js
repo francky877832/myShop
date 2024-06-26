@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Dimensions 
 
 //custom component
 import Top from '../common/Top';
-import ProductList from '../common/ProductsList';
+import ProductsList from '../common/ProductsList';
 
 //custom styles
 import { preferencesStyles } from '../../styles/preferencesStyles';
@@ -29,7 +29,7 @@ const Preferences = (props) => {
                     </View>
 
                     <ScrollView style={preferencesStyles.list}>
-                        <ProductList datas={datas} />
+                        <ProductsList datas={datas} horizontal={false} />
                     </ScrollView>
                 </View>
         </SafeAreaView>

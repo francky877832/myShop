@@ -1,27 +1,53 @@
 import { StyleSheet, Dimensions } from "react-native";
-import { appColors, appFont } from "./commonStyles";
+import { appColors, appFont, customText } from "./commonStyles";
 
+import { productStyles } from "./productStyles";
 
-export const commentStyles = StyleSheet.create({
+export const commentsStyles = StyleSheet.create({
     container: 
     {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      //backgroundColor : appColors.red,
+      top : 20,
+      backgroundColor : appColors.white,
     },
-    itemContainer: 
+    commentContainer: 
     {
-      backgroundColor: '#fff',
-      borderRadius: 5,
-      height: 500,
-      padding: 2,
-      width: "100%",
+      backgroundColor : "red",
+    },
+    flatlistContainer : 
+    {
+      backgroundColor : appColors.white,
+      maxHeight : 600,
+    },
+    
+    comment: 
+    {
+      ///...productStyles.card,
+      flexDirection : "row",
+      backgroundColor : appColors.secondaryColor4,
+      padding : 10,
+      marginTop : 10,
+      alignSelf : "flex-start",
+      paddingLeft : 20,
+      borderRadius : 10,
+      maxWidth : "90%",
+    },
+    subComment: 
+    {
+      backgroundColor : appColors.secondaryColor3,
+      alignSelf : "flex-end",
+    },
+    commentText :
+    {
+      ...customText.text,
+    },
+
+    inputContainer :
+    {
+      top : 10,
       borderWidth : 1,
     },
-    image: 
-    {
-      width: '100%',
-      height: "100%",
-    },
+
   });
