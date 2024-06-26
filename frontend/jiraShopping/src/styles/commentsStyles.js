@@ -3,6 +3,9 @@ import { appColors, appFont, customText } from "./commonStyles";
 
 import { productStyles } from "./productStyles";
 
+export const screenWidth = Dimensions.get("window").width
+
+
 export const commentsStyles = StyleSheet.create({
     container: 
     {

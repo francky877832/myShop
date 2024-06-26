@@ -16,6 +16,7 @@ export const appColors = {
     lightBlack : "rgba(0, 0, 0, 0.2)",
     black : "rgba(0, 0, 0, 0.9)",
     clearBlack : "rgba(0, 0, 0, 0.7)",
+    lightWhite : "rgb(250, 250, 250)",
 }
 
 export const appFont = {

@@ -51,7 +51,7 @@ export const commonSimpleComponentsStyles = StyleSheet.create({
     {
         checkBox : 
         {
-            flexDirection:"row", 
+            flexDirection:"column", 
             justifyContent:"space-around", 
         },
         
