@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
+const faker = require('faker');
 
 const connectDB = async () => {
     try {
@@ -11,4 +12,4 @@ const connectDB = async () => {
     }
 };
 
-module.exports = connectDB;
+module.exports = {connectDB, mongoose};

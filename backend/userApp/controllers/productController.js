@@ -97,8 +97,8 @@ exports.removeProduct  = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
   Product.find()
   .then( (products) => {
-    console.log("ok");
-      res.status(200).json(products);
+      res.status(200).json({products, message : "ok"});
+      
   })
   .catch( (error) => {
       res.status(400).json({ error: error});
@@ -133,13 +133,14 @@ exports.getProductsUser  = (req, res, next) => {
   .then( (products) => { 
       res.status(200).json({
         products ,
-         message:"all good"
-        });
-      
+         message:"all good", 
+        }); 
+         
    })
   .catch( (error) => { 
       res.status(400).json({ error: error });
    });
+  
 };
 
 //Cest mieux de gerer cette fonctionnalite cote backend

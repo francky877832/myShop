@@ -1,7 +1,7 @@
 const mongoose = require('../../shared/db').mongoose;
-const Schema = mongoose.Schema()
+const Schema = mongoose.Schema();
 
-const categorySchema = new Schema({
+const categorySchema = new mongoose.Schema({
     name: { type: String, required: true },
     description: { type: String },
     createdAt : { type : Date, default : Date.now() },
