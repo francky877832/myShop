@@ -7,8 +7,7 @@ import ProductsList from '../common/ProductsList';
 
 //custom styles
 import { preferencesStyles } from '../../styles/preferencesStyles';
-//import { numProduct } from '../../styles/productStyles';
-
+import SearchResults from './SearchResults';
 
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
@@ -20,7 +19,7 @@ const Preferences = (props) => {
                             
 */}
 
-
+    const [isSearch, setIsSearch] = useState(true)
 
     return(
         <SafeAreaView style={{flex:1,}}>
@@ -29,9 +28,15 @@ const Preferences = (props) => {
                         <Top />
                     </View>
 
-                    <View style={preferencesStyles.list}>
-                        <ProductsList datas={datas} horizontal={false} styles={{}} />
-                    </View>
+                { !isSearch ?
+                        <View style={preferencesStyles.list}>
+                            <ProductsList datas={datas} horizontal={false} styles={{}} />
+                        </View>
+                    :
+                        <View style={[{}]}>
+                            <SearchResults styles={{}}/>
+                        </View>
+                }
                 </View>
         </SafeAreaView>
     )

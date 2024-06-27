@@ -104,7 +104,7 @@ const Filters = (props) => {
                             ItemSeparatorComponent={(item) => {return <View style={{width:20,}}></View>}}
                             horizontal={true}
                             showsHorizontalScrollIndicator={true}
-                            contentContainerStyle={{flex:1,flexDirection:"row", padding:10}}
+                            contentContainerStyle={{flex:1,flexDirection:"row", padding:5,paddingLeft:10}}
                         />
                     </View>
                 </View>
