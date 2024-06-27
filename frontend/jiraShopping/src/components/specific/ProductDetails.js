@@ -116,7 +116,7 @@ const ProductDetails = () =>
                         <Text style={[customText.text, {fontWeight:"bold",fontSize:20,color:appColors.black}]}>Produits Similaires</Text>
                     </View>
                     <View style={{}}>
-                        <ProductsList datas={datas} horizontal={true} />
+                        <ProductsList datas={datas} horizontal={true} styles={{}} />
                     </View>
                 </View>
 

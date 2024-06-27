@@ -30,7 +30,7 @@ const Preferences = (props) => {
                     </View>
 
                     <View style={preferencesStyles.list}>
-                        <ProductsList datas={datas} horizontal={false} />
+                        <ProductsList datas={datas} horizontal={false} styles={{}} />
                     </View>
                 </View>
         </SafeAreaView>

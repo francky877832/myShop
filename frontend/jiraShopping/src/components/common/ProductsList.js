@@ -16,10 +16,10 @@ const ProductsList = (props) => {
                             
 */}
 
-    const { datas, horizontal } = props;
+    const { datas, horizontal, styles } = props;
 
     return(
-            <View style={[productsListStyles.container, horizontal ? productsListStyles.containerHorizontal : false, ]}>
+            <View style={[productsListStyles.container, horizontal ? productsListStyles.containerHorizontal : false, styles.container]}>
                     <FlatList
                         data={datas}
                         renderItem={ ({item}) => { return <Product item={item} styles={productsListStyles.listItem} horizontal={horizontal}/> } }
@@ -28,7 +28,7 @@ const ProductsList = (props) => {
                         numColumns={ horizontal ? 1 : numProduct }
                         ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                         showsHorizontalScrollIndicator={horizontal}
-                        contentContainerStyle={[productsListStyles.flatlist, horizontal ? productsListStyles.flatlistHorizontal : false, ]}
+                        contentContainerStyle={[productsListStyles.flatlist, horizontal ? productsListStyles.flatlistHorizontal : false, styles.flatlist]}
                     />
             </View>
     )

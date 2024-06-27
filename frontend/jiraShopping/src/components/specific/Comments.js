@@ -111,12 +111,14 @@ const Comments = () =>
                 />
             <View style={commentsStyles.inputContainer}>
                <Input placeholder="Posez une question sur le produit" onChangeText={(text)=>{setInputValue(text)}}
+                    multiline={true}
+                    numberOfLines={2}
                     placeholderTextColor={appColors.lightBlack}
-                    style = {[commentsStyles.input, isFocused && commentsStyles.inputFocused, commentsStyles.searchBarInput]}
+                    style = {[commentsStyles.input, isFocused && commentsStyles.inputFocused, commentsStyles.searchBarInput, {fontSize:16,padding:5,}]}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                     underlineColorAndroid='transparent'
-                    inputContainerStyle={ { borderBottomWidth: 1 }}
+                    inputContainerStyle={ { borderBottomWidth: 1, }}
                     rightIcon={ 
                         <Pressable onPress={() => {console.log("Go")}}>
                             <Icon name='send-sharp' type='ionicon' size={24} color={appColors.secondaryColor1} />

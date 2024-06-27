@@ -12,6 +12,7 @@ export const searchStyles = StyleSheet.create({
     filter :
     {
        //flex : 1
+       backgroundColor : appColors.white,
     },
     searchBar : 
     {
@@ -19,17 +20,19 @@ export const searchStyles = StyleSheet.create({
         justifyContent : "center",
         alignItems : "center",
     },
+//A passer a searchbar
     searchBarContainer :
     {
         width : "101%",
         justifyContent : "center",
         alignItems : "center",
     },
+//A passer a searchbar
     searchBarInput :
     {
         borderWidth : 0,
         width : "100%",
-        borderColor: "#fff",
+        borderColor: appColors.white,
     },
 
     historyLabelContainer:
