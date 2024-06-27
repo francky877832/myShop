@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef,  } from 'react';
 import { View, Text, Pressable, TextInput, ScrollView, FlatList} from 'react-native';
 
 import { CheckBox } from 'react-native-elements';
+import { RadioButton, } from 'react-native-paper';
 
 import { ConditionChoice } from "../common/CommonSimpleComponents"
 
@@ -11,13 +12,15 @@ import { filtersStyles } from '../../styles/filtersStyles';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
 import { customText, screenWidth } from '../../styles/commonStyles';
 import FilterItem from './FilterItem';
-import OrderBy from './OrderBy';
 
 const Filters = (props) => {
 
-    const {prices, selectedCategories, selectedOrderBy, updateCategories, updateOrderBy, isOldFocused, setIsOldFocused, isNewFocused, setIsNewFocused} = props
+    const {prices, orderBy, category, isOldFocused, setIsOldFocused, isNewFocused, setIsNewFocused} = props
     const minPrice = prices[0]; const setMinPrice = prices[1]
     const maxPrice = prices[2]; const setMaxPrice = prices[3]
+
+    const selectedCategories = category[0]; const updateCategories = category[1]
+    const selectedOrderBy = orderBy[0]; const setSelectedOrderBy = orderBy[1]
 
     const categories = [
         {
@@ -38,7 +41,7 @@ const Filters = (props) => {
         },
      
     ]
-    const orderBy = [{id:1,name1:"Prix DESC",name2:"Prix ASC"}, {id:3,name1:"Plus Recents" ,name2:"Plus Anciens"}, {id:3,name1:"Plus Recents" ,name2:"Plus Anciens"}]
+    const orderByItems = [{id:1,name:"Prix DESC"},{id:2, name:"Prix ASC"}, {id:3,name:"Plus Recents"},{id:4, name:"Plus Anciens"}, {id:5,name:"Plus Recents"} ,{id:6,name:"Plus Anciens"}]
 
     
 
@@ -100,7 +103,7 @@ const Filters = (props) => {
                             )}}
                             ItemSeparatorComponent={(item) => {return <View style={{width:20,}}></View>}}
                             horizontal={true}
-                            showsHorizontalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={true}
                             contentContainerStyle={{flex:1,flexDirection:"row", padding:10}}
                         />
                     </View>
@@ -163,17 +166,19 @@ const Filters = (props) => {
                     <Text style={[customText.text,filtersStyles.label]}>Trier Par...</Text>
                 </View>
 
-                    <View style={filtersStyles.flatlist}>
-                        <FlatList
-                                data={orderBy}
-                                renderItem={ ({item}) => { return <OrderBy item={item} selectedOrderBy={selectedOrderBy} updateOrderBy={updateOrderBy} /> } }
-                                keyExtractor={ (item) => { return Math.random().toString(); } }
-                                ItemSeparatorComponent ={ (item) => { return <View style={filtersStyles.categorySeparator}></View> }}
-                                horizontal={false}
-                                numColumns={2}
-                                showsHorizontalScrollIndicator={false}
-                                contentContainerStyle={{ backgroundColor:appColors.lightWhite, maxHeight : 500,  alignSelf:"center", width:"100%"}}
-                            />
+                    <View style={[filtersStyles.flatlist, filtersStyles.radioBox]}>
+                        <RadioButton.Group onValueChange={val => setSelectedOrderBy(val)} value={selectedOrderBy}>
+                            {
+                                orderByItems.map((item) => {
+                                    return(
+                                        <View style={filtersStyles.radioContainer} key={item.id}>
+                                        <RadioButton value={item.id} />
+                                            <Text>{item.name}</Text>
+                                    </View>
+                                    )
+                                })
+                            }
+                        </RadioButton.Group>
                     </View>
                     <View style={{height:20,}}></View>
                 

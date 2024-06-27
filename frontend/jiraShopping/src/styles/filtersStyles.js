@@ -89,13 +89,6 @@ export const filtersStyles = StyleSheet.create({
         marginTop : 25,
         alignItems : "flex-start",
     },
-    trier :
-    {
-       
-        justifyContent : "center",
-        alignItems : "space-around",
-
-    },
 
     categoryFocused :
     {
@@ -149,18 +142,38 @@ export const filtersStyles = StyleSheet.create({
         flexDirection:"row",
         justifyContent:"space-between",
         paddingLeft: 10,
-        
         backgroundColor : appColors.white,
     },
+    trier :
+    {
+       
+        justifyContent : "center",
+        alignItems : "space-around",
 
+    },
 
+    radioContainer: 
+    {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+        left : 40,
+    },
+    radioBox: 
+    {
+        alignSelf : "flex-start",
+        width : "100%",
+        backgroundColor : appColors.lightWhite
+    },
+    
     filtres :
     {
         justifyContent : "center",
+        borderLeftWidth : 1,
         borderBottomWidth : 1,
-        borderBottomColor : appColors.lightBlack,
-        borderLeftColor : appColors.lightBlack,
+        borderColor : appColors.lightBlack,
         borderRadius : 20,
+        left : 5,
         
     },
     pressableFilter :

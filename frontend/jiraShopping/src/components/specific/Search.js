@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 //custom component
 import SearchBar from '../common/SearchBar';
 import EmptyLit from '../common/EmptyList';
-
+import { ScreenHeight } from 'react-native-elements/dist/helpers';
 //custom styles
 import { appColors, appFont } from '../../styles/commonStyles';
 import { searchStyles } from '../../styles/searchStyles';
@@ -14,11 +14,12 @@ import { productStyles } from '../../styles/productStyles';
 import Filters from '../common/Filters';
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
+import { screenHeight } from '../../styles/commentsStyles';
 
 const Search = (props) => {
     
     const [selectedCategories, setSelectCategories] = useState({})
-    const [selectedOrderBy, setSelectedOrderBy] = useState({})
+    const [selectedOrderBy, setSelectedOrderBy] = useState("")
 
     const [isNewFocused, setIsNewFocused] = useState(true)
     const [isOldFocused, setIsOldFocused] = useState(true)
@@ -50,7 +51,7 @@ const Search = (props) => {
             })
         })
     }
-
+/*
     const updateOrderBy = (id1, id2) => {
         setSelectedOrderBy((prev)=>{
             console.log(prev)
@@ -66,7 +67,7 @@ const Search = (props) => {
             })
         })
     }
-
+*/
     const _handleFocusTextInput = () => {
         if (searchBarRef.current) {
             searchBarRef.current.focus();
@@ -79,16 +80,16 @@ const Search = (props) => {
    
 
     return(
-        <SafeAreaView style={searchStyles.container}>
+        <SafeAreaView style={[searchStyles.container,{height:screenHeight}]}>
             <View style={searchStyles.searchBar}>
                <SearchBar ref={searchBarRef}  placeholder="Rechercher un produit" placeholderTextColor={appColors.mainColor} styles={searchStyles} isPrev={true}  />
             </View>
 
-            <ScrollView style={{}}>
+            <ScrollView contentContainerStyle={{flex:1,}}>
                 
             <View style={searchStyles.filter}>
 
-               <Filters prices={[minPrice, setMinPrice, maxPrice, setMaxPrice ]} selectedCategories={selectedCategories} selectedOrderBy={selectedOrderBy} updateOrderBy={updateOrderBy} updateCategories={_handlePress} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
+                <Filters prices={[minPrice, setMinPrice, maxPrice, setMaxPrice ]} orderBy={[selectedOrderBy, setSelectedOrderBy]} category={[selectedCategories, _handlePress]} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
 
 
                     <View style={[searchStyles.submit,]}>
@@ -100,7 +101,7 @@ const Search = (props) => {
 
                     <View style={searchStyles.historyContainer}>
                         <View style={searchStyles.historyLabelContainer}>
-                            <Text style={[searchStyles.label, searchStyles.historiqueLabel]}>Historique de recherche</Text>
+                            <Text style={[searchStyles.label, searchStyles.historyLabel]}>Historique de recherche</Text>
                             { datas.length === 0 ? false :
                                 <Pressable style={{}} >
                                     <Text style={[searchStyles.label, searchStyles.vider]}>Vider</Text>
@@ -129,6 +130,8 @@ const Search = (props) => {
                         </View>
                     </View>
                 </View>
+                
+
             </ScrollView>
         </SafeAreaView>
     )

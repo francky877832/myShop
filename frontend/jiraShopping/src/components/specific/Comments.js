@@ -21,18 +21,29 @@ const Comments = () =>
         const { comment, styles } = props
             return (
                     <View style={[styles.commentContainer, ]} >
-                        <Pressable style={[styles.comment, ]} onPress={()=>{console.log(comment.id_)}}>
-                            <Text style={[commentsStyles.commentText]} >{comment.text}</Text>
-                        </Pressable>
+                        <View style={{flexDirection:"row", alignItems:"center"}}>
+                            <Pressable style={[styles.comment, ]} onPress={()=>{console.log(comment.id_)}}>
+                                <Text style={[commentsStyles.commentText]} >{comment.text}</Text>
+                            </Pressable>
+                            <Pressable onPress={()=>{console.log(comment.id_)}}>
+                                <Icon name='arrow-back' type='ionicon' />
+                            </Pressable>
+                        </View>
                     
                     {
                         comment.subComment && comment.subComment.length > 0
                         ?
                         comment.subComment.map((item)=>{
                             return (
-                                <Pressable onPress={()=>{console.log(comment.id_)}} style={[styles.comment, styles.subComment]} key={item.id_.toString()}>
-                                    <Text style={[commentsStyles.commentText]} >{item.text}</Text>
-                                </Pressable>
+                                <View style={{flexDirection:"row-reverse",alignItems:"center"}} key={item.id_.toString()}>
+                                    <Pressable onPress={()=>{console.log(comment.id_)}} style={[styles.comment, styles.subComment]} >
+                                        <Text style={[commentsStyles.commentText]} >{item.text}</Text>
+                                    </Pressable>
+
+                                    <Pressable onPress={()=>{console.log(comment.id_)}}>
+                                        <Icon name='arrow-back' type='ionicon' />
+                                    </Pressable>
+                            </View>
                             )
                         })
                         :

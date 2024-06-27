@@ -14,10 +14,8 @@ import { customText, screenWidth } from '../../styles/commonStyles';
 
 const OrderBy = (props) => {
     const { updateOrderBy, item, selectedOrderBy} = props
-
-    return(
-
-            <View style={orderByStyles.container} >
+/*
+      <View style={orderByStyles.container} >
                 <CheckBox title={item.name1} containerStyle={{ borderWidth:0, margin:1,padding:0, }} 
                     textStyle={[customText.text,orderByStyles.checkBoxText]} 
                     checked={selectedOrderBy[item.name1]} onPress={() => { updateOrderBy(item.name1, item.name2);  }} 
@@ -27,11 +25,35 @@ const OrderBy = (props) => {
                     checked={selectedOrderBy[item.name2]} onPress={() => { updateOrderBy(item.name2, item.name1);  }} 
                 />
             </View>
+*/
+    return(
+        <View style={orderByStyles.container}>
+            <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={item.name}>
+                <View style={orderByStyles.radioContainer}>
+                <RadioButton value="first" />
+                <Text>First</Text>
+                </View>
+                <View style={orderByStyles.radioContainer}>
+                <RadioButton value="second" />
+                <Text>Second</Text>
+                </View>
+            </RadioButton.Group>
+        </View>
     )
 }
 
 const orderByStyles =  StyleSheet.create({
-    container :
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      radioContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+      },
+ /*   container :
     {
         flex:1, 
         paddingTop : 10,
@@ -53,7 +75,7 @@ const orderByStyles =  StyleSheet.create({
         marginLeft:0,
         color:appColors.secondaryColor5,
         fontWeight:"normal",
-    }
+    }*/
 
 })
 

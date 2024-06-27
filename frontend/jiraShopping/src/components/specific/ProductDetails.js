@@ -18,15 +18,16 @@ import BadgeIcon from '../common/BadgeIcon';
 
 import ProductsList from '../common/ProductsList';
 
+import { screenHeight, screenWidth } from '../../styles/commentsStyles';
+
 const ProductDetails = () =>
 {
     const data = datas[0]
     const numChars = 10
     const [description, setDescription] = useState(truncateText(data.text, numChars))
     return(
-        <ScrollView>
-            <View style={productDetailsStyles.container}>
-
+        <View style={productDetailsStyles.container}>
+            <ScrollView contentContainerStyle={[{bottom:20,}]}>
                 <View style={productDetailsStyles.buttonContainer}>
                     <PrevButton styles={productDetailsStyles.prevButton}/>
                     <View style={productDetailsStyles.buttonContainerLeft}>
@@ -122,24 +123,24 @@ const ProductDetails = () =>
                     </View>
                 </View>
 
-            </View>
+            </ScrollView>
 
                 <View style={[productDetailsStyles.bottom]}>
-                    <View style={[productDetailsStyles.price]}>
-                        <Text style={[customText.text, {color:appColors.secondaryColor1}]}>{data.price}</Text>
+                    <View style={[productDetailsStyles.price, productDetailsStyles.button]}>
+                        <Text style={[customText.text, productDetailsStyles.buttonText, {color:appColors.secondaryColor1}]}>{data.realPrice} XAF</Text>
                     </View>
 
                     <View style={[productDetailsStyles.acheter]}>
-                        <CustomButton text="Acheter" color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{}} />
+                        <CustomButton text="Acheter" styles={{pressable : productDetailsStyles.button, text:productDetailsStyles.buttonText}} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{}} />
                     </View>
 
                     <View style={[productDetailsStyles.panier]}>
-                        <CustomButton text="Ajouter au panier" color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{}}/>
+                        <CustomButton text="Ajouter au panier" styles={{pressable : productDetailsStyles.button, text:productDetailsStyles.buttonText}} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{}}/>
                     </View>
                 </View>
 
 
-        </ScrollView>
+        </View>
     )
 }
 

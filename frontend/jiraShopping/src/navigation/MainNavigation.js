@@ -1,21 +1,18 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { NavigationContainer, } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Ionicons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import {useSegments} from "expo-router"
+
 
 import BadgeIcon from '../components/common/BadgeIcon';
-import Preferences from '../components/specific/Preferences';
+import Search from '../components/specific/Search';
+import ProductDetails from '../components/specific/ProductDetails';
+
 import HomeNavigation from '../navigation/HomeNavigation';
 
-import badgeIconStyles from '../styles/badgeIconStyles';
 
 
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 
 export default function MainNavigation() {
@@ -23,45 +20,11 @@ export default function MainNavigation() {
 
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown : false,
-          tabBarActiveTintColor: "blue",
-          tabBarInactiveTintColor: "gray",
-          tabBarStyle: [{"display": root.name == "Home" ? 'none' : 'flex',}, null],
-
-
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            let badgeCount = 0;
-
-            if (route.name === 'Home') {
-              iconName = focused ? "home" : "home-outline";
-              badgeCount = 0;
-            } else if (route.name === 'Favourites') {
-              iconName = focused ? 'heart-sharp' : 'heart-outline';
-              badgeCount = 3;
-            } else if (route.name === 'Shop') {
-              iconName = focused ? 'bag-handle' : 'bag-handle-outline';
-              badgeCount = 3;
-            } else if (route.name === 'Basket') {
-              iconName = focused ? 'basket' : 'basket-outline';
-              badgeCount = 3;
-            } else if (route.name === 'Account') {
-              iconName = focused ? 'person-circle' : 'person-circle-outline';
-              badgeCount = 3;
-            }
-            return <BadgeIcon name={iconName} size={size} color={color} badgeCount={badgeCount} styles={badgeIconStyles} />;
-          },
-        })}
-        
-      >
-        <Tab.Screen name="Home" component={HomeNavigation} />
-        <Tab.Screen name="Favourites" component={HomeNavigation} />
-        <Tab.Screen name="Shop" component={HomeNavigation} />
-        <Tab.Screen name="Basket" component={HomeNavigation} />
-        <Tab.Screen name="Account" component={HomeNavigation} />
-      </Tab.Navigator>
+      <Stack.Navigator initialRouteName="ProductDetails">
+        <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, }} />
+        <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
+        <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

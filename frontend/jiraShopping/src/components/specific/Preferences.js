@@ -12,6 +12,7 @@ import { preferencesStyles } from '../../styles/preferencesStyles';
 
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
+import { appColors } from '../../styles/commonStyles';
 
 const Preferences = (props) => {
 {/*
@@ -22,15 +23,15 @@ const Preferences = (props) => {
 
 
     return(
-        <SafeAreaView>
+        <SafeAreaView style={{flex:1,}}>
                 <View style={preferencesStyles.container}>
                     <View style={preferencesStyles.top}>
                         <Top />
                     </View>
 
-                    <ScrollView style={preferencesStyles.list}>
+                    <View style={preferencesStyles.list}>
                         <ProductsList datas={datas} horizontal={false} />
-                    </ScrollView>
+                    </View>
                 </View>
         </SafeAreaView>
     )

@@ -1,12 +1,17 @@
 import { StyleSheet, } from "react-native";
 import { appColors, appFont, screenWidth} from "./commonStyles";
 
+import { customText } from "./commonStyles";
 
 export const searchStyles = StyleSheet.create({
     container : 
     {
-        flex : 1,
+        //flex : 1,
         //backgroundColor : "red",
+    },
+    filter :
+    {
+       //flex : 1
     },
     searchBar : 
     {
@@ -27,13 +32,6 @@ export const searchStyles = StyleSheet.create({
         borderColor: "#fff",
     },
 
-   
-    historyContainer :
-    {
-       flex : 1,
-       top : 20, 
-    },
-
     historyLabelContainer:
     {
         alignSelf : "center", 
@@ -41,6 +39,12 @@ export const searchStyles = StyleSheet.create({
         flexDirection:"row", 
         justifyContent:"space-between", 
         paddingHorizontal: 20,
+    },
+    
+    historyContainer :
+    {
+       flex : 1,
+       top : 20,
     },
     history:
     {
@@ -54,10 +58,11 @@ export const searchStyles = StyleSheet.create({
     },
     historyFlatlist:
     {
-        flex : 1, 
+       
         backgroundColor : "#fff",
         paddingLeft : 10,
         marginTop : 10,
+        //paddingBottom : 60,
     },
     textHistory :
     {
@@ -74,9 +79,16 @@ export const searchStyles = StyleSheet.create({
         borderBottomColor : appColors.secondaryColor4,
     },
 
-    historiqueLabel:
+    historyLabel:
     {
-        
+        fontWeight : "bold",
+    },
+    label :
+    {
+        ...customText.text,
+       fontFamily : appFont.secondaryFontFamily3,
+       fontWeight : "bold",
+       color : appColors.secondaryColor5,
     },
     vider:
     {
