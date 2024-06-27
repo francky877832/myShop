@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef, useRef } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -108,9 +108,6 @@ const ProductDetails = () =>
                 </View>
 
                 <View style={[productDetailsStyles.commentsContainer]}>
-                    <Pressable>
-                        <Text style={[customText.text, {fontWeight:"bold",fontSize:20,color:appColors.black}]}>Une Questions ?</Text>
-                    </Pressable>
                     <Comments />
                 </View>
 
