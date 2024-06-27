@@ -1,7 +1,9 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, useRef,  } from 'react';
 import { View, Text, Pressable, TextInput, ScrollView, FlatList} from 'react-native';
 
 import { CheckBox } from 'react-native-elements';
+
+import { ConditionChoice } from "../common/CommonSimpleComponents"
 
 
 import { appColors, appFont } from '../../styles/commonStyles';
@@ -9,11 +11,13 @@ import { filtersStyles } from '../../styles/filtersStyles';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
 import { customText, screenWidth } from '../../styles/commonStyles';
 import FilterItem from './FilterItem';
+import OrderBy from './OrderBy';
 
 const Filters = (props) => {
 
-    const {selectedCategories, updateCategories, isOldFocused, setIsOldFocused, isNewFocused, setIsNewFocused} = props
-
+    const {prices, selectedCategories, selectedOrderBy, updateCategories, updateOrderBy, isOldFocused, setIsOldFocused, isNewFocused, setIsNewFocused} = props
+    const minPrice = prices[0]; const setMinPrice = prices[1]
+    const maxPrice = prices[2]; const setMaxPrice = prices[3]
 
     const categories = [
         {
@@ -34,25 +38,63 @@ const Filters = (props) => {
         },
      
     ]
+    const orderBy = [{id:1,name1:"Prix DESC",name2:"Prix ASC"}, {id:3,name1:"Plus Recents" ,name2:"Plus Anciens"}, {id:3,name1:"Plus Recents" ,name2:"Plus Anciens"}]
 
-    const filters = [{name:"Categories"},{name:"Price"},{name:"Etat"}, {name:"Etat"}, {name:"Etat"}, {name:"Etat"}]
+    
 
 
     const [modalPriceVisible, setModalPriceVisible] = useState(false);
     const [modalConditionVisible, setModalConditionVisible] = useState(false);
     const [modalCategoryVisible, setModalCategoryVisible] = useState(false);
+    const [modalOrderByVisible, setModalOrderByVisible] = useState(true);
+
+   
+
     const [isMinPriceFocused, setIsMinPriceFocused] = useState(false)
     const [isMaxPriceFocused, setIsMaxPriceFocused] = useState(false)
+
+    const filters = [{name:"Categories"},{name:"Price"},{name:"Etat"}, {name:"Etat"}, {name:"Etat"}, {name:"Etat"}]
+    const activeFilterRef = useRef([setModalOrderByVisible, "trier"])
+
+    const showFilters = (filter) => {
+        const setter = activeFilterRef.current[0]
+        const from = activeFilterRef.current[1]
+
+        if(from != filter.toLowerCase())
+        {
+            switch(filter.toLowerCase())
+            {
+                case "categories" : setModalCategoryVisible(true); 
+                    setter(false)
+                    activeFilterRef.current = [setModalCategoryVisible, "categories"];
+                    break;
+                case "trier" : setModalOrderByVisible(true); 
+                    setter(false)
+                    activeFilterRef.current = [setModalOrderByVisible, "trier"];  
+                break;
+                case "price" : setModalPriceVisible(true);
+                    setter(false)
+                    activeFilterRef.current = [setModalPriceVisible, "price"]; 
+                    break;
+                case "etat" : setModalConditionVisible(true);  
+                    setter(false)
+                    activeFilterRef.current = [setModalConditionVisible, "etat"]; 
+                    break;
+                default :  break;
+            }
+        } else { setter(true); console.log("else");}
+    }
+
 
     return (
         <View style={[filtersStyles.container]}>
                 <View style={[filtersStyles.topContainer]}>
-                    <Pressable style={[filtersStyles.trier]} onPress={()=>{setModalCategoryVisible(!modalCategoryVisible)}}>
-                        <Text style={[customText.text, filtersStyles.pressableFilter]}>Trier</Text>
-                        </Pressable>
+                    <Pressable style={[filtersStyles.trier, ]} onPress={()=>{showFilters("trier")}}>
+                        <Text style={[customText.text, filtersStyles.pressableFilter, activeFilterRef.current[1]=="trier" ? filtersStyles.pressableFilterFocused : false ]}>Trier</Text>
+                    </Pressable>
                     <View style={[filtersStyles.filtres]}>
                         <FlatList data={filters} keyExtractor={(item)=>Math.random().toString()} renderItem={({item}) => {return (
-                            <Pressable style={[filtersStyles.pressableFilter]} onPress={()=>{setModalCategoryVisible(!modalCategoryVisible)}} >
+                            <Pressable style={[filtersStyles.pressableFilter, activeFilterRef.current[1]==item.name.toLowerCase() ? filtersStyles.pressableFilterFocused : false]} onPress={()=>{showFilters(item.name)}} >
                                 <Text style={[customText.text]}>{item.name}</Text>
                             </Pressable>
                             )}}
@@ -64,9 +106,15 @@ const Filters = (props) => {
                     </View>
                 </View>
 
-            <ScrollView style={[{flex:1}]}>
+            <View style={{width:"100%",}}>
                 { modalPriceVisible &&
-                <View style={[filtersStyles.priceModal]} >
+                <View style={[filtersStyles.priceContainer]} >
+                    <View style={{height:10,}}></View>
+                        
+                        <View style={{alignSelf : "center",}}>
+                            <Text style={filtersStyles.label}>Price</Text>
+                        </View>
+
                         <View style={{flexDirection:"row", justifyContent:"space-around"}}>
                             <Text style={filtersStyles.label}>Prix Min.</Text>
                             <Text style={filtersStyles.label}>Prix Max.</Text>
@@ -79,7 +127,8 @@ const Filters = (props) => {
                                     style = {[filtersStyles.input, isMinPriceFocused && filtersStyles.inputFocused]}
                                     onFocus={() => setIsMinPriceFocused(true)}
                                     onBlur={() => setIsMinPriceFocused(false)}
-                                    onChangeText={(text) => {console.log(text)}}
+                                    value={minPrice}
+                                    onChangeText={(price) => setMinPrice(price)}
                                 />
                             </View>
 
@@ -91,25 +140,51 @@ const Filters = (props) => {
                                 style = {[filtersStyles.input, isMaxPriceFocused && filtersStyles.inputFocused]}
                                 onFocus={() => setIsMaxPriceFocused(true)}
                                 onBlur={() => setIsMaxPriceFocused(false)}
-                                onChangeText={(text) => {console.log(text)}}
+                                value={maxPrice}
+                                onChangeText={(price) => setMaxPrice(price)}
                             />
                         </View>
                     </View>
+                    <View style={{height:20,}}></View>
                 </View>
             }
         { modalConditionVisible &&
                     <View style={filtersStyles.conditionContainer}>
-                        <View style={{alignSelf : "center",}}>
-                            <Text style={filtersStyles.label}>Condition</Text>
+                        <View style={{alignSelf : "center",backgroundColor:appColors.white}}>
+                            <Text style={[customText.text,filtersStyles.label]}>Condition</Text>
                         </View>
                         <ConditionChoice styles={{}} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
                     </View>
         }
 
+        { modalOrderByVisible &&
+            <View style={[filtersStyles.orderByContainer]}>
+                <View style={{alignSelf : "center",backgroundColor:appColors.white}}>
+                    <Text style={[customText.text,filtersStyles.label]}>Trier Par...</Text>
+                </View>
+
+                    <View style={filtersStyles.flatlist}>
+                        <FlatList
+                                data={orderBy}
+                                renderItem={ ({item}) => { return <OrderBy item={item} selectedOrderBy={selectedOrderBy} updateOrderBy={updateOrderBy} /> } }
+                                keyExtractor={ (item) => { return Math.random().toString(); } }
+                                ItemSeparatorComponent ={ (item) => { return <View style={filtersStyles.categorySeparator}></View> }}
+                                horizontal={false}
+                                numColumns={2}
+                                showsHorizontalScrollIndicator={false}
+                                contentContainerStyle={{ backgroundColor:appColors.lightWhite, maxHeight : 500,  alignSelf:"center", width:"100%"}}
+                            />
+                    </View>
+                    <View style={{height:20,}}></View>
+                
+            </View>
+
+        }
+
         {modalCategoryVisible &&
                     <View style={filtersStyles.categoryContainer}>
                         <View style={{alignSelf : "center",}}>
-                            <Text style={filtersStyles.label}>Categories</Text>
+                            <Text style={[customText.text, filtersStyles.label]}>Categories</Text>
                         </View>
 
 
@@ -127,7 +202,7 @@ const Filters = (props) => {
                         </View>
                     </View>
         }
-    </ScrollView>
+    </View>
     </View>
 
 

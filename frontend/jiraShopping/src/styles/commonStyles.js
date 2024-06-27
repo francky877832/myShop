@@ -4,6 +4,7 @@ import {StyleSheet, Platform } from "react-native";
 export const appColors = {
     mainColor : "#F0F0F0",
     secondaryColor1 : "#f27a1a",
+    lightOrange : "rgba(242, 122, 26, 0.1)",
     secondaryColor2 : "#fff",
     secondaryColor3 : "#ccc",
     secondaryColor4 : "#777",

@@ -1,5 +1,5 @@
 import { StyleSheet, } from "react-native";
-import { appColors, appFont, screenWidth} from "./commonStyles";
+import { appColors, appFont, screenWidth, customText} from "./commonStyles";
 
 
 
@@ -15,15 +15,14 @@ export const filtersStyles = StyleSheet.create({
     priceContainer : 
     {
         flexDirection : "column",
-        top : 20,
-        backgroundColor : appColors.lightWhite,
+        marginTop : 25,
+        width: screenWidth,
     },
     price : 
     {
         flexDirection : "row",
         justifyContent : "center",
         alignItems : "center",
-
     },
     minPrice : 
     {
@@ -69,8 +68,8 @@ export const filtersStyles = StyleSheet.create({
     {
         flexDirection:"column", 
         justifyContent:"space-around",
-        backgroundColor : appColors.mainColor,
         marginTop : 25,
+        width: screenWidth,
     },
    
     categorySeparator :
@@ -79,14 +78,23 @@ export const filtersStyles = StyleSheet.create({
     },
     categoryContainer :
     {
-        backgroundColor:appColors.lightWhite,
+        width: "100%",
+        top : 20,
+        paddingBottom : 50,
+        justifyContent:"center",
+    },
+    orderByContainer :
+    {
         width: screenWidth,
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
+        marginTop : 25,
+        alignItems : "flex-start",
+    },
+    trier :
+    {
+       
+        justifyContent : "center",
+        alignItems : "space-around",
+
     },
 
     categoryFocused :
@@ -102,21 +110,18 @@ export const filtersStyles = StyleSheet.create({
 
     label :
     {
+        ...customText.text,
        fontFamily : appFont.secondaryFontFamily3,
        fontWeight : "bold",
        color : appColors.secondaryColor5,
     },
-    categoryContainer :
-    {
-        //height : 90,
-        top : 20,
-        paddingBottom : 50,
-       //backgroundColor : "red",
-    },
+    
     flatlist :
     {
         //flex : 1, 
         top : 10,
+        alignSelf : "center",
+        width : "100%",
     },
     category :
     {
@@ -144,21 +149,18 @@ export const filtersStyles = StyleSheet.create({
         flexDirection:"row",
         justifyContent:"space-between",
         paddingLeft: 10,
-        borderBottomWidth : 1,
-        borderBottomColor : appColors.lightWhite,
+        
         backgroundColor : appColors.white,
     },
-    trier :
-    {
-       
-        justifyContent : "center",
-        alignItems : "center",
 
-    },
 
     filtres :
     {
         justifyContent : "center",
+        borderBottomWidth : 1,
+        borderBottomColor : appColors.lightBlack,
+        borderLeftColor : appColors.lightBlack,
+        borderRadius : 20,
         
     },
     pressableFilter :
@@ -171,7 +173,9 @@ export const filtersStyles = StyleSheet.create({
     },
     pressableFilterFocused :
     {
+        borderWidth : 2,
        borderColor : appColors.secondaryColor1,
+       backgroundColor : appColors.lightOrange,
     },
    
 

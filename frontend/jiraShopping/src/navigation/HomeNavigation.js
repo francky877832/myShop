@@ -41,7 +41,7 @@ const Screen4 = () => (
 
 
 const HomeNavigation = () => (
-  <Stack.Navigator initialRouteName="ProductDetails">
+  <Stack.Navigator initialRouteName="Search">
     <Stack.Screen name="Preferences" component={Preferences} options={{ title: 'Preferences', headerShown : false, }} />
     <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
     <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />

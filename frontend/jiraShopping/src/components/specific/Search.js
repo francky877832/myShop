@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 //custom component
 import SearchBar from '../common/SearchBar';
 import EmptyLit from '../common/EmptyList';
-import { ConditionChoice } from "../common/CommonSimpleComponents"
 
 //custom styles
 import { appColors, appFont } from '../../styles/commonStyles';
@@ -19,8 +18,12 @@ import { datas } from '../../utils/sampleDatas';
 const Search = (props) => {
     
     const [selectedCategories, setSelectCategories] = useState({})
+    const [selectedOrderBy, setSelectedOrderBy] = useState({})
+
     const [isNewFocused, setIsNewFocused] = useState(true)
     const [isOldFocused, setIsOldFocused] = useState(true)
+    const [minPrice, setMinPrice] = useState("")
+    const [maxPrice, setMaxPrice] = useState("")
     
 
     const searchBarRef = useRef(null)
@@ -48,6 +51,22 @@ const Search = (props) => {
         })
     }
 
+    const updateOrderBy = (id1, id2) => {
+        setSelectedOrderBy((prev)=>{
+            console.log(prev)
+            next1 = !prev[id1]
+            next2 = prev[id2]
+            if(next1 == next2 == true)
+                next2 = false
+            
+            return ({
+                ...prev,
+                [id1] : next1,
+                [id2] : next2,
+            })
+        })
+    }
+
     const _handleFocusTextInput = () => {
         if (searchBarRef.current) {
             searchBarRef.current.focus();
@@ -62,14 +81,14 @@ const Search = (props) => {
     return(
         <SafeAreaView style={searchStyles.container}>
             <View style={searchStyles.searchBar}>
-               <SearchBar ref={searchBarRef}  placeholder="Rechercher un produit" placeholderTextColor={appColors.mainColor} styles={searchStyles} isPrev={false}  />
+               <SearchBar ref={searchBarRef}  placeholder="Rechercher un produit" placeholderTextColor={appColors.mainColor} styles={searchStyles} isPrev={true}  />
             </View>
 
             <ScrollView style={{}}>
                 
             <View style={searchStyles.filter}>
 
-               <Filters selectedCategories={selectedCategories} updateCategories={_handlePress} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
+               <Filters prices={[minPrice, setMinPrice, maxPrice, setMaxPrice ]} selectedCategories={selectedCategories} selectedOrderBy={selectedOrderBy} updateOrderBy={updateOrderBy} updateCategories={_handlePress} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
 
 
                     <View style={[searchStyles.submit,]}>
