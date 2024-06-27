@@ -22,7 +22,7 @@ const Comments = () =>
     }
 
         const initialNumberOfComments = 2
-        let data = [...datas] ; !isAll ? data.splice(0, initialNumberOfComments) : false
+        let data = [...datas] ; data = !isAll ? data.slice(0, initialNumberOfComments+1) : datas
         const comments = {comments : [...data], count:2, total : 3}
         let  reshapedComments = reshapeComments(comments.comments)
 
