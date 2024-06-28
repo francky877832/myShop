@@ -72,3 +72,9 @@ exports.reshapeComments = (datas) => {
             newComments.push(comments[j])
     return newComments;
 }
+
+
+exports.formatMoney = () => {
+    
+}
+

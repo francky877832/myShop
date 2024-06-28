@@ -11,7 +11,7 @@ const offerSchema = new Schema({
     offers : [{
                 _id: { type: Schema.Types.ObjectId, default: function() {return new mongoose.Types.ObjectId();}},
                 offerPrice: { type: Number, required : true },
-                from: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+                from: { type: String, enum: ['buyer', 'seller'], required: true },
             }],
     hasGotResponse : { type: Number, enum : [0, 1, 2], default : 2, required : true },
 

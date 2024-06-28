@@ -48,6 +48,10 @@ export const commentsStyles = StyleSheet.create({
     {
       ...customText.text,
     },
+    sendButton :
+    {
+        left : 5,
+    },
 
     inputContainer :
     {

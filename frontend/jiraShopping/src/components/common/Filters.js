@@ -127,6 +127,7 @@ const Filters = (props) => {
                             <View style = {[filtersStyles.minPrice]}>
                                 <TextInput placeholder="Prix min."
                                     placeholderTextColor={appColors.mainColor}
+                                    inputMode='numeric'
                                     style = {[filtersStyles.input, isMinPriceFocused && filtersStyles.inputFocused]}
                                     onFocus={() => setIsMinPriceFocused(true)}
                                     onBlur={() => setIsMinPriceFocused(false)}
@@ -140,6 +141,7 @@ const Filters = (props) => {
                         <View style = {[filtersStyles.maxPrice]}>
                             <TextInput placeholder="Prix max."
                                 placeholderTextColor={appColors.mainColor}
+                                inputMode='numeric'
                                 style = {[filtersStyles.input, isMaxPriceFocused && filtersStyles.inputFocused]}
                                 onFocus={() => setIsMaxPriceFocused(true)}
                                 onBlur={() => setIsMaxPriceFocused(false)}

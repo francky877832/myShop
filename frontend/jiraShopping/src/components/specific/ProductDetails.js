@@ -123,16 +123,17 @@ const ProductDetails = () =>
             </ScrollView>
 
                 <View style={[productDetailsStyles.bottom]}>
-                    <View style={[productDetailsStyles.price, productDetailsStyles.button]}>
-                        <Text style={[customText.text, productDetailsStyles.buttonText, {color:appColors.secondaryColor1}]}>{data.realPrice} XAF</Text>
+                    <View style={[productDetailsStyles.button, productDetailsStyles.price, ]}>
+                        <Text numberOfLines={2} style={[customText.text, productDetailsStyles.buttonText, {color:appColors.secondaryColor1}]}>{data.realPrice} XAF</Text>
+                        
                     </View>
 
-                    <View style={[productDetailsStyles.acheter]}>
+                   <View style={[productDetailsStyles.panier]}>
+                        <CustomButton text="Ajouter au panier" styles={{pressable : productDetailsStyles.button, text:productDetailsStyles.buttonText}} color={appColors.secondaryColor1} backgroundColor={appColors.white} onPress={()=>{}}/>
+                    </View>
+
+                     <View style={[productDetailsStyles.acheter]}>
                         <CustomButton text="Acheter" styles={{pressable : productDetailsStyles.button, text:productDetailsStyles.buttonText}} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{}} />
-                    </View>
-
-                    <View style={[productDetailsStyles.panier]}>
-                        <CustomButton text="Ajouter au panier" styles={{pressable : productDetailsStyles.button, text:productDetailsStyles.buttonText}} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{}}/>
                     </View>
                 </View>
 

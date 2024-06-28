@@ -120,7 +120,7 @@ const Comments = () =>
                     underlineColorAndroid='transparent'
                     inputContainerStyle={ { borderBottomWidth: 1, }}
                     rightIcon={ 
-                        <Pressable onPress={() => {console.log("Go")}}>
+                        <Pressable onPress={() => {console.log("Go")}} style={[commentsStyles.sendButton]}>
                             <Icon name='send-sharp' type='ionicon' size={24} color={appColors.secondaryColor1} />
                         </Pressable>
                     }

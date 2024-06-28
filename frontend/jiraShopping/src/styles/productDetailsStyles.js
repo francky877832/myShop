@@ -103,17 +103,20 @@ export const productDetailsStyles = StyleSheet.create({
         right : 0,
         bottom : 0,
         backgroundColor : appColors.lightWhite,
-        height : 50,
+        height : 60,
         borderWidth : 1,
         borderColor : appColors.lightBlack,
+        paddingVertical : 10,
+        paddingHorizontal : 5,
     },
     button:
     {
         ...productStyles.card,
+        shadowColor : appColors.white,
         justifyContent : "center",
         alignItems : "center",
         height : 50,
-        borderRadius : 0,
+        borderRadius : 5,
     },
     buttonText:
     {
@@ -123,19 +126,23 @@ export const productDetailsStyles = StyleSheet.create({
     price :
     {
         flex : 1,
+        alignItems : "center",
 
     },
     acheter :
     {
         flex : 1,
-        borderRadius : 0,
-        borderRightWidth : 1,
-        borderRightColor : appColors.white
+        borderRadius : 5,
     },
     panier :
     {
         flex : 1,
-        borderRadius : 0,
+        borderRadius : 5,
+       // borderLeftColor : appColors.white,
+        //borderLeftWidth : 1,
+        borderWidth : 1,
+        borderColor : appColors.secondaryColor1,
+        left : -5,
     },
 
 
