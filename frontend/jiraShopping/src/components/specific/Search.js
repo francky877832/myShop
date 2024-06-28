@@ -103,9 +103,7 @@ const Search = (props) => {
                 <Filters prices={[minPrice, setMinPrice, maxPrice, setMaxPrice ]} orderBy={[selectedOrderBy, setSelectedOrderBy]} category={[selectedCategories, _handlePress]} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
 :
                     <View style={[productDetailsStyles.similarContainer,{top:0,paddingTop:5,left:0,}]}>
-                        <View style={{backgroundColor:appColors.white}}>
-                            <ProductsList datas={datas} horizontal={true} styles={{}} />
-                        </View>
+                            <ProductsList datas={datas} horizontal={true} styles={searchStyles} />
                     </View>
 
 }

@@ -11,11 +11,12 @@ import { CheckBox } from 'react-native-elements';
 import { Icon } from 'react-native-elements';
 
 exports.LikeButton = (props) => {
-    const { hasLiked, isCard} = props
+    const { hasLiked, isCard, styles} = props
+    const style = styles || {}
     const [like, setLikeIcon ] = useState(hasLiked)
     return(
             <Pressable style={[commonSimpleComponentsStyles.likeButton.likeIcon, isCard ? productStyles.card : false]} onPress = { ()=>{ console.log("likes"); setLikeIcon(like ? false : true)} }>
-                    {like ? <BadgeIcon name="heart-outline" size={24} color="#fff" badgeCount={0} styles={{}}/> : <BadgeIcon name="heart-sharp" size={24} color={appColors.secondaryColor1} badgeCount={0} styles={{}}/>}
+                    {like ? <BadgeIcon name="heart-outline" size={24} color={style.color} badgeCount={0} styles={{}}/> : <BadgeIcon name="heart-sharp" size={24} color={appColors.secondaryColor1} badgeCount={0} styles={{}}/>}
             </Pressable>
     )
 }

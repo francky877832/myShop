@@ -19,7 +19,7 @@ export const productStyles = StyleSheet.create({
         marginVertical : marginVertical,
         paddingBottom : 5,
     },
-    containerHorizontal : 
+    containerHorizontal : //Horizontal container ?
     {
         backgroundColor : appColors.secondaryColor2,
         width : screenWidth/2,

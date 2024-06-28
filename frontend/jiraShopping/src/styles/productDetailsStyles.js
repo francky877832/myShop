@@ -28,9 +28,10 @@ export const productDetailsStyles = StyleSheet.create({
     {
         
     },
-    likeButton :
+    likeButton : //not used cause of different place to display in
     {
         backgroundColor : appColors.white,
+        color : appColors.white,
     },
     shareButton :
     {
@@ -89,8 +90,7 @@ export const productDetailsStyles = StyleSheet.create({
     similarContainer : 
     {
         top : 50,
-        paddingLeft: 10,
-        paddingBottom : 50,
+        paddingBottom : 60,
     },
 
     bottom :

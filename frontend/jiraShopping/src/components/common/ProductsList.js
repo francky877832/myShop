@@ -19,7 +19,7 @@ const ProductsList = (props) => {
     const { datas, horizontal, styles } = props;
 
     return(
-            <View style={[productsListStyles.container, horizontal ? productsListStyles.containerHorizontal : false, styles.container]}>
+            <View style={[productsListStyles.container, horizontal ? productsListStyles.containerHorizontal : false, styles.productContainer]}>
                     <FlatList
                         data={datas}
                         renderItem={ ({item}) => { return <Product item={item} styles={productsListStyles.listItem} horizontal={horizontal}/> } }

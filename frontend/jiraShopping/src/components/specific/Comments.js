@@ -44,11 +44,12 @@ const Comments = () =>
                                 <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
                             </Pressable>
                         </View>
+
                         <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>Ecrit il y'a {sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }</Text></View>
                         {
                             comment.subComment && comment.subComment.length > 0
                             ?
-                                <Pressable onPress={()=>{setShowSubComment(!showSubComment)}} style={{alignSelf:"flex-end"}}>
+                                <Pressable onPress={()=>{setShowSubComment(!showSubComment)}} style={{alignSelf:"flex-end",}}>
                                     { showSubComment ?
                                         <Text style={[customText.text, {textDecorationLine:"underline",fontWeight:"bold"}]}>Masquer les reponses</Text>
                                         :
@@ -94,11 +95,12 @@ const Comments = () =>
 
     return(
         <View style={{}}>
-            <View style={[{flexDirection:"row",justifyContent:"space-between"}]}>
+            <View style={[{flexDirection:"column",justifyContent:"center"}]}>
                 <Pressable>
                         <Text style={[customText.text, {fontWeight:"bold",fontSize:20,color:appColors.black}]}>Une Questions ?</Text>
                 </Pressable>
-                <Pressable onPress={()=>{_displayComments(isAll ? initialNumberOfComments : comments.total )}}>
+
+                <Pressable onPress={()=>{_displayComments(isAll ? initialNumberOfComments : comments.total )}} style={[{alignSelf:"flex-end",}]}>
                     {
                         !isAll ?
                         <Text style={[customText.text,{color:appColors.green,}]}>Tout Afficher</Text>

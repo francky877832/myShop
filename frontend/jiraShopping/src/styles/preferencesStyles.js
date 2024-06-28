@@ -9,20 +9,24 @@ export const preferencesStyles = StyleSheet.create({
     {
         flex : 1,
         top : 0,
-        backgroundColor : appColors.white,
-
+        backgroundColor : appColors.lightWhite,
+    },
+    productContainer : 
+    {
+        flex : 1,
+        paddingBottom : 2,
     },
     top :
     {
-        backgroundColor : appColors.white,
+        backgroundColor : appColors.lightWhite,
         borderBottomWidth : 1,
         borderBottomColor : appColors.lightWhite,
+        //height : 35,
     },
-    list :
+    flatlist :
     {
-        flex : 1,
-        top : 10, 
-        paddingBottom : 30,
+        backgroundColor : appColors.lightWhite,
+
     },
 
 })

@@ -7,7 +7,7 @@ export const searchStyles = StyleSheet.create({
     container : 
     {
         //flex : 1,
-        //backgroundColor : "red",
+        backgroundColor : appColors.lightWhite2,
     },
     filter :
     {
@@ -62,7 +62,7 @@ export const searchStyles = StyleSheet.create({
     historyFlatlist:
     {
        
-        backgroundColor : "#fff",
+        backgroundColor : appColors.white,
         paddingLeft : 10,
         marginTop : 10,
         //paddingBottom : 60,
@@ -116,11 +116,19 @@ export const searchStyles = StyleSheet.create({
     textSubmit:
     {
         flex : 1,
-        color : "#fff",
+        color : appColors.white,
         textAlign : "center",
     },
     
-
+//FOR PRODUCTLIST
+    productContainer :
+    {
+        backgroundColor : appColors.white,
+    },
+    flatlist :
+    {
+        backgroundColor : appColors.lightWhite2,
+    }
     
 
 })

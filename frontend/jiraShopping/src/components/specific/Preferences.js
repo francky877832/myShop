@@ -28,10 +28,8 @@ const Preferences = (props) => {
                         <Top />
                     </View>
 
-                { !isSearch ?
-                        <View style={preferencesStyles.list}>
-                            <ProductsList datas={datas} horizontal={false} styles={{}} />
-                        </View>
+                { isSearch ?
+                            <ProductsList datas={datas} horizontal={false} styles={preferencesStyles} />
                     :
                         <View style={[{}]}>
                             <SearchResults styles={{}}/>

@@ -23,6 +23,7 @@ import { screenHeight, screenWidth } from '../../styles/commentsStyles';
 const ProductDetails = () =>
 {
     const data = datas[0]
+    data.color = "blue"
     const numChars = 10
     const [description, setDescription] = useState(truncateText(data.text, numChars))
     return(
@@ -33,7 +34,7 @@ const ProductDetails = () =>
                     <View style={productDetailsStyles.buttonContainerLeft}>
                         <ShareButton styles={productDetailsStyles.shareButton}/>
                         <View style={{width:10,}}></View>
-                        <LikeButton styles={productDetailsStyles.likeButton} isCard={false} />
+                        <LikeButton styles={{color:appColors.white}} isCard={false} />
                     </View>
                 </View>
                 
@@ -48,7 +49,7 @@ const ProductDetails = () =>
                         </View>
 
                         <View style={{ }}>
-                            <LikeButton styles={productDetailsStyles.likeButton} isCard={false} />
+                            <LikeButton styles={{color:appColors.black}} isCard={false}  />
                             <Text style={[customText.text, ]}>23</Text>
                         </View>
                     </View>
