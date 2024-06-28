@@ -100,3 +100,18 @@ exports.formatMoney = (m) => {
     return money.reverse().join('')
 }
 
+exports.countDatas = (datas) => {
+    let count = 0
+
+    for(let i of datas)
+    {
+        count += 1;
+        if(Array.isArray(i))
+        {
+            count += i.length;
+        }
+    }
+    return count;
+}
+
+

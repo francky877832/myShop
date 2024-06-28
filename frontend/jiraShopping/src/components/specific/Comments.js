@@ -6,7 +6,7 @@ import { appColors, appFont, customText } from '../../styles/commonStyles';
 import { commentsStyles } from '../../styles/commentsStyles';
 import { reshapeComments } from '../../utils/commonAppFonctions';
 import { Icon } from 'react-native-elements';
-import { sinceDate } from '../../utils/commonAppFonctions';
+import { sinceDate, countDatas} from '../../utils/commonAppFonctions';
 
 import { datas } from '../../utils/sampleDatas';
 
@@ -100,13 +100,14 @@ const Comments = () =>
                         <Text style={[customText.text, {fontWeight:"bold",fontSize:20,color:appColors.black}]}>Une Questions ?</Text>
                 </Pressable>
 
-                <Pressable onPress={()=>{_displayComments(isAll ? initialNumberOfComments : comments.total )}} style={[{alignSelf:"flex-end",}]}>
+                <Pressable onPress={()=>{_displayComments(isAll ? initialNumberOfComments : comments.total )}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
                     {
                         !isAll ?
                         <Text style={[customText.text,{color:appColors.green,}]}>Tout Afficher</Text>
                         :
                         <Text style={[customText.text, {color:appColors.secondaryColor1}]}>Afficher Moins</Text>
                     }
+                        <Text style={[customText.text,{color:appColors.black,}]}>({countDatas(datas)})</Text>
                 </Pressable>
             </View>
                 <FlatList

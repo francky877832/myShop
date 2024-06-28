@@ -7,7 +7,7 @@ import { productStyles } from "./productStyles";
 export const productDetailsStyles = StyleSheet.create({
     container : 
     {
-        top : 0,
+        //top : 0,
         height : screenHeight,
     },
     buttonContainer : 
@@ -19,6 +19,11 @@ export const productDetailsStyles = StyleSheet.create({
         zIndex : 99,
         backgroundColor : appColors.lightBlack,
     },
+    getBackPosition :
+    {
+        bottom : 30 //to get back position from buttonContainer
+    },
+
     buttonContainerLeft : 
     {
        flexDirection : "row",

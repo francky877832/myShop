@@ -27,18 +27,18 @@ const ProductDetails = () =>
     const numChars = 10
     const [description, setDescription] = useState(truncateText(data.text, numChars))
     return(
-        <View style={productDetailsStyles.container}>
-            <ScrollView contentContainerStyle={[{bottom:20,}]}>
-                <View style={productDetailsStyles.buttonContainer}>
-                    <PrevButton styles={productDetailsStyles.prevButton}/>
-                    <View style={productDetailsStyles.buttonContainerLeft}>
-                        <ShareButton styles={productDetailsStyles.shareButton}/>
-                        <View style={{width:10,}}></View>
-                        <LikeButton styles={{color:appColors.white}} isCard={false} />
+        <SafeAreaView style={productDetailsStyles.container}>
+            <ScrollView contentContainerStyle={[productDetailsStyles.getBackPosition,{}]}>
+                    <View style={productDetailsStyles.buttonContainer}>
+                        <PrevButton styles={productDetailsStyles.prevButton}/>
+                        <View style={productDetailsStyles.buttonContainerLeft}>
+                            <ShareButton styles={productDetailsStyles.shareButton}/>
+                            <View style={{width:10,}}></View>
+                            <LikeButton styles={{color:appColors.white}} isCard={false} />
+                        </View>
                     </View>
-                </View>
-                
-                <CarouselImage styles={productDetailsStyles.carousselIamge} />
+
+                    <CarouselImage styles={productDetailsStyles.carousselIamge} />
 
                 <View style={[productDetailsStyles.underCaroussel]}>
                     <View style={productDetailsStyles.since}>
@@ -139,7 +139,7 @@ const ProductDetails = () =>
                 </View>
 
 
-        </View>
+        </SafeAreaView>
     )
 }
 
