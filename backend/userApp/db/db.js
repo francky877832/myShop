@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
-const faker = require('faker');
+
 
 const connectDB = async () => {
     try {
