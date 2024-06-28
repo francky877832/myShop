@@ -1,8 +1,8 @@
 
 exports.sinceDate = (_date) => {
     const date2 = new Date(_date)
-    const date = Date.now() - date2
-    console.log(date2)
+    const date = Date.now() - date2.getTime()
+    //console.log(Date.now() + " - " + date2.getTime() + " = " + date)
     let oneDay = 1000 * 60 * 60 * 24
 
     let years = Math.floor(date/(oneDay*365))
@@ -74,7 +74,29 @@ exports.reshapeComments = (datas) => {
 }
 
 
-exports.formatMoney = () => {
-    
+exports.formatMoney = (m) => {
+    let money = [];
+    let money_separator = '.'
+    let m_tmp = m.toString().split('')
+    let money_reverse = []
+    for(let j=m_tmp.length-1;j>=0;j--)
+    {
+        if(m_tmp[j] != money_separator)
+        {
+            money_reverse.push(m_tmp[j])
+        }
+    }
+    for(let i in money_reverse)
+    {
+            if(money_reverse[i] != money_separator)
+            {
+                money.push(money_reverse[i])
+            }
+        if((i+1)%3 == 0 && i != money_reverse.length-1)
+        {
+            money.push(money_separator)
+        }
+    }
+    return money.reverse().join('')
 }
 

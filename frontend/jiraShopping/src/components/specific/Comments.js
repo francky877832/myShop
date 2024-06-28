@@ -6,6 +6,7 @@ import { appColors, appFont, customText } from '../../styles/commonStyles';
 import { commentsStyles } from '../../styles/commentsStyles';
 import { reshapeComments } from '../../utils/commonAppFonctions';
 import { Icon } from 'react-native-elements';
+import { sinceDate } from '../../utils/commonAppFonctions';
 
 import { datas } from '../../utils/sampleDatas';
 
@@ -43,6 +44,7 @@ const Comments = () =>
                                 <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
                             </Pressable>
                         </View>
+                        <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>Ecrit il y'a {sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }</Text></View>
                         {
                             comment.subComment && comment.subComment.length > 0
                             ?
@@ -63,15 +65,21 @@ const Comments = () =>
                                 ?
                                 comment.subComment.map((item)=>{
                                     return (
-                                        <View style={{flexDirection:"row-reverse",alignItems:"center"}} key={item.id_.toString()}>
-                                            <Pressable onPress={()=>{console.log(comment.id_)}} style={[styles.comment, styles.subComment]} >
-                                                <Text style={[commentsStyles.commentText]} >{item.text}</Text>
-                                            </Pressable>
+                                        <View style={[{flex:1}]}  key={item.id_.toString()}>
+                                            <View style={{flexDirection:"row-reverse",alignItems:"center"}}>
+                                                <Pressable onPress={()=>{console.log(comment.id_)}} style={[styles.comment, styles.subComment]} >
+                                                    <Text style={[commentsStyles.commentText]} >{item.text}</Text>
+                                                </Pressable>
 
-                                            <Pressable onPress={()=>{setInputValue("@"+comment.id_+" " +inputValue)}}>
-                                                <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
-                                            </Pressable>
+                                                <Pressable onPress={()=>{setInputValue("@"+comment.id_+" " +inputValue)}}>
+                                                    <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
+                                                </Pressable>
+                                            </View>
+
+                                            <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>Ecrit il y'a {sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }</Text></View>
+
                                         </View>
+        
                                     )
                                 })
                                 :

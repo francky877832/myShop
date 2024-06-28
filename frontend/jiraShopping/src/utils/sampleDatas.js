@@ -19,6 +19,7 @@ export const datas = [{
     "text" : "Jaime ce produit. Comment faire ?",
     "image" : '../../assets/images/product5.png',
     "updatedAt" : "2024-05-03",
+    "createdAt" : "2024-06-18T10:14:02.582+00:00",
 },
 {
     "buyer" : "66715deae5f65636347e7f9e",
@@ -44,6 +45,7 @@ export const datas = [{
     "text" : "Reponse a 1 Jaime ce produit. Comment faire ?",
     "image" : '../../assets/images/product.png',
     "updatedAt" : "20023-12-03",
+    "createdAt" : "2024-06-18T10:14:02.582+00:00",
 },
 {
     "buyer" : "66715deae5f65636347e7f9e",
@@ -68,6 +70,8 @@ export const datas = [{
     "username" : "Frack",
     "text" : "Jaime ce produit. Comment faire ?",
     "image" : '../../assets/images/product5.png',
+    "updatedAt" : "20023-12-03",
+    "createdAt" : "2024-06-18T10:14:02.582+00:00",
 },
 {
     "buyer" : "66715deae5f65636347e7f9e",
@@ -88,6 +92,8 @@ export const datas = [{
     "username" : "Frack",
     "text" : "Reponse a 2 Jaime ce produit. Comment faire ?",
     "image" : '../../assets/images/product.png',
+    "updatedAt" : "20023-12-03",
+    "createdAt" : "2024-06-18T10:14:02.582+00:00",
 },
 {
     "buyer" : "66715deae5f65636347e7f9e",
@@ -108,6 +114,8 @@ export const datas = [{
     "username" : "Frack",
     "text" : "reponse a 2 Jaime ce produit. Comment faire ?",
     "image" : '../../assets/images/product5.png',
+    "updatedAt" : "20023-12-03",
+    "createdAt" : "2024-06-18T10:14:02.582+00:00",
 },
 {
     "buyer" : "66715deae5f65636347e7f9e",
@@ -128,5 +136,8 @@ export const datas = [{
     "username" : "Frack",
     "text" : "Commetaire sans reponse. Comment faire ?",
     "image" : '../../assets/images/product5.png',
+    "updatedAt" : "20023-12-03",
+    "createdAt" : "2024-06-18T10:14:02.582+00:00",
+
 }
 ]

@@ -15,6 +15,7 @@ const SearchBar =  forwardRef((props, ref) => {
     return (
         <View style={[searchBarStyles.container, styles.searchBarContainer ]}>
             <Input placeholder={placeholder} value={value} onChangeText={onChangeText} ref={ref}
+            inputMode='search'
                 placeholderTextColor={placeholderTextColor}
                 style = {[searchBarStyles.input, isFocused && searchBarStyles.inputFocused, styles.searchBarInput]}
                 onFocus={() => setIsFocused(true)}
