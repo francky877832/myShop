@@ -1,6 +1,6 @@
 import { StyleSheet, } from "react-native";
 import { appColors, appFont } from "./commonStyles";
-
+import { productStyles } from "./productStyles";
 
 
 
@@ -10,6 +10,7 @@ export const commonSimpleComponentsStyles = StyleSheet.create({
     {
         likeIcon :
         {
+            ...productStyles.card,
             width : 25,
             height : 25,
         },
@@ -51,7 +52,7 @@ export const commonSimpleComponentsStyles = StyleSheet.create({
     {
         checkBox : 
         {
-            flexDirection:"row", 
+            flexDirection:"column", 
             justifyContent:"space-around", 
         },
         

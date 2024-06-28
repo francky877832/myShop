@@ -53,5 +53,16 @@ exports.ConditionChoice = (props) => {
 }
 
 
+exports.CustomButton = (props) => {
+    const { text, color, backgroundColor, onPress, styles } = props
+    
+    return(
+       <Pressable style={[styles.pressable, {backgroundColor:(backgroundColor || appColors.blue)}]} onPress={onPress}>
+            <Text style={[styles.text, {color:(color || appColors.white),}]}>{text}</Text>
+       </Pressable> 
+        )
+}
+
+
 
 

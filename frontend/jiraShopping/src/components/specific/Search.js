@@ -1,33 +1,40 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, SafeAreaView, TextInput, FlatList, Pressable, TouchableHighlight, ScrollView } from 'react-native';
+import { View, Text, SafeAreaView, TextInput, FlatList, Pressable, TouchableHighlight, ScrollView, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 
 //custom component
 import SearchBar from '../common/SearchBar';
 import EmptyLit from '../common/EmptyList';
-import { ConditionChoice } from "../common/CommonSimpleComponents"
-
+import { ScreenHeight } from 'react-native-elements/dist/helpers';
 //custom styles
 import { appColors, appFont } from '../../styles/commonStyles';
 import { searchStyles } from '../../styles/searchStyles';
 import { productStyles } from '../../styles/productStyles';
-
-
+import { productDetailsStyles } from '../../styles/productDetailsStyles';
+import { customText } from '../../styles/commonStyles';
+import ProductsList from '../common/ProductsList';
+import Filters from '../common/Filters';
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
+import { screenHeight } from '../../styles/commentsStyles';
 
 const Search = (props) => {
-    const [isMinPriceFocused, setIsMinPriceFocused] = useState(false)
-    const [isMaxPriceFocused, setIsMaxPriceFocused] = useState(false)
+    
     const [selectedCategories, setSelectCategories] = useState({})
+    const [selectedOrderBy, setSelectedOrderBy] = useState("")
+
     const [isNewFocused, setIsNewFocused] = useState(true)
     const [isOldFocused, setIsOldFocused] = useState(true)
+    const [minPrice, setMinPrice] = useState("")
+    const [maxPrice, setMaxPrice] = useState("")
+
+    const [showSuggestion, setShowSuggestion] = useState(true)
+    
 
     const searchBarRef = useRef(null)
     const scrollViewRef = useRef(null)
     //const datas = []
-
     
     const _handlePress = (id) => {
         setSelectCategories((prevSlectedCategories)=>{
@@ -39,6 +46,33 @@ const Search = (props) => {
         })
     }
 
+    const updateCategories = (id) => {
+        setSelectCategories((prevSlectedCategories)=>{
+            console.log(prevSlectedCategories)
+
+            return ({
+                ...prevSlectedCategories,
+                [id] : !prevSlectedCategories[id], 
+            })
+        })
+    }
+/*
+    const updateOrderBy = (id1, id2) => {
+        setSelectedOrderBy((prev)=>{
+            console.log(prev)
+            next1 = !prev[id1]
+            next2 = prev[id2]
+            if(next1 == next2 == true)
+                next2 = false
+            
+            return ({
+                ...prev,
+                [id1] : next1,
+                [id2] : next2,
+            })
+        })
+    }
+*/
     const _handleFocusTextInput = () => {
         if (searchBarRef.current) {
             searchBarRef.current.focus();
@@ -48,75 +82,33 @@ const Search = (props) => {
         scrollViewRef.current.scrollTo({ y: 0, animated: true });
     };
 
+   
+
     return(
-        <SafeAreaView style={searchStyles.container}>
+        <SafeAreaView style={[searchStyles.container,{height:screenHeight}]}>
             <View style={searchStyles.searchBar}>
-               <SearchBar ref={searchBarRef}  placeholder="Rechercher un produit" placeholderTextColor={appColors.mainColor} styles={searchStyles} isPrev={false}  />
+               <SearchBar ref={searchBarRef}  placeholder="Rechercher un produit" placeholderTextColor={appColors.mainColor} styles={searchStyles} isPrev={true}  />
             </View>
-            <ScrollView style={{}}>
 
-                <View style={searchStyles.filter}>
-                    <View style={searchStyles.priceContainer}>
+            <ScrollView contentContainerStyle={{flex:1,}}>
+                
+            <View style={searchStyles.filter}>
 
-                        <View style={{flexDirection:"row", justifyContent:"space-around"}}>
-                            <Text style={searchStyles.label}>Prix Min.</Text>
-                            <Text style={searchStyles.label}>Prix Max.</Text>
-                        </View>
 
-                        <View style={searchStyles.price}>
-                            <View style = {[searchStyles.minPrice]}>
-                                <TextInput placeholder="Prix min."
-                                    placeholderTextColor={appColors.mainColor}
-                                    style = {[searchStyles.input, isMinPriceFocused && searchStyles.inputFocused]}
-                                    onFocus={() => setIsMinPriceFocused(true)}
-                                    onBlur={() => setIsMinPriceFocused(false)}
-                                    onChangeText={(text) => {console.log(text)}}
-                                />
-                            </View>
-
-                        <Text>-</Text>
-
-                        <View style = {[searchStyles.maxPrice]}>
-                            <TextInput placeholder="Prix max."
-                                placeholderTextColor={appColors.mainColor}
-                                style = {[searchStyles.input, isMaxPriceFocused && searchStyles.inputFocused]}
-                                onFocus={() => setIsMaxPriceFocused(true)}
-                                onBlur={() => setIsMaxPriceFocused(false)}
-                                onChangeText={(text) => {console.log(text)}}
-                            />
+{/*Suggestion avec un productList*/}
+                        <Pressable onPress={()=>{setShowSuggestion(!showSuggestion)}} style={{backgroundColor:appColors.white, paddingLeft:5}}>
+                            <Text style={[customText.text, {fontWeight:"bold",color:appColors.green,textDecorationLine:"underline"}]}>{!showSuggestion ? "Suggestions" : "Filtres"}</Text>
+                        </Pressable>
+{ !showSuggestion ?
+                <Filters prices={[minPrice, setMinPrice, maxPrice, setMaxPrice ]} orderBy={[selectedOrderBy, setSelectedOrderBy]} category={[selectedCategories, _handlePress]} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
+:
+                    <View style={[productDetailsStyles.similarContainer,{top:0,paddingTop:5,left:0,}]}>
+                        <View style={{backgroundColor:appColors.white}}>
+                            <ProductsList datas={datas} horizontal={true} styles={{}} />
                         </View>
                     </View>
 
-
-                    <View style={searchStyles.conditionContainer}>
-                        <View style={{alignSelf : "center",}}>
-                            <Text style={searchStyles.label}>Condition</Text>
-                        </View>
-                        <ConditionChoice styles={{}} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
-                    </View>
-
-                    <View style={searchStyles.categoryContainer}>
-                        <View style={{alignSelf : "center",}}>
-                            <Text style={searchStyles.label}>Categories</Text>
-                        </View>
-
-                        <View style={searchStyles.flatlist}>
-                            <FlatList
-                                data={datas}
-                                renderItem={ ({item}) => { return (
-                                    <Pressable style={[productStyles.card, searchStyles.category, selectedCategories[item.id_] && searchStyles.categoryFocused ]} onPress={()=>{_handlePress(item.id_)}} >
-                                        <Text style={[searchStyles.textCategory, selectedCategories[item.id_] && searchStyles.textCategoryFocused]}>{item.email}</Text>
-                                    </Pressable> 
-                                )} }
-                                keyExtractor={ (item) => { return item.id_.toString(); } }
-                                ItemSeparatorComponent ={ (item) => { return <View style={searchStyles.categorySeparator}></View> }}
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                contentContainerStyle={{}}
-                            />
-                        </View>
-                    </View>
-
+}
                     <View style={[searchStyles.submit,]}>
                         <Pressable style={[searchStyles.pressableSubmit, productStyles.card]}>
                             <Text style={[searchStyles.label, searchStyles.textSubmit]}>Rechercher</Text>
@@ -126,7 +118,7 @@ const Search = (props) => {
 
                     <View style={searchStyles.historyContainer}>
                         <View style={searchStyles.historyLabelContainer}>
-                            <Text style={[searchStyles.label, searchStyles.historiqueLabel]}>Historique de recherche</Text>
+                            <Text style={[searchStyles.label, searchStyles.historyLabel]}>Historique de recherche</Text>
                             { datas.length === 0 ? false :
                                 <Pressable style={{}} >
                                     <Text style={[searchStyles.label, searchStyles.vider]}>Vider</Text>
@@ -154,9 +146,9 @@ const Search = (props) => {
                             />
                         </View>
                     </View>
-                    
                 </View>
-                </View>
+                
+
             </ScrollView>
         </SafeAreaView>
     )

@@ -16,26 +16,21 @@ const ProductsList = (props) => {
                             
 */}
 
-    const { datas } = props;
+    const { datas, horizontal, styles } = props;
 
     return(
-            <View style={productsListStyles.container}>
-                <View style={productsListStyles.productList}>
+            <View style={[productsListStyles.container, horizontal ? productsListStyles.containerHorizontal : false, styles.container]}>
                     <FlatList
                         data={datas}
-                        renderItem={ (item) => { return <Product details={item} style={productsListStyles.listItem} /> } }
+                        renderItem={ ({item}) => { return <Product item={item} styles={productsListStyles.listItem} horizontal={horizontal}/> } }
                         keyExtractor={ (item) => { return item.id_.toString(); } }
-                        horizontal={false}
-                        numColumns={ numProduct }
+                        horizontal={horizontal}
+                        numColumns={ horizontal ? 1 : numProduct }
                         ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={productsListStyles.flatlist}
+                        showsHorizontalScrollIndicator={horizontal}
+                        contentContainerStyle={[productsListStyles.flatlist, horizontal ? productsListStyles.flatlistHorizontal : false, styles.flatlist]}
                     />
-                </View>
-                        <View>
-                            <Text>Ok</Text>
-                        </View>
-                </View>
+            </View>
     )
 }
 

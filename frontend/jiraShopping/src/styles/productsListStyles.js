@@ -7,23 +7,33 @@ export const productsListStyles = StyleSheet.create({
     container : {
         flexDirection : "column",
         flex: 1,
-        backgroundColor : appColors.mainColor,
-
+        backgroundColor : appColors.white,
     },
 
-    productList :{
-        flex: 1,
+    flatlist :
+    {
+        //flex: 1,
         flexDirection : "column",
-        alignItems : "center",
-        alignSelf : "center",
-    },
-
-    flatlist :{
-        flex: 1,
-        flexDirection : "column",
-        backgroundColor : appColors.mainColor,
+        backgroundColor : appColors.white,
         justifyContent : "center",
-        paddingHorizontal : paddingForProductContainer.horizontal,
+        paddingHorizontal : paddingForProductContainer.horizontal/2,
+    },
+
+
+//HORİZONTAL FL
+    containerHorizontal : 
+    {
+        flexDirection : "row",
+        backgroundColor : appColors.white,
+    },
+ 
+    flatlistHorizontal :
+    {
+        //flex: 1,
+        flexDirection : "row",
+        backgroundColor : appColors.white,
+        justifyContent : "center",
+        paddingHorizontal : paddingForProductContainer.horizontal/2,
     },
 
 

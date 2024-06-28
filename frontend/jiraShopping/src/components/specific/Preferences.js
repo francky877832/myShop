@@ -3,15 +3,15 @@ import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Dimensions 
 
 //custom component
 import Top from '../common/Top';
-import ProductList from '../common/ProductsList';
+import ProductsList from '../common/ProductsList';
 
 //custom styles
 import { preferencesStyles } from '../../styles/preferencesStyles';
-//import { numProduct } from '../../styles/productStyles';
-
+import SearchResults from './SearchResults';
 
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
+import { appColors } from '../../styles/commonStyles';
 
 const Preferences = (props) => {
 {/*
@@ -19,18 +19,24 @@ const Preferences = (props) => {
                             
 */}
 
-
+    const [isSearch, setIsSearch] = useState(true)
 
     return(
-        <SafeAreaView>
+        <SafeAreaView style={{flex:1,}}>
                 <View style={preferencesStyles.container}>
                     <View style={preferencesStyles.top}>
                         <Top />
                     </View>
 
-                    <ScrollView style={preferencesStyles.list}>
-                        <ProductList datas={datas} />
-                    </ScrollView>
+                { !isSearch ?
+                        <View style={preferencesStyles.list}>
+                            <ProductsList datas={datas} horizontal={false} styles={{}} />
+                        </View>
+                    :
+                        <View style={[{}]}>
+                            <SearchResults styles={{}}/>
+                        </View>
+                }
                 </View>
         </SafeAreaView>
     )

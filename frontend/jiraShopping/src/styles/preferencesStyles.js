@@ -8,16 +8,21 @@ export const preferencesStyles = StyleSheet.create({
     container : 
     {
         flex : 1,
-        top : 5,
+        top : 0,
+        backgroundColor : appColors.white,
+
     },
     top :
     {
-        
+        backgroundColor : appColors.white,
+        borderBottomWidth : 1,
+        borderBottomColor : appColors.lightWhite,
     },
     list :
     {
-        top : 20, 
-        flex : 1, 
+        flex : 1,
+        top : 10, 
+        paddingBottom : 30,
     },
 
 })

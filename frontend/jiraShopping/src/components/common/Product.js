@@ -8,15 +8,15 @@ import { productStyles } from '../../styles/productStyles';
 import { customText } from '../../styles/commonStyles';
 
 const Product = (props) => {
-    const { item } = props.details;
+    const { item, horizontal } = props;
     console.log(item)
     const [like, setLikeIcon ] = useState(item.liked)
     return(
 
         <SafeAreaView>
-            <View style={[productStyles.container, productStyles.card]} >
+            <View style={[productStyles.container, productStyles.card, horizontal ? productStyles.containerHorizontal : false]} >
                 <Pressable style={ productStyles.pressable } onPress = { ()=>{ console.log("product")} } >
-                    <Image source={require('../../assets/images/product5.png')}  style={productStyles.image} />
+                    <Image source={require('../../assets/images/product5.png')}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
                     <View style={ productStyles.text } >
                         <View style={{ flexDirection:"column", justifyContent:"flex-start", }} >
                             <Text numberOfLines={1} style={productStyles.shopName}> @{item.username} | </Text>

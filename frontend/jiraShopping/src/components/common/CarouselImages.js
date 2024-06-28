@@ -26,7 +26,7 @@ const CarouselImage = () =>
 
   return (
     <View style={caourselImageStyles.container}>
-      <Carousel loop={true} width={screenWidth} height={400} autoPlay={true} data={datas} scrollAnimationDuration={1000} renderItem={renderItem}/>
+      <Carousel loop={true} width={screenWidth} height={screenWidth*1.2} autoPlay={true} data={datas} scrollAnimationDuration={1000} renderItem={renderItem}/>
     </View>
   );
 

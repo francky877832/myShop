@@ -9,24 +9,29 @@ export const topStyles = StyleSheet.create({
     {
         flex : 1,
         flexDirection : "row",
+        justifyContent : "space-between",
+        alignItems : "center",
         paddingHorizontal : 10,
-        
     },
-    searchBarContainer : 
+//A passer a searchbar
+    searchBarContainer :
     {
-        backgroundColor : appColors.mainColor,
-        borderRadius : 40,
+        width : "101%",
+        justifyContent : "center",
+        alignItems : "center",
     },
-    searchBarInput : 
+//A passer a searchbar
+    searchBarInput :
     {
         borderWidth : 0,
-        borderRadius : 20,
-        backgroundColor : appColors.white,
+        width : "100%",
+        borderColor: appColors.white,
     },
+
     pressableBar : 
     {
         width : "90%"
-        
+        //flex : 1,
     },
 
     notification : 
