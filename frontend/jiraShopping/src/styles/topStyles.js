@@ -9,14 +9,14 @@ export const topStyles = StyleSheet.create({
     {
         flex : 1,
         flexDirection : "row",
-        justifyContent : "space-between",
+        justifyContent : "center",
         alignItems : "center",
-        paddingHorizontal : 10,
+        backgroundColor : appColors.white,
     },
 //A passer a searchbar
     searchBarContainer :
     {
-        width : "101%",
+        width : "100%",
         justifyContent : "center",
         alignItems : "center",
     },
@@ -27,17 +27,25 @@ export const topStyles = StyleSheet.create({
         width : "100%",
         borderColor: appColors.white,
     },
+    inputContainerStyle : 
+    {
+        borderWidth : 0,
+        borderColor : appColors.white,
+    },
 
     pressableBar : 
     {
-        width : "90%"
-        //flex : 1,
+        width : "90%",
+        borderWidth : 0,
+        borderColor : appColors.red,
     },
 
     notification : 
     {
-       
-        
+        width : "10%",
+        //height : "100%",
+        //borderWidth : 1,
+        //borderColor : appColors.white,
     },
     
     searchBar : 

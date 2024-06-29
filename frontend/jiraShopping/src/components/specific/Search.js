@@ -29,7 +29,6 @@ const Search = (props) => {
     const [minPrice, setMinPrice] = useState("")
     const [maxPrice, setMaxPrice] = useState("")
 
-    const [showSuggestion, setShowSuggestion] = useState(true)
     
 
     const searchBarRef = useRef(null)
@@ -96,17 +95,8 @@ const Search = (props) => {
 
 
 {/*Suggestion avec un productList*/}
-                        <Pressable onPress={()=>{setShowSuggestion(!showSuggestion)}} style={{backgroundColor:appColors.white, paddingLeft:5}}>
-                            <Text style={[customText.text, {fontWeight:"bold",color:appColors.green,textDecorationLine:"underline"}]}>{!showSuggestion ? "Suggestions" : "Filtres"}</Text>
-                        </Pressable>
-{ !showSuggestion ?
-                <Filters prices={[minPrice, setMinPrice, maxPrice, setMaxPrice ]} orderBy={[selectedOrderBy, setSelectedOrderBy]} category={[selectedCategories, _handlePress]} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
-:
-                    <View style={[productDetailsStyles.similarContainer,{top:0,paddingTop:5,left:0,}]}>
-                            <ProductsList datas={datas} horizontal={true} styles={searchStyles} />
-                    </View>
-
-}
+                        
+                <Filters prices={[minPrice, setMinPrice, maxPrice, setMaxPrice ]} orderBy={[selectedOrderBy, setSelectedOrderBy]} category={[selectedCategories, _handlePress]} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} suggestion={true} />
                     <View style={[searchStyles.submit,]}>
                         <Pressable style={[searchStyles.pressableSubmit, productStyles.card]}>
                             <Text style={[searchStyles.label, searchStyles.textSubmit]}>Rechercher</Text>
@@ -126,7 +116,7 @@ const Search = (props) => {
 
                         <View style={searchStyles.historyFlatlist}>
                             <FlatList
-                                data={datas}
+                                data={[datas]}
                                 renderItem={ ({item}) => {  return (
                                     <Pressable style={[ searchStyles.history, ]} >
                                         <Pressable style={{}} >

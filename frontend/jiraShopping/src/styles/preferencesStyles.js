@@ -18,7 +18,8 @@ export const preferencesStyles = StyleSheet.create({
     },
     top :
     {
-        backgroundColor : appColors.lightWhite,
+        width : "100%",
+        backgroundColor : appColors.white,
         borderBottomWidth : 1,
         borderBottomColor : appColors.lightWhite,
         //height : 35,
@@ -26,7 +27,6 @@ export const preferencesStyles = StyleSheet.create({
     flatlist :
     {
         backgroundColor : appColors.lightWhite,
-
     },
 
 })

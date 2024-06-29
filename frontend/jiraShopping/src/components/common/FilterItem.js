@@ -32,7 +32,7 @@ const FilterItem = (props) => {
                     item.subCategories.map((item, index) =>{
                         return(
                         <View style={filterItemStyles.checkBox} key={index}>
-                            <CheckBox title={item.name} containerStyle={{ borderWidth:0, margin:1,padding:0, }} textStyle={[customText.text,filterItemStyles.checkBoxText]} checked={selectedCategories[item.id]} onPress={() => { updateCategories(item.id);  }} />
+                            <CheckBox title={item.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} checked={selectedCategories[item.id]} onPress={() => { updateCategories(item.id);  }} />
                         </View>
                     )})
                 }
@@ -44,13 +44,20 @@ const filterItemStyles =  StyleSheet.create({
     container :
     {
         flex:1, 
+        backgroundColor:appColors.white,
         paddingTop : 10,
-        backgroundColor:appColors.lightWhite,
     },
     checkBox :
     {
         width : screenWidth/2.5,
         paddingLeft : 20
+    },
+    contentContainer :
+    {
+        borderWidth:0, 
+        margin:1,
+        padding:0, 
+        backgroundColor:appColors.white,
     },
 
     title :

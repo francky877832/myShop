@@ -6,13 +6,49 @@ import Product from './Product';
 //custom styles
 import { productsListStyles } from '../../styles/productsListStyles';
 import { numProduct } from '../../styles/productStyles';
+import Filters from './Filters';
 
 
 const ProductsList = (props) => {
     const { datas, horizontal, styles } = props;
+    const [selectedCategories, setSelectCategories] = useState({})
+    const [selectedOrderBy, setSelectedOrderBy] = useState("")
+
+    const [isNewFocused, setIsNewFocused] = useState(true)
+    const [isOldFocused, setIsOldFocused] = useState(true)
+    const [minPrice, setMinPrice] = useState("")
+    const [maxPrice, setMaxPrice] = useState("")
+
     
 
+    const searchBarRef = useRef(null)
+    const scrollViewRef = useRef(null)
+    //const datas = []
+    
+    const _handlePress = (id) => {
+        setSelectCategories((prevSlectedCategories)=>{
+            console.log(prevSlectedCategories)
+            return ({
+                ...prevSlectedCategories,
+                [id] : !prevSlectedCategories[id], 
+            })
+        })
+    }
+
+    const updateCategories = (id) => {
+        setSelectCategories((prevSlectedCategories)=>{
+            console.log(prevSlectedCategories)
+
+            return ({
+                ...prevSlectedCategories,
+                [id] : !prevSlectedCategories[id], 
+            })
+        })
+    }
+
     return(
+    <View style={{flex:1,}}>
+            <Filters prices={[minPrice, setMinPrice, maxPrice, setMaxPrice ]} orderBy={[selectedOrderBy, setSelectedOrderBy]} category={[selectedCategories, _handlePress]} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} suggestion={true} />
             <View style={[productsListStyles.container, horizontal ? productsListStyles.containerHorizontal : false, styles.productContainer]}>
                     <FlatList
                         data={datas}
@@ -25,6 +61,7 @@ const ProductsList = (props) => {
                         contentContainerStyle={[productsListStyles.flatlist, horizontal ? productsListStyles.flatlistHorizontal : false, styles.flatlist]}
                     />
             </View>
+        </View>
     )
 }
 

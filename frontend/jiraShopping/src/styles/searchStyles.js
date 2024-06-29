@@ -1,18 +1,17 @@
 import { StyleSheet, } from "react-native";
-import { appColors, appFont, screenWidth} from "./commonStyles";
+import { appColors, appFont, screenWidth, screenHeight} from "./commonStyles";
 
 import { customText } from "./commonStyles";
 
 export const searchStyles = StyleSheet.create({
     container : 
     {
-        //flex : 1,
-        backgroundColor : appColors.lightWhite2,
+        flex : 1,
     },
     filter :
     {
-       //flex : 1
-       backgroundColor : appColors.white,
+        flex : 1,
+        backgroundColor : appColors.lightWhite,
     },
     searchBar : 
     {
@@ -47,7 +46,8 @@ export const searchStyles = StyleSheet.create({
     historyContainer :
     {
        flex : 1,
-       top : 20,
+       top : 50,
+       backgroundColor : appColors.lightWhite,
     },
     history:
     {
@@ -61,7 +61,7 @@ export const searchStyles = StyleSheet.create({
     },
     historyFlatlist:
     {
-       
+       flex : 1,
         backgroundColor : appColors.white,
         paddingLeft : 10,
         marginTop : 10,
@@ -101,7 +101,7 @@ export const searchStyles = StyleSheet.create({
     submit:
     {
         width : "100%",
-        bottom : 20, 
+        //top : 20, 
         flexDirection : "row",
         justifyContent: 'center',
         alignItems: 'center',
@@ -127,7 +127,7 @@ export const searchStyles = StyleSheet.create({
     },
     flatlist :
     {
-        backgroundColor : appColors.lightWhite2,
+        backgroundColor : appColors.lightWhite,
     }
     
 

@@ -22,7 +22,7 @@ const SearchBar =  forwardRef((props, ref) => {
                 onBlur={() => setIsFocused(false)}
                 underlineColorAndroid='transparent'
                 inputStyle={[customText.text]}
-                inputContainerStyle={ { borderBottomWidth: isPrev ? 1 : 1,borderRadius:styles.searchBarInput.borderRadius, flex:1, }}
+                containerStyle={ [{borderBottomWidth: isPrev ? 1 : 0,borderRadius:styles.searchBarInput.borderRadius, flex:1}, styles.inputContainerStyle]}
                 leftIcon={ !isPrev ? false :
                     <Pressable onPress={() => {console.log("Go")}}>
                         <Icon name='arrow-back' type='ionicon' />

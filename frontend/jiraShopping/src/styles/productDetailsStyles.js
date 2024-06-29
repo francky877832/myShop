@@ -92,12 +92,6 @@ export const productDetailsStyles = StyleSheet.create({
         paddingTop : 10,
     },
 
-    similarContainer : 
-    {
-        top : 50,
-        paddingBottom : 60,
-    },
-
     bottom :
     {
         flexDirection : "row",

@@ -7,9 +7,34 @@ export const filtersStyles = StyleSheet.create({
     container :
     {
         backgroundColor : appColors.white,
-        //flex : 1,
-        paddingTop : 10,
-        paddingBottom : 30,
+        flex : 1,
+        //paddingTop : 5,
+       //paddingBottom : 10,
+    },
+
+    similarContainer : 
+    {
+        top :60,
+        paddingBottom : 5,
+        backgroundColor : appColors.lightWhite,
+    },
+
+    modalVisibleText : 
+    {
+        color: appColors.secondaryColor1
+    },
+    
+    filtres :
+    {
+        //top : 10,
+        justifyContent : "center",
+        paddingHorizontal : 5,
+        borderTopWidth : 1,
+        borderTopColor : appColors.secondaryColor3,
+    },
+    modal :
+    {
+        flex : 1,
     },
 
     priceContainer : 
@@ -88,7 +113,22 @@ export const filtersStyles = StyleSheet.create({
         width: screenWidth,
         marginTop : 25,
         alignItems : "flex-start",
+        backgroundColor : appColors.lightWhite2,
     },
+    
+    radioContainer: 
+    {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+        left : 40,
+    },
+    radioBox: 
+    {
+        alignSelf : "flex-start",
+        width : "100%",
+    },
+
 
     categoryFocused :
     {
@@ -109,7 +149,7 @@ export const filtersStyles = StyleSheet.create({
        color : appColors.secondaryColor5,
     },
     
-    flatlist :
+    filterFlatlist :
     {
         //flex : 1, 
         top : 10,
@@ -140,42 +180,30 @@ export const filtersStyles = StyleSheet.create({
     topContainer :
     {
         flexDirection:"row",
-        justifyContent:"space-between",
-        paddingLeft: 10,
-        backgroundColor : appColors.white,
-    },
-    trier :
-    {
-       
-        justifyContent : "center",
-        alignItems : "space-around",
-
-    },
-
-    radioContainer: 
-    {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-        left : 40,
-    },
-    radioBox: 
-    {
-        alignSelf : "flex-start",
-        width : "100%",
-        backgroundColor : appColors.lightWhite
-    },
-    
-    filtres :
-    {
-        justifyContent : "center",
-        borderLeftWidth : 1,
+        justifyContent:"space-around",
+        alignItems : "center",
         borderBottomWidth : 1,
-        borderColor : appColors.lightBlack,
-        borderRadius : 20,
-        left : 5,
-        
+        borderBottomColor : appColors.secondaryColor3,
+        //backgroundColor : appColors.red,
+        //height : 200,
+    
     },
+    trierFiltrer :
+    {
+        flex : 1,
+       flexDirection : "row",
+       justifyContent:"center",
+       alignItems : "center",
+       paddingHorizontal : 20,
+       paddingVertical : 10,
+
+    },
+    trierFiltrerFocused :
+    {
+        borderTopWidth : 1,
+        borderTopColor : appColors.secondaryColor1,
+    },
+
     pressableFilter :
     {
        borderWidth : 1,
@@ -183,6 +211,7 @@ export const filtersStyles = StyleSheet.create({
        padding : 7,
        paddingHorizontal : 10,
        borderRadius : 20,
+       flexDirection : "row",
     },
     pressableFilterFocused :
     {
@@ -190,6 +219,19 @@ export const filtersStyles = StyleSheet.create({
        borderColor : appColors.secondaryColor1,
        backgroundColor : appColors.lightOrange,
     },
+
+
+    
    
+//FOR PRODUCTLIST
+    productContainer :
+    {
+        backgroundColor : appColors.lightWhite,
+    },
+    flatlist :
+    {
+        backgroundColor : appColors.lightWhite,
+    }
+
 
 })

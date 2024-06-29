@@ -30,6 +30,7 @@ export const searchBarStyles = StyleSheet.create({
         justifyContent : "center",
         alignItems : "center",
     },
+   
     inputFocused : 
     {
         borderColor: appColors.secondaryColor1,
