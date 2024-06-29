@@ -12,14 +12,16 @@ import SearchResults from './SearchResults';
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
 import { appColors } from '../../styles/commonStyles';
+import ProductsListWithFilters from '../common/ProductsListWithFilters';
 
 const Preferences = (props) => {
 {/*
                             numColumns={ calculateNumColumns() }
-                            
+                                <ProductsList datas={datas} horizontal={false} styles={preferencesStyles} />
+                        
 */}
 
-    const [isSearch, setIsSearch] = useState(true)
+    const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
 
     return(
         <SafeAreaView style={{flex:1,}}>
@@ -29,7 +31,7 @@ const Preferences = (props) => {
                     </View>
 
                 { isSearch ?
-                            <ProductsList datas={datas} horizontal={false} styles={preferencesStyles} />
+                            <ProductsListWithFilters datas={datas} horizontal={false} styles={preferencesStyles} />
                     :
                         <View style={[{}]}>
                             <SearchResults styles={{}}/>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef,  } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { View, Text, Pressable, TextInput, ScrollView, FlatList} from 'react-native';
 
 import { CheckBox } from 'react-native-elements';
@@ -16,17 +16,18 @@ import ProductsList from './ProductsList';
 import { datas } from '../../utils/sampleDatas';
 import { searchStyles } from '../../styles/searchStyles';
 import { productStyles } from '../../styles/productStyles';
+import { formatMoney } from '../../utils/commonAppFonctions';
+
+//Context
+import { FilterContext } from '../../context/FilterContext';
 
 const Filters = (props) => {
 
-    const {prices, orderBy, category, isOldFocused, setIsOldFocused, isNewFocused, setIsNewFocused, suggestion} = props
+    const {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, _handlePress, updateCategories }  =  useContext(FilterContext)
+
+    const { suggestion } = props
     const [showSuggestion, setShowSuggestion] = useState(suggestion)
 
-    const minPrice = prices[0]; const setMinPrice = prices[1]
-    const maxPrice = prices[2]; const setMaxPrice = prices[3]
-
-    const selectedCategories = category[0]; const updateCategories = category[1]
-    const selectedOrderBy = orderBy[0]; const setSelectedOrderBy = orderBy[1]
 
     const categories = [
         {
@@ -118,10 +119,9 @@ const Filters = (props) => {
 
 
     return (
-        <View>
+        <View style={ [{}]}>
                 {suggestion && !showSuggestion &&
-                            <Pressable onPress={()=>{setShowSuggestion(!showSuggestion)}} style={{backgroundColor:appColors.white
-                            , paddingLeft:5,position:"relative",flexDirection:"row"}}>
+                            <Pressable onPress={()=>{setShowSuggestion(!showSuggestion)}} style={{backgroundColor:appColors.white, paddingLeft:5,position:"relative",flexDirection:"row"}}>
                                 <Icon name='bulb' type='ionicon' size={18} color={appColors.green} />
                                 <Text style={[customText.text, {fontWeight:"bold",color:appColors.green,textDecorationLine:"underline"}]}>Suggestions</Text>
                             </Pressable>
@@ -178,7 +178,7 @@ const Filters = (props) => {
                                     onFocus={() => setIsMinPriceFocused(true)}
                                     onBlur={() => setIsMinPriceFocused(false)}
                                     value={minPrice}
-                                    onChangeText={(price) => setMinPrice(price)}
+                                    onChangeText={(price) => setMinPrice(formatMoney(price))}
                                 />
                             </View>
 
@@ -192,7 +192,7 @@ const Filters = (props) => {
                                 onFocus={() => setIsMaxPriceFocused(true)}
                                 onBlur={() => setIsMaxPriceFocused(false)}
                                 value={maxPrice}
-                                onChangeText={(price) => setMaxPrice(price)}
+                                onChangeText={(price) => setMaxPrice(formatMoney(price))}
                             />
                         </View>
                     </View>
@@ -235,13 +235,13 @@ const Filters = (props) => {
         }
 
         {modalFiltersVisible && modalCategoryVisible &&
-                    <View style={filtersStyles.categoryContainer}>
+                    <View style={[filtersStyles.categoryContainer, filtersStyles.cardItem]}>
                         <View style={{alignSelf : "center",}}>
                             <Text style={[customText.text, filtersStyles.label]}>Categories</Text>
                         </View>
 
 
-                        <View style={filtersStyles.filterFlatlist}>
+                        <View style={[filtersStyles.filterFlatlist,filtersStyles.cardItem]}>
                             <FlatList
                                 data={categories}
                                 renderItem={ ({item}) => { return <FilterItem selectedCategories={selectedCategories} item={item} updateCategories={updateCategories} /> } }

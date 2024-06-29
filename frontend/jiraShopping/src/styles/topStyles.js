@@ -23,29 +23,21 @@ export const topStyles = StyleSheet.create({
 //A passer a searchbar
     searchBarInput :
     {
-        borderWidth : 0,
         width : "100%",
-        borderColor: appColors.white,
     },
     inputContainerStyle : 
     {
-        borderWidth : 0,
         borderColor : appColors.white,
     },
 
     pressableBar : 
     {
         width : "90%",
-        borderWidth : 0,
-        borderColor : appColors.red,
     },
 
     notification : 
     {
-        width : "10%",
-        //height : "100%",
-        //borderWidth : 1,
-        //borderColor : appColors.white,
+        
     },
     
     searchBar : 

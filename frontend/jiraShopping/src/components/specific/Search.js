@@ -21,56 +21,15 @@ import { screenHeight } from '../../styles/commentsStyles';
 
 const Search = (props) => {
     
-    const [selectedCategories, setSelectCategories] = useState({})
-    const [selectedOrderBy, setSelectedOrderBy] = useState("")
-
-    const [isNewFocused, setIsNewFocused] = useState(true)
-    const [isOldFocused, setIsOldFocused] = useState(true)
-    const [minPrice, setMinPrice] = useState("")
-    const [maxPrice, setMaxPrice] = useState("")
 
     
 
     const searchBarRef = useRef(null)
     const scrollViewRef = useRef(null)
     //const datas = []
-    
-    const _handlePress = (id) => {
-        setSelectCategories((prevSlectedCategories)=>{
-            console.log(prevSlectedCategories)
-            return ({
-                ...prevSlectedCategories,
-                [id] : !prevSlectedCategories[id], 
-            })
-        })
-    }
 
-    const updateCategories = (id) => {
-        setSelectCategories((prevSlectedCategories)=>{
-            console.log(prevSlectedCategories)
-
-            return ({
-                ...prevSlectedCategories,
-                [id] : !prevSlectedCategories[id], 
-            })
-        })
-    }
 /*
-    const updateOrderBy = (id1, id2) => {
-        setSelectedOrderBy((prev)=>{
-            console.log(prev)
-            next1 = !prev[id1]
-            next2 = prev[id2]
-            if(next1 == next2 == true)
-                next2 = false
-            
-            return ({
-                ...prev,
-                [id1] : next1,
-                [id2] : next2,
-            })
-        })
-    }
+   
 */
     const _handleFocusTextInput = () => {
         if (searchBarRef.current) {
@@ -85,18 +44,19 @@ const Search = (props) => {
 
     return(
         <SafeAreaView style={[searchStyles.container,{height:screenHeight}]}>
-            <View style={searchStyles.searchBar}>
+            <View style={[searchStyles.searchBar,{}]}>
                <SearchBar ref={searchBarRef}  placeholder="Rechercher un produit" placeholderTextColor={appColors.mainColor} styles={searchStyles} isPrev={true}  />
+                <View style={{height:5,width:"100%",backgroundColor:appColors.white,}}></View>
             </View>
 
-            <ScrollView contentContainerStyle={{flex:1,}}>
+            <ScrollView contentContainerStyle={{flex:1}}>
                 
             <View style={searchStyles.filter}>
 
 
 {/*Suggestion avec un productList*/}
                         
-                <Filters prices={[minPrice, setMinPrice, maxPrice, setMaxPrice ]} orderBy={[selectedOrderBy, setSelectedOrderBy]} category={[selectedCategories, _handlePress]} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} suggestion={true} />
+                <Filters suggestion={true} />
                     <View style={[searchStyles.submit,]}>
                         <Pressable style={[searchStyles.pressableSubmit, productStyles.card]}>
                             <Text style={[searchStyles.label, searchStyles.textSubmit]}>Rechercher</Text>
@@ -116,7 +76,7 @@ const Search = (props) => {
 
                         <View style={searchStyles.historyFlatlist}>
                             <FlatList
-                                data={[datas]}
+                                data={datas}
                                 renderItem={ ({item}) => {  return (
                                     <Pressable style={[ searchStyles.history, ]} >
                                         <Pressable style={{}} >

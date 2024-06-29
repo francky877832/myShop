@@ -24,7 +24,7 @@ const FilterItem = (props) => {
 
     return(
 
-            <View style={filterItemStyles.container} >
+            <View style={[filterItemStyles.container,{}]} >
                 <View style={[filterItemStyles.title]}>
                     <Text style={[customText.text, {fontWeight:"bold",}]}>{item.name}</Text>
                 </View>
@@ -70,7 +70,8 @@ const filterItemStyles =  StyleSheet.create({
         marginLeft:0,
         color:appColors.secondaryColor5,
         fontWeight:"normal",
-    }
+    },
+
 
 })
 

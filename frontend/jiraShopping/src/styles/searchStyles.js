@@ -45,7 +45,7 @@ export const searchStyles = StyleSheet.create({
     
     historyContainer :
     {
-       flex : 1,
+       //flex : 1,
        top : 50,
        backgroundColor : appColors.lightWhite,
     },

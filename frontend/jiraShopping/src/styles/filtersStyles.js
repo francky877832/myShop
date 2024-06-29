@@ -184,6 +184,8 @@ export const filtersStyles = StyleSheet.create({
         alignItems : "center",
         borderBottomWidth : 1,
         borderBottomColor : appColors.secondaryColor3,
+        borderTopWidth : 1,
+        borderTopColor : appColors.lightWhite,
         //backgroundColor : appColors.red,
         //height : 200,
     
@@ -216,12 +218,32 @@ export const filtersStyles = StyleSheet.create({
     pressableFilterFocused :
     {
         borderWidth : 2,
-       borderColor : appColors.secondaryColor1,
-       backgroundColor : appColors.lightOrange,
+        borderColor : appColors.secondaryColor1,
+        backgroundColor : appColors.lightOrange,
     },
 
-
-    
+    cardItem : 
+    {
+        borderRadius: 80,
+        shadowColor: appColors.lightWhite,
+        shadowOffset: { width: 10, height: 20 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 50,
+        backgroundColor : appColors.lightWhite,
+        paddingTop : 10,
+    },
+  /*  cardItem : 
+    {
+        borderRadius: 20,
+        shadowColor: appColors.lightWhite,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 50,
+        backgroundColor : appColors.lightWhite,
+    },
+*/
    
 //FOR PRODUCTLIST
     productContainer :

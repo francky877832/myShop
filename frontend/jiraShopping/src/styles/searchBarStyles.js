@@ -6,7 +6,7 @@ export const searchBarStyles = StyleSheet.create({
     container: 
     {
         flex : 1,
-        borderWidth: 1,
+        borderWidth: 0,
         borderColor: appColors.mainColor,
         backgroundColor : appColors.white,
         flexDirection : "column",
@@ -19,7 +19,7 @@ export const searchBarStyles = StyleSheet.create({
     {
         width: '100%',
         height: 35,
-        borderColor: appColors.lightBlack,
+        borderColor: appColors.lightWhite,
         borderWidth: 1,
         paddingVertical: 15,
         paddingHorizontal : 20,

@@ -12,6 +12,8 @@ import Offers from '../components/specific/Offers';
 
 import HomeNavigation from '../navigation/HomeNavigation';
 
+//Contexts
+import { FilterProvider } from '../context/FilterContext';
 
 
 const Stack = createStackNavigator();
@@ -21,15 +23,17 @@ export default function MainNavigation() {
   const hide = false
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Preferences">
-        <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, }} />
-        <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
-        <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
-        <Stack.Screen name="Offers" component={Offers}  options={{ title: 'Offers', headerShown : false, tabBarVisible: false, }} />
+    <FilterProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Search">
+          <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, }} />
+          <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
+          <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
+          <Stack.Screen name="Offers" component={Offers}  options={{ title: 'Offers', headerShown : false, tabBarVisible: false, }} />
 
-      </Stack.Navigator>
-    </NavigationContainer>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </FilterProvider>
   );
 }
 
