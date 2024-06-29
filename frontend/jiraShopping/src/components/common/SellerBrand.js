@@ -16,7 +16,7 @@ const SellerBrand = (props) => {
 const sellerBrandStyles = StyleSheet.create({
     container :
     {
-
+        
     }
 })
 

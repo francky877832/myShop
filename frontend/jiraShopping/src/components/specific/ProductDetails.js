@@ -17,7 +17,7 @@ import { datas } from '../../utils/sampleDatas';
 import BadgeIcon from '../common/BadgeIcon';
 
 import ProductsList from '../common/ProductsList';
-
+import SellerBrand from '../common/SellerBrand';
 import { screenHeight, screenWidth } from '../../styles/commentsStyles';
 
 const ProductDetails = () =>
