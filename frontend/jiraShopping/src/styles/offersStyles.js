@@ -1,5 +1,5 @@
 import { StyleSheet, } from "react-native";
-import { appColors, appFont, screenWidth, customText} from "./commonStyles";
+import { appColors, appFont, screenWidth, customText, inputTextStyle} from "./commonStyles";
 
 
 import { commentsStyles } from "./commentsStyles";
@@ -9,13 +9,35 @@ export const offersStyles = StyleSheet.create({
     container :
     {
         flex : 1,
-        backgroundColor : appColors.white
+        backgroundColor : appColors.lightWhite
     },
-    offerContainer : //offer sans "s"
+    bottom : 
+    {
+        position : "absolute",
+        bottom : 0,
+        left : 0,
+        right : 0,
+        paddingVertical : 20,
+        backgroundColor : appColors.white,
+    },
+    inputContainer : 
+    {
+       flex : 1,
+    },
+    offerBottom : 
+    {
+        ...productStyles.card,
+        flexDirection : "row",
+        justifyContent : "space-around",
+        alignItems : "center",
+        width : "100%",
+        
+    },
+    offerContainer : //offer sans "s" la ou il ya le prix
     {
         flex : 1,
     },
-    offersContainer :
+    offersContainerFlatlist : //for flatlist
     {
         flex : 1,
         padding: 20,
@@ -45,14 +67,6 @@ export const offersStyles = StyleSheet.create({
         borderRadius : 10,
         width : "100%",
     },
-    offerBottom : 
-    {
-        ...productStyles.card,
-        flexDirection : "row",
-        justifyContent : "space-around",
-        alignItems : "center",
-        width : "100%",
-    },
     offerBottomText :
     {
         fontSize : 10,
@@ -61,19 +75,13 @@ export const offersStyles = StyleSheet.create({
 
     input :
     {
-        ...commentsStyles.input,
+        ...customText.text,
+        ...inputTextStyle,
+        ...commentsStyles.input, 
     },
     inputFocused :
     {
         ...commentsStyles.inputFocused,
-    },
-    inputContainer : 
-    {
-        position : "absolute",
-        bottom : 0,
-        left : 0,
-        right : 0,
-        paddingBottom : 20,
     },
     searchBarInput :
     {
@@ -98,7 +106,7 @@ export const offersStyles = StyleSheet.create({
         alignItems:"center",
         borderWidth:1,
         padding:20,
-        borderColor:appColors.lightBlack
+        borderColor:appColors.lightWhite,
     },
     offersBottomWaiting :
     {
@@ -107,6 +115,6 @@ export const offersStyles = StyleSheet.create({
         alignItems : "center",
         borderWidth:1,
         padding:20,
-        borderColor:appColors.lightBlack
+        borderColor:appColors.lightWhite
     }
 })

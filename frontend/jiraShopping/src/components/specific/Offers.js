@@ -147,7 +147,7 @@ const Offers = (props) => {
 
 
     return (
-        <View style={[offersStyles.container]}>
+        <ScrollView contentContainerStyle={[offersStyles.container]}>
             <FlatList
                     data={offers}
                     renderItem={ ({item}) => { return <OffersItem item={item} seller={seller} buyer={buyer} styles={{}} /> } }
@@ -155,8 +155,9 @@ const Offers = (props) => {
                     horizontal={false}
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={[offersStyles.offersContainer]}
+                    contentContainerStyle={[offersStyles.offersContainerFlatlist]}
                 />
+    <View style={[offersStyles.bottom]}>
                 {
                     (offers[offers.length-1].hasGotResponse == 0)
                     ?
@@ -192,7 +193,7 @@ const Offers = (props) => {
                                     <Text style={[customText.text,]}>Refuser</Text>
                                 </Pressable>
                                 <Pressable style={[offersStyles.offersBottomConfirmationButtom,{}]}>
-                                <Icon name='checkmark-circle' type='ionicon' size={24} color={appColors.green} />
+                                    <Icon name='checkmark-circle' type='ionicon' size={24} color={appColors.green} />
                                     <Text style={[customText.text,]}>Accepter</Text>
                                 </Pressable>
                             </View>
@@ -211,7 +212,8 @@ const Offers = (props) => {
                                             <Text style={[customText.text, ]}>Offre en attente de réponse</Text>
                                         </View>
                 }
-        </View>
+                </View>
+        </ScrollView>
     )
 }
 

@@ -1,5 +1,5 @@
 import { StyleSheet, } from "react-native";
-import { appColors, appFont } from "./commonStyles";
+import { appColors, appFont, customText, inputTextStyle } from "./commonStyles";
 
 
 export const searchBarStyles = StyleSheet.create({
@@ -17,6 +17,8 @@ export const searchBarStyles = StyleSheet.create({
     },
     input : 
     {
+        ...customText,
+        ...inputTextStyle,
         width: '100%',
         height: 35,
         borderColor: appColors.lightWhite,

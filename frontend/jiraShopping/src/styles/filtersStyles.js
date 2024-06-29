@@ -1,5 +1,5 @@
 import { StyleSheet, } from "react-native";
-import { appColors, appFont, screenWidth, customText} from "./commonStyles";
+import { appColors, appFont, screenWidth, customText, inputTextStyle} from "./commonStyles";
 
 
 
@@ -69,18 +69,16 @@ export const filtersStyles = StyleSheet.create({
     },
     input : 
     {
+        ...customText.text,
+        ...inputTextStyle,
         width : "100%",
         height: 20,
-        borderColor : "#ccc",
+        borderColor : appColors.secondaryColor3,
         borderWidth: 1,
         borderRadius: 5,
         paddingVertical: 10,
         paddingHorizontal : 20,
-        fontSize: 14,
-        color: "#000",
-        backgroundColor: '#fff',
         flex : 1,
-        fontFamily : appFont.mainFontFamily,
         justifyContent : "center", 
     },
 
