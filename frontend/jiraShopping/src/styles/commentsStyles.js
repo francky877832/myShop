@@ -1,8 +1,9 @@
 import { StyleSheet, Dimensions } from "react-native";
-import { appColors, appFont, customText } from "./commonStyles";
+import { appColors, appFont, customText, inputTextStyle } from "./commonStyles";
 
 import { productStyles } from "./productStyles";
 import { ScreenWidth } from "react-native-elements/dist/helpers";
+
 
 export const screen = Dimensions.get("window")
 export const screenWidth = screen.width
@@ -58,5 +59,17 @@ export const commentsStyles = StyleSheet.create({
       top : 10,
       borderWidth : 1,
     },
+    input :
+    {
+      ...customText,
+      ...inputTextStyle,
+      padding : 5,
+    },
+    inputFocused :
+    {
+      borderWidth : 1,
+      borderColor : appColors.secondaryColor1,
+    }
+    
 
   });

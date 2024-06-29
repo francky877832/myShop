@@ -8,12 +8,12 @@ import { preferencesStyles } from '../../styles/preferencesStyles';
 import { customText, appColors, appFont } from '../../styles/commonStyles';
 
 const ProductsListWithFilters = (props) => {
-    const { datas, horizontal, styles } = props;
+    const { datas, horizontal, title } = props;
    
     return(
             <View style={[productsListWithFiltersStyles.container]}>
                 <View style={[productsListWithFiltersStyles.title]}>
-                    <Text style={[productsListWithFiltersStyles.titleText]}>Produits Tendance...</Text>
+                    <Text style={[productsListWithFiltersStyles.titleText]}>{title}</Text>
                 </View>
                 <Filters suggestion={false} />
                 <ProductsList datas={datas} horizontal={false} styles={preferencesStyles} />

@@ -6,15 +6,14 @@ import Top from '../common/Top';
 import ProductsList from '../common/ProductsList';
 
 //custom styles
+import { favouritesStyles } from '../../styles/favouritesStyles';
 import { preferencesStyles } from '../../styles/preferencesStyles';
-import SearchResults from './SearchResults';
-
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
 import { appColors } from '../../styles/commonStyles';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
 
-const Preferences = (props) => {
+const Favourites = (props) => {
 {/*
                             numColumns={ calculateNumColumns() }
                                 <ProductsList datas={datas} horizontal={false} styles={preferencesStyles} />
@@ -25,21 +24,15 @@ const Preferences = (props) => {
 
     return(
         <SafeAreaView style={{flex:1,}}>
-                <View style={preferencesStyles.container}>
+                <ScrollView style={favouritesStyles.container}>
                     <View style={preferencesStyles.top}>
                         <Top />
                     </View>
 
-                { isSearch ?
-                            <ProductsListWithFilters datas={datas} horizontal={false} styles={preferencesStyles} title="Produits tendances..." />
-                    :
-                        <View style={[{}]}>
-                            <SearchResults styles={{}}/>
-                        </View>
-                }
-                </View>
+                <ProductsListWithFilters datas={datas} horizontal={false} title="Mes Favoris" />
+                </ScrollView>
         </SafeAreaView>
     )
 }
 
-export default  Preferences
+export default  Favourites

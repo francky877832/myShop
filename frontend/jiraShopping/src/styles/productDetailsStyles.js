@@ -2,7 +2,7 @@ import { StyleSheet, } from "react-native";
 import { appColors, appFont } from "./commonStyles";
 import { screenHeight, screenWidth } from "./commentsStyles";
 import { productStyles } from "./productStyles";
-
+import { filtersStyles } from "./filtersStyles";
 
 export const productDetailsStyles = StyleSheet.create({
     container : 
@@ -17,7 +17,12 @@ export const productDetailsStyles = StyleSheet.create({
         paddingHorizontal : 10,
         top : 30,
         zIndex : 99,
-        backgroundColor : appColors.lightBlack,
+        backgroundColor : appColors.lightBlack, //transparence sur limage
+    },
+    similarContainer : 
+    {
+        ...filtersStyles.similarContainer,
+        paddingBottom :  60,
     },
     getBackPosition :
     {
@@ -101,10 +106,10 @@ export const productDetailsStyles = StyleSheet.create({
         left : 0,
         right : 0,
         bottom : 0,
-        backgroundColor : appColors.lightWhite,
+        backgroundColor : appColors.white,
         height : 60,
         borderWidth : 1,
-        borderColor : appColors.lightBlack,
+        borderColor : appColors.secondaryColor3,
         paddingVertical : 10,
         paddingHorizontal : 5,
     },

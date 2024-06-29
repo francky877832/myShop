@@ -7,6 +7,7 @@ import BadgeIcon from '../components/common/BadgeIcon';
 import Preferences from '../components/specific/Preferences';
 import Search from '../components/specific/Search';
 import ProductDetails from '../components/specific/ProductDetails';
+import Favourites from '../components/specific/Favourites';
 
 import badgeIconStyles from '../styles/badgeIconStyles';
 
@@ -49,7 +50,7 @@ const HomeNavigation = () => (
         
       >
         <Tab.Screen name="Home" component={Preferences} />
-          <Tab.Screen name="Favourites" component={Preferences} />
+          <Tab.Screen name="Favourites" component={Favourites} />
           <Tab.Screen name="Shop" component={Preferences} />
           <Tab.Screen name="Basket" component={Preferences} />
           <Tab.Screen name="Account" component={Preferences} />

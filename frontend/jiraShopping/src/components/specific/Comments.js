@@ -125,7 +125,7 @@ const Comments = () =>
                     multiline={true}
                     numberOfLines={2}
                     placeholderTextColor={appColors.lightBlack}
-                    style = {[commentsStyles.input, isFocused && commentsStyles.inputFocused, commentsStyles.searchBarInput, {fontSize:16,padding:5,}]}
+                    style = {[commentsStyles.input, isFocused && commentsStyles.inputFocused, commentsStyles.searchBarInput,]}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                     underlineColorAndroid='transparent'
