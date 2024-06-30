@@ -1,5 +1,6 @@
 import { StyleSheet, } from "react-native";
 import { appColors, appFont, screenWidth, customText, inputTextStyle} from "./commonStyles";
+import { screenHeight } from "./commentsStyles";
 
 
 
@@ -7,10 +8,57 @@ export const filtersStyles = StyleSheet.create({
     container :
     {
         backgroundColor : appColors.white,
-        flex : 1,
+        width : screenWidth,
+        height : screenHeight,
+        //zIndex : 98,
         //paddingTop : 5,
        //paddingBottom : 10,
+       //backgroundColor : appColors.red,
     },
+    
+    topContainer :
+    {
+        flexDirection:"row",
+        justifyContent:"space-around",
+        alignItems : "center",
+        borderBottomWidth : 1,
+        borderBottomColor : appColors.secondaryColor3,
+        //borderTopWidth : 1,
+        borderTopColor : appColors.lightWhite,
+        backgroundColor : appColors.white,
+        height : 40,    
+    },
+    topModal :
+    {
+        zIndex : 100,
+        top : 0,
+        left : 0,
+        right : 0,
+        //height : 55,
+        backgroundColor : appColors.white,
+    },  
+    filtres :
+    {
+        justifyContent : "center",
+        paddingHorizontal : 5,
+        borderTopWidth : 1,
+        borderTopColor : appColors.secondaryColor3,
+        height : 55,
+        backgroundColor : appColors.white,
+        zIndex : 100,
+    },
+    modal :
+    {
+        //flex : 1,
+        paddingBottom : 5,
+        borderTopWidth : 1,
+        borderTopColor : appColors.blue,
+        //borderBottomWidth : 1,
+        //borderBottomColor : appColors.secondaryColor1,
+        //backgroundColor : "yellow",
+        zIndex : 98,
+    },
+  
 
     similarContainer : 
     {
@@ -22,25 +70,6 @@ export const filtersStyles = StyleSheet.create({
     modalVisibleText : 
     {
         color: appColors.secondaryColor1
-    },
-    
-    filtres :
-    {
-        //top : 10,
-        justifyContent : "center",
-        paddingHorizontal : 5,
-        borderTopWidth : 1,
-        borderTopColor : appColors.secondaryColor3,
-    },
-    modal :
-    {
-        flex : 1,
-        paddingBottom : 5,
-        borderTopWidth : 1,
-        borderTopColor : appColors.lightWhite,
-        borderBottomWidth : 1,
-        borderBottomColor : appColors.secondaryColor1,
-        zIndex : 99,
     },
 
     priceContainer : 
@@ -99,6 +128,10 @@ export const filtersStyles = StyleSheet.create({
         justifyContent:"space-around",
         marginTop : 25,
         width: screenWidth,
+        /*position:"absolute",
+        top:0,
+        left:0,right:0,
+        zIndex : 100,*/
     },
    
     categorySeparator :
@@ -117,7 +150,11 @@ export const filtersStyles = StyleSheet.create({
         width: screenWidth,
         marginTop : 25,
         alignItems : "flex-start",
-        backgroundColor : appColors.lightWhite2,
+        backgroundColor : appColors.white,
+        position : "absolute",
+        top : 30,
+        //bottom : 0, left : 0, right : 0, backgroundColor : "red",
+        zIndex : 98,
     },
     
     radioContainer: 
@@ -180,20 +217,6 @@ export const filtersStyles = StyleSheet.create({
     },
 
 
-
-    topContainer :
-    {
-        flexDirection:"row",
-        justifyContent:"space-around",
-        alignItems : "center",
-        borderBottomWidth : 1,
-        borderBottomColor : appColors.secondaryColor3,
-        borderTopWidth : 1,
-        borderTopColor : appColors.lightWhite,
-        //backgroundColor : appColors.red,
-        //height : 200,
-    
-    },
     trierFiltrer :
     {
         flex : 1,
@@ -257,7 +280,7 @@ export const filtersStyles = StyleSheet.create({
     flatlist :
     {
         backgroundColor : appColors.lightWhite,
-    }
+    },
 
-
+  
 })

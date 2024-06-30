@@ -2,7 +2,6 @@ import { StyleSheet, Dimensions } from "react-native";
 import { appColors, appFont, customText, inputTextStyle } from "./commonStyles";
 
 import { productStyles } from "./productStyles";
-import { ScreenWidth } from "react-native-elements/dist/helpers";
 
 
 export const screen = Dimensions.get("window")

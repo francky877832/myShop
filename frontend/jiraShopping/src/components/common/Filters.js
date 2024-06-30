@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { View, Text, Pressable, TextInput, ScrollView, FlatList} from 'react-native';
 
-import { CheckBox } from 'react-native-elements';
+import { Button, CheckBox } from 'react-native-elements';
 import { RadioButton, } from 'react-native-paper';
 
 import { ConditionChoice } from "../common/CommonSimpleComponents"
@@ -83,7 +83,7 @@ const Filters = (props) => {
                     break;
                 case "filter" : 
                     setModalFiltersVisible(true)
-                    setModalCategoryVisible(true)
+                    setModalCategoryVisible(false)
                     setModalOrderByVisible(false)
                     setModalConditionVisible(false)
                     setModalPriceVisible(false)
@@ -119,7 +119,8 @@ const Filters = (props) => {
 
 
     return (
-        <View style={ [{}]}>
+        <View style={ [{flex:1,}]}>
+
                 {suggestion && !showSuggestion &&
                             <Pressable onPress={()=>{setShowSuggestion(!showSuggestion)}} style={{backgroundColor:appColors.white, paddingLeft:5,position:"relative",flexDirection:"row"}}>
                                 <Icon name='bulb' type='ionicon' size={18} color={appColors.green} />
@@ -128,6 +129,7 @@ const Filters = (props) => {
                          }
 { //showSuggestion ||
         <View style={[filtersStyles.container]}>
+            
                 <View style={[filtersStyles.topContainer]}>
                         <Pressable style={[filtersStyles.trierFiltrer,  modalOrderByVisible ? filtersStyles.trierFiltrerFocused : false, ]} onPress={()=>{showFilters("trier")}}>
                             <Icon name='swap-vertical' type='ionicon' size={18} color={appColors.secondaryColor1} />
@@ -140,7 +142,12 @@ const Filters = (props) => {
                                 <Text style={[customText.text, modalFiltersVisible ? filtersStyles.modalVisibleText : false, ]}>Filtrer</Text>
                         </Pressable>    
                 </View>
-{modalFiltersVisible &&
+
+
+
+
+{modalFiltersVisible &&   
+<View style={[filtersStyles.topModal,{}]}>
                     <View style={[filtersStyles.filtres]}>
                         <FlatList data={filters} keyExtractor={(item)=>Math.random().toString()} renderItem={({item}) => {return (
                             <Pressable style={[filtersStyles.pressableFilter, functionsCatalog[item.name.toLowerCase()][0] ? filtersStyles.pressableFilterFocused : false]} onPress={()=>{showFilters(item.name)}} >
@@ -149,11 +156,11 @@ const Filters = (props) => {
                             )}}
                             ItemSeparatorComponent={(item) => {return <View style={{width:20,}}></View>}}
                             horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={{flex:1,flexDirection:"row",paddingVertical:10,}}
+                            showsHorizontalScrollIndicator={true}
+                            contentContainerStyle={{justifyContent:"center", alignItems:"center",}}
                         />
                     </View>
-}
+
 <View style={[filtersStyles.modal,{}]}>
             <View style={{width:"100%",}}>
                 { modalFiltersVisible && modalPriceVisible &&
@@ -208,7 +215,9 @@ const Filters = (props) => {
                     </View>
         }
 
-        {!modalFiltersVisible && modalOrderByVisible &&
+       
+
+{!modalFiltersVisible && modalOrderByVisible &&
             <View style={[filtersStyles.orderByContainer]}>
                 <View style={{alignSelf : "center",backgroundColor:appColors.white}}>
                     <Text style={[customText.text,filtersStyles.label]}>Trier Par...</Text>
@@ -234,14 +243,14 @@ const Filters = (props) => {
 
         }
 
+
         {modalFiltersVisible && modalCategoryVisible &&
                     <View style={[filtersStyles.categoryContainer, filtersStyles.cardItem]}>
                         <View style={{alignSelf : "center",}}>
                             <Text style={[customText.text, filtersStyles.label]}>Categories</Text>
                         </View>
 
-
-                        <View style={[filtersStyles.filterFlatlist,filtersStyles.cardItem]}>
+                        <View style={[filtersStyles.filterFlatlist, filtersStyles.cardItem]}>
                             <FlatList
                                 data={categories}
                                 renderItem={ ({item}) => { return <FilterItem selectedCategories={selectedCategories} item={item} updateCategories={updateCategories} /> } }
@@ -256,8 +265,9 @@ const Filters = (props) => {
                     </View>
         }
             </View>
+            </View>
+            </View>}
         </View>
-    </View>
 }
 {showSuggestion &&
                     <View style={[filtersStyles.similarContainer,{top:2,paddingTop:5,left:0,}]}>

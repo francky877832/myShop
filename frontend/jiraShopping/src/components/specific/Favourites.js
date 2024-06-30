@@ -12,6 +12,7 @@ import { preferencesStyles } from '../../styles/preferencesStyles';
 import { datas } from '../../utils/sampleDatas';
 import { appColors } from '../../styles/commonStyles';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
+import { productStyles } from '../../styles/productStyles';
 
 const Favourites = (props) => {
 {/*
@@ -23,15 +24,14 @@ const Favourites = (props) => {
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
 
     return(
-        <SafeAreaView style={{flex:1,}}>
-                <ScrollView style={favouritesStyles.container}>
-                    <View style={preferencesStyles.top}>
+        <View style={[favouritesStyles.container,]}>
+                    <View style={[favouritesStyles.top]}>
                         <Top />
                     </View>
-
-                <ProductsListWithFilters datas={datas} horizontal={false} title="Mes Favoris" />
-                </ScrollView>
-        </SafeAreaView>
+                    <ScrollView>
+                        <ProductsListWithFilters datas={datas} horizontal={false} title="Mes Favoris" />
+                    </ScrollView>
+        </View>
     )
 }
 

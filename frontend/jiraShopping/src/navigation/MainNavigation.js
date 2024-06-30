@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import { NavigationContainer, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -25,7 +25,7 @@ export default function MainNavigation() {
     <FavouritesProvider>
       <FilterProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Search">
+          <Stack.Navigator initialRouteName="Preferences">
             <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, }} />
             <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
             <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
@@ -36,6 +36,7 @@ export default function MainNavigation() {
       </FilterProvider>
     </FavouritesProvider>
   );
+
 }
 
 

@@ -7,11 +7,13 @@ import { appColors, appFont } from "./commonStyles";
 export const topStyles = StyleSheet.create({
     container : 
     {
-        flex : 1,
+        //flex : 1,
         flexDirection : "row",
         justifyContent : "center",
         alignItems : "center",
         backgroundColor : appColors.white,
+        width : "100%",
+        height : 60,
     },
 //A passer a searchbar
     searchBarContainer :
@@ -28,6 +30,7 @@ export const topStyles = StyleSheet.create({
     inputContainerStyle : 
     {
         borderColor : appColors.white,
+        //borderWidth : 0,
     },
 
     pressableBar : 

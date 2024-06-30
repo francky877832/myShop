@@ -13,8 +13,8 @@ export const preferencesStyles = StyleSheet.create({
     },
     productContainer : 
     {
-        flex : 1,
-        paddingBottom : 2,
+        //flex : 1,
+        //paddingBottom : 2,
     },
     top :
     {

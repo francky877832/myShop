@@ -32,10 +32,12 @@ exports.LikeButton = (props) => {
 
 
 exports.PrevButton = (props) => {
-
+    const {styles} = props
+    const color = styles ? styles.color : appColors.black
+    const size = styles ? styles.size : 24
     return(
         <Pressable onPress={() => {console.log("Go")}}>
-            <Icon name='arrow-back' type='ionicon' color="#fff" />
+            <Icon name='arrow-back' type='ionicon' color={color} size={size} />
         </Pressable>
     )
 }

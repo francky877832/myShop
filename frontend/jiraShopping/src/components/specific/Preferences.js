@@ -24,12 +24,11 @@ const Preferences = (props) => {
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
 
     return(
-        <SafeAreaView style={{flex:1,}}>
-                <View style={preferencesStyles.container}>
+            <View style={preferencesStyles.container}>
                     <View style={preferencesStyles.top}>
                         <Top />
                     </View>
-
+<ScrollView>
                 { isSearch ?
                             <ProductsListWithFilters datas={datas} horizontal={false} styles={preferencesStyles} title="Produits tendances..." />
                     :
@@ -37,8 +36,8 @@ const Preferences = (props) => {
                             <SearchResults styles={{}}/>
                         </View>
                 }
-                </View>
-        </SafeAreaView>
+    </ScrollView>
+            </View>
     )
 }
 

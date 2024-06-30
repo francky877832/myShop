@@ -23,7 +23,7 @@ export const searchBarStyles = StyleSheet.create({
         height: 35,
         borderColor: appColors.lightWhite,
         borderWidth: 1,
-        paddingVertical: 15,
+        //paddingVertical: 15,
         paddingHorizontal : 20,
         fontSize: 16,
         color: '#333',
