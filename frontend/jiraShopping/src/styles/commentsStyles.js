@@ -58,12 +58,14 @@ export const commentsStyles = StyleSheet.create({
     {
       top : 10,
       borderWidth : 1,
+      //justifyContent : "center",
+      //alignItems : "center",
     },
     input :
     {
       ...customText,
       ...inputTextStyle,
-      padding : 5,
+      padding : 10,
     },
     inputFocused :
     {

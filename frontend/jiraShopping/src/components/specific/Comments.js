@@ -123,9 +123,9 @@ const Comments = () =>
             <View style={commentsStyles.inputContainer}>
                <Input placeholder="Posez une question sur le produit" onChangeText={(text)=>{setInputValue(text)}}
                     multiline={true}
-                    numberOfLines={2}
+                    numberOfLines={1}
                     placeholderTextColor={appColors.lightBlack}
-                    style = {[commentsStyles.input, isFocused && commentsStyles.inputFocused, commentsStyles.searchBarInput,]}
+                    inputStyle = {[commentsStyles.searchBarInput, commentsStyles.input, isFocused && commentsStyles.inputFocused,]}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                     underlineColorAndroid='transparent'

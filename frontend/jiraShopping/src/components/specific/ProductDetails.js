@@ -34,7 +34,7 @@ const ProductDetails = () =>
                         <View style={productDetailsStyles.buttonContainerLeft}>
                             <ShareButton styles={productDetailsStyles.shareButton}/>
                             <View style={{width:10,}}></View>
-                            <LikeButton styles={{color:appColors.white}} isCard={false} />
+                            <LikeButton hasLiked={data.liked} item={data} styles={{color:appColors.white}} isCard={false} />
                         </View>
                     </View>
 
@@ -49,7 +49,7 @@ const ProductDetails = () =>
                         </View>
 
                         <View style={{ }}>
-                            <LikeButton styles={{color:appColors.black}} isCard={false}  />
+                            <LikeButton hasLiked={data.liked} item={data} styles={{color:appColors.black}} isCard={false}  />
                             <Text style={[customText.text, ]}>23</Text>
                         </View>
                     </View>

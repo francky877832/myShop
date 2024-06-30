@@ -31,11 +31,11 @@ const FilterProvider = ({children}) => {
         })
     }
 
-    const filterStateVar = {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice}
+    const filterStateVars = {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice}
     const filterStateSetters = {setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice}
-    const utilsFonctions = { _handlePress, updateCategories }
+    const utilsFunctions = { _handlePress, updateCategories }
     return (
-        <FilterContext.Provider value={{...filterStateVar, ...filterStateSetters, ...utilsFonctions}}>
+        <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}
         </FilterContext.Provider>
     )

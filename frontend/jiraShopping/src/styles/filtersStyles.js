@@ -35,6 +35,12 @@ export const filtersStyles = StyleSheet.create({
     modal :
     {
         flex : 1,
+        paddingBottom : 5,
+        borderTopWidth : 1,
+        borderTopColor : appColors.lightWhite,
+        borderBottomWidth : 1,
+        borderBottomColor : appColors.secondaryColor1,
+        zIndex : 99,
     },
 
     priceContainer : 

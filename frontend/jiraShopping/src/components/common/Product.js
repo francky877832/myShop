@@ -7,10 +7,30 @@ import { LikeButton, } from "./CommonSimpleComponents"
 import { productStyles } from '../../styles/productStyles';
 import { appColors, customText } from '../../styles/commonStyles';
 
-const Product = (props) => {
+
+//CONTEXTE
+import { FavouritesContext } from '../../context/FavouritesContext';
+
+const username = "Franck"
+const Product = (props) => { 
     const { item, horizontal } = props;
-    console.log(item)
+    //console.log(item)
+   
+
+    const {favourites, addFavourite} = useContext(FavouritesContext)
+    useEffect(() => {
+    //prendre en compte le contexte Favourites lors de l'affichage
+        const setProductFavourite = () =>{
+            for(let i in favourites)
+            {
+                console.log(favourites[i].id_)
+                if(favourites[i].id_ == item.id_) //A modifier par _id de  mongo
+                    item.liked = favourites[i].liked //parce que favourites contien les elements likes et delikes et non item.liked=true--obselete
+            }
+        }; setProductFavourite();
+    })
     const [like, setLikeIcon ] = useState(item.liked)
+
     return(
 
         <SafeAreaView>
@@ -37,10 +57,10 @@ const Product = (props) => {
                         <View style={[productStyles.top,] } >
                             <Pressable style={[productStyles.feesBy, productStyles.card]}  onPress = { ()=>{ console.log("transport")} } >
                                 <Ionicons name="cube-sharp" size={24} color="#fff" />
-                                 <Text style={[customText.text, {color:"#fff", fontSize:12, top:3,}]}>{item.feesBy ? "Gratuit"  : "Reduction"} </Text>
+                                 <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{item.feesBy ? "Gratuit"  : "Reduction"} </Text>
                             </Pressable>
 
-                            <LikeButton hasLiked={item.liked} isCard={false} styles={{color:appColors.white}}/>
+                            <LikeButton hasLiked={item.liked} item={item} isCard={false} styles={{color:appColors.white}}/>
 
                         </View>
                     

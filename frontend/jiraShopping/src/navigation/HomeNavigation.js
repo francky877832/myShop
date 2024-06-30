@@ -11,12 +11,15 @@ import Favourites from '../components/specific/Favourites';
 
 import badgeIconStyles from '../styles/badgeIconStyles';
 
+//Contexte
+import { FavouritesProvider } from '../context/FavouritesContext';
+
 const Tab = createBottomTabNavigator();
 
 
 
 const HomeNavigation = () => (
-  <Tab.Navigator
+    <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown : false,
           tabBarActiveTintColor: "blue",
@@ -49,12 +52,13 @@ const HomeNavigation = () => (
         })}
         
       >
-        <Tab.Screen name="Home" component={Preferences} />
-          <Tab.Screen name="Favourites" component={Favourites} />
-          <Tab.Screen name="Shop" component={Preferences} />
-          <Tab.Screen name="Basket" component={Preferences} />
-          <Tab.Screen name="Account" component={Preferences} />
-      </Tab.Navigator>
+            <Tab.Screen name="Home" component={Preferences} />
+            <Tab.Screen name="Favourites" component={Favourites} />
+            <Tab.Screen name="Shop" component={Preferences} />
+            <Tab.Screen name="Basket" component={Preferences} />
+            <Tab.Screen name="Account" component={Preferences} />
+        </Tab.Navigator>
+
  
 );
 

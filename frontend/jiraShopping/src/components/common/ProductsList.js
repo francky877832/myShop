@@ -7,10 +7,13 @@ import Product from './Product';
 import { productsListStyles } from '../../styles/productsListStyles';
 import { numProduct } from '../../styles/productStyles';
 
+//Contexte
+import { FavouritesContext } from '../../context/FavouritesContext';
 
 const ProductsList = (props) => {
     const { datas, horizontal, styles } = props;
-    
+    const {favourites} = useContext(FavouritesContext)
+
 
     return(
             <View style={[productsListStyles.container, horizontal ? productsListStyles.containerHorizontal : false, styles.productContainer]}>

@@ -101,7 +101,7 @@ export const searchStyles = StyleSheet.create({
     submit:
     {
         width : "100%",
-        //top : 20, 
+        top : 20, 
         flexDirection : "row",
         justifyContent: 'center',
         alignItems: 'center',
