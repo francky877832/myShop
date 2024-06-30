@@ -18,7 +18,7 @@ const ProductsListWithFilters = (props) => {
 
                 <View style={{flex:1,flexDirection:"column",}}>
                     <Filters suggestion={false} />
-                    <View style={{height:100}}></View>
+                    <View style={{height:10}}></View>
                     <ProductsList datas={datas} horizontal={false} styles={preferencesStyles} />
                 </View>
 

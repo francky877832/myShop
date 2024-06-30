@@ -8,9 +8,8 @@ export const filtersStyles = StyleSheet.create({
     container :
     {
         backgroundColor : appColors.white,
-        width : screenWidth,
-        height : screenHeight,
-        //zIndex : 98,
+        flex:1,
+        zIndex : 98,
         //paddingTop : 5,
        //paddingBottom : 10,
        //backgroundColor : appColors.red,
@@ -30,6 +29,7 @@ export const filtersStyles = StyleSheet.create({
     },
     topModal :
     {
+       
         zIndex : 100,
         top : 0,
         left : 0,
@@ -49,14 +49,25 @@ export const filtersStyles = StyleSheet.create({
     },
     modal :
     {
-        //flex : 1,
+        flex : 1,
         paddingBottom : 5,
         borderTopWidth : 1,
         borderTopColor : appColors.blue,
         //borderBottomWidth : 1,
         //borderBottomColor : appColors.secondaryColor1,
         //backgroundColor : "yellow",
-        zIndex : 98,
+        zIndex : 100,
+    },
+    orderByContainer :
+    {
+        width: screenWidth,
+        marginTop : 25,
+        alignItems : "flex-start",
+        backgroundColor : appColors.white,
+        position : "absolute",
+        top : 30,
+        //bottom : 0, left : 0, right : 0, backgroundColor : "red",
+        zIndex : 99,
     },
   
 
@@ -145,17 +156,7 @@ export const filtersStyles = StyleSheet.create({
         paddingBottom : 50,
         justifyContent:"center",
     },
-    orderByContainer :
-    {
-        width: screenWidth,
-        marginTop : 25,
-        alignItems : "flex-start",
-        backgroundColor : appColors.white,
-        position : "absolute",
-        top : 30,
-        //bottom : 0, left : 0, right : 0, backgroundColor : "red",
-        zIndex : 98,
-    },
+   
     
     radioContainer: 
     {

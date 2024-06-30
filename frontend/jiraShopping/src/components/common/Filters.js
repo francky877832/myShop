@@ -145,6 +145,33 @@ const Filters = (props) => {
 
 
 
+                {!modalFiltersVisible && modalOrderByVisible &&
+            <View style={[filtersStyles.orderByContainer]}>
+                <View style={{alignSelf : "center",backgroundColor:appColors.white}}>
+                    <Text style={[customText.text,filtersStyles.label]}>Trier Par...</Text>
+                </View>
+
+                    <View style={[filtersStyles.filterFlatlist, filtersStyles.radioBox]}>
+                        <RadioButton.Group onValueChange={val => setSelectedOrderBy(val)} value={selectedOrderBy} style={[filtersStyles.radioGroup,]}>
+                            {
+                                orderByItems.map((item) => {
+                                    return(
+                                        <View style={filtersStyles.radioContainer} key={item.id}>
+                                        <RadioButton value={item.id} />
+                                            <Text>{item.name}</Text>
+                                    </View>
+                                    )
+                                })
+                            }
+                        </RadioButton.Group>
+                    </View>
+                    <View style={{height:20,}}></View>
+                
+            </View>
+
+        }
+
+
 
 {modalFiltersVisible &&   
 <View style={[filtersStyles.topModal,{}]}>
@@ -213,34 +240,6 @@ const Filters = (props) => {
                         </View>
                         <ConditionChoice styles={{}} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
                     </View>
-        }
-
-       
-
-{!modalFiltersVisible && modalOrderByVisible &&
-            <View style={[filtersStyles.orderByContainer]}>
-                <View style={{alignSelf : "center",backgroundColor:appColors.white}}>
-                    <Text style={[customText.text,filtersStyles.label]}>Trier Par...</Text>
-                </View>
-
-                    <View style={[filtersStyles.filterFlatlist, filtersStyles.radioBox]}>
-                        <RadioButton.Group onValueChange={val => setSelectedOrderBy(val)} value={selectedOrderBy} style={[filtersStyles.radioGroup,]}>
-                            {
-                                orderByItems.map((item) => {
-                                    return(
-                                        <View style={filtersStyles.radioContainer} key={item.id}>
-                                        <RadioButton value={item.id} />
-                                            <Text>{item.name}</Text>
-                                    </View>
-                                    )
-                                })
-                            }
-                        </RadioButton.Group>
-                    </View>
-                    <View style={{height:20,}}></View>
-                
-            </View>
-
         }
 
 

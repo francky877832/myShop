@@ -7,7 +7,7 @@ export const productsListStyles = StyleSheet.create({
     container : 
     {
         flexDirection : "column",
-        //flex: 1,
+        flex: 1,
     },
 
     flatlist :
