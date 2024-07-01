@@ -13,7 +13,8 @@ const notificaitonRoutes = require('./notificaitonRoutes');
 const basketRoutes = require('./basketRoutes');
 const searchRoutes = require('./searchRoutes');
 const orderRoutes = require('./orderRoutes');
-const category = require('./categoryRoutes')
+const category = require('./categoryRoutes');
+const subCategories = require('./subCategoriesRoutes')
 
 const seederRoutes = require('./seedersRoutes') 
 
@@ -30,7 +31,7 @@ router.use('/basket', basketRoutes);
 router.use('/search', searchRoutes);
 router.use('/orders', orderRoutes);
 router.use('/category', category);
-
+router.use('/sub-categories', subCategories);
 
 
 router.use('/seeders',seederRoutes);
