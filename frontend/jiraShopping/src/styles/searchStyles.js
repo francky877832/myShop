@@ -10,14 +10,16 @@ export const searchStyles = StyleSheet.create({
     },
     filter :
     {
-        flex : 1,
+        //flex : 1,
         backgroundColor : appColors.lightWhite,
+        height : 300,
     },
     searchBar : 
     {
         width : "100%",
         justifyContent : "center",
         alignItems : "center",
+       height : 80,
     },
 //A passer a searchbar
     searchBarContainer :
@@ -45,7 +47,7 @@ export const searchStyles = StyleSheet.create({
     
     historyContainer :
     {
-       //flex : 1,
+       flex : 1,
        top : 50,
        backgroundColor : appColors.lightWhite,
     },
@@ -115,7 +117,7 @@ export const searchStyles = StyleSheet.create({
     },
     textSubmit:
     {
-        flex : 1,
+        //flex : 1,
         color : appColors.white,
         textAlign : "center",
     },

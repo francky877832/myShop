@@ -43,26 +43,27 @@ const Search = (props) => {
    
 
     return(
-        <SafeAreaView style={[searchStyles.container,{height:screenHeight}]}>
+<SafeAreaView style={[searchStyles.container,{}]}>
             <View style={[searchStyles.searchBar,{}]}>
                <SearchBar ref={searchBarRef}  placeholder="Rechercher un produit" placeholderTextColor={appColors.mainColor} styles={searchStyles} isPrev={true}  />
-                <View style={{height:5,width:"100%",backgroundColor:appColors.white,}}></View>
             </View>
 
-            <ScrollView contentContainerStyle={{flex:1}}>
+        <ScrollView contentContainerStyle={{flex:1,backgroundColor:appColors.white,}}>
                 
             <View style={searchStyles.filter}>
 
 
 {/*Suggestion avec un productList*/}
-                        
-                <Filters suggestion={true} />
+            <View style={{flex:1,}}>        
+                <View style={{height:10,backgroundColor:appColors.white}}></View>
                     <View style={[searchStyles.submit,]}>
                         <Pressable style={[searchStyles.pressableSubmit, productStyles.card]}>
                             <Text style={[searchStyles.label, searchStyles.textSubmit]}>Rechercher</Text>
                         </Pressable>
                     </View>
+            </View>
 
+                
 
                     <View style={searchStyles.historyContainer}>
                         <View style={searchStyles.historyLabelContainer}>
@@ -73,6 +74,7 @@ const Search = (props) => {
                                 </Pressable>
                             }
                         </View>
+
 
                         <View style={searchStyles.historyFlatlist}>
                             <FlatList
