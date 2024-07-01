@@ -1,5 +1,5 @@
 const fs = require('fs');
-
+const User = require('../models/userModel')
 const Product = require('../models/productModel');
 
 
@@ -128,19 +128,44 @@ exports.getProductsFromCategories  = (req, res, next) => {
    });
 };
 
-exports.getProductsUser  = (req, res, next) => {
-  Product.find({ seller : req.params.user })
-  .then( (products) => { 
-      res.status(200).json({
-        products ,
-         message:"all good", 
-        }); 
-         
-   })
-  .catch( (error) => { 
+exports.getProductsWithUserInfo = (req, res, next) => {
+  Product.find()
+    .populate('seller', '_id')
+    .then((products) => {
+      // Récupérer les ObjectId des vendeurs
+      const sellerIds = products.map(product => product.seller._id);
+      console.log('ok1')
+      // Récupérer les informations des utilisateurs à partir de leurs ObjectId
+      User.find({ _id: { $in: sellerIds } }, 'name email')
+        .then(users => {
+          // Créer un objet avec les informations des utilisateurs
+          const userInfo = users.reduce((acc, user) => {
+            acc[user._id.toString()] = { name: user.name, email: user.email };
+            return acc;
+          }, {});
+          // Ajouter les informations des utilisateurs à la réponse
+          const response = {
+            products: products.map((product) => ({
+              id: product._id,
+              name: product.name,
+              price: product.price,
+              seller: {
+                name: userInfo[product.seller._id.toString()].name,
+                email: userInfo[product.seller._id.toString()].email
+              }
+            })),
+            message: "all good"
+          };
+
+          res.status(200).json(response);
+        })
+        .catch(error => {
+          res.status(400).json({ error: error });
+        });
+    })
+    .catch((error) => {
       res.status(400).json({ error: error });
-   });
-  
+    });
 };
 
 //Cest mieux de gerer cette fonctionnalite cote backend

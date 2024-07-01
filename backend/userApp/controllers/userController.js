@@ -61,5 +61,13 @@ exports.getUser = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 }
 
+exports.getAllUser = (req, res, next) => {
+    User.find()
+    .then((user)=>{
+        res.status(200).json(user);
+    })
+    .catch(error => res.status(500).json({ error }));
+}
+
 
 

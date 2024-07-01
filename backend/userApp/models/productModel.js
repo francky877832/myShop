@@ -1,26 +1,6 @@
 const mongoose = require('../../shared/db').mongoose;
 const Schema = mongoose.Schema
-const User = require('../models/userModel')
 
-
-getusers = () =>{
-    User.find({})
-       .then((users) => {
-       if (users.length > 0) {
-           const userName = users.map((user) => user.email);
-           console.log(userName)
-           return userName;
-       } else {
-           console.log('No user found.');
-           return null; // Handle the case when no products are found
-       }
-   }).catch((error)=>{
-       return error
-   });
-  
-};
-
-const userId = getusers();
 
 
 const productSchema = new Schema({
@@ -38,7 +18,7 @@ const productSchema = new Schema({
     brand : { type : String, required : false },
     couleur : [{ type : String, required : false}],
     images : [{ type : String, required : true}],
-    feesBy : { type : String, enum : userId, default : "buyer" },
+    feesBy : { type : String, enum : ['buyer','seller'], default : "buyer" },
     garanti : { type : Number, default : 0 },
     stock : { type : Number },
     likes : { type : Number, default : 0 },

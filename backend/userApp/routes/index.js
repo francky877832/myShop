@@ -13,8 +13,9 @@ const notificaitonRoutes = require('./notificaitonRoutes');
 const basketRoutes = require('./basketRoutes');
 const searchRoutes = require('./searchRoutes');
 const orderRoutes = require('./orderRoutes');
+const category = require('./categoryRoutes')
 
-
+const seederRoutes = require('./seedersRoutes') 
 
 //router.use('/products', auth,  productRoutes);
 
@@ -28,7 +29,11 @@ router.use('/notifications', notificaitonRoutes);
 router.use('/basket', basketRoutes);
 router.use('/search', searchRoutes);
 router.use('/orders', orderRoutes);
+router.use('/category', category);
 
+
+
+router.use('/seeders',seederRoutes);
 
 module.exports = router;
 
