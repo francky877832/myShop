@@ -28,9 +28,9 @@ const Favourites = (props) => {
                     <View style={[favouritesStyles.top]}>
                         <Top />
                     </View>
-                    <ScrollView>
+                    <View style={[{flex:1,}]}>
                         <ProductsListWithFilters datas={datas} horizontal={false} title="Mes Favoris" />
-                    </ScrollView>
+                    </View>
         </View>
     )
 }

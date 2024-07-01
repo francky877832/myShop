@@ -119,7 +119,7 @@ const Filters = (props) => {
 
 
     return (
-        <View style={ [{flex:1,}]}>
+        <View style={[filtersStyles.contentContainerStyle,{}]}>
 
                 {suggestion && !showSuggestion &&
                             <Pressable onPress={()=>{setShowSuggestion(!showSuggestion)}} style={{backgroundColor:appColors.white, paddingLeft:5,position:"relative",flexDirection:"row"}}>
@@ -129,7 +129,7 @@ const Filters = (props) => {
                          }
 { //showSuggestion ||
         <View style={[filtersStyles.container]}>
-            
+            <View style={[filtersStyles.topMostContainer,{}]}>
                 <View style={[filtersStyles.topContainer]}>
                         <Pressable style={[filtersStyles.trierFiltrer,  modalOrderByVisible ? filtersStyles.trierFiltrerFocused : false, ]} onPress={()=>{showFilters("trier")}}>
                             <Icon name='swap-vertical' type='ionicon' size={18} color={appColors.secondaryColor1} />
@@ -142,12 +142,26 @@ const Filters = (props) => {
                                 <Text style={[customText.text, modalFiltersVisible ? filtersStyles.modalVisibleText : false, ]}>Filtrer</Text>
                         </Pressable>    
                 </View>
-
+            {//modalFiltersVisible &&
+                <View style={[filtersStyles.filtres]}>
+                        <FlatList data={filters} keyExtractor={(item)=>Math.random().toString()} renderItem={({item}) => {return (
+                            <Pressable style={[filtersStyles.pressableFilter, functionsCatalog[item.name.toLowerCase()][0] ? filtersStyles.pressableFilterFocused : false]} onPress={()=>{showFilters(item.name)}} >
+                                <Text style={[customText.text]}>{item.name}</Text>
+                            </Pressable>
+                            )}}
+                            ItemSeparatorComponent={(item) => {return <View style={{width:20,}}></View>}}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{justifyContent:"center", alignItems:"center",}}
+                        />
+                </View>
+            }
+        </View>
 
 
                 {!modalFiltersVisible && modalOrderByVisible &&
             <View style={[filtersStyles.orderByContainer]}>
-                <View style={{alignSelf : "center",backgroundColor:appColors.white}}>
+                <View style={{alignSelf : "center",}}>
                     <Text style={[customText.text,filtersStyles.label]}>Trier Par...</Text>
                 </View>
 
@@ -173,21 +187,7 @@ const Filters = (props) => {
 
 
 
-{modalFiltersVisible &&   
-<View style={[filtersStyles.topModal,{}]}>
-                    <View style={[filtersStyles.filtres]}>
-                        <FlatList data={filters} keyExtractor={(item)=>Math.random().toString()} renderItem={({item}) => {return (
-                            <Pressable style={[filtersStyles.pressableFilter, functionsCatalog[item.name.toLowerCase()][0] ? filtersStyles.pressableFilterFocused : false]} onPress={()=>{showFilters(item.name)}} >
-                                <Text style={[customText.text]}>{item.name}</Text>
-                            </Pressable>
-                            )}}
-                            ItemSeparatorComponent={(item) => {return <View style={{width:20,}}></View>}}
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={true}
-                            contentContainerStyle={{justifyContent:"center", alignItems:"center",}}
-                        />
-                    </View>
-
+{modalFiltersVisible &&  (modalConditionVisible || modalCategoryVisible || modalPriceVisible) && 
 <View style={[filtersStyles.modal,{}]}>
             <View style={{width:"100%",}}>
                 { modalFiltersVisible && modalPriceVisible &&
@@ -235,7 +235,7 @@ const Filters = (props) => {
             }
         { modalFiltersVisible && modalConditionVisible &&
                     <View style={filtersStyles.conditionContainer}>
-                        <View style={{alignSelf : "center",backgroundColor:appColors.white}}>
+                        <View style={{alignSelf : "center",}}>
                             <Text style={[customText.text,filtersStyles.label]}>Condition</Text>
                         </View>
                         <ConditionChoice styles={{}} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
@@ -263,7 +263,6 @@ const Filters = (props) => {
                         </View>
                     </View>
         }
-            </View>
             </View>
             </View>}
         </View>

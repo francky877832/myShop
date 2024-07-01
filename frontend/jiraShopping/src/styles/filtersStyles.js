@@ -5,69 +5,111 @@ import { screenHeight } from "./commentsStyles";
 
 
 export const filtersStyles = StyleSheet.create({
+
+    contentContainerStyle :
+    {
+        height : 40+55,
+    },
     container :
     {
         backgroundColor : appColors.white,
-        flex:1,
+        //flex:1,
         zIndex : 98,
+        flex : 1,
         //paddingTop : 5,
-       //paddingBottom : 10,
+       ////paddingBottom : 10,
        //backgroundColor : appColors.red,
     },
-    
+
+    modal :
+    {
+        //flex : 1,
+        paddingBottom : 5,
+        borderTopWidth : 1,
+        borderTopColor : appColors.secondaryColor3,
+        //borderBottomWidth : 1,
+        //borderBottomColor : appColors.secondaryColor1,
+        backgroundColor : appColors.white,
+        zIndex : 100,
+        position : "absolute", //sor du flow de contentContainerStyle puisque qu!il a un height fixe : 40+55 
+        left : 0,
+        right : 0,
+        top : 40+55,
+        borderWidth : 1,
+        borderBottomColor : appColors.secondaryColor4,
+        borderRadius: 5,
+        shadowColor: appColors.lightWhite,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 5,
+        backgroundColor : appColors.lightWhite,
+        //paddingTop : 5,
+        justifyContent : "center",
+        alignItems : "center",
+    },
     topContainer :
     {
         flexDirection:"row",
         justifyContent:"space-around",
         alignItems : "center",
-        borderBottomWidth : 1,
-        borderBottomColor : appColors.secondaryColor3,
+        //borderWidth : 1,
+        //borderBottomWidth : 1,
+        //borderBottomColor : appColors.secondaryColor3,
         //borderTopWidth : 1,
-        borderTopColor : appColors.lightWhite,
+        //borderTopColor : appColors.lightWhite,
         backgroundColor : appColors.white,
-        height : 40,    
+        //height : 40,  
+        flex : 1, //40+55 for topMostContainer
     },
-    topModal :
+    topMostContainer :
     {
-       
-        zIndex : 100,
-        top : 0,
-        left : 0,
-        right : 0,
-        //height : 55,
-        backgroundColor : appColors.white,
-    },  
+        //height : 40+55,
+        flex : 1,
+       // borderWidth : 1,
+    },
+      
     filtres :
     {
         justifyContent : "center",
         paddingHorizontal : 5,
         borderTopWidth : 1,
         borderTopColor : appColors.secondaryColor3,
-        height : 55,
+        flex : 1,//40+55 for topMostContainer
+        //height : 55, 
         backgroundColor : appColors.white,
         zIndex : 100,
     },
-    modal :
+    categoryContainer :
     {
-        flex : 1,
-        paddingBottom : 5,
-        borderTopWidth : 1,
-        borderTopColor : appColors.blue,
-        //borderBottomWidth : 1,
-        //borderBottomColor : appColors.secondaryColor1,
-        //backgroundColor : "yellow",
-        zIndex : 100,
+        width: "100%",
+        top : 10,
+        paddingBottom : 50,
+        justifyContent:"center",
     },
     orderByContainer :
     {
         width: screenWidth,
-        marginTop : 25,
+        marginTop : 40+10,
         alignItems : "flex-start",
         backgroundColor : appColors.white,
         position : "absolute",
-        top : 30,
+        paddingTop : 20,
         //bottom : 0, left : 0, right : 0, backgroundColor : "red",
-        zIndex : 99,
+        zIndex : 101,
+
+        borderRadius: 5,
+        shadowColor: appColors.lightWhite,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 5,
+        backgroundColor : appColors.lightWhite,
+        //paddingTop : 5,
+        justifyContent : "center",
+        alignItems : "center",
+        borderBottomWidth : 1,
+        borderBottomColor : appColors.secondaryColor4,
     },
   
 
@@ -86,7 +128,7 @@ export const filtersStyles = StyleSheet.create({
     priceContainer : 
     {
         flexDirection : "column",
-        marginTop : 25,
+        marginTop : 10,
         width: screenWidth,
     },
     price : 
@@ -137,7 +179,7 @@ export const filtersStyles = StyleSheet.create({
     {
         flexDirection:"column", 
         justifyContent:"space-around",
-        marginTop : 25,
+        marginTop : 10,
         width: screenWidth,
         /*position:"absolute",
         top:0,
@@ -149,15 +191,7 @@ export const filtersStyles = StyleSheet.create({
     {
         width: 20,
     },
-    categoryContainer :
-    {
-        width: "100%",
-        top : 20,
-        paddingBottom : 50,
-        justifyContent:"center",
-    },
-   
-    
+     
     radioContainer: 
     {
         flexDirection: 'row',
@@ -224,8 +258,9 @@ export const filtersStyles = StyleSheet.create({
        flexDirection : "row",
        justifyContent:"center",
        alignItems : "center",
-       paddingHorizontal : 20,
-       paddingVertical : 10,
+       //paddingHorizontal : 20,
+       //paddingVertical : 10,
+       height : "100%", //OK!
 
     },
     trierFiltrerFocused :
@@ -249,12 +284,12 @@ export const filtersStyles = StyleSheet.create({
         borderColor : appColors.secondaryColor1,
         backgroundColor : appColors.lightOrange,
     },
-
+/*
     cardItem : 
     {
         borderRadius: 80,
         shadowColor: appColors.lightWhite,
-        shadowOffset: { width: 10, height: 20 },
+        shadowOffset: { width: 5, height: 10 },
         shadowOpacity: 0.2,
         shadowRadius: 8,
         elevation: 50,

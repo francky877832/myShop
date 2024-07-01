@@ -28,7 +28,7 @@ const Preferences = (props) => {
                     <View style={preferencesStyles.top}>
                         <Top />
                     </View>
-<ScrollView>
+<View style={[{flex:1,}]}>
                 { isSearch ?
                             <ProductsListWithFilters datas={datas} horizontal={false} styles={preferencesStyles} title="Produits tendances..." />
                     :
@@ -36,7 +36,7 @@ const Preferences = (props) => {
                             <SearchResults styles={{}}/>
                         </View>
                 }
-    </ScrollView>
+    </View>
             </View>
     )
 }
