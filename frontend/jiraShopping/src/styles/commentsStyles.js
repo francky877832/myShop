@@ -11,19 +11,25 @@ export const screenHeight = screen.height
 export const commentsStyles = StyleSheet.create({
     container: 
     {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      top : 20,
       backgroundColor : appColors.white,
+      paddingHorizontal:20,
+      paddingBottom : 20,
     },
     commentContainer: 
     {
       backgroundColor : "red",
+    
+    },
+    flatlistContainerView :
+    {
+      //flex : 1,
     },
     flatlistContainer : 
     {
       backgroundColor : appColors.white,
+    },
+    flatlistContainerNotAll :
+    {
       maxHeight : 600,
     },
     
@@ -56,7 +62,6 @@ export const commentsStyles = StyleSheet.create({
     inputContainer :
     {
       top : 10,
-      borderWidth : 1,
       //justifyContent : "center",
       //alignItems : "center",
     },
@@ -71,6 +76,7 @@ export const commentsStyles = StyleSheet.create({
       borderWidth : 1,
       borderColor : appColors.secondaryColor1,
     }
+  
     
 
   });

@@ -1,0 +1,43 @@
+ const minHeight = 0;
+    const maxHeight = screenHeight/2;
+    const halfHeight = maxHeight / 2;
+    const animatedHeight = useRef(new Animated.Value(maxHeight)).current; // Hauteur initiale de l'image
+    const panResponder = useRef(
+        PanResponder.create({
+            onPanResponderMove: (evt, gestureState) => {
+                let newHeight = animatedHeight + gestureState.dy;
+                // Vérifier si la hauteur est inférieure à la moitié de la hauteur maximale
+               console.log("dd")
+                    if (newHeight < minHeight) {
+                        // Remettre à maxHeight si la hauteur est inférieure à la moitié de la hauteur maximale
+                        newHeight = minHeight
+                    } 
+                    if(newHeight > maxHeight){
+                        // Sinon, réduire à minHeight
+                        newHeight = maxHeight
+                    }
+               
+                animatedHeight.setValue(newHeight)
+            },
+            onPanResponderRelease: (evt, gestureState) => {
+                // Finaliser la hauteur selon gestureState.dy
+                let finalHeight = animatedHeight + gestureState.dy;
+                if(gestureState.dy < 0) 
+                {   
+                    if (finalHeight < halfHeight) {
+                        finalHeight = maxHeight;
+                    } else {
+                        finalHeight = minHeight;
+                    }
+                } else {
+                    finalHeight = maxHeight
+                }
+                Animated.spring(animatedHeight, {
+                    toValue: finalHeight,
+                    useNativeDriver: false,
+                    friction: 7,
+                    tension: 40,
+                }).start();
+            },
+        })
+    ).current;

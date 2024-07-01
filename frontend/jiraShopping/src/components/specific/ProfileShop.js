@@ -15,6 +15,7 @@ import badgeIconStyles from '../../styles/badgeIconStyles';
 import { datas } from '../../utils/sampleDatas';
 import { appColors, customText } from '../../styles/commonStyles';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
+import SellerBrand from '../common/SellerBrand';
 
 const ProfilShop = (props) => {
 {/*
@@ -33,20 +34,7 @@ const ProfilShop = (props) => {
                                 <PrevButton styles={{color:appColors.black}}/>
                             </View>
 
-                            <View style={[profilShopStyles.sellerBrand]}>
-                                <View style={[profilShopStyles.sellerBrandImageContainer]}>
-                                    <Image source={require('../../assets/images/product.png')}   style={[profilShopStyles.sellerBrandImage]}/>
-                                </View>
-                                
-                                <View style={[profilShopStyles.sellerBrandName]}>
-                                    <Text style={[customText.text, {fontWeight:"bold",}]}>@Franck</Text>
-
-                                    <View style={[{flexDirection:"row",justifyContent:"flex-start",alignItems:"center",/*backgroundColor:"red",*/}]}>
-                                        <Text style={[customText.text, {color:appColors.secondaryColor1,}]}>Vendeur certifié</Text>
-                                        <BadgeIcon name="checkmark-circle" size={18} color={appColors.secondaryColor1} badgeCount={0} styles={badgeIconStyles} />
-                                    </View>
-                                </View>
-                            </View>
+                            <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z"/>
 
                             <View style={[profilShopStyles.notifParameter]}>
                                 <Pressable  style={[profilShopStyles.notification, ]} onPress = { ()=>{ console.log("Notifications")} }>

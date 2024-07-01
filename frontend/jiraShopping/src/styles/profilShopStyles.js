@@ -40,33 +40,7 @@ export const profilShopStyles = StyleSheet.create({
     {
         
     },
-    sellerBrand :
-    {
-        flexDirection : "row",
-        width : "70%",
-        left : 20,
-    },
-    sellerBrandImageContainer :
-    {
-        width : 50,
-        height : 50,
-        borderRadius : 25,
-    },
-    sellerBrandImage :
-    {
-        width : 50,
-        height : 50,
-        borderRadius : 25,
-        borderWidth : 2,
-        borderColor : appColors.secondaryColor1,
-    },
-    sellerBrandName :
-    {
-        height : 50,
-        flexDirection : "column",
-        justifyContent : "space-evenly",
-        paddingLeft : 10,
-    },
+    
     notifParameter :
     {
         flexDirection : "row",

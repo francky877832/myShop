@@ -1,4 +1,4 @@
-import { StyleSheet, } from "react-native";
+import { StyleSheet, StatusBar} from "react-native";
 import { appColors, appFont } from "./commonStyles";
 import { screenHeight, screenWidth } from "./commentsStyles";
 import { productStyles } from "./productStyles";
@@ -8,25 +8,27 @@ export const productDetailsStyles = StyleSheet.create({
     container : 
     {
         //top : 0,
-        height : screenHeight,
+        width : "100%",
+        height : "100%",
     },
     buttonContainer : 
     {
         flexDirection : "row",
         justifyContent : "space-between",
         paddingHorizontal : 10,
-        top : 30,
-        zIndex : 99,
+        zIndex : 100,
         backgroundColor : appColors.lightBlack, //transparence sur limage
     },
     similarContainer : 
     {
         ...filtersStyles.similarContainer,
-        paddingBottom :  60,
+        top : 20,
+        //paddingLeft : 1,
+        paddingBottom :  170,
     },
     getBackPosition :
     {
-        bottom : 30 //to get back position from buttonContainer
+        bottom : 60 //to get back position from buttonContainer
     },
 
     buttonContainerLeft : 
@@ -36,7 +38,7 @@ export const productDetailsStyles = StyleSheet.create({
     },
     prevButton :
     {
-        
+        color : appColors.white,
     },
     likeButton : //not used cause of different place to display in
     {
@@ -50,9 +52,7 @@ export const productDetailsStyles = StyleSheet.create({
     underCaroussel :
     {
         //flex : 1,
-        backgroundColor : appColors.white, 
-        paddingHorizontal : 10,
-        paddingTop : 5,
+        backgroundColor : appColors.white,
 
     },
     since :
@@ -86,15 +86,29 @@ export const productDetailsStyles = StyleSheet.create({
         borderRadius : 5,
         width : "100%",
     },
+    infosBox :
+    {
+        paddingHorizontal : 10,
+        paddingTop : 5,
+    },
     commentsContainer : 
     {
         //flex : 1,
         width : "100%",
-        paddingHorizontal : 10,
+        //paddingHorizontal : 5,
         paddingBottom : 10,
         backgroundColor : appColors.white,
         top : 10,
         paddingTop : 10,
+    },
+    scrollView :
+    {
+        backgroundColor : appColors.lightWhite,
+        width : "100%",
+        //bottom : -screenHeight/2,
+        left : 0,
+        right : 0,
+        
     },
 
     bottom :
@@ -105,13 +119,13 @@ export const productDetailsStyles = StyleSheet.create({
         position : "absolute",
         left : 0,
         right : 0,
-        bottom : 0,
+        top : screenHeight-60,
         backgroundColor : appColors.white,
         height : 60,
         borderWidth : 1,
         borderColor : appColors.secondaryColor3,
-        paddingVertical : 10,
-        paddingHorizontal : 5,
+        //paddingVertical : 10, height est fixe
+        paddingHorizontal : 10,
     },
     button:
     {
@@ -149,5 +163,12 @@ export const productDetailsStyles = StyleSheet.create({
         left : -5,
     },
 
+    sellerBrand :
+    {
+        backgroundColor : appColors.lightOrange,
+        paddingVertical : 10,
+        paddingHorizontal : 5,
+    },  
 
+  
 })

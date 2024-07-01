@@ -23,7 +23,7 @@ export const productsListStyles = StyleSheet.create({
     {
         flexDirection : "row",
         paddingHorizontal : paddingForProductContainer.horizontal/2,
-        backgroundColor : appColors.lightWhite2,
+        backgroundColor : appColors.lightWhite,
     },
  
     flatlistHorizontal :
@@ -31,7 +31,7 @@ export const productsListStyles = StyleSheet.create({
         //flex: 1,
         flexDirection : "row",
         justifyContent : "center",
-        backgroundColor : appColors.lightWhite2,
+        backgroundColor : appColors.lightWhite,
     },
 
 

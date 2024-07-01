@@ -17,11 +17,11 @@ export const appColors = {
     green : "green",
     orange : "orange",
     white : "#fff",
-    lightBlack : "black",//"rgba(0, 0, 0, 0.2)",
+    lightBlack : "rgba(0, 0, 0, 0.2)",
     black : "rgba(0, 0, 0, 0.9)",
-    clearBlack : "black",//"rgba(0, 0, 0, 0.7)",
+    clearBlack : "rgba(0, 0, 0, 0.7)",
     lightWhite : "rgb(240, 240, 240)",
-    lightWhite2 : "black",//"rgba(240, 240, 240, 0.02)",
+    //lightWhite2 : "rgba(240, 240, 240, 0.02)",
 }
 
 export const appFont = {

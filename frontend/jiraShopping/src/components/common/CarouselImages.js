@@ -10,8 +10,9 @@ import { datas } from '../../utils/sampleDatas';
 
 const { width: screenWidth } = Dimensions.get('window');
 
-const CarouselImage = () =>
+const CarouselImage = (props) =>
 {
+  const {styles} = props
     const carouselRef = useRef(null);
     const [index, setIndex] = useState(0);
     const image = "../../assets/images/product5.png"
@@ -25,7 +26,7 @@ const CarouselImage = () =>
 
 
   return (
-    <View style={caourselImageStyles.container}>
+    <View style={[caourselImageStyles.container,styles]}>
       <Carousel loop={true} width={screenWidth} height={screenWidth*1.2} autoPlay={true} data={datas} scrollAnimationDuration={1000} renderItem={renderItem}/>
     </View>
   );

@@ -10,24 +10,27 @@ import { sinceDate, countDatas} from '../../utils/commonAppFonctions';
 
 import { datas } from '../../utils/sampleDatas';
 
-const Comments = (props) =>
+const Comments = () =>
 {
-    const { all, navigation} = props 
     //Requete parametres avec le nombre  de comments a afficher
     //modifier comments avec un champ subComment au lieur de isResponseTo
     const [inputValue, setInputValue] = useState("")
     const [isFocused, setIsFocused] = useState(false)
-    const [isAll, setIsAll] = useState(all)
-  
+    const [isAll, setIsAll] = useState(false)
+    
+    const _displayComments = (number) => {
+        number == comments.total ? setIsAll(true) : setIsAll(initialNumberOfComments==comments.total) 
+    }
+
         const initialNumberOfComments = 2
-        let data = [...datas] ; data = !all ? data.slice(0, initialNumberOfComments+1) : datas
-        const comments = {comments : [...data], count:2, total : 3} //format de retourn cote server Express
+        let data = [...datas] ; data = !isAll ? data.slice(0, initialNumberOfComments+1) : datas
+        const comments = {comments : [...data], count:2, total : 3}
         let  reshapedComments = reshapeComments(comments.comments)
 
         console.log(reshapedComments)
 
     const Comment = (props) => {
-        const { comment, styles, all } = props
+        const { comment, styles } = props
 
         const [showSubComment, setShowSubComment] = useState(false)
 
@@ -44,15 +47,15 @@ const Comments = (props) =>
 
                         <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>Ecrit il y'a {sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }</Text></View>
                         {
-                            comment.subComment && comment.subComment.length > 0 && all
+                            comment.subComment && comment.subComment.length > 0
                             ?
-                                    <Pressable onPress={()=>{setShowSubComment(!showSubComment)}} style={{alignSelf:"flex-end",}}>
-                                        { showSubComment ?
-                                            <Text style={[customText.text, {textDecorationLine:"underline",fontWeight:"bold"}]}>Masquer les reponses</Text>
-                                            :
-                                            <Text style={[customText.text, {textDecorationLine:"underline",fontWeight:"bold",}]}>Afficher les reponses</Text>
-                                        }
-                                    </Pressable>
+                                <Pressable onPress={()=>{setShowSubComment(!showSubComment)}} style={{alignSelf:"flex-end",}}>
+                                    { showSubComment ?
+                                        <Text style={[customText.text, {textDecorationLine:"underline",fontWeight:"bold"}]}>Masquer les reponses</Text>
+                                        :
+                                        <Text style={[customText.text, {textDecorationLine:"underline",fontWeight:"bold",}]}>Afficher les reponses</Text>
+                                    }
+                                </Pressable>
                             :
                             false
                         }
@@ -91,37 +94,34 @@ const Comments = (props) =>
 
 
     return(
-        <ScrollView contentContainerStyle={[commentsStyles.container,{}]}>
-           { !all &&  
+        <View style={{}}>
             <View style={[{flexDirection:"column",justifyContent:"center"}]}>
-               
-                    <Pressable>
+                <Pressable>
                         <Text style={[customText.text, {fontWeight:"bold",fontSize:20,color:appColors.black}]}>Une Questions ?</Text>
-                    </Pressable>
-        
-                    <Pressable onPress={()=>{navigation.navigate("AllComments")}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
-                        
-                            <Text style={[customText.text,{color:appColors.green,}]}>Tout Afficher</Text>
-                        
-                            <Text style={[customText.text,{color:appColors.black,}]}>({countDatas(datas)})</Text>
-                    </Pressable>
+                </Pressable>
+
+                <Pressable onPress={()=>{_displayComments(isAll ? initialNumberOfComments : comments.total )}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
+                    {
+                        !isAll ?
+                        <Text style={[customText.text,{color:appColors.green,}]}>Tout Afficher</Text>
+                        :
+                        <Text style={[customText.text, {color:appColors.secondaryColor1}]}>Afficher Moins</Text>
+                    }
+                        <Text style={[customText.text,{color:appColors.black,}]}>({countDatas(datas)})</Text>
+                </Pressable>
             </View>
-        }
-            <View style={[commentsStyles.flatlistContainerView]}>
                 <FlatList
                     data={reshapedComments}
-                    renderItem={ ({item}) => { return <Comment all={all} comment={item} styles={ {comment : {...commentsStyles.comment}, subComment : {...commentsStyles.subComment}}} /> } }
+                    renderItem={ ({item}) => { return <Comment comment={item} styles={ {comment : {...commentsStyles.comment}, subComment : {...commentsStyles.subComment}}} /> } }
                     keyExtractor={ (item) => { return item.id_.toString(); } }
                     horizontal={false}
                     numColumns={ 1 }
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={[commentsStyles.flatlistContainer, !all?commentsStyles.flatlistContainerNotAll:false]}
+                    contentContainerStyle={[commentsStyles.flatlistContainer]}
                 />
-            </View>
-        { !all &&  
-            <View style={[commentsStyles.inputContainer, {borderWidth:isFocused?0:1,}]}>
-               <Input placeholder="Posez une question" onChangeText={(text)=>{setInputValue(text)}}
+            <View style={commentsStyles.inputContainer}>
+               <Input placeholder="Posez une question sur le produit" onChangeText={(text)=>{setInputValue(text)}}
                     multiline={true}
                     numberOfLines={1}
                     placeholderTextColor={appColors.lightWhite}
@@ -129,7 +129,7 @@ const Comments = (props) =>
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                     underlineColorAndroid='transparent'
-                    inputContainerStyle={ { borderBottomWidth:isFocused?0:1, }}
+                    inputContainerStyle={ { borderBottomWidth: 1, }}
                     rightIcon={ 
                         <Pressable onPress={() => {console.log("Go")}} style={[commentsStyles.sendButton]}>
                             <Icon name='send-sharp' type='ionicon' size={24} color={appColors.secondaryColor1} />
@@ -138,8 +138,7 @@ const Comments = (props) =>
                     value={inputValue}
                 />
             </View>
-        }
-        </ScrollView>
+        </View>
     )
 }
 
