@@ -1,5 +1,5 @@
-import { StyleSheet, } from "react-native";
-import { appColors, appFont, screenWidth, customText, inputTextStyle} from "./commonStyles";
+import { StyleSheet, StatusBar} from "react-native";
+import { appColors, appFont, screenWidth, customText, inputTextStyle, screenHeight} from "./commonStyles";
 
 
 import { commentsStyles } from "./commentsStyles";
@@ -9,12 +9,12 @@ export const offersStyles = StyleSheet.create({
     container :
     {
         flex : 1,
-        backgroundColor : appColors.lightWhite
+        backgroundColor : appColors.lightWhite,
     },
     bottom : 
     {
         position : "absolute",
-        bottom : 0,
+        bottom : StatusBar.currentHeight,
         left : 0,
         right : 0,
         paddingVertical : 20,
@@ -35,11 +35,11 @@ export const offersStyles = StyleSheet.create({
     },
     offerContainer : //offer sans "s" la ou il ya le prix
     {
-        flex : 1,
+        //flex : 1,
     },
     offersContainerFlatlist : //for flatlist
     {
-        flex : 1,
+        //flex : 1,
         padding: 20,
         backgroundColor : appColors.lightWhite,
     },

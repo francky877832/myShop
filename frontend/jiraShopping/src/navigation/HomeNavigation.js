@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigationState } from '@react-navigation/native';
 
@@ -27,7 +27,7 @@ const HomeNavigation = () => {
           headerShown : false,
           tabBarActiveTintColor: "blue",
           tabBarInactiveTintColor: "gray",
-          tabBarStyle: [{"display": route.name == "Home" ? 'none' : 'flex',}, null],
+          tabBarStyle: [{"display": route.name == "Home" ? 'none' : 'flex', bottom:StatusBar.currentHeight,}, null],
 
 
           tabBarIcon: ({ focused, color, size }) => {

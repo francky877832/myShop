@@ -6,35 +6,55 @@ export const searchBarStyles = StyleSheet.create({
     container: 
     {
         flex : 1,
-        borderWidth: 0,
-        borderColor: appColors.mainColor,
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderTopColor: appColors.mainColor,
+        borderBottomColor: appColors.mainColor,
         backgroundColor : appColors.white,
-        flexDirection : "column",
+        flexDirection : "row",
         justifyContent : "center",
         alignItems : "center",
-        height : 35,
-        paddingTop : 5,
+        //height : 35,
+        paddingHorizontal : 10,
     },
-    input : 
+    containerBox :
     {
-        ...customText,
+        flex:1,
+        flexDirection : "row",
+        justifyContent : "center",
+        alignItems : "center",
+        paddingHorizontal : 5,
+        backgroundColor: appColors.white,
+    },
+    prevButton : 
+    {
+        top : 0,
+    },
+    inputText : 
+    {
+        ...customText.text,
         ...inputTextStyle,
-        width: '100%',
-        height: 35,
-        borderColor: appColors.lightWhite,
-        borderWidth: 1,
-        //paddingVertical: 15,
-        paddingHorizontal : 20,
         fontSize: 16,
         color: '#333',
-        backgroundColor: appColors.white,
         fontFamily : appFont.mainFontFamily,
+    },
+    inputContainer : 
+    {
+        borderWidth: 1,
+        borderColor: appColors.lightWhite,
+        paddingHorizontal : 5,
+        backgroundColor: appColors.white,
         justifyContent : "center",
         alignItems : "center",
+        alignSelf : "center",
+        borderWidth : 1,
+        borderColor: appColors.lightWhite,
+        borderRadius : 60,
     },
    
-    inputFocused : 
+    inputContainerFocused : 
     {
+        borderWidth : 1,
         borderColor: appColors.secondaryColor1,
     },
 

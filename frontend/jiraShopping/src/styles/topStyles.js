@@ -1,5 +1,5 @@
 import { StyleSheet, } from "react-native";
-import { appColors, appFont } from "./commonStyles";
+import { appColors, appFont, screenWidth } from "./commonStyles";
 
 
 
@@ -9,23 +9,23 @@ export const topStyles = StyleSheet.create({
     {
         //flex : 1,
         flexDirection : "row",
-        justifyContent : "center",
+        justifyContent : "space-around",
         alignItems : "center",
         backgroundColor : appColors.white,
-        width : "100%",
+        width : screenWidth,
         height : 60,
+        borderWidth : 1,
+        borderColor : appColors.secondaryColor3,
     },
 //A passer a searchbar
     searchBarContainer :
     {
-        width : "100%",
-        justifyContent : "center",
-        alignItems : "center",
+        
     },
 //A passer a searchbar
     searchBarInput :
     {
-        width : "100%",
+       
     },
     inputContainerStyle : 
     {
@@ -36,11 +36,12 @@ export const topStyles = StyleSheet.create({
     pressableBar : 
     {
         width : "90%",
+        borderWidth : 0,
     },
 
     notification : 
     {
-        
+        right : 5
     },
     
     searchBar : 

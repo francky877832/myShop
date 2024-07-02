@@ -11,8 +11,10 @@ export const searchStyles = StyleSheet.create({
     filter :
     {
         //flex : 1,
-        backgroundColor : appColors.lightWhite,
+        backgroundColor : appColors.white,
         height : 300,
+        borderTopWidth : 1,
+        borderTopColor : appColors.lightWhite,
     },
     searchBar : 
     {
@@ -24,16 +26,12 @@ export const searchStyles = StyleSheet.create({
 //A passer a searchbar
     searchBarContainer :
     {
-        width : "101%",
-        justifyContent : "center",
-        alignItems : "center",
+        
     },
 //A passer a searchbar
     searchBarInput :
     {
-        borderWidth : 0,
-        width : "100%",
-        borderColor: appColors.white,
+        
     },
 
     historyLabelContainer:
@@ -48,8 +46,8 @@ export const searchStyles = StyleSheet.create({
     historyContainer :
     {
        flex : 1,
-       top : 50,
-       backgroundColor : appColors.lightWhite,
+       top : 20,
+       backgroundColor : appColors.white,
     },
     history:
     {
@@ -63,7 +61,7 @@ export const searchStyles = StyleSheet.create({
     },
     historyFlatlist:
     {
-       flex : 1,
+        flex : 1,
         backgroundColor : appColors.white,
         paddingLeft : 10,
         marginTop : 10,
@@ -91,6 +89,7 @@ export const searchStyles = StyleSheet.create({
     label :
     {
         ...customText.text,
+        fontSize : 16,
        fontFamily : appFont.secondaryFontFamily3,
        fontWeight : "bold",
        color : appColors.secondaryColor5,

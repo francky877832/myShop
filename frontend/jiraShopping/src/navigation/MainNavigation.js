@@ -26,11 +26,11 @@ export default function MainNavigation() {
     <FavouritesProvider>
       <FilterProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Search">
+          <Stack.Navigator initialRouteName="Offers">
             <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, }} />
             <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
             <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
-            <Stack.Screen name="Offers" component={Offers}  options={{ title: 'Offers', headerShown : false, tabBarVisible: false, }} />
+            <Stack.Screen name="Offers" component={Offers}  options={{ title: 'Propositions', headerShown : true, tabBarVisible: false, }} />
             <Stack.Screen name="AllComments" component={AllCommets}  options={{ title: 'All Comments', headerShown : true, tabBarVisible: false, }} />
 
           </Stack.Navigator>

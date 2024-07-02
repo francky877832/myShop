@@ -1,4 +1,4 @@
-import { StyleSheet, } from "react-native";
+import { StyleSheet, StatusBar } from "react-native";
 import { appColors, appFont } from "./commonStyles";
 import SellerBrand from "../components/common/SellerBrand";
 
@@ -11,6 +11,7 @@ export const profilShopStyles = StyleSheet.create({
         flex : 1,
         top : 0,
         backgroundColor : appColors.white,
+        paddingBottom : StatusBar.currentHeight,
     },
     productContainer : 
     {

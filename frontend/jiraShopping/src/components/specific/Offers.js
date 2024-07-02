@@ -147,7 +147,7 @@ const Offers = (props) => {
 
 
     return (
-        <ScrollView contentContainerStyle={[offersStyles.container]}>
+        <View style={[offersStyles.container]}>
             <FlatList
                     data={offers}
                     renderItem={ ({item}) => { return <OffersItem item={item} seller={seller} buyer={buyer} styles={{}} /> } }
@@ -213,7 +213,7 @@ const Offers = (props) => {
                                         </View>
                 }
                 </View>
-        </ScrollView>
+        </View>
     )
 }
 

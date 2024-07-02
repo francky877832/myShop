@@ -14,21 +14,29 @@ const SearchBar =  forwardRef((props, ref) => {
     const [isFocused, setIsFocused] = useState(false)
     return (
         <View style={[searchBarStyles.container, styles.searchBarContainer ]}>
+            {!isPrev ? false :
+                    <View>
+                        <Pressable onPress={() => {console.log("Go")}} style={searchBarStyles.prevButton}>
+                            <Icon name='arrow-back' type='ionicon' color={appColors.secondaryColor5} />
+                        </Pressable>
+                    </View>
+                }
+                <View style={{width:10,}}></View>
             <Input placeholder={placeholder} value={value} onChangeText={onChangeText} ref={ref}
-            inputMode='search'
+                inputMode='search'
                 placeholderTextColor={placeholderTextColor}
-                style = {[searchBarStyles.input, isFocused && searchBarStyles.inputFocused, styles.searchBarInput]}
+                inputStyle = {[searchBarStyles.inputText, ]}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 underlineColorAndroid='transparent'
-                inputStyle={[customText.text]}
-                containerStyle={ [{borderBottomWidth: isPrev?0:0,borderRadius:styles.searchBarInput.borderRadius, flex:1}, styles.inputContainerStyle]}
-                leftIcon={ !isPrev ? false :
+                containerStyle={ [searchBarStyles.containerBox, styles.searchBarContainer,]}
+                inputContainerStyle = {[searchBarStyles.inputContainer, styles.searchBarInput, isFocused && searchBarStyles.inputContainerFocused,]}
+                leftIcon={ 
                     <Pressable onPress={() => {console.log("Go")}}>
-                        <Icon name='arrow-back' type='ionicon' />
+                        <Icon name='search' type='ionicon' color={appColors.secondaryColor1} />
                     </Pressable>
                 }
-
+               
             />
       </View>
 

@@ -52,7 +52,6 @@ export const customText = {
 export const inputTextStyle = {
     fontSize: 16,
     color: appColors.secondaryColor5,
-    backgroundColor: appColors.white,
     fontFamily : appFont.mainFontFamily,
     fontWeight : "bold",
 

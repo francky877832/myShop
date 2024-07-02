@@ -53,16 +53,16 @@ const Search = (props) => {
             <View style={searchStyles.filter}>
 
 
-{/*Suggestion avec un productList*/}
-            <View style={{flex:1,}}>        
-                <View style={{height:10,backgroundColor:appColors.white}}></View>
-                    <View style={[searchStyles.submit,]}>
-                        <Pressable style={[searchStyles.pressableSubmit, productStyles.card]}>
-                            <Text style={[searchStyles.label, searchStyles.textSubmit]}>Rechercher</Text>
-                        </Pressable>
-                    </View>
-            </View>
-
+{/*Suggestion avec un productList
+                <View style={{flex:1,}}>        
+                    <View style={{height:10,backgroundColor:appColors.white}}></View>
+                        <View style={[searchStyles.submit,]}>
+                            <Pressable style={[searchStyles.pressableSubmit, productStyles.card]}>
+                                <Text style={[searchStyles.label, searchStyles.textSubmit]}>Rechercher</Text>
+                            </Pressable>
+                        </View>
+                </View>
+*/}
                 
 
                     <View style={searchStyles.historyContainer}>
@@ -76,7 +76,7 @@ const Search = (props) => {
                         </View>
 
 
-                        <View style={searchStyles.historyFlatlist}>
+                        <ScrollView style={searchStyles.historyFlatlist}>
                             <FlatList
                                 data={datas}
                                 renderItem={ ({item}) => {  return (
@@ -94,12 +94,14 @@ const Search = (props) => {
                                 contentContainerStyle={{}}
                                 ListEmptyComponent={<EmptyLit giveFocus={_handleFocusTextInput} text="Historique de recherche vide.|Effectuer une recherche." />}
                             />
-                        </View>
+                        </ScrollView>
                     </View>
                 </View>
                 
 
-            </ScrollView>
+        </ScrollView>
+
+
         </SafeAreaView>
     )
 }
