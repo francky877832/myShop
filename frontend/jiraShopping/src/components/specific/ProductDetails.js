@@ -28,27 +28,12 @@ const ProductDetails = (props) => {
     const halfHeight = maxHeight / 2;
     const initialHeight = maxHeight;
 
-
-    const minMarginTop = -screenHeight / 2;
-    const maxMarginTop = 0
-    const halfMarginTop = minMarginTop / 2;
-    const initialMarginTop = maxMarginTop;
-
     
     const pan = useRef(new Animated.Value(initialHeight)).current;
     const [lastValidHeight, setLastValidHeight] = useState(initialHeight);
     const animatedHeight = pan.interpolate({
         inputRange: [minHeight, maxHeight],
         outputRange: [minHeight, maxHeight],
-        extrapolate: 'clamp',
-    });
-
-
-    const pan_m = useRef(new Animated.Value(initialMarginTop)).current;
-    const [lastValidMarginTop, setLastValidMarginTop] = useState(initialMarginTop);
-    const animatedMarginTop = pan.interpolate({
-        inputRange: [minMarginTop, maxMarginTop],
-        outputRange: [maxMarginTop, maxMarginTop],
         extrapolate: 'clamp',
     });
 
@@ -95,45 +80,7 @@ const ProductDetails = (props) => {
 
 
 
-    const panResponder_m = useRef(
-        PanResponder.create({
-          onMoveShouldSetPanResponder: () => true,
-          onPanResponderMove: (ev, gestureState) => 
-              {
-                alert("ok"),
-                  setLastValidMarginTop(pan_m._value);
-  
-                  Animated.event(
-                  [
-                      null,
-                      { dy: pan_m }
-                  ],
-                  { useNativeDriver: false }
-          )},
-          onPanResponderRelease: (evt, gestureState) => {
-                  let finalValue;
-  
-                  if (gestureState.dy < 0) {
-                      // Si le geste va vers le haut (vers le haut de l'écran)
-                      finalValue = lastValidMarginTop + gestureState.dy;
-                     
-                          finalValue = -20; // Revenir à la hauteur initiale si moins de la moitié
-                     
-                  } else {
-                      // Si le geste va vers le bas (vers le bas de l'écran)
-                      finalValue = 0; // Revenir à la hauteur initiale
-                  }
-  
-            Animated.spring(pan, {
-              toValue: -100,
-              useNativeDriver: false,
-              friction: 7,
-              tension: 50,
-            }).start();
-          }
-        })
-      ).current;
-  
+    
 
     return (
         <View style={productDetailsStyles.container}>

@@ -7,7 +7,7 @@ import { appColors, appFont } from "./commonStyles";
 export const favouritesStyles = StyleSheet.create({
     container : 
     {
-        flex : 1,   
+        flex : 1,
     },
 
     top :

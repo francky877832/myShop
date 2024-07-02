@@ -24,7 +24,7 @@ const HomeNavigation = () => {
   //const currentRouteName = navigationState.routes[navigationState.index].name;
 
   return (
-    <Tab.Navigator initialRouteName='Basket'
+    <Tab.Navigator initialRouteName='Shop'
         screenOptions={({ route }) => ({
           headerShown : false,
           tabBarActiveTintColor: "blue",

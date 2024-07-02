@@ -9,11 +9,12 @@ import { appColors,customText} from '../../styles/commonStyles';
 import { sinceDate } from '../../utils/commonAppFonctions';
 
 const SellerBrand = (props) => {
-    const { pub, onlineDate, certified} = props
+    const { pub, onlineDate, certified, pp} = props
+        const profile = pp || require('../../assets/images/product.png')
     return(
             <View style={[sellerBrandStyles.sellerBrand]}>
                 <View style={[sellerBrandStyles.sellerBrandImageContainer]}>
-                    <Image source={require('../../assets/images/product.png')}   style={[sellerBrandStyles.sellerBrandImage]}/>
+                    <Image source={profile}   style={[sellerBrandStyles.sellerBrandImage]}/>
                 </View>
                                 
                 <View style={[sellerBrandStyles.sellerBrandName]}>
@@ -22,12 +23,12 @@ const SellerBrand = (props) => {
                         { pub &&
                             <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center",alignSelf:"flex-end",left:10,top:-3}]}>
                                 <Icon name="ellipse" type='ionicon' size={10} color={appColors.green}  styles={{}} />
-                                <Text style={[customText.text, {color:appColors.secondaryColor5,fontSize:11,left:5,}]}>En ligne il y'a {sinceDate(onlineDate)[0] + " " + sinceDate(onlineDate)[1]}</Text>
+                                    <Text style={[customText.text, {color:appColors.secondaryColor5,fontSize:11,left:5,}]}>En ligne il y'a {sinceDate(onlineDate)[0] + " " + sinceDate(onlineDate)[1]}</Text>
                             </View>
                         }
                     </View>
                     <View style={[{flexDirection:"row",justifyContent:"flex-start",alignItems:"center",/*backgroundColor:"red",*/}]}>
-                        <Text style={[customText.text, {color:appColors.secondaryColor1,}]}>{!certified?"Vendeur certifié":"Membre"}</Text>
+                        <Text style={[customText.text, {color:appColors.secondaryColor1,}]}>{certified?"Vendeur certifié":"Membre"}</Text>
                             <BadgeIcon name="checkmark-circle" size={18} color={appColors.secondaryColor1} badgeCount={0} styles={badgeIconStyles} />
                     </View>
                 </View>

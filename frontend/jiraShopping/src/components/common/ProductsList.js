@@ -10,8 +10,8 @@ import { numProduct } from '../../styles/productStyles';
 //Contexte
 import { FavouritesContext } from '../../context/FavouritesContext';
 
-const ProductsList = (props) => {
-    const { datas, horizontal, styles } = props;
+const ProductsList = React.forwardRef((props, ref) => {
+    const { datas, horizontal, styles, onEndReached } = props;
     const {favourites} = useContext(FavouritesContext)
 
 
@@ -26,9 +26,12 @@ const ProductsList = (props) => {
                         ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                         showsHorizontalScrollIndicator={horizontal}
                         contentContainerStyle={[productsListStyles.flatlist, horizontal ? productsListStyles.flatlistHorizontal : false, styles.flatlist]}
+                        ref={ref}
+                        onEndReached={onEndReached}
+                        onEndReachedThreshold={0.75}
                     />
             </View>
     )
-}
+})
 
 export default  ProductsList

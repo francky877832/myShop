@@ -7,8 +7,8 @@ import Filters from './Filters';
 import { preferencesStyles } from '../../styles/preferencesStyles';
 import { customText, appColors, appFont } from '../../styles/commonStyles';
 
-const ProductsListWithFilters = (props) => {
-    const { datas, horizontal, title } = props;
+const ProductsListWithFilters = React.forwardRef((props, ref) => {
+    const { datas, horizontal, title, onEndReached} = props;
    
     return(
             <View style={[productsListWithFiltersStyles.container]}>
@@ -19,12 +19,12 @@ const ProductsListWithFilters = (props) => {
                 <View style={{flex:1,flexDirection:"column",}}>
                     <Filters suggestion={false} />
                     <View style={{height:10}}></View>
-                    <ProductsList datas={datas} horizontal={false} styles={preferencesStyles} />
+                    <ProductsList onEndReached={onEndReached} ref={ref} datas={datas} horizontal={false} styles={preferencesStyles} />
                 </View>
 
             </View>
     )
-}
+})
 
 export default  ProductsListWithFilters
 
@@ -36,7 +36,7 @@ const productsListWithFiltersStyles = StyleSheet.create({
     },
     title : 
     {
-        paddingVertical: 20,
+        paddingVertical: 5,
         paddingLeft : 10,
         borderBottomWidth : 1,
         borderBottomColor : appColors.lightWhite,

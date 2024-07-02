@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable } from 'react-native';
+import { View, Text, Animated, Pressable, PanResponder } from 'react-native';
 
 //custom component
 import Top from '../common/Top';
@@ -13,7 +13,7 @@ import badgeIconStyles from '../../styles/badgeIconStyles';
 
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
-import { appColors, customText } from '../../styles/commonStyles';
+import { appColors, customText, screenHeight, screenWidth } from '../../styles/commonStyles';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
 import SellerBrand from '../common/SellerBrand';
 
@@ -26,9 +26,89 @@ const ProfilShop = (props) => {
 
     const [follow, setIsFollow] = useState(true) //Je ne crois pas avoir besoin de Search
 
+    const flatListRef = useRef(null);
+
+    const maxTop = 180;
+    const minTop = 65
+    const halfTop = maxTop / 2;
+    const initialTop = maxTop;
+
+    
+    const pan = useRef(new Animated.Value(initialTop)).current;
+    const [lastValidTop, setLastValidTop] = useState(initialTop);
+    const animatedTop = pan.interpolate({
+        inputRange: [minTop, maxTop],
+        outputRange: [minTop, maxTop],
+        extrapolate: 'clamp',
+    });
+
+    //flatListRef.current.setNativeProps({ scrollEnabled: false });
+    const onEndReached = () => {
+            if (flatListRef.current) {
+                flatListRef.current.setNativeProps({ scrollEnabled: false });
+              }
+      };
+      
+    const panResponder = useRef(
+      PanResponder.create({
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: (ev, gestureState) => 
+            {
+                //console.log("ok")
+                if (flatListRef.current) {
+                    flatListRef.current.setNativeProps({ scrollEnabled: false });
+                  }
+
+                setLastValidTop(pan._value);
+
+                Animated.event(
+                [
+                    null,
+                    { dy: pan }
+                ],
+                { useNativeDriver: false }
+        )},
+        onPanResponderRelease: (evt, gestureState) =>{
+            if (flatListRef.current) {
+                flatListRef.current.setNativeProps({ scrollEnabled: false });
+              }
+                let finalValue;
+                finalValue = lastValidTop - gestureState.dy;
+                if (gestureState.dy < 0) {
+                    // Si le geste va vers le haut (vers le haut de l'écran)
+                    
+                    if (finalValue < halfTop) {
+                        finalValue = minTop; // Revenir à la hauteur initiale si moins de la moitié
+                    } else {
+                        finalValue = minTop; // Aller à la hauteur minimale sinon
+                    }
+                } else {
+                    // Si le geste va vers le bas (vers le bas de l'écran)
+                    finalValue = initialTop; // Revenir à la hauteur initiale
+                }
+
+          Animated.spring(pan, {
+            toValue: finalValue,
+            useNativeDriver: false,
+            friction: 7,
+            tension: 50,
+          }).start();
+
+          if (flatListRef.current) {
+            flatListRef.current.setNativeProps({ scrollEnabled: true });
+          }
+
+          
+        }
+      })
+    ).current;
+
+
+
+
     return(
                 <View style={profilShopStyles.container}>
-                    <View style={profilShopStyles.topContainer}>
+                    <Animated.View style={[profilShopStyles.topContainer, {height:animatedTop}]}>
                         <View style={[profilShopStyles.topTop]}>
                             <View style={[profilShopStyles.prevButton,{}]}>
                                 <PrevButton styles={{color:appColors.black}}/>
@@ -46,7 +126,7 @@ const ProfilShop = (props) => {
                                 </Pressable>
                             </View>
                         </View>
-
+                
                         <View style={[profilShopStyles.follow]}>
                             <View style={[profilShopStyles.followInformations]}>
                                 <View style={[profilShopStyles.followLeftElements,profilShopStyles.sold,{}]}>
@@ -76,10 +156,11 @@ const ProfilShop = (props) => {
                                     <BadgeIcon name={follow ? "person-remove" : "person-add"} size={24} color={follow ? appColors.secondaryColor1 : appColors.white} badgeCount={0} styles={badgeIconStyles} />
                                     <Text style={[customText.text,{ fontWeight:"bold", color : follow ? appColors.secondaryColor1 : appColors.white}]}>{follow ? "Unfollow" : "Follow"}</Text>
                                 </Pressable>
-                    </View>
+                    </Animated.View>
+                    
 
-                        <View style={{flex:1,}}>
-                            <ProductsListWithFilters datas={datas} horizontal={false} styles={profilShopStyles} title={`${datas.length} ${datas.length > 1 ? 'Produits' : 'Produit'}`} />
+                        <View style={{flex:1,}} {...panResponder.panHandlers}>
+                            <ProductsListWithFilters onEndReached={onEndReached} ref={flatListRef} datas={datas} horizontal={false} styles={profilShopStyles} title={`${datas.length} ${datas.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
                 </View>
     )

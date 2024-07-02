@@ -23,7 +23,7 @@ export const profilShopStyles = StyleSheet.create({
         width : "100%",
         backgroundColor : appColors.lightOrange2,
         padding : 10,
-       // height : 190,
+        //height : 180,
     },
     flatlist :
     {
