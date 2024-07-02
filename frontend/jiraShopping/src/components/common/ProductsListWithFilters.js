@@ -18,7 +18,6 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
 
                 <View style={{flex:1,flexDirection:"column",}}>
                     <Filters suggestion={false} />
-                    <View style={{height:10}}></View>
                     <ProductsList onEndReached={onEndReached} ref={ref} datas={datas} horizontal={false} styles={preferencesStyles} />
                 </View>
 

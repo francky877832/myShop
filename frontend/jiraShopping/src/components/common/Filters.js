@@ -57,7 +57,7 @@ const Filters = (props) => {
     const [modalConditionVisible, setModalConditionVisible] = useState(false);
     const [modalCategoryVisible, setModalCategoryVisible] = useState(false);
     const [modalOrderByVisible, setModalOrderByVisible] = useState(false);
-    const [modalFiltersVisible, setModalFiltersVisible] = useState(true);
+    const [modalFiltersVisible, setModalFiltersVisible] = useState(false);
     const functionsCatalog = { //for element in the filters
         "price" :  [modalPriceVisible, setModalPriceVisible],
         "condition" : [modalConditionVisible, setModalConditionVisible],
@@ -243,13 +243,14 @@ const Filters = (props) => {
         }
 
 
-        {modalFiltersVisible && modalCategoryVisible &&
+        {
+            modalFiltersVisible && modalCategoryVisible &&
                     <View style={[filtersStyles.categoryContainer, filtersStyles.cardItem]}>
                         <View style={{alignSelf : "center",}}>
                             <Text style={[customText.text, filtersStyles.label]}>Categories</Text>
                         </View>
 
-                        <View style={[filtersStyles.filterFlatlist, filtersStyles.cardItem]}>
+                        <View style={[filtersStyles.filterFlatlist, filtersStyles.cardItem,]}>
                             <FlatList
                                 data={categories}
                                 renderItem={ ({item}) => { return <FilterItem selectedCategories={selectedCategories} item={item} updateCategories={updateCategories} /> } }
