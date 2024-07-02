@@ -27,7 +27,7 @@ export default function MainNavigation() {
       <FilterProvider>
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Preferences">
-            <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, }} />
+            <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
             <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
             <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
             <Stack.Screen name="Offers" component={Offers}  options={{ title: 'Propositions', headerShown : true, tabBarVisible: false, }} />

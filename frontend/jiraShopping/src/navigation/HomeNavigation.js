@@ -24,12 +24,12 @@ const HomeNavigation = () => {
   //const currentRouteName = navigationState.routes[navigationState.index].name;
 
   return (
-    <Tab.Navigator initialRouteName='Shop'
+    <Tab.Navigator initialRouteName='Favourites'
         screenOptions={({ route }) => ({
           headerShown : false,
           tabBarActiveTintColor: "blue",
           tabBarInactiveTintColor: "gray",
-          tabBarStyle: [{"display": route.name == "Home" ? 'none' : 'flex', bottom:StatusBar.currentHeight,}, null],
+          tabBarStyle: [{"display": route.name == "Home" ? 'flex' : 'flex', bottom:StatusBar.currentHeight,}, null],
 
 
           tabBarIcon: ({ focused, color, size }) => {
@@ -60,7 +60,7 @@ const HomeNavigation = () => {
             <Tab.Screen name="Home" component={Preferences} />
             <Tab.Screen name="Favourites" component={Favourites} />
             <Tab.Screen name="Shop" component={ProfilShop} />
-            <Tab.Screen name="Basket" component={Basket} options={{ title: 'Mon Panier', headerShown : true, tabBarVisible: false, }} />
+            <Tab.Screen name="Basket" component={Basket} options={{ title: 'Mon Panier', headerShown : false, tabBarVisible: false, }} />
             <Tab.Screen name="Account" component={Preferences} />
         </Tab.Navigator>
 

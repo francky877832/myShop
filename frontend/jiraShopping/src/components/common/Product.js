@@ -13,7 +13,7 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 
 const username = "Franck"
 const Product = (props) => { 
-    const { item, horizontal } = props;
+    const { item, horizontal, navigation } = props;
     //console.log(item)
    
 
@@ -32,10 +32,8 @@ const Product = (props) => {
     const [like, setLikeIcon ] = useState(item.liked)
 
     return(
-
-        <SafeAreaView>
             <View style={[productStyles.container, productStyles.card, horizontal ? productStyles.containerHorizontal : false]} >
-                <Pressable style={ productStyles.pressable } onPress = { ()=>{ console.log("product")} } >
+                <Pressable style={ productStyles.pressable } onPress = { ()=>{ navigation.navigate("ProductDetails")} } >
                     <Image source={require('../../assets/images/product5.png')}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
                     <View style={ productStyles.text } >
                         <View style={{ flexDirection:"column", justifyContent:"flex-start", }} >
@@ -72,7 +70,6 @@ const Product = (props) => {
                     </View>
                 </Pressable>
             </View>
-        </SafeAreaView>
     )
 }
 

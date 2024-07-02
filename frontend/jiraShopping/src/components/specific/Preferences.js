@@ -28,7 +28,7 @@ const Preferences = (props) => {
                     <View style={preferencesStyles.top}>
                         <Top />
                     </View>
-<View style={[{flex:1,}]}>
+<View style={[{flex:1,paddingBottom:40,}]}>
                 { isSearch ?
                             <ProductsListWithFilters datas={datas} horizontal={false} styles={preferencesStyles} title="Produits tendances..." />
                     :
