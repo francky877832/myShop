@@ -7,6 +7,8 @@ import BadgeIcon from '../components/common/BadgeIcon';
 import Preferences from '../components/specific/Preferences';
 import Favourites from '../components/specific/Favourites';
 import ProfilShop from '../components/specific/ProfileShop';
+import Basket from '../components/specific/Basket';
+
 
 import badgeIconStyles from '../styles/badgeIconStyles';
 
@@ -22,7 +24,7 @@ const HomeNavigation = () => {
   //const currentRouteName = navigationState.routes[navigationState.index].name;
 
   return (
-    <Tab.Navigator initialRouteName='Shop'
+    <Tab.Navigator initialRouteName='Basket'
         screenOptions={({ route }) => ({
           headerShown : false,
           tabBarActiveTintColor: "blue",
@@ -58,7 +60,7 @@ const HomeNavigation = () => {
             <Tab.Screen name="Home" component={Preferences} />
             <Tab.Screen name="Favourites" component={Favourites} />
             <Tab.Screen name="Shop" component={ProfilShop} />
-            <Tab.Screen name="Basket" component={Preferences} />
+            <Tab.Screen name="Basket" component={Basket} options={{ title: 'Mon Panier', headerShown : true, tabBarVisible: false, }} />
             <Tab.Screen name="Account" component={Preferences} />
         </Tab.Navigator>
 

@@ -1,0 +1,11 @@
+npx expo publish
+ npm install -g eas-cli
+ eas login
+eas init
+https://expo.dev/accounts/jira877832/projects/jiraShopping
+eas branch:list
+eas update --branch main
+
+
+a chaque modif, faire un push github, puis eas login, eas push
+(eas.json pour les config development, preview, prod)

@@ -1,7 +1,7 @@
 
 export const datas = [{
-    "buyer" : "66715deae5f65636347e7f9e",
-    "seller" : "66715f91d3b51ee92c1dc017",
+    "buyer" : "Francky",
+    "seller" : "Thomas",
     "user" : "66715f91d3b51ee92c1dc017",
     "from" : "66715f91d3b51ee92c1dc017",
     "product" : "666ec2ac5b75b61beb73ba05",
@@ -23,8 +23,8 @@ export const datas = [{
     "createdAt" : "2024-06-18T10:14:02.582+00:00",
 },
 {
-    "buyer" : "66715deae5f65636347e7f9e",
-    "seller" : "66715f91d3b51ee92c1dc017",
+    "buyer" : "Francky",
+    "seller" : "Thomas",
     "user" : "66715f91d3b51ee92c1dc017",
     "from" : "66715f91d3b51ee92c1dc017",
     "product" : "666ec2ac5b75b61beb73ba05",
@@ -49,8 +49,8 @@ export const datas = [{
     "createdAt" : "2024-06-18T10:14:02.582+00:00",
 },
 {
-    "buyer" : "66715deae5f65636347e7f9e",
-    "seller" : "66715f91d3b51ee92c1dc017",
+    "buyer" : "Francky",
+    "seller" : "The Style",
     "user" : "66715f91d3b51ee92c1dc017",
     "from" : "66715f91d3b51ee92c1dc017",
     "product" : "666ec2ac5b75b61beb73ba05",
@@ -75,8 +75,8 @@ export const datas = [{
     "createdAt" : "2024-06-18T10:14:02.582+00:00",
 },
 {
-    "buyer" : "66715deae5f65636347e7f9e",
-    "seller" : "66715f91d3b51ee92c1dc017",
+    "buyer" : "Francky",
+    "seller" : "The Style",
     "user" : "66715f91d3b51ee92c1dc017",
     "from" : "66715f91d3b51ee92c1dc017",
     "product" : "666ec2ac5b75b61beb73ba05",
@@ -144,4 +144,12 @@ export const datas = [{
     "createdAt" : "2024-06-18T10:14:02.582+00:00",
 
 }
+]
+
+export const basketsProducts = [
+    {
+        buyer : "Francky",
+        products : [datas[0], datas[1], datas[2]],
+        id_ : "1",
+    }
 ]

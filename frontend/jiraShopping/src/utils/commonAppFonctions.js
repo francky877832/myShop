@@ -115,3 +115,8 @@ exports.countDatas = (datas) => {
 }
 
 
+exports.reshapeBasketProducts = (p) => {
+    const products = [...p]
+
+}
+
