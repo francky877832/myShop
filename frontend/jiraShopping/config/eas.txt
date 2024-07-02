@@ -8,4 +8,6 @@ eas update --branch main
 
 
 a chaque modif, faire un push github, puis eas login, eas push
+por update : eas update --branch <branch-name> --message "<your-update-message>"
+
 (eas.json pour les config development, preview, prod)
