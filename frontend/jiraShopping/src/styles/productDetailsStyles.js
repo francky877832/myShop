@@ -24,7 +24,8 @@ export const productDetailsStyles = StyleSheet.create({
         ...filtersStyles.similarContainer,
         top : 20,
         //paddingLeft : 1,
-        paddingBottom :  170,
+        paddingBottom :  130,
+        //backgroundColor : appColors.white,
     },
     getBackPosition :
     {
@@ -119,7 +120,7 @@ export const productDetailsStyles = StyleSheet.create({
         position : "absolute",
         left : 0,
         right : 0,
-        top : screenHeight-60,
+        bottom : 0,
         backgroundColor : appColors.white,
         height : 60,
         borderWidth : 1,

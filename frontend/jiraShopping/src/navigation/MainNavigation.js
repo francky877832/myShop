@@ -1,7 +1,9 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import { NavigationContainer, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 
 import BadgeIcon from '../components/common/BadgeIcon';
@@ -16,14 +18,16 @@ import HomeNavigation from '../navigation/HomeNavigation';
 import { FilterProvider } from '../context/FilterContext';
 import { FavouritesProvider } from '../context/FavouritesContext';
 
+
 const Stack = createStackNavigator();
 
 
 export default function MainNavigation() {
   const hide = false
 
-  return (
-  <NavigationContainer>
+  return ( 
+<SafeAreaView style={{ flex: 1 }}>
+  <NavigationContainer> 
       <FavouritesProvider>
         <FilterProvider>
             <Stack.Navigator initialRouteName="Preferences">
@@ -36,6 +40,7 @@ export default function MainNavigation() {
         </FilterProvider>
       </FavouritesProvider>
     </NavigationContainer>
+  </SafeAreaView>
   );
 
 }

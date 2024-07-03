@@ -11,7 +11,7 @@ export const profilShopStyles = StyleSheet.create({
         flex : 1,
         top : 0,
         backgroundColor : appColors.white,
-        paddingBottom : StatusBar.currentHeight,
+        //paddingBottom : StatusBar.currentHeight,
     },
     productContainer : 
     {

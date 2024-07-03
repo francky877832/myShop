@@ -36,12 +36,35 @@ const ProductDetails = (props) => {
         extrapolate: 'clamp',
     });
 
+
+    const scrollViewRef = useRef(null);
+/* //Bloquer le scroll au debut onScroll={handleScroll}
+    const handleScroll = (event) => {
+      const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
   
+      // Calcul de la position actuelle dans la ScrollView
+      const scrollY = contentOffset.y;
+      const screenHeight = layoutMeasurement.height;
+      const contentHeight = contentSize.height;
+  
+      // Vérification si la fin du scroll est atteinte
+      if (scrollY == 0) { //A la fin scrollY +screenHeight >= contentHeight 
+        // Désactiver le scrolling en utilisant la référence à la ScrollView
+        if (scrollViewRef.current) {
+          scrollViewRef.current.setNativeProps({ scrollEnabled: false });
+        }
+      }
+    };
+  */
     const panResponder = useRef(
       PanResponder.create({
         onMoveShouldSetPanResponder: () => true,
         onPanResponderMove: (ev, gestureState) => 
             {
+                 // Désactiver le scrolling en utilisant la référence à la ScrollView
+        if (scrollViewRef.current) {
+            scrollViewRef.current.setNativeProps({ scrollEnabled: false });
+          }
                 setLastValidHeight(pan._value);
 
                 Animated.event(
@@ -73,6 +96,11 @@ const ProductDetails = (props) => {
             friction: 7,
             tension: 50,
           }).start();
+
+          if (scrollViewRef.current) {
+            scrollViewRef.current.setNativeProps({ scrollEnabled: true });
+          }
+
         }
       })
     ).current;
@@ -98,7 +126,7 @@ const ProductDetails = (props) => {
                 </Animated.View>
         
 <View style={[productDetailsStyles.underCaroussel]} {...panResponder.panHandlers} >
-                <ScrollView style={[productDetailsStyles.scrollView,]} >
+                <ScrollView style={[productDetailsStyles.scrollView,]} ref={scrollViewRef} >
                     <View style={[productDetailsStyles.infosBox]}>
                     <View style={productDetailsStyles.since}>
                         <View style={{ flexDirection: "row" }}>

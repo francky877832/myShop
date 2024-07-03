@@ -15,7 +15,7 @@ export const radioProductsListtStyles = StyleSheet.create({
     top :
     {
         flex : 1,
-        paddingBottom : 115,        
+        paddingBottom : 80,        
         backgroundColor : appColors.white, 
 
     },
@@ -30,11 +30,11 @@ export const radioProductsListtStyles = StyleSheet.create({
         justifyContent : "space-around",
         alignItems : "center",
         //paddingHorizontal : 20,
-        paddingVertical : 20,
+        paddingVertical : 15,
         position : "absolute",
         left : 0,
         right : 0,
-        bottom : 36,
+        bottom : 0,
         backgroundColor : appColors.white,
         borderTopWidth : 2,
         borderTopColor : appColors.secondaryColor3,

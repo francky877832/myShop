@@ -1,5 +1,5 @@
-import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Dimensions } from 'react-native';
+import React, { useState, useEffect, createContext, useContext, useRef,  } from 'react';
+import { View, } from 'react-native';
 
 //custom component
 import Top from '../common/Top';
@@ -14,12 +14,15 @@ import { appColors } from '../../styles/commonStyles';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
 import { productStyles } from '../../styles/productStyles';
 
+
+
 const Favourites = (props) => {
 {/*
                             numColumns={ calculateNumColumns() }
                                 <ProductsList datas={datas} horizontal={false} styles={preferencesStyles} />
                         
 */}
+
 
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
 
@@ -28,7 +31,7 @@ const Favourites = (props) => {
                     <View style={[favouritesStyles.top]}>
                         <Top />
                     </View>
-                    <View style={[{flex:1,paddingBottom:40,}]}>
+                    <View style={[{flex:1,paddingBottom:0,}]}>
                         <ProductsListWithFilters datas={datas} horizontal={false} title="Mes Favoris" />
                     </View>
         </View>

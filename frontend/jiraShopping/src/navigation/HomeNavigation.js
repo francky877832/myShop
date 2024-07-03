@@ -1,7 +1,8 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, Dimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigationState } from '@react-navigation/native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+
 
 import BadgeIcon from '../components/common/BadgeIcon';
 import Preferences from '../components/specific/Preferences';
@@ -13,23 +14,21 @@ import Basket from '../components/specific/Basket';
 import badgeIconStyles from '../styles/badgeIconStyles';
 
 //Contexte
-import { FavouritesProvider } from '../context/FavouritesContext';
+import { screenHeight } from '../styles/commonStyles';
 
 const Tab = createBottomTabNavigator();
 
 
 
 const HomeNavigation = () => {
-  //const navigationState = useNavigationState(state => state);
-  //const currentRouteName = navigationState.routes[navigationState.index].name;
-
+ 
   return (
     <Tab.Navigator initialRouteName='Favourites'
         screenOptions={({ route }) => ({
           headerShown : false,
           tabBarActiveTintColor: "blue",
           tabBarInactiveTintColor: "gray",
-          tabBarStyle: [{"display": route.name == "Home" ? 'flex' : 'flex', bottom:StatusBar.currentHeight,}, null],
+          tabBarStyle: [{"display": route.name == "Home" ? 'flex' : 'flex', bottom : 0}, null],
 
 
           tabBarIcon: ({ focused, color, size }) => {
@@ -60,7 +59,7 @@ const HomeNavigation = () => {
             <Tab.Screen name="Home" component={Preferences} />
             <Tab.Screen name="Favourites" component={Favourites} />
             <Tab.Screen name="Shop" component={ProfilShop} />
-            <Tab.Screen name="Basket" component={Basket} options={{ title: 'Mon Panier', headerShown : false, tabBarVisible: false, }} />
+            <Tab.Screen name="Basket" component={Basket} options={{ title: 'Mon Panier', headerShown : true, tabBarVisible: false, }} />
             <Tab.Screen name="Account" component={Preferences} />
         </Tab.Navigator>
 
