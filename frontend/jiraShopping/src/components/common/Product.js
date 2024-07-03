@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Image, Pressable} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 import { LikeButton, } from "./CommonSimpleComponents"
 
@@ -13,7 +14,8 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 
 const username = "Franck"
 const Product = (props) => { 
-    const { item, horizontal, navigation } = props;
+    const { item, horizontal, } = props;
+    const navigation = useNavigation()
     //console.log(item)
    
 
@@ -33,7 +35,17 @@ const Product = (props) => {
 
     return(
             <View style={[productStyles.container, productStyles.card, horizontal ? productStyles.containerHorizontal : false]} >
-                <Pressable style={ productStyles.pressable } onPress = { ()=>{ navigation.navigate("ProductDetails")} } >
+                        <View style={[productStyles.top,] } >
+                            <Pressable style={[productStyles.feesBy, productStyles.card]}  onPress = { ()=>{ } } >
+                                <Ionicons name="cube-sharp" size={24} color={appColors.white} />
+                                 <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{item.feesBy ? "Gratuit"  : "Reduction"} </Text>
+                            </Pressable>
+
+                            <LikeButton hasLiked={item.liked} item={item} isCard={false} styles={{color:appColors.white}}/>
+
+                        </View>
+                    
+                <Pressable style={ productStyles.pressable } onPress = { ()=>{navigation.navigate("ProductDetails")} } >
                     <Image source={require('../../assets/images/product5.png')}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
                     <View style={ productStyles.text } >
                         <View style={{ flexDirection:"column", justifyContent:"flex-start", }} >
@@ -52,16 +64,7 @@ const Product = (props) => {
                             }
                         </View>
 
-                        <View style={[productStyles.top,] } >
-                            <Pressable style={[productStyles.feesBy, productStyles.card]}  onPress = { ()=>{ console.log("transport")} } >
-                                <Ionicons name="cube-sharp" size={24} color="#fff" />
-                                 <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{item.feesBy ? "Gratuit"  : "Reduction"} </Text>
-                            </Pressable>
-
-                            <LikeButton hasLiked={item.liked} item={item} isCard={false} styles={{color:appColors.white}}/>
-
-                        </View>
-                    
+                       
                         <View style={[productStyles.bottom, productStyles.card] } >
                             <Pressable onPress = { ()=>{ console.log("transport")} } >
                                 <Text numberOfLines={1} style={[customText.text, productStyles.category]}>Ajouter Au Panier</Text>

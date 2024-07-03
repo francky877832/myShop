@@ -1,0 +1,3 @@
+npm install -D @expo/cli
+npx expo init MonNouveauProjet
+  $ expo init is not supported in the local CLI, please use npx create-expo-app instead

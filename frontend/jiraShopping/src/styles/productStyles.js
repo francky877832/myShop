@@ -77,14 +77,18 @@ export const productStyles = StyleSheet.create({
 
     top :
     {
-       height : 25,
-       width : "100%",
-       position : "absolute",
-       top : -cardWidth * 1.2,
-       flexDirection : "row",
-       justifyContent : "space-between",
-       paddingHorizontal : 10,
-       marginLeft : -5,
+        height : 25,
+        width : "100%",
+        position : "absolute",
+        //top : -cardWidth * 1.2,
+        flexDirection : "row",
+        justifyContent : "space-between",
+        paddingHorizontal : 2,
+        //marginLeft : -5,
+        left : 0,
+        right : 0,
+        zIndex : 100,
+        //backgroundColor:"red",
     },
     bottom :
     {
