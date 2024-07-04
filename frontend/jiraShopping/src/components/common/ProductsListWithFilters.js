@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, } from 'react-native';
 
 //custom component
 import ProductsList from './ProductsList';
@@ -8,7 +8,7 @@ import { preferencesStyles } from '../../styles/preferencesStyles';
 import { customText, appColors, appFont } from '../../styles/commonStyles';
 
 const ProductsListWithFilters = React.forwardRef((props, ref) => {
-    const { datas, horizontal, title, onEndReached} = props;
+    const { datas, horizontal, title, onEndReached, filters} = props;
    
     return(
             <View style={[productsListWithFiltersStyles.container]}>
@@ -17,7 +17,9 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
                 </View>
 
                 <View style={{flex:1,flexDirection:"column",}}>
-                    <Filters suggestion={false} />
+                    {filters &&
+                        <Filters suggestion={false} />
+                    }
                     <ProductsList onEndReached={onEndReached} ref={ref} datas={datas} horizontal={false} styles={preferencesStyles} />
                 </View>
 

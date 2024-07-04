@@ -33,7 +33,7 @@ const RadioProductsList = (props) => {
                         item.products.map((product1) => {
                                
                             return(
-                            <View style={[radioProductsListtStyles.seller,{}]}>
+                            <View style={[radioProductsListtStyles.seller,{}]} key={product1.id_}>
                                 { passed_sellers.includes(product1.seller) ? false :
                                     <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer1]} >
                                         <RadioButton value={product1.id} />
@@ -47,7 +47,7 @@ const RadioProductsList = (props) => {
                             { 
                                 passed_product.push(product2.id_)
                                 return(
-                                    <View style={[radioProductStyles.radioProducts,{}]}>
+                                    <View style={[radioProductStyles.radioProducts,{}]} key={product2.id_}>
                                             <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer2]} >
                                                     <CheckBox title=
                                                     {

@@ -118,7 +118,7 @@ const ProfilShop = (props) => {
 
                             <View style={[profilShopStyles.notifParameter]}>
                                 <Pressable  style={[profilShopStyles.notification, ]} onPress = { ()=>{ console.log("Notifications")} }>
-                                    <BadgeIcon name="settings-outline" size={24} color="black" badgeCount={0} styles={badgeIconStyles} />
+                                    <BadgeIcon name="create-outline" size={24} color="black" badgeCount={0} styles={badgeIconStyles} />
                                 </Pressable>
                                 
                                 <Pressable  style={[profilShopStyles.notification, ]}onPress = { ()=>{ console.log("Notifications")} }>

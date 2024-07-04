@@ -1,7 +1,7 @@
 import React, { forwardRef, useState,  } from 'react';
 import { View, Text, TextInput, Pressable } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
-
+import { useNavigation } from '@react-navigation/native';
 
 //custom styles
 import { appColors, appFont, customText } from '../../styles/commonStyles';
@@ -10,13 +10,14 @@ import { searchBarStyles } from '../../styles/searchBarStyles';
 
 //custom app datas  backgroundColor : appColors.white,
 const SearchBar =  forwardRef((props, ref) => {
+    const navigation = useNavigation()
     const { value, onChangeText, placeholder, placeholderTextColor, styles, isPrev } = props
     const [isFocused, setIsFocused] = useState(false)
     return (
         <View style={[searchBarStyles.container, styles.searchBarContainer ]}>
             {!isPrev ? false :
                     <View>
-                        <Pressable onPress={() => {console.log("Go")}} style={searchBarStyles.prevButton}>
+                        <Pressable onPress={() => {navigation.goBack();}} style={searchBarStyles.prevButton}>
                             <Icon name='arrow-back' type='ionicon' color={appColors.secondaryColor5} />
                         </Pressable>
                     </View>

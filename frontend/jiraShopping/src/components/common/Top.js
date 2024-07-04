@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import BadgeIcon from './BadgeIcon';
 import SearchBar from './SearchBar';
@@ -9,14 +10,14 @@ import { topStyles } from '../../styles/topStyles';
 import { appColors, appFont } from '../../styles/commonStyles';
 
 const Top = (props) => {
-
+    const navigation = useNavigation()
     return(
         <View style={[topStyles.container, ]} >
-            <Pressable  style={[topStyles.pressableBar, ]} onPress={() => {}}>
+            <Pressable  style={[topStyles.pressableBar, ]} pointerEvents='box-only' onPress={() => {navigation.navigate("Search");}}>
                 <SearchBar placeholder="Rechercher un produit" styles={topStyles} isPrev={false} />
             </Pressable>
 
-            <Pressable  style={[topStyles.notification, ]}onPress = { ()=>{ console.log("Notifications")} }>
+            <Pressable  style={[topStyles.notification, ]} onPress = { ()=>{ navigation.navigate("Notifications");} }>
                 <BadgeIcon name="notifications" size={24} color="black" badgeCount={5} styles={badgeIconStyles} />
             </Pressable>
         </View>

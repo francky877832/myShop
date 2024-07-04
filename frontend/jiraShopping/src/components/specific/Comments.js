@@ -32,7 +32,7 @@ const Comments = (props) =>
         const [showSubComment, setShowSubComment] = useState(false)
 
         return (
-                    <View style={[styles.commentContainer, ]} >
+                    <View style={[styles.commentContainer,]} >
                         <View style={{flexDirection:"row", alignItems:"center"}}>
                             <Pressable style={[styles.comment, ]} onPress={()=>{console.log(comment.id_)}}>
                                 <Text style={[commentsStyles.commentText]} >{comment.text}</Text>
@@ -63,7 +63,7 @@ const Comments = (props) =>
                                 ?
                                 comment.subComment.map((item)=>{
                                     return (
-                                        <View style={[{flex:1}]}  key={item.id_.toString()}>
+                                        <View style={[{flex:0}]}  key={item.id_.toString()}>
                                             <View style={{flexDirection:"row-reverse",alignItems:"center"}}>
                                                 <Pressable onPress={()=>{console.log(comment.id_)}} style={[styles.comment, styles.subComment]} >
                                                     <Text style={[commentsStyles.commentText]} >{item.text}</Text>
@@ -91,7 +91,7 @@ const Comments = (props) =>
 
 
     return(
-        <ScrollView contentContainerStyle={[commentsStyles.container,{}]}>
+        <View style={[commentsStyles.container,{}]}>
            { !all &&  
             <View style={[{flexDirection:"column",justifyContent:"center"}]}>
                
@@ -100,16 +100,15 @@ const Comments = (props) =>
                     </Pressable>
         
                     <Pressable onPress={()=>{navigation.navigate("AllComments")}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
-                        
                             <Text style={[customText.text,{color:appColors.green,}]}>Tout Afficher</Text>
-                        
                             <Text style={[customText.text,{color:appColors.black,}]}>({countDatas(datas)})</Text>
                     </Pressable>
             </View>
         }
             <View style={[commentsStyles.flatlistContainerView]}>
-                <FlatList
+                {/*<FlatList
                     data={reshapedComments}
+                    nestedScrollEnabled={true}
                     renderItem={ ({item}) => { return <Comment all={all} comment={item} styles={ {comment : {...commentsStyles.comment}, subComment : {...commentsStyles.subComment}}} /> } }
                     keyExtractor={ (item) => { return item.id_.toString(); } }
                     horizontal={false}
@@ -117,7 +116,16 @@ const Comments = (props) =>
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={[commentsStyles.flatlistContainer, !all?commentsStyles.flatlistContainerNotAll:false]}
-                />
+                />*/
+                reshapedComments.map((item)=>{
+                    return(
+                        <View style={{}} key={item.id_}>
+                            <Comment all={all} comment={item} styles={ {comment : {...commentsStyles.comment}, subComment : {...commentsStyles.subComment}}} />
+                            <View style={{width:5,}}></View>
+                        </View>
+                    )
+                    })
+                }
             </View>
         { !all &&  
             <View style={[commentsStyles.inputContainer, {borderWidth:isFocused?0:1,}]}>
@@ -139,7 +147,7 @@ const Comments = (props) =>
                 />
             </View>
         }
-        </ScrollView>
+        </View>
     )
 }
 

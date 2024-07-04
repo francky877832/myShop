@@ -32,7 +32,7 @@ const Favourites = (props) => {
                         <Top />
                     </View>
                     <View style={[{flex:1,paddingBottom:0,}]}>
-                        <ProductsListWithFilters datas={datas} horizontal={false} title="Mes Favoris" />
+                        <ProductsListWithFilters filters={false} datas={datas} horizontal={false} title="Mes Favoris" />
                     </View>
         </View>
     )

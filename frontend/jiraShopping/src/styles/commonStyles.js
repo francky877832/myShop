@@ -25,11 +25,11 @@ export const appColors = {
 }
 
 export const appFont = {
-    mainFontFamily : "Arial",
-    secondaryFontFamily1 : Platform.select({
+    mainFontFamily : Platform.select({
         ios: 'Helvetica',
         android: 'Roboto',
       }),
+    secondaryFontFamily1 :  "Arial",
     secondaryFontFamily2 : "Georgia",
     secondaryFontFamily3 : "Verdana",
     secondaryFontFamily4 : "Courier",
@@ -43,7 +43,7 @@ export const appFontSize = {
 export const customText = {
     text :
     {
-        fontFamily : appFont.secondaryFontFamily3,
+        fontFamily : appFont.mainFontFamily,
         fontSize : appFontSize.mainFontSize,
         color : appColors.black,
     },

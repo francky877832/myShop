@@ -19,6 +19,7 @@ const ProductsList = React.forwardRef((props, ref) => {
             <View style={[productsListStyles.container, horizontal ? productsListStyles.containerHorizontal : false, styles.productContainer]}>
                     <FlatList
                         data={datas}
+                        nestedScrollEnabled={true}
                         renderItem={ ({item}) => { return <Product item={item} styles={productsListStyles.listItem} horizontal={horizontal}/> } }
                         keyExtractor={ (item) => { return item.id_.toString(); } }
                         horizontal={horizontal}

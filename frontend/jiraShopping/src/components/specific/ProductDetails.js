@@ -62,9 +62,9 @@ const ProductDetails = (props) => {
         onPanResponderMove: (ev, gestureState) => 
             {
                  // Désactiver le scrolling en utilisant la référence à la ScrollView
-        if (scrollViewRef.current) {
-            scrollViewRef.current.setNativeProps({ scrollEnabled: false });
-          }
+                if (scrollViewRef.current) {
+                    scrollViewRef.current.setNativeProps({ scrollEnabled: false });
+                }
                 setLastValidHeight(pan._value);
 
                 Animated.event(
@@ -126,7 +126,7 @@ const ProductDetails = (props) => {
                 </Animated.View>
         
 <View style={[productDetailsStyles.underCaroussel]} {...panResponder.panHandlers} >
-                <ScrollView style={[productDetailsStyles.scrollView,]} ref={scrollViewRef} >
+                <ScrollView style={[productDetailsStyles.scrollView,]} ref={scrollViewRef}horizontal={false} nestedScrollEnabled={true} >
                     <View style={[productDetailsStyles.infosBox]}>
                     <View style={productDetailsStyles.since}>
                         <View style={{ flexDirection: "row" }}>
@@ -199,6 +199,7 @@ const ProductDetails = (props) => {
                     <View>
                         <Text style={[customText.text, { fontWeight: "bold", fontSize: 20, color: appColors.black ,paddingLeft:10,}]}>Produits Similaires</Text>
                     </View>
+
                     <View>
                         <ProductsList datas={datas} horizontal={true} styles={{}} />
                     </View>
