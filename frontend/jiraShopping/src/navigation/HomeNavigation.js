@@ -23,7 +23,7 @@ const Tab = createBottomTabNavigator();
 const HomeNavigation = () => {
  
   return (
-    <Tab.Navigator initialRouteName='Home'
+    <Tab.Navigator initialRouteName='Shop'
         screenOptions={({ route }) => ({
           headerShown : false,
           tabBarActiveTintColor: "blue",

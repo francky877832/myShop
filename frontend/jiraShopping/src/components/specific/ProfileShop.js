@@ -1,11 +1,11 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
 import { View, Text, Animated, Pressable, PanResponder } from 'react-native';
-
+import { useNavigation } from '@react-navigation/native';
 //custom component
 import Top from '../common/Top';
 import ProductsList from '../common/ProductsList';
 import BadgeIcon from '../common/BadgeIcon';
-import { PrevButton } from "../common/CommonSimpleComponents"
+import { PrevButton, CustomButton } from "../common/CommonSimpleComponents"
 //custom styles
 import { profilShopStyles } from '../../styles/profilShopStyles';
 import SearchResults from './SearchResults';
@@ -23,7 +23,7 @@ const ProfilShop = (props) => {
                                 <ProductsList datas={datas} horizontal={false} styles={profilShopStyles} />
                         
 */}
-
+    const navigation = useNavigation()
     const [follow, setIsFollow] = useState(true) //Je ne crois pas avoir besoin de Search
 
     const flatListRef = useRef(null);
@@ -117,11 +117,11 @@ const ProfilShop = (props) => {
                             <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z"/>
 
                             <View style={[profilShopStyles.notifParameter]}>
-                                <Pressable  style={[profilShopStyles.notification, ]} onPress = { ()=>{ console.log("Notifications")} }>
+                                <Pressable  style={[profilShopStyles.notification, ]} onPress = { ()=>{ navigation.navigate("Notifications");} }>
                                     <BadgeIcon name="create-outline" size={24} color="black" badgeCount={0} styles={badgeIconStyles} />
                                 </Pressable>
                                 
-                                <Pressable  style={[profilShopStyles.notification, ]}onPress = { ()=>{ console.log("Notifications")} }>
+                                <Pressable  style={[profilShopStyles.notification, ]}onPress = { ()=>{ navigation.navigate("Notifications");} }>
                                     <BadgeIcon name="notifications-outline" size={24} color="black" badgeCount={5} styles={badgeIconStyles} />
                                 </Pressable>
                             </View>
@@ -159,8 +159,12 @@ const ProfilShop = (props) => {
                     </Animated.View>
                     
 
-                        <View style={{flex:1,}} {...panResponder.panHandlers}>
+                        <View style={{flex:1, paddingBottom:40}} {...panResponder.panHandlers}>
                             <ProductsListWithFilters onEndReached={onEndReached} ref={flatListRef} datas={datas} horizontal={false} styles={profilShopStyles} title={`${datas.length} ${datas.length > 1 ? 'Produits' : 'Produit'}`} />
+                        </View>
+
+                        <View style={[profilShopStyles.addProduct,{}]}>
+                                <CustomButton color={appColors.white} backgroundColor={appColors.secondaryColor1} text="Ajouter Un Produit" onPress={()=>{navigation.navigate("AddProduct")}} styles={profilShopStyles} />
                         </View>
                 </View>
     )

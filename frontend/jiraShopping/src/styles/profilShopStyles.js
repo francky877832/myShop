@@ -101,6 +101,26 @@ export const profilShopStyles = StyleSheet.create({
         backgroundColor : appColors.white,
         borderWidth : 1,
         borderColor : appColors.secondaryColor1
-    }
+    },
+
+    addProduct :
+    {
+        position : "absolute",
+        bottom : 2,
+        left : 0,
+        right : 0,
+        justifyContent : "flex-end",
+        alignItems : "center",
+        height : 60,
+        backgroundColor : "rgba(0,0,0,0)",
+        //paddingVertical : 5,
+
+    },
+    pressable :
+    {
+        paddingVertical : 9,
+        paddingHorizontal : 20,
+        borderRadius : 20,
+    },
 
 })
