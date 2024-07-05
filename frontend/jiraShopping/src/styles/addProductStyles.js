@@ -1,5 +1,5 @@
 import { StyleSheet, StatusBar } from "react-native";
-import { appColors, appFont, customText } from "./commonStyles";
+import { appColors, appFont, customText, screenHeight } from "./commonStyles";
 import SellerBrand from "../components/common/SellerBrand";
 
 
@@ -8,7 +8,7 @@ import SellerBrand from "../components/common/SellerBrand";
 export const addProductStyles = StyleSheet.create({
     container : 
     {
-        flex : 1,
+        flexGrow : 1,
         top : 0,
         //backgroundColor : appColors.white,
     },
@@ -38,11 +38,13 @@ export const addProductStyles = StyleSheet.create({
     {
         ...customText.text,
         fontWeight : "bold",
-        fontSize : 20,
+        fontSize : 16,
     },
     normalText :
     {
         ...customText.text,
+        fontSize : 14,
+        color : appColors.secondaryColor5
 
     },
     imageBox :
@@ -65,7 +67,49 @@ export const addProductStyles = StyleSheet.create({
         justifyContent : "space-around",
         alignItems : "center",
         paddingHorizontal : 20,
-        backgroundColor : appColors.lightOrange,
-    }
+        backgroundColor : appColors.lightWhite,
+        borderTopWidth : 2,
+        borderTopColor : appColors.white
+    },
+
+    inputContainer : 
+    {
+        borderRadius : 0,
+        borderWidth : 0,
+        borderBottom : 1,
+        padding : 0
+    },
+    radioBox : 
+    {
+        flexDirection : "row",
+        justifyContent : "space-around",
+        alignItems : "center",
+        width : "100%",
+    },
+    radioContainer : 
+    {
+        flexDirection : "row",
+        alignItems : "center",
+    },
+    categoryContainer :
+    {
+        backgroundColor : appColors.white,
+        flexDirection : "column",
+        justifyContent : "center",
+        alignItems : "flex-start",
+        padding : 0,
+        paddingRight : 0,
+        wifth : "100%",
+    },
+    pressableDetails :
+    {
+        padding : 15,
+        borderBottomWidth:1,
+        borderColor:appColors.secondaryColor3,
+        width : "100%",
+        flexDirection : "row",
+        justifyContent : "space-between",
+        alignItems : "center",
+    },
 
 })

@@ -10,10 +10,12 @@ const productSchema = new Schema({
     maxPrice : { type : Number, default : () => { return this.price; } },
     condition : { type : String, enum : ['new', 'used', "new used"], default : 'new' },
     seller : { type : Schema.Types.ObjectId, ref : 'User', required : true },
+
     category : { type : Schema.Types.ObjectId, ref : 'Category', required : true  },
     //category : { type : String, required : false },
     brand : { type : String, required : false },
     couleur : [{ type : String, required : false}],
+    
     images : [{ type : String, required : true}],
     feesBy : { type : String, enum : ['seller', 'buyer'], default : "buyer" },
     garanti : { type : Number, default : 0 }, //en jour

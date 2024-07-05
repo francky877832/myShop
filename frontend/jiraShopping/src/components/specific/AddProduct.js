@@ -1,6 +1,9 @@
-import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, Animated, Pressable, ScrollView, FlatList, Image, Alert } from 'react-native';
+import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
+import { View, Text, Animated, Pressable, ScrollView, FlatList, Image, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { RadioButton, } from 'react-native-paper';
 
+import { Input } from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 
@@ -9,34 +12,98 @@ import { appColors, customText } from '../../styles/commonStyles';
 import { CustomButton } from "../common/CommonSimpleComponents"
 
 import { addProductStyles } from '../../styles/addProductStyles';
+import { searchBarStyles } from '../../styles/searchBarStyles';
 import { Icon } from 'react-native-elements';
-
+import Categories from '../common/Categories';
+import { formatMoney } from '../../utils/commonAppFonctions';
+import { categoriesStyles } from '../../styles/categoriesStyles';
 
 const AddProduct = (props) => {
-    const [open, setOpen] = useState(false)
-    const [selectedImages, setSelectedImages] = useState([]);
+    
+    const navigation = useNavigation();
+    const [allowBack, setAllowBack] = useState(false);
+
+    const [valueName, setValueName] = useState("")
+    const [valueDesc, setValueDesc] = useState("")
+    const [valuePrice, setValuePrice] = useState("")
+    const [valueGaranti, setValueGaranti] = useState("")
+    const [valueStock, setValueStock] = useState("")
+    const [isNameFocused, setIsNameFocused] = useState(false)
+    const [isDescFocused, setIsDescFocused] = useState(false)
+    const [isPriceFocused, setIsPriceFocused] = useState(false)
+    const [isGarantiFocused, setIsGarantiFocused] = useState(false)
+    const [isStockFocused, setIsStockFocused] = useState(false)
+    const [valueBrand, setValueBrand] = useState("")
+    const [valueCategory, setValueCategory] = useState("")
+    const [selectedCategories, setSelectedCategories] = useState({})
+
+    
+    const handleGoBackCat = (data) => {
+        // Réception des données renvoyées de ScreenB
+        setValueCategory(data);
+      };
+      const handleGoBackBrand = (data) => {
+        // Réception des données renvoyées de ScreenB
+        setValueBrand(data);
+      };
+
     const [images, setImages] = useState([]);
     const [cameraOrGalery, setCameraOrGalery] = useState(false)
     const MAX_IMAGES = 6, MIN_IMAGES = 3
+
+
+    //GoBackPermission
+    const onBackPress = useCallback((e) => {
+        if (allowBack) {
+            return;
+        }
+
+        if (e) {
+          e.preventDefault(); // Empêcher le comportement par défaut de la navigation
+        }
+    
+        Alert.alert(
+          "Attention!",
+          "Abandoné l'ajout de produit ?",
+          [
+            { text: "Non", onPress: () => null, style: "cancel" },
+            { text: "Oui", onPress: () =>{
+                    setAllowBack(true);
+                    navigation.goBack();
+                    navigation.dispatch(e.data.action);
+                }
+             }
+          ]
+        );
+      }, [allowBack, navigation]);
+
+
+useEffect(()=>{
+    //Appel de useCallBack
+       // Ajouter l'écouteur pour l'événement de retour
+    const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
+    return unsubscribe;
+}, [navigation, onBackPress])
+
 
 //Demande de permission
 const requestPermissions = async () => {
     const { status: galleryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (galleryStatus !== 'granted') {
-      Alert.alert('Permission to access gallery is required!');
-      return false;
+    Alert.alert('Permission to access gallery is required!');
+    return false;
     }
     
     const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
     if (cameraStatus !== 'granted') {
-      Alert.alert('Permission to access camera is required!');
-      return false;
+    Alert.alert('Permission to access camera is required!');
+    return false;
     }
     
     return true;
-  };
+};
 
-  const pickImages = async () => {
+const pickImages = async () => {
         const hasPermissions = await requestPermissions();
         if (!hasPermissions) return;
 
@@ -58,9 +125,9 @@ const requestPermissions = async () => {
             setImages((prevImages) => [...prevImages, ...newImages]);
             setCameraOrGalery(false)
         }
-  };
+};
 //
-  const takePhoto = async () => {
+const takePhoto = async () => {
         const hasPermissions = await requestPermissions();
         if (!hasPermissions) return;
 
@@ -83,24 +150,6 @@ const requestPermissions = async () => {
         }
 };
 
-
-    const resizeImage = async (imageUri) => {
-        const resizedImage = await ImageManipulator.manipulateAsync(
-          imageUri,
-          [{ resize: { width: 100, height: 100 } }],
-          { compress: 1, format: ImageManipulator.SaveFormat.PNG, base64: true }
-        );
-        return resizedImage.uri;
-    };
-    
-    const resizeAllImages = async () => {
-        const resizedImages = await Promise.all(setImages.map(async image => {
-          const resizedUri = await resizeImage(image.uri);
-          return { ...image, uri: resizedUri };
-        }));
-        setImages(resizedImages);
-    };
-
 const deleteSelectedImage = (uri) => {
     for(let i in images)
     {
@@ -115,9 +164,11 @@ const deleteSelectedImage = (uri) => {
     }
 }
 
-
+console.log(selectedCategories) 
 
    return (
+<KeyboardAvoidingView style={{flex:1}}  keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={[addProductStyles.container,{}]}>
             <View style={[addProductStyles.containers]}>
                 <View style={[addProductStyles.titles]}>
@@ -127,7 +178,7 @@ const deleteSelectedImage = (uri) => {
                 <View style={[addProductStyles.contents]}>
                     <View style={[{flexDirection:"row",}]}>
                         <View style={[addProductStyles.imageBox,]}>
-                            <Pressable onPress={()=>{setCameraOrGalery(true)}}>
+                            <Pressable onPress={()=>{setCameraOrGalery(!cameraOrGalery)}}>
                                 <Icon name="camera-outline" type="ionicon" size={50} color={appColors.secondaryColor1} />
                                 <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Photos {images.length}/{MAX_IMAGES}</Text>
                             </Pressable>
@@ -161,7 +212,194 @@ const deleteSelectedImage = (uri) => {
                 </View>
             </View>
 
+            <View style={[addProductStyles.containers]}>
+                <View style={[addProductStyles.titles]}>
+                    <Text style={[addProductStyles.titlesText]}>Nom Du Produit</Text>
+                </View>
+                
+                <View style={[addProductStyles.contents]}>
+                    <View style={{width:10,}}></View>
+                        <Input placeholder="EX : Samsung Galaxy Z-Fold" value={valueName} onChangeText={(name)=>{setValueName(name)}}
+                            inputMode='text'
+                            multiline={false}
+                            maxLength={100}
+                            placeholderTextColor={appColors.secondaryColor3}
+                            inputStyle = {[searchBarStyles.inputText, ]}
+                            onFocus={() => setIsNameFocused(true)}
+                            onBlur={() => setIsNameFocused(false)}
+                            underlineColorAndroid='transparent'
+                            containerStyle={ [searchBarStyles.containerBox,]}
+                            inputContainerStyle = {[searchBarStyles.inputContainer, isNameFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
+                        />
+                    </View>
+            </View>
 
+            
+            <View style={[addProductStyles.containers]}>
+                <View style={[addProductStyles.titles]}>
+                    <Text style={[addProductStyles.titlesText]}>Description Du Produit</Text>
+                </View>
+                
+                <View style={[addProductStyles.contents]}>
+                    <View style={{width:10,}}></View>
+                        <Input placeholder="EX : Téléphone neuf, je l!ai juste utilisé 2 fois. 128 Go et 8 Go de Ram..." value={valueDesc} onChangeText={(desc)=>{setValueDesc(desc)}}
+                            inputMode='text'
+                            multiline={true}
+                            maxLength={500}
+                            placeholderTextColor={appColors.secondaryColor3}
+                            inputStyle = {[searchBarStyles.inputText, ]}
+                            onFocus={() => setIsDescFocused(true)}
+                            onBlur={() => setIsDescFocused(false)}
+                            underlineColorAndroid='transparent'
+                            containerStyle={ [searchBarStyles.containerBox,]}
+                            inputContainerStyle = {[searchBarStyles.inputContainer, isDescFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
+                        />
+                    </View>
+            </View>
+
+            <View style={[addProductStyles.containers]}>
+                <View style={[addProductStyles.titles]}>
+                    <Text style={[addProductStyles.titlesText]}>Etat Du Produit</Text>
+                </View>
+                
+                <View style={[addProductStyles.contents,]}>
+                    <View style={{width:10,}}></View>
+                        <RadioButton.Group onValueChange={val => {}} value={{}} style={[addProductStyles.radioGroup,{backgroundColor:"red",}]}>
+                            <View style={[addProductStyles.radioBox,]}>
+                                <View style={addProductStyles.radioContainer}>
+                                    <RadioButton value="new" />
+                                    <Text>Neuf</Text>
+                                </View>
+                                
+                                <View style={addProductStyles.radioContainer}>
+                                    <RadioButton value="used" />
+                                    <Text>Utilisé</Text>
+                                </View>
+                                
+                                <View style={addProductStyles.radioContainer}>
+                                    <RadioButton value="new used" />
+                                    <Text>Peu Utilisé</Text>
+                                </View>
+                            </View>
+                        </RadioButton.Group>
+                </View>
+            </View>
+
+
+            <View style={[addProductStyles.containers]}>
+                <View style={[addProductStyles.titles]}>
+                    <Text style={[addProductStyles.titlesText]}>Details</Text>
+                </View>
+
+                <View style={[addProductStyles.contents,addProductStyles.categoryContainer]}>
+                        
+                        <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{onGoBack:(datas)=>{handleGoBackCat(datas)},datas:{page:"category"}})}}>
+                            <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Categorie</Text>
+                            <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
+                        </Pressable>
+
+                        <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{onGoBack:(datas)=>{handleGoBackBrand(datas)}, datas:{page:"brand"}})}}>
+                            <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Marque</Text>
+                            <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
+
+                        </Pressable>
+                        
+                        <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{}}>
+                            <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Couleur</Text>
+                            <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
+                        </Pressable>
+                </View>
+
+            </View>
+
+            <View style={[addProductStyles.containers]}>
+                <View style={[addProductStyles.titles]}>
+                    <Text style={[addProductStyles.titlesText]}>Frais De Transport Payés Par...</Text>
+                </View>
+                
+                <View style={[addProductStyles.contents,]}>
+                    <View style={{width:10,}}></View>
+                        <RadioButton.Group onValueChange={val => {}} value={{}} style={[addProductStyles.radioGroup,{backgroundColor:"red",}]}>
+                            <View style={[addProductStyles.radioBox,]}>
+                                <View style={addProductStyles.radioContainer}>
+                                    <RadioButton value="seller" />
+                                    <Text>Moi</Text>
+                                </View>
+                                
+                                <View style={addProductStyles.radioContainer}>
+                                    <RadioButton value="buyer" />
+                                    <Text>L'acheteur</Text>
+                                </View>
+                                
+                            </View>
+                        </RadioButton.Group>
+                </View>
+            </View>
+
+            
+
+
+            <View style={[addProductStyles.containers]}>
+                <View style={[addProductStyles.titles]}>
+                    <Text style={[addProductStyles.titlesText]}>Garanti Et Stock</Text>
+                </View>
+                
+                <View style={[addProductStyles.contents]}>
+                    <View style={{width:10,}}></View>
+                        <Input placeholder="Garanti en Mois" value={valueGaranti} onChangeText={(garanti)=>{setValueGaranti(garanti)}}
+                            inputMode='numeric'
+                            multiline={false}
+                            placeholderTextColor={appColors.secondaryColor3}
+                            inputStyle = {[searchBarStyles.inputText, ]}
+                            onFocus={() => setIsGarantiFocused(true)}
+                            onBlur={() => setIsGarantiFocused(false)}
+                            underlineColorAndroid='transparent'
+                            containerStyle={ [searchBarStyles.containerBox,]}
+                            inputContainerStyle = {[searchBarStyles.inputContainer, isGarantiFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
+                        />
+
+                    <Input placeholder="Nombre de ce produit. Ex : 1" value={valueStock} onChangeText={(stock)=>{setValueStock(stock)}}
+                            inputMode='numeric'
+                            multiline={false}
+                            placeholderTextColor={appColors.secondaryColor3}
+                            inputStyle = {[searchBarStyles.inputText, ]}
+                            onFocus={() => setIsStockFocused(true)}
+                            onBlur={() => setIsStockFocused(false)}
+                            underlineColorAndroid='transparent'
+                            containerStyle={ [searchBarStyles.containerBox,]}
+                            inputContainerStyle = {[searchBarStyles.inputContainer, isStockFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
+                        />
+                    </View>
+            </View>
+
+
+
+            <View style={[addProductStyles.containers]}>
+                <View style={[addProductStyles.titles]}>
+                    <Text style={[addProductStyles.titlesText]}>Prix En FCFA</Text>
+                </View>
+                
+                <View style={[addProductStyles.contents]}>
+                    <View style={{width:10,}}></View>
+                        <Input placeholder="EX : 2500" value={valuePrice} onChangeText={(price)=>{setValuePrice(formatMoney(price))}}
+                            inputMode='numeric'
+                            multiline={false}
+                            placeholderTextColor={appColors.secondaryColor3}
+                            inputStyle = {[searchBarStyles.inputText, ]}
+                            onFocus={() => setIsPriceFocused(true)}
+                            onBlur={() => setIsPriceFocused(false)}
+                            underlineColorAndroid='transparent'
+                            containerStyle={ [searchBarStyles.containerBox,]}
+                            inputContainerStyle = {[searchBarStyles.inputContainer, isPriceFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
+                        />
+                    </View>
+            </View>
+
+
+            
+            </ScrollView>
+        </TouchableWithoutFeedback>
+        
         {cameraOrGalery &&
             <View style={[addProductStyles.bottomPicker]}>
                 <Pressable onPress={pickImages}>
@@ -170,12 +408,11 @@ const deleteSelectedImage = (uri) => {
                 </Pressable>
                 <Pressable onPress={takePhoto}>
                     <Icon name="camera-outline" type="ionicon" size={24} color={appColors.secondaryColor1} />
-                    <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Photos</Text>
+                    <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Camera</Text>
                 </Pressable>
             </View>
         }
-            
-        </ScrollView>
+    </KeyboardAvoidingView>
     )
 }
 export default AddProduct
