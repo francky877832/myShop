@@ -24,20 +24,24 @@ const AddProduct = (props) => {
     
     const navigation = useNavigation();
     const [allowBack, setAllowBack] = useState(false);
-    const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedBrand} = useContext(ProductItemContext)
+    const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedBrand,selectedColor, setSelectedColor} = useContext(ProductItemContext)
 
     const [valueName, setValueName] = useState("")
     const [valueDesc, setValueDesc] = useState("")
     const [valuePrice, setValuePrice] = useState("")
     const [valueGaranti, setValueGaranti] = useState("")
     const [valueStock, setValueStock] = useState("")
+    const [valueEtat, setValueEtat] = useState("")
+    const [valueFeesBy, setValueFeesBy] = useState("")
+
+//IsFocused pour ls inputText
     const [isNameFocused, setIsNameFocused] = useState(false)
     const [isDescFocused, setIsDescFocused] = useState(false)
     const [isPriceFocused, setIsPriceFocused] = useState(false)
     const [isGarantiFocused, setIsGarantiFocused] = useState(false)
     const [isStockFocused, setIsStockFocused] = useState(false)
-    const [valueBrand, setValueBrand] = useState("")
-    const [valueCategory, setValueCategory] = useState("")
+    //const [valueBrand, setValueBrand] = useState("")
+    //const [valueCategory, setValueCategory] = useState("")
 
     const [images, setImages] = useState([]);
     const [cameraOrGalery, setCameraOrGalery] = useState(false)
@@ -159,6 +163,9 @@ const deleteSelectedImage = (uri) => {
 }
 
 
+const submitProduct = () => {
+    
+}
 
    return (
 <KeyboardAvoidingView style={{flex:1}}  keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
@@ -258,7 +265,7 @@ const deleteSelectedImage = (uri) => {
                 
                 <View style={[addProductStyles.contents,]}>
                     <View style={{width:10,}}></View>
-                        <RadioButton.Group onValueChange={val => {}} value={{}} style={[addProductStyles.radioGroup,{backgroundColor:"red",}]}>
+                        <RadioButton.Group onValueChange={val => {setValueEtat(val)}} value={valueEtat} style={[addProductStyles.radioGroup,{backgroundColor:"red",}]}>
                             <View style={[addProductStyles.radioBox,]}>
                                 <View style={addProductStyles.radioContainer}>
                                     <RadioButton value="new" />
@@ -313,7 +320,7 @@ const deleteSelectedImage = (uri) => {
                 
                 <View style={[addProductStyles.contents,]}>
                     <View style={{width:10,}}></View>
-                        <RadioButton.Group onValueChange={val => {}} value={{}} style={[addProductStyles.radioGroup,{backgroundColor:"red",}]}>
+                        <RadioButton.Group onValueChange={val => {setValueFeesBy(val)}} value={valueFeesBy} style={[addProductStyles.radioGroup,{backgroundColor:"red",}]}>
                             <View style={[addProductStyles.radioBox,]}>
                                 <View style={addProductStyles.radioContainer}>
                                     <RadioButton value="seller" />
@@ -406,6 +413,9 @@ const deleteSelectedImage = (uri) => {
                 </Pressable>
             </View>
         }
+        <View style={[addProductStyles.addProductSubmitView,{}]}>
+                <CustomButton text="Publier Le Produit" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={submitProduct} />
+        </View>
     </KeyboardAvoidingView>
     )
 }

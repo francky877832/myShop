@@ -11,8 +11,8 @@ const productSchema = new Schema({
     condition : { type : String, enum : ['new', 'used', "new used"], default : 'new' },
     seller : { type : Schema.Types.ObjectId, ref : 'User', required : true },
 
-    category : { type : Schema.Types.ObjectId, ref : 'Category', required : true  },
-    //category : { type : String, required : false },
+    //category : { type : Schema.Types.ObjectId, ref : 'Category', required : true  },
+    category : { type : String, required : false, default:"Autres/Autres" },
     brand : { type : String, required : false },
     couleur : [{ type : String, required : false}],
     

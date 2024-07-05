@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Dimensions, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView, SafeAreaView, Dimensions, } from 'react-native';
 
 import BadgeIcon from './BadgeIcon';
 import { Ionicons } from '@expo/vector-icons';

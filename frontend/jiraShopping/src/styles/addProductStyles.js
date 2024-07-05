@@ -69,7 +69,8 @@ export const addProductStyles = StyleSheet.create({
         paddingHorizontal : 20,
         backgroundColor : appColors.lightWhite,
         borderTopWidth : 2,
-        borderTopColor : appColors.white
+        borderTopColor : appColors.white,
+        zIndex : 99,
     },
 
     inputContainer : 
@@ -110,6 +111,29 @@ export const addProductStyles = StyleSheet.create({
         flexDirection : "row",
         justifyContent : "space-between",
         alignItems : "center",
+    },
+
+    addProductSubmitView :
+    {
+        //position : "absolute",
+        left : 0,
+        right : 0,
+        bottom : 0,
+        width : "100%",
+        height : 60,
+    },
+    pressable :
+    {
+        padding : 20,
+        justifyContent : "center",
+        alignItems : "center",
+        flex : 1,
+        //borderRadius : 20,
+    },
+    text :
+    {
+        ...customText.text,
+        fontWeight : "bold",
     },
 
 })
