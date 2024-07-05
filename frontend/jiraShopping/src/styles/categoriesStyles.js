@@ -40,6 +40,21 @@ export const categoriesStyles = StyleSheet.create({
        borderWidth : 1,
        borderColor : appColors.secondaryColor3
     },
+    colorContainer :
+    {
+      width : "100%",
+      justifyContent : "center",
+      alignItems : "center",
+    },
+    pressableColor :
+    {
+       padding : 5,
+       width : "100%",
+       justifyContent : "center",
+      alignItems : "center",
+       //borderWidth : 1,
+       //borderColor : appColors.secondaryColor3
+    },
 
 
 //Marque

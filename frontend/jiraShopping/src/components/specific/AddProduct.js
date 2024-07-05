@@ -18,10 +18,13 @@ import Categories from '../common/Categories';
 import { formatMoney } from '../../utils/commonAppFonctions';
 import { categoriesStyles } from '../../styles/categoriesStyles';
 
+import { ProductItemContext } from '../../context/ProductItemContext';
+
 const AddProduct = (props) => {
     
     const navigation = useNavigation();
     const [allowBack, setAllowBack] = useState(false);
+    const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedBrand} = useContext(ProductItemContext)
 
     const [valueName, setValueName] = useState("")
     const [valueDesc, setValueDesc] = useState("")
@@ -35,22 +38,13 @@ const AddProduct = (props) => {
     const [isStockFocused, setIsStockFocused] = useState(false)
     const [valueBrand, setValueBrand] = useState("")
     const [valueCategory, setValueCategory] = useState("")
-    const [selectedCategories, setSelectedCategories] = useState({})
-
-    
-    const handleGoBackCat = (data) => {
-        // Réception des données renvoyées de ScreenB
-        setValueCategory(data);
-      };
-      const handleGoBackBrand = (data) => {
-        // Réception des données renvoyées de ScreenB
-        setValueBrand(data);
-      };
 
     const [images, setImages] = useState([]);
     const [cameraOrGalery, setCameraOrGalery] = useState(false)
     const MAX_IMAGES = 6, MIN_IMAGES = 3
 
+
+//Traitement des donnees et envoie au serveur
 
     //GoBackPermission
     const onBackPress = useCallback((e) => {
@@ -164,7 +158,7 @@ const deleteSelectedImage = (uri) => {
     }
 }
 
-console.log(selectedCategories) 
+
 
    return (
 <KeyboardAvoidingView style={{flex:1}}  keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
@@ -293,18 +287,18 @@ console.log(selectedCategories)
 
                 <View style={[addProductStyles.contents,addProductStyles.categoryContainer]}>
                         
-                        <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{onGoBack:(datas)=>{handleGoBackCat(datas)},datas:{page:"category"}})}}>
+                        <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{datas:{page:"category"}})}}>
                             <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Categorie</Text>
                             <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
                         </Pressable>
 
-                        <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{onGoBack:(datas)=>{handleGoBackBrand(datas)}, datas:{page:"brand"}})}}>
+                        <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{datas:{page:"brand"}})}}>
                             <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Marque</Text>
                             <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
 
                         </Pressable>
                         
-                        <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{}}>
+                        <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{datas:{page:"color"}})}}>
                             <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Couleur</Text>
                             <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
                         </Pressable>

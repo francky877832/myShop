@@ -18,6 +18,7 @@ import HomeNavigation from '../navigation/HomeNavigation';
 //Contexts
 import { FilterProvider } from '../context/FilterContext';
 import { FavouritesProvider } from '../context/FavouritesContext';
+import { ProductItemProvider } from '../context/ProductItemContext';
 
 
 const Stack = createStackNavigator();
@@ -29,21 +30,22 @@ export default function MainNavigation() {
   return ( 
 <SafeAreaView style={{ flex: 1 }}>
   <NavigationContainer> 
-      <FavouritesProvider>
-        <FilterProvider>
-            <Stack.Navigator initialRouteName="AddProduct">
-              <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
-              <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
-              <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
-              <Stack.Screen name="Offers" component={Offers}  options={{ title: 'Propositions', headerShown : true, tabBarVisible: false, }} />
-              <Stack.Screen name="AllComments" component={AllCommets}  options={{ title: 'All Comments', headerShown : true, tabBarVisible: false, }} />
-              <Stack.Screen name="Notifications" component={Notifications}  options={{ title: 'Notifications', headerShown : true, tabBarVisible: false, }} />
-              <Stack.Screen name="AddProduct" component={AddProduct}  options={{ title: 'Ajouter Un Produit', headerShown : true, tabBarVisible: false, }} />
-              <Stack.Screen name="Categories" component={Categories}  options={{ title: 'Choisir Une Categorie', headerShown : true, tabBarVisible: false, }} />
-
-            </Stack.Navigator>
-        </FilterProvider>
-      </FavouritesProvider>
+    <ProductItemProvider>
+        <FavouritesProvider>
+          <FilterProvider>
+              <Stack.Navigator initialRouteName="AddProduct">
+                <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
+                <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
+                <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
+                <Stack.Screen name="Offers" component={Offers}  options={{ title: 'Propositions', headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="AllComments" component={AllCommets}  options={{ title: 'All Comments', headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="Notifications" component={Notifications}  options={{ title: 'Notifications', headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="AddProduct" component={AddProduct}  options={{ title: 'Ajouter Un Produit', headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="Categories" component={Categories}  options={{ title: 'Choisir Une Categorie', headerShown : true, tabBarVisible: false, }} />
+              </Stack.Navigator>
+          </FilterProvider>
+        </FavouritesProvider>
+      </ProductItemProvider>
     </NavigationContainer>
   </SafeAreaView>
   );

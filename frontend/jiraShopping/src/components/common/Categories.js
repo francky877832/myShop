@@ -15,12 +15,16 @@ import { CustomButton } from "./CommonSimpleComponents"
 import { Icon } from 'react-native-elements';
 
 import { formatMoney } from '../../utils/commonAppFonctions';
+import { ProductItemContext } from '../../context/ProductItemContext';
 
 const Categories = (props) => {
     const { params } = props.route
-    const [selectedCategories, setSelectedCategories] = useState({})
+
+    const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedColor, setSelectedColor} = useContext(ProductItemContext)
     const navigation = useNavigation()
 
+
+    //Appel side effect pour recuperer les cat, marque et couleur de la BD
     const categories = [
         {
             id_ : 1,
@@ -37,23 +41,13 @@ const Categories = (props) => {
             subCategories : ["Telephone", "Ordinateur", "Tablette", "Autres"],
         },
     ]
-
     const brands = [{id_:1, name:"Tecno"}, {id_:2, name:"Samsung"},]
-    const updateSelectedCategory = (id, path) => {
-        setSelectedCategories((prevSelectedCategories) => {
-           
-            if(path==undefined)
-            {
-                return {[id] : !prevSelectedCategories[id]}
-            }
-            else
-            {
-                return {[id] : true, subCategories:path}
-            }
-        })
-    }
+    const colors = [{id_:1, name:"green"}, {id_:2, name:"red"}, {id_:3, name:"blue"},{id_:4, name:"green"}, {id_:6, name:"red"}, {id_:7, name:"blue"}]
 
-const Category = (props) => {
+//UCFIRST
+    const capitalizeFirstLetter = str => str ? str[0].toUpperCase() + str.slice(1).toLowerCase() : str;
+
+    const Category = (props) => {
     const { item, selectedCategories, updateSelectedCategory } = props
     return(
         <View style={[categoriesStyles.categoryContainer]}>
@@ -68,7 +62,7 @@ const Category = (props) => {
                      {
                         item.subCategories.map((cat, index) => {
                             return (
-                                    <Pressable key={index} style={[categoriesStyles.pressableSubCat]} onPress={()=>{updateSelectedCategory(item.id_, cat); params.onGoBack(selectedCategories);navigation.goBack();}}>
+                                    <Pressable key={index} style={[categoriesStyles.pressableSubCat]} onPress={()=>{updateSelectedCategory(item.id_, cat); navigation.goBack();}}>
                                         <Text>{cat}</Text>
                                     </Pressable>
                             )
@@ -110,7 +104,7 @@ const Category = (props) => {
                         nestedScrollEnabled={true}
                         renderItem={ ({item}) => { return (
                             <View style={{flex:1}}>
-                                <Pressable style={[categoriesStyles.pressableSubCat]} onPress={()=>{params.onGoBack(item.name);navigation.goBack();}}>
+                                <Pressable style={[categoriesStyles.pressableSubCat]} onPress={()=>{setSelectedBrand(item.name);navigation.goBack();}}>
                                     <Text style={[addProductStyles.normalText,]}>{item.name}</Text>
                                  </Pressable>
                             </View>
@@ -122,6 +116,31 @@ const Category = (props) => {
                         ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={[categoriesStyles.flatlist,]}
+                    />
+            </View>
+        }
+
+{
+            params.datas.page=="color" &&
+            <View style={[categoriesStyles.colorContainer,{}]}>
+                <FlatList
+                        data={colors}
+                        nestedScrollEnabled={true}
+                        renderItem={ ({item}) => { return (
+                            <View style={{}}>
+                                <Pressable style={[categoriesStyles.pressableColor,]} onPress={()=>{setSelectedColor(item.name);navigation.goBack();}}>
+                                    <View style={[{width:50,height:50,borderRadius:25,backgroundColor:item.name,}]}></View>
+                                    <Text style={[addProductStyles.normalText,]}>{capitalizeFirstLetter(item.name)}</Text>
+                                 </Pressable>
+                            </View>
+                            )
+                        } }
+                        keyExtractor={ (item) => { return item.id_.toString(); } }
+                        horizontal={false}
+                        numColumns={ 5 }
+                        ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={[{}]}
                     />
             </View>
         }
