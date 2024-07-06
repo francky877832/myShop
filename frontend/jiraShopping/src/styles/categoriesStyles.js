@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { appColors } from "./commonStyles";
+import { appColors, screenHeight } from "./commonStyles";
 import { appFont } from "./commonStyles";
 
 export const categoriesStyles = StyleSheet.create({
@@ -20,6 +20,7 @@ export const categoriesStyles = StyleSheet.create({
       alignSelf : "flex-start",
       //backgroundColor : "red",
       width : "100%",
+      height : screenHeight,
     },  
     pressableCat : 
     {
@@ -31,14 +32,21 @@ export const categoriesStyles = StyleSheet.create({
       borderColor : appColors.secondaryColor3,
       width : 100,
       height : 100,
-
+      //position : "absolute",
+      //backgroundColor:"blue",
+      zIndex : 100,
     },
     pressableSubCat :
     {
        padding : 20,
        width : "100%",
+      //height : 200,
        borderWidth : 1,
-       borderColor : appColors.secondaryColor3
+       borderColor : appColors.secondaryColor3,
+       justifyContent : "center",
+  
+       //backgroundColor:"blue",
+
     },
     colorContainer :
     {

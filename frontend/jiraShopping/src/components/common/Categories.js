@@ -17,62 +17,102 @@ import { Icon } from 'react-native-elements';
 import { formatMoney } from '../../utils/commonAppFonctions';
 import { ProductItemContext } from '../../context/ProductItemContext';
 
+import { server } from '../../remote/server';
+import { colors } from '../../utils/sampleDatas';
+import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
+
 const Categories = (props) => {
     const { params } = props.route
 
     const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedColor, setSelectedColor} = useContext(ProductItemContext)
     const navigation = useNavigation()
-
+    const [ categories, setCategories ] = useState([])
+    const [ brands, setBrands ] = useState([])
 
     //Appel side effect pour recuperer les cat, marque et couleur de la BD
-    const categories = [
+    let categorie = [
         {
-            id_ : 1,
+            _id : 1,
             no : 0,
             name : "Vetements",
             icon : "ionicon/shirt-outline",
             subCategories : ["Hommes", "Femmes", "Mixte", "Autres"],
         },
         {
-            id_ : 2,
+            _id : 2,
             no : 1,
             name : "Electronique",
             icon : "ionicon/phone-portrait-outline",
             subCategories : ["Telephone", "Ordinateur", "Tablette", "Autres"],
         },
     ]
-    const brands = [{id_:1, name:"Tecno"}, {id_:2, name:"Samsung"},]
-    const colors = [{id_:1, name:"green"}, {id_:2, name:"red"}, {id_:3, name:"blue"},{id_:4, name:"green"}, {id_:6, name:"red"}, {id_:7, name:"blue"}]
+    let brand = [{_id:1, name:"Tecno"}, {_id:2, name:"Samsung"},]
 
-//UCFIRST
-    const capitalizeFirstLetter = str => str ? str[0].toUpperCase() + str.slice(1).toLowerCase() : str;
+    const fecthCategories = async () =>{
+        try{
+
+            const response = await fetch(`${server}/api/datas/categories/get`);            
+            const datas = await response.json()
+            //console.log(datas)
+            setCategories(datas)
+        }catch(error){
+            Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
+        }
+    }
+    const fecthBrands= async () =>{
+        try{
+
+            const response = await fetch(`${server}/api/datas/brands/get`);            
+            const datas = await response.json()
+            setBrands(datas)
+        }catch(error){
+            Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
+        }
+    }
+
+useEffect(() => {
+    if(params.datas.page=="category")
+        fecthCategories().then()
+    else if(params.datas.page=="brand")
+        fecthBrands().then()
+    else if(params.datas.page=="color")
+        fecthBrands().then()
+}, [])
+
+
 
     const Category = (props) => {
-    const { item, selectedCategories, updateSelectedCategory } = props
-    return(
-        <View style={[categoriesStyles.categoryContainer]}>
-            <Pressable style={[categoriesStyles.pressableCat]} onPress={()=>{updateSelectedCategory(item.id_)}}>
-                <Icon name={item.icon.split("/")[1]} type={item.icon.split("/")[0]} color={selectedCategories[item.id_]  ? appColors.secondaryColor1 : appColors.secondaryColor4} />
-                <Text style={[customText.text, {color:selectedCategories[item.id]  ? appColors.secondaryColor1 : appColors.secondaryColor4} ]}>{item.name}</Text>
-            </Pressable>
-            {
-                selectedCategories[item.id_] &&
-               
-                <View style={[categoriesStyles.subCategoryContainer, {position:"absolute",top:-item.no*100,left:100,}]}>
-                     {
-                        item.subCategories.map((cat, index) => {
-                            return (
-                                    <Pressable key={index} style={[categoriesStyles.pressableSubCat]} onPress={()=>{updateSelectedCategory(item.id_, cat); navigation.goBack();}}>
-                                        <Text>{cat}</Text>
-                                    </Pressable>
-                            )
-                        })
-                    }
+        const { item, selectedCategories, updateSelectedCategory } = props
+        //console.log(item.subCategories)
+        console.log(selectedCategories)
+        return(
+            <View style={{flex:1,}}>
+                <View pointerEvents='auto' style={[categoriesStyles.categoryContainer,{flex:1,}]}>
+                    <Pressable style={[categoriesStyles.pressableCat]} onPress={()=>{updateSelectedCategory(item.name); }}>
+                        <Icon name={item.icon.split("/")[1]} type={item.icon.split("/")[0]} color={selectedCategories[item.name]  ? appColors.secondaryColor1 : appColors.secondaryColor4} />
+                        <Text style={[customText.text, {color:selectedCategories[item.name]  ? appColors.secondaryColor1 : appColors.secondaryColor4} ]}>{item.name}</Text>
+                    </Pressable>
+                    
                 </View>
-              
-            }
-       </View>
-    )
+                    {/*
+                        selectedCategories[item.name] &&
+                    
+                        <View pointerEvents='auto' style={[categoriesStyles.subCategoryContainer, {position:"relative",top:-(item.no-1)*100,left:100,}]}>
+                            {
+                                item.subCategories.map((cat, index) => {
+                                    return (
+                                            <Pressable key={cat._id} style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateSelectedCategory(item.name, cat.name); navigation.goBack();}}>
+                                                <Text>{cat.name}</Text>
+                                            </Pressable>
+                                    )
+                                })
+                            }
+                        </View>
+                        */
+                    
+                    }
+        </View>
+        )
 }
 
 
@@ -81,12 +121,13 @@ const Categories = (props) => {
 
         {
             params.datas.page=="category" &&
-            <View style={[categoriesStyles.brandContainer]}>
+            <View style={{flexDirection:"row",}}>
+            <View style={[categoriesStyles.categoriesContainer]}>
                 <FlatList
                         data={categories}
                         nestedScrollEnabled={true}
                         renderItem={ ({item}) => { return <Category item={item} selectedCategories={selectedCategories} updateSelectedCategory={updateSelectedCategory} /> } }
-                        keyExtractor={ (item) => { return item.id_.toString(); } }
+                        keyExtractor={ (item) => { return item._id.toString(); } }
                         horizontal={false}
                         numColumns={ 1 }
                         ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
@@ -94,23 +135,50 @@ const Categories = (props) => {
                         contentContainerStyle={[categoriesStyles.flatlist,]}
                     />
             </View>
+            <View style={[categoriesStyles.subCategoryContainer, {}]}>
+            <FlatList
+                    data={categories}
+                    nestedScrollEnabled={true}
+                    renderItem={ ({item}) => { return (
+                        <View pointerEvents='auto'>
+                            {  selectedCategories[item.name] &&
+                                item.subCategories.map((cat, index) => {
+                                    return (
+                                            <Pressable key={cat._id} style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateSelectedCategory(item.name, cat.name); navigation.goBack();}}>
+                                                <Text>{cat.name}</Text>
+                                            </Pressable>
+                                    )
+                                })
+                            }
+                        </View>
+                    ) } }
+                    keyExtractor={ (item) => { return item._id.toString(); } }
+                    horizontal={false}
+                    numColumns={ 1 }
+                    ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={[categoriesStyles.flatlist,]}
+                />
+        </View>
+        </View>
         }
 
 {
             params.datas.page=="brand" &&
-            <View style={[categoriesStyles.categoriesContainer]}>
+            <View style={[categoriesStyles.brandContainer]}>
                 <FlatList
                         data={brands}
                         nestedScrollEnabled={true}
-                        renderItem={ ({item}) => { return (
-                            <View style={{flex:1}}>
-                                <Pressable style={[categoriesStyles.pressableSubCat]} onPress={()=>{setSelectedBrand(item.name);navigation.goBack();}}>
-                                    <Text style={[addProductStyles.normalText,]}>{item.name}</Text>
-                                 </Pressable>
-                            </View>
-                            )
+                        renderItem={ ({item}) => { return(
+                                <View style={{flex:1}}>
+                                    <Pressable style={[categoriesStyles.pressableSubCat]} onPress={()=>{setSelectedBrand(item.name);navigation.goBack();}}>
+                                        <Text style={[addProductStyles.normalText,]}>{item.name}</Text>
+                                    </Pressable>
+                                </View>
+                                )
+                           
                         } }
-                        keyExtractor={ (item) => { return item.id_.toString(); } }
+                        keyExtractor={ (item) => { return item._id.toString(); } }
                         horizontal={false}
                         numColumns={ 1 }
                         ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
@@ -126,16 +194,31 @@ const Categories = (props) => {
                 <FlatList
                         data={colors}
                         nestedScrollEnabled={true}
-                        renderItem={ ({item}) => { return (
-                            <View style={{}}>
-                                <Pressable style={[categoriesStyles.pressableColor,]} onPress={()=>{setSelectedColor(item.name);navigation.goBack();}}>
-                                    <View style={[{width:50,height:50,borderRadius:25,backgroundColor:item.name,}]}></View>
-                                    <Text style={[addProductStyles.normalText,]}>{capitalizeFirstLetter(item.name)}</Text>
-                                 </Pressable>
-                            </View>
-                            )
+                        renderItem={ ({item}) => { 
+                            if(item.name!="multicolor")
+                            {
+                                  return (
+                                    <View style={{}}>
+                                        <Pressable style={[categoriesStyles.pressableColor,]} onPress={()=>{setSelectedColor(item.name);navigation.goBack();}}>
+                                            <View style={[{width:50,height:50,borderRadius:25,backgroundColor:item.name,}]}></View>
+                                            <Text style={[addProductStyles.normalText,]}>{capitalizeFirstLetter(item.name)}</Text>
+                                        </Pressable>
+                                    </View>
+                                  )
+
+                            }else{
+                                    return(
+                                        <View style={{flex:1}}>
+                                            <Pressable style={{}}  onPress={()=>{setSelectedColor(item.name);navigation.goBack();}}>
+                                                <Image source={require('../../assets/images/multicolor.png')} style={[{width:50,height:50,borderRadius:25,backgroundColor:item.name,}]} />
+                                                <Text style={[addProductStyles.normalText,]}>{capitalizeFirstLetter(item.name)}</Text>
+                                            </Pressable>
+                                        </View>
+                                        )
+                             }
+                        
                         } }
-                        keyExtractor={ (item) => { return item.id_.toString(); } }
+                        keyExtractor={ (item) => { return item._id.toString(); } }
                         horizontal={false}
                         numColumns={ 5 }
                         ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}

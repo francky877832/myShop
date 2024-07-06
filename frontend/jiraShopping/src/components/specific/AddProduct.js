@@ -20,6 +20,8 @@ import { categoriesStyles } from '../../styles/categoriesStyles';
 
 import { ProductItemContext } from '../../context/ProductItemContext';
 
+import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
+
 const AddProduct = (props) => {
     
     const navigation = useNavigation();
@@ -293,21 +295,31 @@ const submitProduct = () => {
                 </View>
 
                 <View style={[addProductStyles.contents,addProductStyles.categoryContainer]}>
-                        
                         <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{datas:{page:"category"}})}}>
-                            <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Categorie</Text>
-                            <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
+                                <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Categorie</Text>
+                                <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
+                          
+                                {
+                                    selectedCategories.name &&
+                                    <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>{selectedCategories.name} | {selectedCategories.subCategories}</Text>
+                                }
                         </Pressable>
-
                         <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{datas:{page:"brand"}})}}>
                             <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Marque</Text>
                             <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
-
+                                {
+                                    selectedBrand &&
+                                    <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>{selectedBrand}</Text>
+                                }
                         </Pressable>
                         
                         <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{datas:{page:"color"}})}}>
                             <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Couleur</Text>
                             <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
+                                {
+                                    selectedColor &&
+                                    <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>{capitalizeFirstLetter(selectedColor)}</Text>
+                                }
                         </Pressable>
                 </View>
 

@@ -153,3 +153,7 @@ export const basketsProducts = [
         id_ : "1",
     }
 ]
+
+
+export const colors = [{_id:1, name:"green"}, {_id:2, name:"red"}, {_id:3, name:"blue"},{_id:4, name:"green"}, {_id:6, name:"red"}, {_id:7, name:"multicolor"}]
+

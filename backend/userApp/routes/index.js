@@ -13,11 +13,13 @@ const notificaitonRoutes = require('./notificaitonRoutes');
 const basketRoutes = require('./basketRoutes');
 const searchRoutes = require('./searchRoutes');
 const orderRoutes = require('./orderRoutes');
-
+const categoryRoutes = require('./categoryRoutes');
+const brandRoutes = require('./brandRoutes');
 
 
 //router.use('/products', auth,  productRoutes);
-
+router.use('/categories', categoryRoutes);
+router.use('/brands', brandRoutes);
 router.use('/products', productRoutes);
 router.use('/comments', commentRoutes);
 router.use('/offers', offerRoutes);

@@ -1,4 +1,7 @@
 
+
+exports.capitalizeFirstLetter = str => str ? str[0].toUpperCase() + str.slice(1).toLowerCase() : str;
+
 exports.sinceDate = (_date) => {
     const date2 = new Date(_date)
     const date = Date.now() - date2.getTime()

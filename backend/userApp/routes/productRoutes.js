@@ -9,7 +9,7 @@ const prodCtrl = require('../controllers/productController');
 
 
 
-router.get('/get', auth, prodCtrl.getProducts);
+router.get('/get', prodCtrl.getProducts);
 router.get('/get/user/:user', prodCtrl.getProductsUser);
 router.get('/search', prodCtrl.getSearchedProducts);
 router.get('/likes/get/:id', prodCtrl.getProductNumLikes);

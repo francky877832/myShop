@@ -16,7 +16,7 @@ const ProductItemProvider = ({children}) => {
             }
             else
             {
-                return {[id] : true, subCategories:path}
+                return {[id] : true, name:id, subCategories:path}
             }
         })
     }

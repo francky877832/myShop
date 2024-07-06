@@ -1,5 +1,5 @@
 const mongoose = require('../../shared/db').mongoose;
-const Schema = mongoose.Schema()
+const Schema = mongoose.Schema
 
 const brandSchema = new Schema({
     name: { type: String, required: true },
