@@ -21,7 +21,8 @@ import { categoriesStyles } from '../../styles/categoriesStyles';
 import { ProductItemContext } from '../../context/ProductItemContext';
 
 import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
-
+import { server } from '../../remote/server';
+const loggedUser = "66731fcb569b492d3ef429ba"
 const AddProduct = (props) => {
     
     const navigation = useNavigation();
@@ -164,10 +165,56 @@ const deleteSelectedImage = (uri) => {
     }
 }
 
+console.log(images)
+const submitProduct = async () => {
 
-const submitProduct = () => {
-    
-}
+    let formData = new FormData()
+    const datas = {
+        name : valueName,
+        description : valueDesc,
+        price : valuePrice.replace('.',''),
+        newPrice : valuePrice.replace('.',''),
+        minPrice : valuePrice.replace('.',''),
+        maxPrice : valuePrice.replace('.',''),
+        condition : valueEtat,
+        seller : loggedUser,
+        category : `${selectedCategories.name}/${selectedCategories.subCategories}`,
+        brand : selectedBrand,
+        color : selectedColor,
+        feesBy : valueFeesBy,
+        garanti : valueGaranti,
+        stock : valueStock, 
+    }
+    //Gestion des images
+    images.forEach((image, index) => {
+        formData.append('images', {
+          uri: image.uri,
+          name: image.fileName,
+          type: image.mimeType,
+          extension:image.fileName.split('.')[1]
+        });
+      });
+
+   
+    Object.keys(datas).forEach(key => {
+        formData.append(key, datas[key]);
+    });
+
+    try {
+        const response = await fetch(`${server}/api/datas/products/add`,{
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        const responseJson = await response.json();
+        console.log(responseJson);
+      } catch (error) {
+        console.error(error);
+      }
+};
+
 
    return (
 <KeyboardAvoidingView style={{flex:1}}  keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
