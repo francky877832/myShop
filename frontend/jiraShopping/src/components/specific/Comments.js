@@ -14,7 +14,7 @@ const Comments = (props) =>
 {
     const { all, navigation} = props 
     //Requete parametres avec le nombre  de comments a afficher
-    //modifier comments avec un champ subComment au lieur de isResponseTo
+    //modifier comments avec un champ subComment au lieur de isResponseTo length
     const [inputValue, setInputValue] = useState("")
     const [isFocused, setIsFocused] = useState(false)
     const [isAll, setIsAll] = useState(all)

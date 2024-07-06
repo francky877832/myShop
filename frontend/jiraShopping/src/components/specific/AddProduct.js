@@ -6,11 +6,12 @@ import { RadioButton, } from 'react-native-paper';
 import { Input } from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 
 import { appColors, customText } from '../../styles/commonStyles';
 import { CustomButton } from "../common/CommonSimpleComponents"
-
+import { screenWidth, screenHeight } from '../../styles/commonStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { Icon } from 'react-native-elements';
@@ -22,9 +23,11 @@ import { ProductItemContext } from '../../context/ProductItemContext';
 
 import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
 import { server } from '../../remote/server';
+import { ScreenWidth } from 'react-native-elements/dist/helpers';
 const loggedUser = "66731fcb569b492d3ef429ba"
 const AddProduct = (props) => {
-    
+    const IMG_MAX_HEIGHT = screenHeight/2
+    const IMG_MAX_WIDTH = screenWidth
     const navigation = useNavigation();
     const [allowBack, setAllowBack] = useState(false);
     const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedBrand,selectedColor, setSelectedColor} = useContext(ProductItemContext)
@@ -146,10 +149,31 @@ const takePhoto = async () => {
             //setImages((prevImages) => [...prevImages, result]);
             //console.log(result);
             setImages((prevImages) => [...prevImages, { uri: result.assets[0].uri }]);
-
             setCameraOrGalery(false)
         }
 };
+
+const resizeImages = async (images) => {
+    return await Promise.all(images.map(async (selectedImage) => {
+      if (selectedImage.width > IMG_MAX_WIDTH || selectedImage.height > IMG_MAX_HEIGHT) {
+        const resizedImage = await ImageManipulator.manipulateAsync(
+          selectedImage.uri,
+          [
+            {
+              resize: {
+                width: Math.min(selectedImage.width, IMG_MAX_WIDTH),
+                height: Math.min(selectedImage.height, IMG_MAX_HEIGHT/2),
+              },
+            },
+          ],
+          { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+        );
+        return {...selectedImage, width:resizedImage.width, height:resizedImage.height};
+      } else {
+        return selectedImage
+      }
+    }));
+  };
 
 const deleteSelectedImage = (uri) => {
     for(let i in images)
@@ -165,51 +189,57 @@ const deleteSelectedImage = (uri) => {
     }
 }
 
-console.log(images)
+//console.log(images)
 const submitProduct = async () => {
-
-    let formData = new FormData()
-    const datas = {
-        name : valueName,
-        description : valueDesc,
-        price : valuePrice.replace('.',''),
-        newPrice : valuePrice.replace('.',''),
-        minPrice : valuePrice.replace('.',''),
-        maxPrice : valuePrice.replace('.',''),
-        condition : valueEtat,
-        seller : loggedUser,
-        category : `${selectedCategories.name}/${selectedCategories.subCategories}`,
-        brand : selectedBrand,
-        color : selectedColor,
-        feesBy : valueFeesBy,
-        garanti : valueGaranti,
-        stock : valueStock, 
-    }
-    //Gestion des images
-    images.forEach((image, index) => {
-        formData.append('images', {
-          uri: image.uri,
-          name: image.fileName,
-          type: image.mimeType,
-          extension:image.fileName.split('.')[1]
-        });
-      });
-
-   
-    Object.keys(datas).forEach(key => {
-        formData.append(key, datas[key]);
-    });
-
     try {
-        const response = await fetch(`${server}/api/datas/products/add`,{
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+        //console.log(images)
+        const images_ = await resizeImages(images)
+        console.log(images_)
+        
+        let formData = new FormData()
+        const datas = {
+            name : valueName,
+            description : valueDesc,
+            price : valuePrice.replace('.',''),
+            newPrice : valuePrice.replace('.',''),
+            minPrice : valuePrice.replace('.',''),
+            maxPrice : valuePrice.replace('.',''),
+            condition : valueEtat,
+            seller : loggedUser,
+            category : `${selectedCategories.name}/${selectedCategories.subCategories}`,
+            brand : selectedBrand,
+            color : selectedColor,
+            feesBy : valueFeesBy,
+            garanti : valueGaranti,
+            stock : valueStock, 
+        }
+        //Gestion des images
+        images.forEach((image, index) => {
+            formData.append('images', {
+            uri: image.uri,
+            name: image.fileName,
+            type: image.mimeType,
+            extension:image.fileName.split('.')[1],
+            width : image.width,
+            height : image.height,
+            });
         });
-        const responseJson = await response.json();
-        console.log(responseJson);
+
+    
+        Object.keys(datas).forEach(key => {
+            formData.append(key, datas[key]);
+        });
+
+
+            const response = await fetch(`${server}/api/datas/products/add`,{
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            });
+            const responseJson = await response.json();
+            console.log(responseJson);
       } catch (error) {
         console.error(error);
       }

@@ -18,9 +18,13 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
+const imagesPath =  path.join(__dirname, '/assets/images').replace(/\\/g, '/')
 app.use('/api/datas', routes);
-app.use('/assets/images', express.static(path.join(__dirname, 'userApp/assets/imagesimages')));
+console.log( path.join(__dirname, '/assets/images').replace(/\\/g, '/'))
+app.use('/userApp/assets/images', express.static(path.join(__dirname, '/assets/images').replace(/\\/g, '/')))
+app.get('/userApp/assets/images/:imageName', (req, res) => {
+  res.sendFile(path.join(imagesPath, req.params.imageName));
+});
 app.use('/api/auth', userRoutes);
 
 

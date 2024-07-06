@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView, Animated, PanResponder, } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 
 import CarouselImage from '../common/CarouselImages';
 import { PrevButton, ShareButton, LikeButton, CustomButton } from "../common/CommonSimpleComponents";
@@ -13,13 +14,17 @@ import BadgeIcon from '../common/BadgeIcon';
 import ProductsList from '../common/ProductsList';
 import SellerBrand from '../common/SellerBrand';
 import { screenHeight, screenWidth } from '../../styles/commentsStyles';
-
+import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
 const ProductDetails = (props) => {
-    const { navigation } = props;
-    const data = datas[0];
+    //console.log(props)
+    const navigation = useNavigation()
+    const route = useRoute()
+//console.log(route.params.productDetails) length
+    const data = route.params.productDetails;
     data.color = "blue";
-    const numChars = 10;
-    const [description, setDescription] = useState(truncateText(data.text, numChars));
+    const numChars = 150;
+    
+    const [description, setDescription] = useState(truncateText(data.description, numChars));
 
    
     const minHeight = 0;
@@ -62,9 +67,9 @@ const ProductDetails = (props) => {
         onPanResponderMove: (ev, gestureState) => 
             {
                  // Désactiver le scrolling en utilisant la référence à la ScrollView
-                if (scrollViewRef.current) {
+               /* if (scrollViewRef.current) {
                     scrollViewRef.current.setNativeProps({ scrollEnabled: false });
-                }
+                }*/
                 setLastValidHeight(pan._value);
 
                 Animated.event(
@@ -106,10 +111,9 @@ const ProductDetails = (props) => {
     ).current;
 
 
-
     
-
     return (
+        
         <View style={productDetailsStyles.container}>
             <View contentContainerStyle={[productDetailsStyles.getBackPosition, {}]}>
                 <View style={productDetailsStyles.buttonContainer}>
@@ -122,9 +126,9 @@ const ProductDetails = (props) => {
                 </View>
 
                 <Animated.View style={[productDetailsStyles.carousselIamge, { height: animatedHeight }]}>
-                    <CarouselImage styles={{ }} />
+                    <CarouselImage images={data.images} styles={{ }} />
                 </Animated.View>
-        
+
 <View style={[productDetailsStyles.underCaroussel]} {...panResponder.panHandlers} >
                 <ScrollView style={[productDetailsStyles.scrollView,]} ref={scrollViewRef}horizontal={false} nestedScrollEnabled={true} >
                     <View style={[productDetailsStyles.infosBox]}>
@@ -134,34 +138,34 @@ const ProductDetails = (props) => {
                             <View style={{ width: 5 }}></View>
                             <Text style={[customText.text, { color: appColors.secondaryColor4 }]}>Mis à jour il y'a {sinceDate(data.updatedAt).join(" ")}</Text>
                         </View>
-                        <View>
+                        <View style={{justifyContent:"center",alignItems:"center",}}>
                             <LikeButton hasLiked={data.liked} item={data} styles={{ color: appColors.black }} isCard={false} />
-                            <Text style={[customText.text]}>23</Text>
+                            <Text style={[customText.text]}>{data.likes}</Text>
                         </View>
                     </View>
 
                     <View style={[productDetailsStyles.name]}>
-                        <Text numberOfLines={2} style={[customText.text, { fontWeight: "bold" }]}>{data.username}</Text>
-                        <View style={{ flexDirection: "row", top: 5 }}>
-                            <Text style={[customText.text]}>Telephone categories.map</Text>
+                        <Text numberOfLines={2} style={[customText.text, { fontWeight: "bold" }]}>{capitalizeFirstLetter(data.username)}</Text>
+                        <View style={{ flexDirection: "row", top: 0 }}>
+                            <Text style={[customText.text,{fontWeight:"bold",fontSize:15,}]}>{data.category.replace(/\//g, ' | ')}</Text>
                         </View>
                     </View>
 
                     <View style={[productDetailsStyles.details]}>
                         <View style={[{ flexDirection: "row" }]}>
                             <BadgeIcon name="checkmark-circle-sharp" size={18} color="black" styles={{}} isCard={false} />
-                            <Text style={[customText.text, { paddingLeft: 5 }]}>Tecno</Text>
+                            <Text style={[customText.text, { paddingLeft: 5 }]}>{capitalizeFirstLetter(data.brand)}</Text>
                         </View>
                         <View style={[{ flexDirection: "row" }]}>
                             <View style={{ transform: [{ rotate: "-90deg" }] }}>
                                 <BadgeIcon name="pricetag-outline" size={18} color="black" styles={{}} isCard={false} />
                             </View>
-                            <Text style={[customText.text, { paddingLeft: 5 }]}>Utilisé</Text>
+                            <Text style={[customText.text, { paddingLeft: 5 }]}>{capitalizeFirstLetter(data.condition)}</Text>
                         </View>
                         {data.color ?
                             <View style={[{ flexDirection: "row" }]}>
-                                <BadgeIcon name="ellipse-sharp" size={18} color="blue" styles={{}} isCard={false} />
-                                <Text style={[customText.text]}>Bleu</Text>
+                                <BadgeIcon name="ellipse-sharp" size={18} color={data.color.toLowerCase()} styles={{}} isCard={false} />
+                                <Text style={[customText.text]}>{capitalizeFirstLetter(data.color)}</Text>
                             </View>
                             : false
                         }
@@ -172,11 +176,11 @@ const ProductDetails = (props) => {
                             <Text style={[customText.text]}>{description[0]}</Text>
                             {description[1] == 0 && !description[2] ? true :
                                 description[1] == 1 ?
-                                    <Pressable onPress={() => { setDescription(truncateText(data.text, data.text.length, true)) }}>
+                                    <Pressable onPress={() => { setDescription(truncateText(data.description, data.description.length, true)) }}>
                                         <Text style={[customText.text, { color: appColors.secondaryColor1 }]}>...Plus</Text>
                                     </Pressable>
                                     :
-                                    <Pressable onPress={() => { setDescription(truncateText(data.text, numChars, true)) }}>
+                                    <Pressable onPress={() => { setDescription(truncateText(data.description, numChars, true)) }}>
                                         <Text style={[customText.text, { color: appColors.secondaryColor1 }]}>...Moins</Text>
                                     </Pressable>
                             }

@@ -80,7 +80,7 @@ export const productDetailsStyles = StyleSheet.create({
     },
     descriptionBox : 
     {
-        flexDirection : "row",
+        flexDirection : "column",
         backgroundColor : appColors.secondaryColor3,
         padding : 10,
         top : 5,

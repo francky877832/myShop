@@ -12,22 +12,22 @@ const { width: screenWidth } = Dimensions.get('window');
 
 const CarouselImage = (props) =>
 {
-  const {styles} = props
+  const {styles, images} = props
     const carouselRef = useRef(null);
-    const [index, setIndex] = useState(0);
+    const [index, setIndex] = useState(0); //length
     const image = "../../assets/images/product5.png"
 
-  console.log(screenWidth)
+  //console.log(images)
   const renderItem = ({ item, index }) => (
     <View style={[caourselImageStyles.itemContainer, productStyles.card, {borderRadius:0}]} key={index}>
-      <Image source={require(image)} style={caourselImageStyles.image} />
+      <Image source={{uri: item}} style={caourselImageStyles.image} />
     </View> 
   )
 
 
   return (
     <View style={[caourselImageStyles.container,styles]}>
-      <Carousel loop={true} width={screenWidth} height={screenWidth*1.2} autoPlay={true} data={datas} scrollAnimationDuration={1000} renderItem={renderItem}/>
+      <Carousel loop={true} width={screenWidth} height={screenWidth*1.2} autoPlay={true} data={images} scrollAnimationDuration={1000} renderItem={renderItem}/>
     </View>
   );
 

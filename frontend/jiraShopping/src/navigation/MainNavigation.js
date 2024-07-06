@@ -33,7 +33,7 @@ export default function MainNavigation() {
     <ProductItemProvider>
         <FavouritesProvider>
           <FilterProvider>
-              <Stack.Navigator initialRouteName="AddProduct">
+              <Stack.Navigator initialRouteName="Preferences">
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
                 <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
                 <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
