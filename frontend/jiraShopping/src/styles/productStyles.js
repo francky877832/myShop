@@ -63,16 +63,18 @@ export const productStyles = StyleSheet.create({
     },
     productName :
     { 
-        fontWeight : "normal",
+        fontWeight : "bold",
         fontStyle : "normal",
         fontFamily : appFont.mainFontFamily,
-        color : "gray",
+        color : appColors.secondaryColor5,
         paddingTop : 7,
         alignSelf : "center",
+        fontSize: 15,
     },
     price :
     {
         color : appColors.secondaryColor1,
+        fontWeight : "bold",
     },
 
     top :

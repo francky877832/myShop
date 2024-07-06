@@ -185,7 +185,7 @@ const ProfilShop = (props) => {
                     
 
                         <View style={{flex:1, paddingBottom:40}} {...panResponder.panHandlers}>
-                            <ProductsListWithFilters onEndReached={onEndReached} ref={flatListRef} datas={datas} horizontal={false} styles={profilShopStyles} title={`${datas.length} ${datas.length > 1 ? 'Produits' : 'Produit'}`} />
+                            <ProductsListWithFilters onEndReached={onEndReached} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products.length} ${products.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
 
                         <View style={[profilShopStyles.addProduct,{}]}>
