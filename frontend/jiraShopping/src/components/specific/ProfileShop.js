@@ -16,7 +16,10 @@ import { datas } from '../../utils/sampleDatas';
 import { appColors, customText, screenHeight, screenWidth } from '../../styles/commonStyles';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
 import SellerBrand from '../common/SellerBrand';
+import { server } from '../../remote/server';
 
+
+const loggedUser = "66731fcb569b492d3ef429ba"
 const ProfilShop = (props) => {
 {/*
                             numColumns={ calculateNumColumns() }
@@ -25,6 +28,7 @@ const ProfilShop = (props) => {
 */}
     const navigation = useNavigation()
     const [follow, setIsFollow] = useState(true) //Je ne crois pas avoir besoin de Search
+    const [products, setProducts] = useState([])
 
     const flatListRef = useRef(null);
 
@@ -104,7 +108,28 @@ const ProfilShop = (props) => {
     ).current;
 
 
-
+    const getProducts = async ()=> {
+        try
+        {
+            const response = await fetch(`${server}/api/datas/products/get/user/${loggedUser}`,{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'Application/json',
+                },
+                });
+                const responseJson = await response.json();
+                setProducts(responseJson)
+        } catch (error) {
+        console.error(error);
+      }
+    }
+    
+    useEffect(()=>{
+            getProducts()
+            //console.log(products)
+    
+    },[])
+    
 
     return(
                 <View style={profilShopStyles.container}>

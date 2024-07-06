@@ -8,7 +8,7 @@ import { PrevButton, ShareButton, LikeButton, CustomButton } from "../common/Com
 import Comments from './Comments';
 import { productDetailsStyles } from '../../styles/productDetailsStyles';
 import { appColors, customText } from '../../styles/commonStyles';
-import { sinceDate, truncateText } from '../../utils/commonAppFonctions';
+import { formatMoney, sinceDate, truncateText } from '../../utils/commonAppFonctions';
 import { datas } from '../../utils/sampleDatas';
 import BadgeIcon from '../common/BadgeIcon';
 import ProductsList from '../common/ProductsList';
@@ -215,7 +215,7 @@ const ProductDetails = (props) => {
 
             <View style={[productDetailsStyles.bottom]}>
                 <View style={[productDetailsStyles.button, productDetailsStyles.price]}>
-                    <Text numberOfLines={2} style={[customText.text, productDetailsStyles.buttonText, { color: appColors.secondaryColor1 }]}>{data.realPrice} XAF</Text>
+                    <Text numberOfLines={2} style={[customText.text, productDetailsStyles.buttonText, { color: appColors.secondaryColor1 }]}>{formatMoney(data.price)} XAF</Text>
                 </View>
                 <View style={[productDetailsStyles.panier]}>
                     <CustomButton text="Ajouter au panier" styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText }} color={appColors.secondaryColor1} backgroundColor={appColors.white} onPress={() => { }} />

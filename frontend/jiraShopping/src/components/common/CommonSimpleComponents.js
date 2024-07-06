@@ -7,7 +7,7 @@ import { productStyles } from '../../styles/productStyles';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
 import { appFont, appColors, appFontSize } from '../../styles/commonStyles';
 import { CheckBox } from 'react-native-elements';
-
+import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 
 //contexte
@@ -33,10 +33,11 @@ exports.LikeButton = (props) => {
 
 exports.PrevButton = (props) => {
     const {styles} = props
+    const navigation = useNavigation()
     const color = styles ? styles.color : appColors.black
     const size = styles ? styles.size : 24
     return(
-        <Pressable onPress={() => {console.log("Go")}}>
+        <Pressable onPress={() => {navigation.goBack()}}>
             <Icon name='arrow-back' type='ionicon' color={color} size={size} />
         </Pressable>
     )
