@@ -3,6 +3,8 @@ import React, { createContext, useState } from 'react'
 const FilterContext = createContext()
 const FilterProvider = ({children}) => {
     const [selectedCategories, setSelectCategories] = useState({})
+    const [selectedBrands, setSelectedBrands] = useState({})
+
     const [selectedOrderBy, setSelectedOrderBy] = useState("")
 
     const [isNewFocused, setIsNewFocused] = useState(true)
@@ -22,7 +24,7 @@ const FilterProvider = ({children}) => {
     
     const updateCategories = (id) => {
         setSelectCategories((prevSlectedCategories)=>{
-            console.log(prevSlectedCategories)
+            //console.log(prevSlectedCategories)
     
             return ({
                 ...prevSlectedCategories,
@@ -31,9 +33,21 @@ const FilterProvider = ({children}) => {
         })
     }
 
-    const filterStateVars = {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice}
+    const updateSelectedBrands = (name) => {
+        setSelectedBrands((prevSlectedBrands)=>{
+                //console.log(prevSlectedCategories)
+        
+                return ({
+                    ...prevSlectedBrands,
+                    [name] : !prevSlectedBrands[name], 
+                })
+            })
+
+    }
+
+    const filterStateVars = {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands}
     const filterStateSetters = {setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice}
-    const utilsFunctions = { _handlePress, updateCategories }
+    const utilsFunctions = { _handlePress, updateCategories, updateSelectedBrands }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

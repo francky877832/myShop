@@ -20,16 +20,18 @@ import { formatMoney } from '../../utils/commonAppFonctions';
 
 //Context
 import { FilterContext } from '../../context/FilterContext';
+import { ProductItemContext } from '../../context/ProductItemContext';
 
 const Filters = (props) => {
 
     const {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, _handlePress, updateCategories }  =  useContext(FilterContext)
-
+    const { categories, brands } = useContext(ProductItemContext)
+//console.log(categories)
     const { suggestion } = props
     const [showSuggestion, setShowSuggestion] = useState(suggestion)
 
 
-    const categories = [
+   /* const categories = [
         {
             name : "Electonique",
             subCategories : [{id:1,name:"Telephone",}, {id:2, name:"Ordinateur"}]
@@ -47,7 +49,7 @@ const Filters = (props) => {
     
         },
      
-    ]
+    ]*/
     const orderByItems = [{id:1,name:"Prix DESC"},{id:2, name:"Prix ASC"}, {id:3,name:"Plus Recents"},{id:4, name:"Plus Anciens"}, {id:5,name:"Plus Recents"} ,{id:6,name:"Plus Anciens"}]
 
     
@@ -58,12 +60,15 @@ const Filters = (props) => {
     const [modalCategoryVisible, setModalCategoryVisible] = useState(false);
     const [modalOrderByVisible, setModalOrderByVisible] = useState(false);
     const [modalFiltersVisible, setModalFiltersVisible] = useState(false);
+    const [modalBrandVisible, setModalBrandVisible] = useState(false);
+
     const functionsCatalog = { //for element in the filters
         "price" :  [modalPriceVisible, setModalPriceVisible],
         "condition" : [modalConditionVisible, setModalConditionVisible],
         "categories" : [modalCategoryVisible, setModalCategoryVisible],
         "trier" :  [modalOrderByVisible, setModalOrderByVisible],
         "filters" : [modalFiltersVisible, setModalFiltersVisible],
+        "marque" :  [modalBrandVisible, setModalBrandVisible],
     }
 
    
@@ -71,47 +76,60 @@ const Filters = (props) => {
     const [isMinPriceFocused, setIsMinPriceFocused] = useState(false)
     const [isMaxPriceFocused, setIsMaxPriceFocused] = useState(false)
 
-    const filters = [{name:"Categories"},{name:"Price"},{name:"Condition"}, {name:"Condition"}, {name:"Condition"}, {name:"Condition"}]
+    const filters = [{name:"Categories"},{name:"Price"},{name:"Condition"}, {name:"Marque"}]
 
+const setOtherModalToFalse = (modal)=>{
+    Object.keys(functionsCatalog).map((key)=>{
+        if(modal!=key)
+            //console.log(key)
+            functionsCatalog[key][1](false)
+    })
+}
     const showFilters = (filter) => {
-            switch(filter.toLowerCase())
+        filter = filter.toLowerCase()
+        //console.log(filter)
+            switch(filter)
             {
                 case "trier" : 
                     setModalOrderByVisible(true)
-                    setModalFiltersVisible(false)
+                    setOtherModalToFalse(filter)
+
                     //activeFilterRef.current = [setModalOrderByVisible, "trier"];  
                     break;
-                case "filter" : 
+                case "filters" : 
                     setModalFiltersVisible(true)
-                    setModalCategoryVisible(false)
-                    setModalOrderByVisible(false)
-                    setModalConditionVisible(false)
-                    setModalPriceVisible(false)
+                    setOtherModalToFalse(filter)
                     //(["categories","price","etat"].includes(from)) ? setModalFiltersVisible(false) : setModalFiltersVisible(true)
                     //setter(false)
                     //activeFilterRef.current = [setModalFiltersVisible, "filter"];
                     break;
                 case "categories" :
                     //modalFiltersVisble est deja a true
+                    //console.log("OK")
                     setModalCategoryVisible(!modalCategoryVisible)
-                    setModalConditionVisible(false)
-                    setModalPriceVisible(false)
+                    setOtherModalToFalse(filter)
+
                     //from!="filter" ? setter(false) : false
                     //activeFilterRef.current = [setModalCategoryVisible, "categories"];
                     break;
                 case "price" : 
                     setModalPriceVisible(!modalPriceVisible);
-                    setModalCategoryVisible(false)
-                    setModalConditionVisible(false)
+                    setOtherModalToFalse(filter)
+
                     //from!="filter" ? setter(false) : false
                     //activeFilterRef.current = [setModalPriceVisible, "price"]; 
                     break;
                 case "condition" : 
                     setModalConditionVisible(!modalConditionVisible);
-                    setModalCategoryVisible(false)
-                    setModalPriceVisible(false)
+                    setOtherModalToFalse(filter)
+
                     //from!="filter" ? setter(false) : false
                     //activeFilterRef.current = [setModalConditionVisible, "etat"]; 
+                    break;
+                case "marque" : 
+                    setModalBrandVisible(!modalBrandVisible);
+                    setOtherModalToFalse(filter)
+
                     break;
                 default :  break;
             }
@@ -136,7 +154,7 @@ const Filters = (props) => {
                                 <View style={{width:10}}></View>
                             <Text style={[customText.text, modalOrderByVisible ? filtersStyles.modalVisibleText : false,]}>Trier</Text>
                         </Pressable>
-                        <Pressable style={[filtersStyles.trierFiltrer, {borderLeftWidth:1,borderLeftColor:appColors.secondaryColor3}, modalFiltersVisible ? filtersStyles.trierFiltrerFocused : false,]} onPress={()=>{showFilters("filter")}}>
+                        <Pressable style={[filtersStyles.trierFiltrer, {borderLeftWidth:1,borderLeftColor:appColors.secondaryColor3}, modalFiltersVisible ? filtersStyles.trierFiltrerFocused : false,]} onPress={()=>{showFilters("filters")}}>
                                 <Icon name='filter' type='ionicon' size={18} color={appColors.secondaryColor1} />
                                     <View style={{width:10}}></View>
                                 <Text style={[customText.text, modalFiltersVisible ? filtersStyles.modalVisibleText : false, ]}>Filtrer</Text>
@@ -187,10 +205,10 @@ const Filters = (props) => {
 
 
 
-{modalFiltersVisible &&  (modalConditionVisible || modalCategoryVisible || modalPriceVisible) && 
+{/*modalFiltersVisible && */ (modalConditionVisible || modalCategoryVisible || modalPriceVisible || modalBrandVisible) && 
 <View style={[filtersStyles.modal,{}]}>
             <View style={{width:"100%",}}>
-                { modalFiltersVisible && modalPriceVisible &&
+                { /*modalFiltersVisible &&*/ modalPriceVisible &&
                 <View style={[filtersStyles.priceContainer]} >
                     <View style={{height:10,}}></View>
                         
@@ -233,7 +251,7 @@ const Filters = (props) => {
                     <View style={{height:20,}}></View>
                 </View>
             }
-        { modalFiltersVisible && modalConditionVisible &&
+        { /*modalFiltersVisible &&*/ modalConditionVisible &&
                     <View style={filtersStyles.conditionContainer}>
                         <View style={{alignSelf : "center",}}>
                             <Text style={[customText.text,filtersStyles.label]}>Condition</Text>
@@ -244,7 +262,7 @@ const Filters = (props) => {
 
 
         {
-            modalFiltersVisible && modalCategoryVisible &&
+            /*modalFiltersVisible &&*/ modalCategoryVisible &&
                     <View style={[filtersStyles.categoryContainer, filtersStyles.cardItem]}>
                         <View style={{alignSelf : "center",}}>
                             <Text style={[customText.text, filtersStyles.label]}>Categories</Text>
@@ -253,7 +271,7 @@ const Filters = (props) => {
                         <View style={[filtersStyles.filterFlatlist, filtersStyles.cardItem,]}>
                             <FlatList
                                 data={categories}
-                                renderItem={ ({item}) => { return <FilterItem selectedCategories={selectedCategories} item={item} updateCategories={updateCategories} /> } }
+                                renderItem={ ({item}) => { return <FilterItem tag="category" item={item} /> } }
                                 keyExtractor={ (item) => { return Math.random().toString(); } }
                                 ItemSeparatorComponent ={ (item) => { return <View style={filtersStyles.categorySeparator}></View> }}
                                 horizontal={false}
@@ -264,6 +282,29 @@ const Filters = (props) => {
                         </View>
                     </View>
         }
+
+{
+            /*modalFiltersVisible &&*/ modalBrandVisible &&
+                    <View style={[filtersStyles.categoryContainer, filtersStyles.cardItem]}>
+                        <View style={{alignSelf : "center",}}>
+                            <Text style={[customText.text, filtersStyles.label]}>Marques</Text>
+                        </View>
+
+                        <View style={[filtersStyles.filterFlatlist, filtersStyles.cardItem,]}>
+                            <FlatList
+                                data={brands}
+                                renderItem={ ({item}) => { return <FilterItem tag="brand" item={item}  /> } }
+                                keyExtractor={ (item) => { return Math.random().toString(); } }
+                                ItemSeparatorComponent ={ (item) => { return <View style={filtersStyles.categorySeparator}></View> }}
+                                horizontal={false}
+                                numColumns={2}
+                                showsHorizontalScrollIndicator={false}
+                                contentContainerStyle={{  maxHeight : 500,  }}
+                            />
+                        </View>
+                    </View>
+        }
+
             </View>
             </View>}
         </View>

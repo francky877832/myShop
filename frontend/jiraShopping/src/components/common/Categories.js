@@ -24,13 +24,12 @@ import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
 const Categories = (props) => {
     const { params } = props.route
 
-    const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedColor, setSelectedColor} = useContext(ProductItemContext)
+    const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedColor, setSelectedColor, categories, brands} = useContext(ProductItemContext)
     const navigation = useNavigation()
-    const [ categories, setCategories ] = useState([])
-    const [ brands, setBrands ] = useState([])
+   
 
     //Appel side effect pour recuperer les cat, marque et couleur de la BD
-    let categorie = [
+   /* let categorie = [
         {
             _id : 1,
             no : 0,
@@ -46,37 +45,11 @@ const Categories = (props) => {
             subCategories : ["Telephone", "Ordinateur", "Tablette", "Autres"],
         },
     ]
-    let brand = [{_id:1, name:"Tecno"}, {_id:2, name:"Samsung"},]
+    let brand = [{_id:1, name:"Tecno"}, {_id:2, name:"Samsung"},]*/
 
-    const fecthCategories = async () =>{
-        try{
-
-            const response = await fetch(`${server}/api/datas/categories/get`);            
-            const datas = await response.json()
-            //console.log(datas)
-            setCategories(datas)
-        }catch(error){
-            Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
-        }
-    }
-    const fecthBrands= async () =>{
-        try{
-
-            const response = await fetch(`${server}/api/datas/brands/get`);            
-            const datas = await response.json()
-            setBrands(datas)
-        }catch(error){
-            Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
-        }
-    }
-
+    
 useEffect(() => {
-    if(params.datas.page=="category")
-        fecthCategories().then()
-    else if(params.datas.page=="brand")
-        fecthBrands().then()
-    else if(params.datas.page=="color")
-        fecthBrands().then()
+    
 }, [])
 
 

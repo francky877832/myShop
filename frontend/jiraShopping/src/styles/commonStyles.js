@@ -31,7 +31,7 @@ export const appFont = {
       }),
     secondaryFontFamily1 :  "Arial",
     secondaryFontFamily2 : "Georgia",
-    secondaryFontFamily3 : "Verdana",
+    secondaryFontFamily3 : this.mainFontFamily,
     secondaryFontFamily4 : "Courier",
 
 }

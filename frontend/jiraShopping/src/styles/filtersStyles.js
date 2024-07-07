@@ -130,6 +130,7 @@ export const filtersStyles = StyleSheet.create({
         flexDirection : "column",
         marginTop : 10,
         width: screenWidth,
+        backgroundColor : appColors.lightWhite,
     },
     price : 
     {
@@ -160,14 +161,15 @@ export const filtersStyles = StyleSheet.create({
         ...customText.text,
         ...inputTextStyle,
         width : "100%",
-        height: 20,
+        height: 40,
         borderColor : appColors.secondaryColor3,
         borderWidth: 1,
         borderRadius: 5,
-        paddingVertical: 10,
+        paddingVertical: 2,
         paddingHorizontal : 20,
         flex : 1,
         justifyContent : "center", 
+        backgroundColor : appColors.white,
     },
 
     inputFocused : 

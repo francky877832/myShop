@@ -9,35 +9,45 @@ import { searchStyles } from '../../styles/searchStyles';
 import { productStyles } from '../../styles/productStyles';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
 import { customText, screenWidth } from '../../styles/commonStyles';
-
-
+import { ProductItemContext } from '../../context/ProductItemContext';
+import { FilterContext } from '../../context/FilterContext';
 
 const FilterItem = (props) => {
-    const { updateCategories, item, selectedCategories} = props
-    const [modalVisible, setModalVisible] = useState(true);
-    const toggleCheckbox = (key) => {
-        setCheckboxValues((prev) => ({ ...prev, [key]: !prev[key] }));
-      };
-      let { subCategories } = item
+    const { item, tag } = props
+    
+    const { updateCategories, selectedCategories, selectedBrands, updateSelectedBrands  } = useContext(FilterContext)
       
-     
+     //console.log(tag)
+        if(tag=="category")
+        {
+        
+            return(
 
-    return(
-
-            <View style={[filterItemStyles.container,{}]} >
-                <View style={[filterItemStyles.title]}>
-                    <Text style={[customText.text, {fontWeight:"bold",}]}>{item.name}</Text>
-                </View>
-                {
-                    item.subCategories.map((item, index) =>{
-                        return(
-                        <View style={filterItemStyles.checkBox} key={index}>
-                            <CheckBox title={item.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} checked={selectedCategories[item.id]} onPress={() => { updateCategories(item.id);  }} />
+                    <View style={[filterItemStyles.container,{}]} >
+                        <View style={[filterItemStyles.title]}>
+                            <Text style={[customText.text, {fontWeight:"bold",}]}>{item.name}</Text>
                         </View>
-                    )})
-                }
-            </View>
-    )
+                        {
+                            item.subCategories.map((it, index) =>{
+                                return(
+                                <View style={filterItemStyles.checkBox} key={index}>
+                                    <CheckBox title={it.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} checked={selectedCategories[item.name+"/"+it.name]} onPress={() => { updateCategories(item.name+"/"+it.name);  }} />
+                                </View>
+                            )})
+                        }
+                    </View>
+            )
+        }
+        else if(tag=="brand")
+        {
+            return(
+                <View style={[filterItemStyles.container,{}]} >
+                    <View style={[filterItemStyles.title]}>
+                    <CheckBox title={item.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} checked={selectedBrands[item.name]} onPress={() => { updateSelectedBrands(item.name);  }} />
+                    </View>
+                </View>
+            )
+        }
 }
 
 const filterItemStyles =  StyleSheet.create({
