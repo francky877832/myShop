@@ -13,19 +13,21 @@ import { Icon } from 'react-native-elements';
 //contexte
 import { FavouritesContext } from '../../context/FavouritesContext';
 exports.LikeButton = (props) => {
-    const {favourites, addFavourite, removeFavourite} = useContext(FavouritesContext)
-    const {item, hasLiked, isCard, styles} = props
+    const {favourites, addFavourite, removeFavourite, addFavouriteContext, hasLiked, liked, setLikedIcon} = useContext(FavouritesContext)
+    const {item, isCard, styles} = props
     const style = styles || {}
 
-    const [like, setLikeIcon ] = useState(hasLiked)
+    const [like, setLikeIcon ] = useState(hasLiked(item))
     const _handleLikePressed = (item) => {
-        item.liked ?  addFavourite(item,false) : addFavourite(item,true)
-        //setLikeIcon(!like);
+        //item.like = !item.liked
+        like ?  addFavourite(item,false) : addFavourite(item,true)
+        setLikeIcon(!like);
+        setLikedIcon(!liked)
     }
 
     return(
             <Pressable style={[commonSimpleComponentsStyles.likeButton.likeIcon, isCard ? productStyles.card : false]} onPress = { ()=>{ _handleLikePressed(item)  } }>
-                    {!item.liked ? <BadgeIcon name="heart-outline" size={24} color={style.color} badgeCount={0} styles={{}}/> : <BadgeIcon name="heart-sharp" size={24} color={appColors.secondaryColor1} badgeCount={0} styles={{}}/>}
+                    {!like ? <BadgeIcon name="heart-outline" size={24} color={style.color} badgeCount={0} styles={{}}/> : <BadgeIcon name="heart-sharp" size={24} color={appColors.secondaryColor1} badgeCount={0} styles={{}}/>}
             </Pressable>
     )
 }

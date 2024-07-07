@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, Image, Pressable} from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, Image, Pressable, Alert} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -22,15 +22,16 @@ const Product = (props) => {
     const {favourites, addFavourite} = useContext(FavouritesContext)
     useEffect(() => {
     //prendre en compte le contexte Favourites lors de l'affichage
-        const setProductFavourite = () =>{
+        /*const setProductFavourite = () =>{
             for(let i in favourites)
             {
                 //console.log(favourites[i].id_)
-                if(favourites[i].id_ == item.id_) //A modifier par _id de  mongo
-                    item.liked = favourites[i].liked //parce que favourites contien les elements likes et delikes et non item.liked=true--obselete
+                if(favourites[i]._id == item._id) //A modifier par _id de  mongo
+                    item.liked = favourites[i].liked//parce que favourites contien les elements likes et delikes et non item.liked=true--obselete
             }
-        }; setProductFavourite();
-    })
+        }; setProductFavourite();*/
+    }, [favourites])
+   // Alert.alert(item.liked?"true":"false")
     const [like, setLikeIcon ] = useState(item.liked)
 
     return(

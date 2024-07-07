@@ -29,9 +29,10 @@ export default function MainNavigation() {
 
   return ( 
 <SafeAreaView style={{ flex: 1 }}>
+<FavouritesProvider>
   <NavigationContainer> 
     <ProductItemProvider>
-        <FavouritesProvider>
+        
           <FilterProvider>
               <Stack.Navigator initialRouteName="Preferences">
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
@@ -44,9 +45,10 @@ export default function MainNavigation() {
                 <Stack.Screen name="Categories" component={Categories}  options={{ title: 'Choisir Une Categorie', headerShown : true, tabBarVisible: false, }} />
               </Stack.Navigator>
           </FilterProvider>
-        </FavouritesProvider>
       </ProductItemProvider>
     </NavigationContainer>
+            </FavouritesProvider>
+
   </SafeAreaView>
   );
 

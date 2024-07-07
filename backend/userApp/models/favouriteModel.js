@@ -6,11 +6,8 @@ const Schema = mongoose.Schema
 //on utilisera un gestion de state comme Redux
 const favouriteSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    products: [ { 
-                    product : { type : Schema.Types.ObjectId, ref: 'Product', required: true },
-                    createdAt : { type : Date, default : Date.now() },
-                    updatedAt : { type : Date, default : Date.now() },
-                }], 
+    username : {type : String, required : true},
+    products: { type : Schema.Types.Array, required: true }, 
 });
 
 module.exports = mongoose.model('Favourite', favouriteSchema);
