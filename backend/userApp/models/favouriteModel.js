@@ -7,7 +7,7 @@ const Schema = mongoose.Schema
 const favouriteSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     username : {type : String, required : true},
-    products: { type : Schema.Types.Array, required: true }, 
+    products: [{ type : Schema.Types.ObjectId, ref: 'Product', required: true }], 
 });
 
 module.exports = mongoose.model('Favourite', favouriteSchema);

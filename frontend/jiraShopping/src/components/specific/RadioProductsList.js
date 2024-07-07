@@ -16,9 +16,11 @@ import { Icon } from 'react-native-elements';
 import { CustomButton } from '../common/CommonSimpleComponents'
 import { CheckBox } from 'react-native-elements';
 
+import { formatMoney } from '../../utils/commonAppFonctions';
 const RadioProductsList = (props) => {
     const { item, datas  } = props;
-
+    console.log("GGG")
+console.log(datas)
 
     const RadioProduct = (props) => {
         const {item} = props
@@ -30,24 +32,25 @@ const RadioProductsList = (props) => {
             <View styles={[radioProductStyles.container,{}]}>       
                 <RadioButton.Group onValueChange={val => {}} value={{}} style={[radioProductStyles.radioGroup,radioProductStyles.radioGroup1,]}>
                     {
-                        item.products.map((product1) => {
+                        item.productDetails.map((product1, key) => {
                                
                             return(
-                            <View style={[radioProductsListtStyles.seller,{}]} key={product1.id_}>
+                            <View style={[radioProductsListtStyles.seller,{}]} key={key}>
                                 { passed_sellers.includes(product1.seller) ? false :
                                     <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer1]} >
                                         <RadioButton value={product1.id} />
-                                        <SellerBrand pub={false} certified={true} />
+                                        <SellerBrand pub={false} certified={true} username={product1.seller} /> 
+                                        <Text>{/*A MODIFIER*/}</Text>
                                     </View>
                                 }
                             
-                        {item.products.map((product2) => {
+                        {item.productDetails.map((product2, key) => {
                              passed_sellers.push(product1.seller) 
-                            if(product1.seller == product2.seller && !passed_product.includes(product2.id_))
+                            if(product1.seller == product2.seller && !passed_product.includes(product2._id))
                             { 
-                                passed_product.push(product2.id_)
+                                passed_product.push(product2._id)
                                 return(
-                                    <View style={[radioProductStyles.radioProducts,{}]} key={product2.id_}>
+                                    <View style={[radioProductStyles.radioProducts,{}]} key={key}>
                                             <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer2]} >
                                                     <CheckBox title=
                                                     {
@@ -57,8 +60,8 @@ const RadioProductsList = (props) => {
                                                         </View>
                                                         <View style={[{left : 10,}]}>
                                                             <Text style={[customText.text, ]}>{product2.seller}</Text>
-                                                            <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.seller} . Category</Text> 
-                                                            <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{product2.realPrice} XAF{/* prix de la proposition ou real Price*/}</Text>
+                                                            <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
+                                                            <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(product2.price)} XAF{/* prix de la proposition ou real Price*/}</Text>
                                                             <Pressable onPress={()=>{}}>
                                                                 <Icon name="trash-outline" color={appColors.black} size={18} type="ionicon" style={[{alignSelf:"flex-end"}]} />
                                                             </Pressable>
@@ -75,9 +78,11 @@ const RadioProductsList = (props) => {
                                                     
                                                    
                                                 </View> 
-                                            <View style={radioProductStyles.inBasket}>
-                                                <Text style={[customText.text, {fontSize:10,}]}>{inBasket? `Dans le panier de ${inBasket} personnes!`:flase}</Text>
-                                            </View>
+                                            {product2.inBasket>0 &&
+                                                <View style={radioProductStyles.inBasket}>
+                                                    <Text style={[customText.text, {fontSize:10,}]}>{`Dans le panier de ${product2.inBasket} personnes!`}</Text>
+                                                </View>
+                                            }
                                             <View style={{height:10,}}></View>
                                     </View>
                                 )
@@ -101,7 +106,7 @@ const RadioProductsList = (props) => {
                     <FlatList
                         data={datas}
                         renderItem={ ({item}) => { return <RadioProduct item={item}  /> } }
-                        keyExtractor={ (item) => { return item.id_.toString(); } }
+                        keyExtractor={ (item) => { return item._id.toString(); } }
                         horizontal={false}
                         numColumns={ 1 }
                         ItemSeparatorComponent ={ (item) => { return <View style={{height:5,}}></View> }}

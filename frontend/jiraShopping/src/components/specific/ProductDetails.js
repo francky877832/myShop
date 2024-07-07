@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView, Animated, PanResponder, } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
@@ -15,6 +15,7 @@ import ProductsList from '../common/ProductsList';
 import SellerBrand from '../common/SellerBrand';
 import { screenHeight, screenWidth } from '../../styles/commentsStyles';
 import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
+import { FavouritesContext } from '../../context/FavouritesContext';
 const ProductDetails = (props) => {
     //console.log(props)
     const navigation = useNavigation()
@@ -25,7 +26,7 @@ const ProductDetails = (props) => {
     const numChars = 150;
     
     const [description, setDescription] = useState(truncateText(data.description, numChars));
-
+    const {favourites} = useContext(FavouritesContext)
    
     const minHeight = 0;
     const maxHeight = screenHeight / 2;
@@ -205,7 +206,7 @@ const ProductDetails = (props) => {
                     </View>
 
                     <View>
-                        <ProductsList datas={datas} horizontal={true} styles={{}} />
+                        <ProductsList datas={favourites} horizontal={true} styles={{}} />
                     </View>
                 </View>
 </ScrollView>

@@ -9,7 +9,7 @@ import { appColors,customText} from '../../styles/commonStyles';
 import { sinceDate } from '../../utils/commonAppFonctions';
 
 const SellerBrand = (props) => {
-    const { pub, onlineDate, certified, pp} = props
+    const { pub, onlineDate, certified, pp, username} = props
         const profile = pp || require('../../assets/images/product.png')
     return(
             <View style={[sellerBrandStyles.sellerBrand]}>
@@ -19,7 +19,7 @@ const SellerBrand = (props) => {
                                 
                 <View style={[sellerBrandStyles.sellerBrandName]}>
                     <View style={[{flexDirection:"row",justifyContent:"space-between"}]}>
-                        <Text style={[customText.text, {fontWeight:"bold",}]}>@Franck</Text>
+                        <Text style={[customText.text, {fontWeight:"bold",}]}>@{username}</Text>
                         { pub &&
                             <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center",alignSelf:"flex-end",left:10,top:-3}]}>
                                 <Icon name="ellipse" type='ionicon' size={10} color={appColors.green}  styles={{}} />

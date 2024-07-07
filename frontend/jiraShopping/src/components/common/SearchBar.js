@@ -11,7 +11,7 @@ import { searchBarStyles } from '../../styles/searchBarStyles';
 //custom app datas  backgroundColor : appColors.white,
 const SearchBar =  forwardRef((props, ref) => {
     const navigation = useNavigation()
-    const { value, onChangeText, placeholder, placeholderTextColor, styles, isPrev } = props
+    const { value, onChangeText, placeholder, placeholderTextColor, styles, isPrev, } = props
     const [isFocused, setIsFocused] = useState(false)
     return (
         <View style={[searchBarStyles.container, styles.searchBarContainer ]}>

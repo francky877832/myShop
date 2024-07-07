@@ -13,17 +13,18 @@ import { Icon } from 'react-native-elements';
 //contexte
 import { FavouritesContext } from '../../context/FavouritesContext';
 exports.LikeButton = (props) => {
-    const {favourites, addFavourite, removeFavourite, addFavouriteContext, hasLiked, liked, setLikedIcon} = useContext(FavouritesContext)
-    const {item, isCard, styles} = props
+    const {favourites, addFavourite, removeFavourite, hasLiked} = useContext(FavouritesContext)
+    const {item, hasLikedItem, isCard, styles} = props
     const style = styles || {}
 
-    const [like, setLikeIcon ] = useState(hasLiked(item))
+    const [like, setLikeIcon ] = useState(hasLikedItem)
     const _handleLikePressed = (item) => {
-        //item.like = !item.liked
-        like ?  addFavourite(item,false) : addFavourite(item,true)
+       like ?  addFavourite(item,false) : addFavourite(item,true)
         setLikeIcon(!like);
-        setLikedIcon(!liked)
     }
+    useEffect(()=>{
+        setLikeIcon(hasLiked(item));
+    }, [favourites])
 
     return(
             <Pressable style={[commonSimpleComponentsStyles.likeButton.likeIcon, isCard ? productStyles.card : false]} onPress = { ()=>{ _handleLikePressed(item)  } }>

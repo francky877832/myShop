@@ -1,15 +1,42 @@
+const mongoose = require('../../shared/db').mongoose;
+
 const Favourite = require('../models/favouriteModel');
 
-
-exports.getUserLikedProducts  = (req, res, next) => {
-    Favourite.find({ user : req.params.user })
-        .then( (favourites) => { 
+const ObjectId = mongoose.Types.ObjectId;
+exports.getUserLikedProducts  =  (req, res, next) => {
+    const userId = req.params.user
+        Favourite.aggregate([
+            { $match: { user: new ObjectId(userId) } }, 
+            { $unwind: '$products' }, // Décompose le tableau de user_ids
+            {
+              $lookup: {
+                from: 'products',
+                localField: 'products',
+                foreignField: '_id',
+                as: 'productDetails'
+              }
+            },
+            { $unwind: '$productDetails' }, // Décompose le tableau résultant de la jointure
+            {
+              $group: {
+                _id: '$_id',
+                user: { $first: '$user' },
+                username: { $first: '$username' },
+                products: { $push: '$products' },
+                productDetails : { $push: '$productDetails' }
+              }
+            }
+           
+        ]).then( (favourites) => { 
+            //console.log("AGG")
+                console.log(favourites)
             res.status(200).json(favourites);
         })
         .catch( (error) => { 
+            console.log(error)
             res.status(400).json({ error: error });
         });
-};
+    }
 
 const addUserLikedProducts = (req, res, next) => {
     console.log("ADD FIRST TIME")
@@ -42,7 +69,7 @@ exports.updateUserLikedProducts  = (req, res, next) => {
             {
                 for(let el of favourites[0].products)
                 {
-                    if(el._id == req.body.product._id)
+                    if(el == req.body.product)
                     {
                         isFavPresent = true;
                         break; 
@@ -68,7 +95,7 @@ exports.updateUserLikedProducts  = (req, res, next) => {
             else
             {
                 //console.log("OKK")
-
+                
                 addUserLikedProducts(req, res, next)
             }
 
@@ -80,13 +107,13 @@ exports.updateUserLikedProducts  = (req, res, next) => {
 
 exports.removeUserLikesProduct  = (req, res, next) => {
     //console.log("GOMAN")
-    Favourite.find({ user : req.params.user })
+    Favourite.find({ user : new ObjectId(req.params.user) })
     .then( (fav) => {
         let newFav = []
         for (let i in fav[0].products)
         {
             let el = fav[0].products[i]
-            if(el._id != req.body.product._id)
+            if(el != req.body.product)
             {
                newFav.push(fav[0].products[i] )
             }

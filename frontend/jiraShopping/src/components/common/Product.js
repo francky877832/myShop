@@ -11,7 +11,11 @@ import { appColors, customText } from '../../styles/commonStyles';
 
 //CONTEXTE
 import { FavouritesContext } from '../../context/FavouritesContext';
+import { BasketContext } from '../../context/BasketContext';
+import { server } from '../../remote/server';
 
+const loggedUser = "Francky"
+const loggedUserId = "66715deae5f65636347e7f9e"
 const username = "Franck"
 const Product = (props) => { 
     const { item, horizontal, } = props;
@@ -19,19 +23,13 @@ const Product = (props) => {
     //console.log(item)
    
 //console.log(item.images[0])
-    const {favourites, addFavourite} = useContext(FavouritesContext)
+    const {favourites, addFavourite, hasLiked} = useContext(FavouritesContext)
+    const {basket, addBasket} = useContext(BasketContext)
+
+
     useEffect(() => {
-    //prendre en compte le contexte Favourites lors de l'affichage
-        /*const setProductFavourite = () =>{
-            for(let i in favourites)
-            {
-                //console.log(favourites[i].id_)
-                if(favourites[i]._id == item._id) //A modifier par _id de  mongo
-                    item.liked = favourites[i].liked//parce que favourites contien les elements likes et delikes et non item.liked=true--obselete
-            }
-        }; setProductFavourite();*/
-    }, [favourites])
-   // Alert.alert(item.liked?"true":"false")
+        
+    }, [])
     const [like, setLikeIcon ] = useState(item.liked)
 
     return(
@@ -42,7 +40,7 @@ const Product = (props) => {
                                  <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{item.feesBy=="seller" ? "Gratuit"  : "Reduction"} </Text>
                             </Pressable>
 
-                            <LikeButton hasLiked={item.liked} item={item} isCard={false} styles={{color:appColors.white}}/>
+                            <LikeButton hasLikedItem={hasLiked(item)} item={item} isCard={false} styles={{color:appColors.white}}/>
 
                         </View>
                     
@@ -67,7 +65,7 @@ const Product = (props) => {
 
                        
                         <View style={[productStyles.bottom, productStyles.card] } >
-                            <Pressable onPress = { ()=>{ console.log("transport")} } >
+                            <Pressable onPress = { ()=>{ addBasket(item) } } >
                                 <Text numberOfLines={1} style={[customText.text, productStyles.category]}>Ajouter Au Panier</Text>
                             </Pressable>
                         </View>

@@ -1,7 +1,7 @@
 import React, { useState, createContext, useEffect } from "react";
 import { Alert } from 'react-native'
 
-//import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 
 import { datas } from "../utils/sampleDatas";
@@ -11,14 +11,12 @@ const FavouritesContext = createContext()
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
 const FavouritesProvider = ({children}) => {
-    //const navigation = useNavigation()
 
     const [favourites, setFavourites] = useState([])
-    const [liked, setLikedIcon ] = useState(false)
+    const [liked, setLikedIcon ] = useState()
         
     const addFavouriteContext = (item, bool) => {
         setFavourites((prevState) =>{
-            //let item = {...it}
             //item.liked = bool
             //console.log(item.id_)
             const tmp = isFavouritePresent(item)
@@ -27,14 +25,11 @@ const FavouritesProvider = ({children}) => {
             {
                 prevState[i] = item
                 let tmp_fav = [...prevState]
-                /*tmp_fav[i] = item   
-                return [...tmp_fav]*/
-                //console.log(tmp_fav.length)
+                //console.log(tmp_fav)
                 tmp_fav.splice(i,1)
-                //console.log(tmp_fav.length)
+                console.log(tmp_fav)
                 //console.log([...prevState])
-                return [...tmp_fav]
-             
+                return tmp_fav
             }
             else
             {
@@ -52,7 +47,7 @@ const FavouritesProvider = ({children}) => {
         const favourite = {
             useer : loggedUserId,
             username : loggedUser,
-            product : {...item, liked:true},
+            product : item._id,
         }
         //console.log(bool)
             try{
@@ -63,9 +58,17 @@ const FavouritesProvider = ({children}) => {
                         body: JSON.stringify(favourite),
                         headers: {
                             'Content-Type': 'application/json',
-                        },
-                    });
-                    //console.log("ADD LIKE")
+                        },})
+                        
+                        responseLikes = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
+                            method: 'PUT',
+                            body: JSON.stringify({updateLikes:1}),
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+    
+                        });
+                        item.likes++
                 }
                 else
                 {
@@ -77,6 +80,16 @@ const FavouritesProvider = ({children}) => {
                             'Content-Type': 'application/json',
                         },
                     });
+
+                    responseLikes = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({updateLikes:-1}),
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+
+                    });
+                    item.likes > 0 ? item.likes-- : false
                     //console.log("REMOVE LIKE")
 
                 }        
@@ -85,7 +98,6 @@ const FavouritesProvider = ({children}) => {
                     throw new Error('Erreur lors de la requête');
                 }*/
                 addFavouriteContext(item, bool)
-                setLikedIcon(bool)
                 const responseData = await response.json(); // Convertir la réponse en JSON
                 console.log('Réponse de l\'API:', responseData);
                 return responseData;
@@ -105,13 +117,9 @@ const FavouritesProvider = ({children}) => {
                     throw new Error('Erreur lors de la requête');
                 }
                 //console.log(datasdatas[0].products)
-                let p = datas[0].products
-                setFavourites(p)
-                /*p.map((el)=>{
-                       return {...el, liked:true}
-                }))*/
+                setFavourites(datas[0].productDetails)
             }catch(error){
-                Alert.alert("Erreur", "Une erreur est survenue! "+ error)
+                Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
             }
     }
 
@@ -156,11 +164,11 @@ const FavouritesProvider = ({children}) => {
     useEffect(()=>{
         fetchUserFavourites()
         //console.log(favourites)
-    })
+    }, [])
 
     const favouritesStateVars = {favourites, liked}
     const favouritesStateStters = {hasLiked, setLikedIcon}
-    const utilsFunctions = {addFavourite, addFavouriteContext}// removeFavourite}
+    const utilsFunctions = {addFavourite, }// removeFavourite}
     return (
         <FavouritesContext.Provider value={{...favouritesStateVars, ...favouritesStateStters, ...utilsFunctions}}>
             {children}

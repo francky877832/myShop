@@ -63,7 +63,7 @@ useEffect(()=>{
        console.log(el.liked)
     }
     //Alert.alert("ChokPref")*/
-})
+}, [refreshComponent])
     return(
             <View style={preferencesStyles.container}>
                     <View style={preferencesStyles.top}>
