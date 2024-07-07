@@ -26,7 +26,8 @@ console.log(datas)
         const {item} = props
         let passed_sellers = []
         let passed_product = []
-        const profile = item.pp || require('../../assets/images/product5.png')
+        console.log(item)
+        //const profile = item.productDetails.images[0] || require('../../assets/images/product5.png')
         const inBasket = 3
         return (
             <View styles={[radioProductStyles.container,{}]}>       
@@ -56,7 +57,7 @@ console.log(datas)
                                                     {
                                                         <View style={[radioProductStyles.productInfos,{}]}>
                                                         <View style={[radioProductStyles.imageContainer,{}]}>
-                                                            <Image source={profile} style={[radioProductStyles.productImage,{}]} />
+                                                            <Image source={{uri: product2.images[0]}} style={[radioProductStyles.productImage,{}]} />
                                                         </View>
                                                         <View style={[{left : 10,}]}>
                                                             <Text style={[customText.text, ]}>{product2.seller}</Text>

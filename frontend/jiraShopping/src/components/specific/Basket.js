@@ -39,7 +39,7 @@ const Basket = (props) => {
                 if (!response.ok) {
                     throw new Error('Erreur lors de la requête');
                 }
-            console.log(datas)
+            //console.log(datas)
             setBasket(datas)
         }catch(error){
                     Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
