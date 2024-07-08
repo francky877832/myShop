@@ -16,6 +16,12 @@ import SellerBrand from '../common/SellerBrand';
 import { screenHeight, screenWidth } from '../../styles/commentsStyles';
 import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
 import { FavouritesContext } from '../../context/FavouritesContext';
+
+
+const loggedUserId = "66731fcb569b492d3ef429ba"
+const loggedUser = "Francky"
+const visitorUserId = "66715deae5f65636347e7f9e"
+
 const ProductDetails = (props) => {
     //console.log(props)
     const navigation = useNavigation()
@@ -193,9 +199,9 @@ const ProductDetails = (props) => {
              
 
                 <View style={[productDetailsStyles.commentsContainer]}>
-                    <View style={[productDetailsStyles.sellerBrand]}>
-                        <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z"/>
-                    </View>
+                    <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{loggedUserId!=visitorUserId ? navigation.navigate("Shop", {username:data.seller}) : false }}>
+                        <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={data.seller}/>
+                    </Pressable>
                     <View style={{height:20}}></View>
                     <Comments navigation={navigation} />
                 </View>

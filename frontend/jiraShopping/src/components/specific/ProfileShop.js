@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
 import { View, Text, Animated, Pressable, PanResponder } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 //custom component
 import Top from '../common/Top';
 import ProductsList from '../common/ProductsList';
@@ -19,8 +19,9 @@ import SellerBrand from '../common/SellerBrand';
 import { server } from '../../remote/server';
 
 
+const loggedUserId = "66731fcb569b492d3ef429ba"
 const loggedUser = "Francky"
-const loggedUserId = "66715deae5f65636347e7f9e"
+const visitorUserId = "66715deae5f65636347e7f9e"
 const ProfilShop = (props) => {
 {/*
                             numColumns={ calculateNumColumns() }
@@ -28,6 +29,7 @@ const ProfilShop = (props) => {
                         
 */}
     const navigation = useNavigation()
+    const route = useRoute()
     const [follow, setIsFollow] = useState(true) //Je ne crois pas avoir besoin de Search
     const [products, setProducts] = useState([])
 
@@ -60,9 +62,9 @@ const ProfilShop = (props) => {
         onPanResponderMove: (ev, gestureState) => 
             {
                 //console.log("ok")
-                if (flatListRef.current) {
+                /*if (flatListRef.current) {
                     flatListRef.current.setNativeProps({ scrollEnabled: false });
-                  }
+                  }*/
 
                 setLastValidTop(pan._value);
 
@@ -112,7 +114,7 @@ const ProfilShop = (props) => {
     const getProducts = async ()=> {
         try
         {
-            const response = await fetch(`${server}/api/datas/products/get/user/${loggedUser}`,{
+            const response = await fetch(`${server}/api/datas/products/get/user/${loggedUserId}`,{
                 method: 'GET',
                 headers: {
                     'Content-Type': 'Application/json',
@@ -185,13 +187,15 @@ const ProfilShop = (props) => {
                     </Animated.View>
                     
 
-                        <View style={{flex:1, paddingBottom:40}} {...panResponder.panHandlers}>
+                        <View style={{flex:1, paddingBottom:route.params.username==loggedUser?40:0}} {...panResponder.panHandlers}>
                             <ProductsListWithFilters onEndReached={onEndReached} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products.length} ${products.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
 
+                    { route.params.username==loggedUser &&
                         <View style={[profilShopStyles.addProduct,{}]}>
                                 <CustomButton color={appColors.white} backgroundColor={appColors.secondaryColor1} text="Ajouter Un Produit" onPress={()=>{navigation.navigate("AddProduct")}} styles={profilShopStyles} />
                         </View>
+                    }
                 </View>
     )
 }
