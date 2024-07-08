@@ -189,7 +189,7 @@ const setOtherModalToFalse = (modal)=>{
                                 orderByItems.map((item) => {
                                     return(
                                         <View style={filtersStyles.radioContainer} key={item.id}>
-                                        <RadioButton value={item.id} />
+                                        <RadioButton value={item.name} />
                                             <Text>{item.name}</Text>
                                     </View>
                                     )

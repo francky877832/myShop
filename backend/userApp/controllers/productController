@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const Product = require('../models/productModel');
+const Fuse = require('fuse.js');
 
 
 
@@ -156,42 +157,37 @@ exports.getUserProductsFromCategory  = (req, res, next) => {
 //Search products by names, category
 //historique de recherhce
 //resultats de recherches, puis avec filtres
-exports.getSearchedProducts = (req, res, next) => {
-  const datas = req.body 
-  let filters = {};
-  if(datas.name)
-  {
-    filters = { ...filters, name : { $regex: new RegExp(".*"+datas.name+".*", 'i') }}
+exports.getSearchedProducts = async (req, res, next) => {
+  //console.log("SERAHC PRODUCTS")
+  //console.log(req.query)
+  const { name, customFilter } = req.query;
+
+  try {
+    const products = await Product.find();
+
+    const fuse = new Fuse(products, {
+      keys: ['name', 'description', 'category'],
+      threshold: 0.5, // Ajustez ce seuil selon vos besoins
+    });
+
+    // Effectuer la recherche floue
+    const result = fuse.search(name).map(result => result.item);
+
+    
+    // Appliquer des filtres personnalisés si nécessaire
+    let filteredResult = result;
+    if (customFilter === 'price') {
+      filteredResult = filteredResult.filter(product => product.price <= 100);
+    } else if (customFilter === 'category') {
+      filteredResult = filteredResult.filter(product => product.category === 'Electronics');
+    }
+
+    res.json(filteredResult);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 
-  if(datas.category)
-  {
-    filters = { ...filters, category : datas.category }
-  }
-
-  if(datas.price)
-  {
-    filters = { ...filters, price : {$gte : datas.minPrice, $lte : datas.maxPrice }, }
-  }
-
-  if(datas.condition)
-  {
-    filters = { ...filters, condition : datas.condition }
-  }
-
-  if(datas.feesBy)
-  {
-      filters = { ...filters,   feesBy : datas.feesBy }
-  }
-  Product.find(filters)
-  .then( (products) => {
-      res.status(200).json(products);
-  })
-  .catch( (error) => {
-      res.status(400).json({ error: error });
-  });
-};
-
+}
 
 exports.getProductNumLikes  = (req, res, next) => {
   Product.findOne({ _id : req.params.id })
