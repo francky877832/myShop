@@ -12,6 +12,7 @@ export const appColors = {
     secondaryColor3 : "#ccc",
     secondaryColor4 : "#777",
     secondaryColor5 : "#444",
+    gray : "gray",
     red : "red",
     blue : "rgb(32, 137, 220)",
     green : "green",

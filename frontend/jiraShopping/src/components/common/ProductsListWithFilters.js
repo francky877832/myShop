@@ -12,8 +12,8 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
    
     return(
             <View style={[productsListWithFiltersStyles.container]}>
-                <View style={[productsListWithFiltersStyles.title]}>
-                    <Text style={[productsListWithFiltersStyles.titleText]}>{title}</Text>
+                <View style={[productsListWithFiltersStyles.title,{paddingVertical:10,}]}>
+                    <Text style={[productsListWithFiltersStyles.titleText,{fontSize:16}]} numberOfLines={2}>{title}</Text>
                 </View>
 
                 <View style={{flex:1,flexDirection:"column",}}>

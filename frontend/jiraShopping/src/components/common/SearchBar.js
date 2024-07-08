@@ -11,7 +11,7 @@ import { searchBarStyles } from '../../styles/searchBarStyles';
 //custom app datas  backgroundColor : appColors.white,
 const SearchBar =  forwardRef((props, ref) => {
     const navigation = useNavigation()
-    const { value, onChangeText, placeholder, placeholderTextColor, styles, isPrev, } = props
+    const { value, onChangeText, placeholder, placeholderTextColor, styles, isPrev, onSubmitEditing } = props
     const [isFocused, setIsFocused] = useState(false)
     return (
         <View style={[searchBarStyles.container, styles.searchBarContainer ]}>
@@ -37,7 +37,7 @@ const SearchBar =  forwardRef((props, ref) => {
                         <Icon name='search' type='ionicon' color={appColors.secondaryColor1} />
                     </Pressable>
                 }
-               
+                onSubmitEditing={onSubmitEditing}
             />
       </View>
 

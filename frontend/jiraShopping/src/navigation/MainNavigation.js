@@ -14,6 +14,7 @@ import Notifications from '../components/specific/Notifications';
 import AddProduct from '../components/specific/AddProduct';
 import Categories from '../components/common/Categories';
 import ProfilShop from '../components/specific/ProfileShop';
+import SearchResults from '../components/specific/SearchResults';
 import HomeNavigation from '../navigation/HomeNavigation';
 
 //Contexts
@@ -36,7 +37,7 @@ export default function MainNavigation() {
     <ProductItemProvider>
         
           <FilterProvider>
-              <Stack.Navigator initialRouteName="Preferences">
+              <Stack.Navigator initialRouteName="SearchResults">
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
                 <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
                 <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
@@ -46,6 +47,7 @@ export default function MainNavigation() {
                 <Stack.Screen name="AddProduct" component={AddProduct}  options={{ title: 'Ajouter Un Produit', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Categories" component={Categories}  options={{ title: 'Choisir Une Categorie', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Shop" component={ProfilShop}  options={{ title: 'Choisir Une Categorie', headerShown : false, tabBarVisible: false, }} />
+                <Stack.Screen name="SearchResults" component={SearchResults}  options={{ title: 'Resultats De Recherche', headerShown : false, tabBarVisible: false, }} />
 
               </Stack.Navigator>
           </FilterProvider>

@@ -46,7 +46,7 @@ const FavouritesProvider = ({children}) => {
     const addFavourite = async (item, bool) => {
         let response = null;
         const favourite = {
-            useer : loggedUserId,
+            user : loggedUserId,
             username : loggedUser,
             product : item._id,
         }

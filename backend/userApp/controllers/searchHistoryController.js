@@ -1,7 +1,8 @@
 const SearchHistory = require('../models/searchHistoryModel');
 
 exports.getSimpleSearchHistory  = (req, res, next) => {
-    SearchHistory.find({ user : req.body.user })
+    console.log("GET HISTORIQUE")
+    SearchHistory.find({ user : req.params.user })
         .then( (sh) => { 
             res.status(200).json(sh);
         })
@@ -11,15 +12,17 @@ exports.getSimpleSearchHistory  = (req, res, next) => {
   };
 
 
-  exports.addSimpleSearchHistory  = (req, res, next) => {
+  const addSimpleSearchHistory  = (req, res, next) => {
+    //console.log("HISTORY SAVED");
     const searchHistory = new SearchHistory({ 
-        user : req.body.user,
-        filters : [{ keyword : req.body.name }]
+        user : req.params.user,
+        username : req.body.username,
+        filters : new Array(req.body.searchText),
     }) 
 
     searchHistory.save()
     .then( () => { 
-        console.log("ok");
+        //console.log("HISTORY SAVED");
             res.status(200).json({ message : "Simple search history ajoute avec succes pour cet user." });
         })
     .catch( (error) => { 
@@ -28,37 +31,45 @@ exports.getSimpleSearchHistory  = (req, res, next) => {
   };
 
   exports.updateSimpleSearchHistory  = (req, res, next) => {
-    SearchHistory.find({user : req.body.user})
+    //console.log("HISTORY SAVED");
+    SearchHistory.find({user : req.params.user})
     .then( (sh) => {
         let isKeywordPresent = false, i=0;
-        for(let el of sh[0].filters)
+        if(sh.length > 0)
         {
-            if(el.keyword == req.body.name)
+            for(let el of sh[0].filters)
             {
-                isKeywordPresent = true;
-                break;
+                if(el == req.body.searchText)
+                {
+                    isKeywordPresent = true;
+                    break;
+                }
+                i++
             }
-            i++
-        }
 
-        let update_tmp = sh[0].filters
-        if(!isKeywordPresent)
-        {
-            update_tmp.push({ keyword : req.body.name }) 
-            SearchHistory.updateOne({ user : req.body.user }, {filters : update_tmp})
-            .then( () => { 
-                    res.status(200).json({ message : "Simple search history mis a jour avec succes pour cet user." });
-                })
-            .catch( (error) => { 
-                    res.status(400).json({ error: error });
-            });
-        }
-        else
-        {
-            res.status(200).json({ message : "Ce keyword existe deja pour cet user." });
+            let update_tmp = sh[0].filters
+            if(!isKeywordPresent)
+            {
+                update_tmp.push(req.body.searchText) 
+                SearchHistory.updateOne({ user : req.params.user }, {filters : update_tmp})
+                .then( () => { 
 
+                        res.status(200).json({ message : "Simple search history mis a jour avec succes pour cet user." });
+                    })
+                .catch( (error) => { 
+                        res.status(400).json({ error: error, message:"Message survenu lors de lajout de l'historique" });
+                });
+            }
+            else
+            {
+                res.status(200).json({ message : "Ce keyword existe deja pour cet user." });
+
+            }
+        }else
+        {
+            addSimpleSearchHistory(req, res, next)
         }
-          
+            
     })
     .catch( (error) => { 
         res.status(400).json({ error: error });
@@ -69,21 +80,22 @@ exports.getSimpleSearchHistory  = (req, res, next) => {
 
 
   exports.removeSimpleSearchHistory  = (req, res, next) => {
-    SearchHistory.find({ user : req.body.user })
+    SearchHistory.find({ user : req.params.user })
     .then( (sh) => {
         let newSh = []
         for (let i in sh[0].filters)
         {
             let el = sh[0].filters[i]
-            if(el.keyword != req.body.name)
+            if(el != req.body.searchText)
             {
-               newSh.push(sh[0].filters[i] )
+               newSh.push(el)
             }
         }
-        SearchHistory.updateOne({ user : req.body.user },  { filters : newSh })
+        console.log("REMOVE HIST")
+        SearchHistory.updateOne({ user : req.params.user },  { filters : newSh })
                     .then(
                         () => {
-                            res.status(200).json({ message: 'Product removed from user favourite list.'});
+                            res.status(200).json({ message: 'Product removed from user Historique list.'});
                         })
                     .catch((error) => { res.status(400).json({error : error}); }); 
      })
@@ -91,5 +103,15 @@ exports.getSimpleSearchHistory  = (req, res, next) => {
         res.status(400).json({ error: error });
      });
   };
+
+exports.removeAllSimpleSearchHistory = (req, res, next) =>{
+    console.log("REMOVE ALL HIST")
+    
+    SearchHistory.updateOne({user:req.params.user}, {filters:[]})
+        .then(() => {
+                res.status(200).json({ message: 'All Historiques removed.'});
+         })
+        .catch((error) => { res.status(400).json({error : error}); }); 
+  }
   
   

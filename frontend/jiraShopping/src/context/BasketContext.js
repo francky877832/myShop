@@ -49,7 +49,7 @@ const BasketProvider = ({children}) => {
 
 const addBasket = async (item) => {
     const basket = {
-        useer : loggedUserId,
+        user : loggedUserId,
         username : loggedUser,
         product : item._id,
     }

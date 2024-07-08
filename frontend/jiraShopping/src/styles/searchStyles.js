@@ -57,6 +57,8 @@ export const searchStyles = StyleSheet.create({
         alignItems : "center",
         paddingVertical : 15,
         paddingHorizontal : 10,
+        backgroundColor : appColors.lightWhite,
+        width : "100%",
 
     },
     historyFlatlist:
@@ -76,10 +78,10 @@ export const searchStyles = StyleSheet.create({
     },
     historySeparator:
     {
-        width:"80%", 
-        marginLeft : "10%",
+        width:"96%", 
+        marginLeft : "2%",
         borderBottomWidth : 1,
-        borderBottomColor : appColors.secondaryColor4,
+        borderBottomColor : appColors.white,
     },
 
     historyLabel:
