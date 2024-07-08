@@ -58,7 +58,7 @@ exports.reshapeComments = (datas) => {
             {
                 if(comments[i] != undefined && comments[j] != undefined)
                 {
-                    if(comments[i].id_ == comments[j].id)
+                    if(comments[i]._id == comments[j].isResponseTo)
                     {
                         subComment.push(comments[j])
                         comments[i] = {...comments[i], subComment : subComment}

@@ -7,7 +7,7 @@ const commentCtrl = require('../controllers/commentController');
 
 //Comment route
 router.get('/get/:id', commentCtrl.getProductComments);
-router.post('/add', commentCtrl.addProductComment);
+router.post('/add/:product', commentCtrl.addProductComment);
 router.put('/validate/:id', commentCtrl.validateProductComment);
 router.delete('/remove/:id', commentCtrl.removeProductComment);
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from 'react';
-import { View, Text, Pressable, StyleSheet, ScrollView, Animated, PanResponder, } from 'react-native';
+import { View, Text, Pressable, StyleSheet, ScrollView, Animated, PanResponder, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 
@@ -74,10 +74,10 @@ const ProductDetails = (props) => {
         onPanResponderMove: (ev, gestureState) => 
             {
                  // Désactiver le scrolling en utilisant la référence à la ScrollView
-               /* if (scrollViewRef.current) {
+                if (scrollViewRef.current) {
                     scrollViewRef.current.setNativeProps({ scrollEnabled: false });
-                }*/
-                setLastValidHeight(pan._value);
+                }
+                //setLastValidHeight(pan._value);
 
                 Animated.event(
                 [
@@ -91,15 +91,23 @@ const ProductDetails = (props) => {
 
                 if (gestureState.dy < 0) {
                     // Si le geste va vers le haut (vers le haut de l'écran)
-                    finalValue = lastValidHeight + gestureState.dy;
-                    if (finalValue < halfHeight) {
-                        finalValue = initialHeight; // Revenir à la hauteur initiale si moins de la moitié
-                    } else {
-                        finalValue = minHeight; // Aller à la hauteur minimale sinon
-                    }
+                    finalValue = lastValidHeight //+ gestureState.dy;
+                    Alert.alert("",`${gestureState.dy}Ok`)
+                    if (gestureState.dy < -20) {
+                        finalValue = minHeight ; // Revenir à la hauteur initiale si moins de la moitié
+                    } /*else {
+                        finalValue = initialHeight; // Aller à la hauteur minimale sinon
+                    }*/
                 } else {
                     // Si le geste va vers le bas (vers le bas de l'écran)
-                    finalValue = initialHeight; // Revenir à la hauteur initiale
+                    finalValue = lastValidHeight + gestureState.dy;
+                    if (gestureState.dy > 20) {
+                        finalValue = initialHeight; // Revenir à la hauteur initiale si moins de la moitié
+                    } /*else {
+                        finalValue = minHeight; // Aller à la hauteur minimale sinon
+                    }*/
+                    //finalValue = initialHeight; // Revenir à la hauteur initiale
+                    
                 }
 
           Animated.spring(pan, {
@@ -203,7 +211,7 @@ const ProductDetails = (props) => {
                         <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={data.seller}/>
                     </Pressable>
                     <View style={{height:20}}></View>
-                    <Comments navigation={navigation} />
+                    <Comments navigation={navigation} product={data} />
                 </View>
 
                 <View style={[productDetailsStyles.similarContainer]}>

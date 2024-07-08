@@ -187,11 +187,11 @@ const ProfilShop = (props) => {
                     </Animated.View>
                     
 
-                        <View style={{flex:1, paddingBottom:route.params.username==loggedUser?40:0}} {...panResponder.panHandlers}>
+                        <View style={{flex:1, paddingBottom:route.params==undefined?40:0}} {...panResponder.panHandlers}>
                             <ProductsListWithFilters onEndReached={onEndReached} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products.length} ${products.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
 
-                    { route.params.username==loggedUser &&
+                    { route.params==undefined &&
                         <View style={[profilShopStyles.addProduct,{}]}>
                                 <CustomButton color={appColors.white} backgroundColor={appColors.secondaryColor1} text="Ajouter Un Produit" onPress={()=>{navigation.navigate("AddProduct")}} styles={profilShopStyles} />
                         </View>

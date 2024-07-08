@@ -1,21 +1,27 @@
 const Comment = require('../models/commentModel');
+const mongoose = require('../../shared/db').mongoose;
+const ObjectId = mongoose.Types.ObjectId;
 
 
 exports.addProductComment = (req, res, next) => {
+    
     //const commentObject = req.body.comment
     //delete commentObject._id
     //delete commentObject.user
     const comment = new Comment({
         user : req.body.user,
+        username : req.body.username,
         product : req.body.product,
         text : req.body.text,
-        isResponseTo : req.body.responseId
+        isResponseTo : req.body.isResponseTo
     })
     comment.save()
     .then( () => {
+        //console.log("COMMENT")
         res.status(200).json({ message: "Commentaire ajoute avec succes pour ce produit." });
     })
     .catch( (error) => {
+        //console.log(error)
         res.status(400).json({ error: error });
     });
 };
@@ -44,6 +50,7 @@ exports.removeProductComment = (req, res, next) => {
 exports.getProductComments = (req, res, next) => {
     Comment.find({product : req.params.id})
     .then( (products) => {
+        console.log("SUCCESS GET COMMENT")
         res.status(200).json(products);
     })
     .catch( (error) => {
