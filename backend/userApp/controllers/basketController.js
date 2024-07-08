@@ -30,7 +30,7 @@ exports.updateBasketProduct = (req, res, next) => {
             {
                 for(let el of baskets[0].products)
                 {
-                    if(el._id == req.body.product._id)
+                    if(el == req.body.product)
                     {
                         isProductPresent = true;
                         break; 
@@ -68,9 +68,9 @@ exports.removeBasketProduct  = (req, res, next) => {
         for (let i in baskets[0].products)
         {
             let el = baskets[0].products[i]
-            if(el.product != req.body.products[0].product)
+            if(el != req.body.product)
             {
-               newBasket.push(baskets[0].products[i] )
+               newBasket.push(el)
             }
         }
         Basket.updateOne({ user : req.params.user },  { products : newBasket })

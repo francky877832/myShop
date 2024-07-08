@@ -19,7 +19,8 @@ import SellerBrand from '../common/SellerBrand';
 import { server } from '../../remote/server';
 
 
-const loggedUser = "66731fcb569b492d3ef429ba"
+const loggedUser = "Francky"
+const loggedUserId = "66715deae5f65636347e7f9e"
 const ProfilShop = (props) => {
 {/*
                             numColumns={ calculateNumColumns() }
@@ -139,7 +140,7 @@ const ProfilShop = (props) => {
                                 <PrevButton styles={{color:appColors.black}}/>
                             </View>
 
-                            <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z"/>
+                            <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={loggedUser}/>
 
                             <View style={[profilShopStyles.notifParameter]}>
                                 <Pressable  style={[profilShopStyles.notification, ]} onPress = { ()=>{ navigation.navigate("Notifications");} }>

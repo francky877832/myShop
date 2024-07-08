@@ -22,31 +22,11 @@ const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
 const Basket = (props) => {
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
-    const [basket, setBasket] = useState([])
-    //const {basket, fetchUserBasket} = useContext(BasketContext)
+    //const [basket, setBasket] = useState([])
+    const {basket, fetchUserBasket} = useContext(BasketContext)
 
-    const fetchUserBasket = async () =>{
-        try{
-            //console.log("Ok")
-                const response = await fetch(`${server}/api/datas/basket/get/${loggedUserId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                });           
-                const datas = await response.json()
-                        //console.log(datas)
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la requête');
-                }
-            //console.log(datas)
-            setBasket(datas)
-        }catch(error){
-                    Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
-        }
-    }  
 useEffect(()=>{
-    fetchUserBasket()
+    //fetchUserBasket()
     //console.log(basket)
 }, [basket])
 

@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { datas } from "../utils/sampleDatas";
 import { server } from "../remote/server";
+
 const FavouritesContext = createContext()
 
 const loggedUser = "Francky"

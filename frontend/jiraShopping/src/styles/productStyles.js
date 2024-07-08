@@ -129,5 +129,16 @@ export const productStyles = StyleSheet.create({
         elevation: 5,
     },
 
+    isBasketPresent : 
+    {
+        backgroundColor : appColors.secondaryColor3,
+        borderColor : appColors.lightBlack,
+    },
+    isBasketPresentText :
+    {
+        color : appColors.white,
+
+    }
+
     
 })

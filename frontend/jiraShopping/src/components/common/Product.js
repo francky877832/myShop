@@ -24,7 +24,7 @@ const Product = (props) => {
    
 //console.log(item.images[0])
     const {favourites, addFavourite, hasLiked} = useContext(FavouritesContext)
-    const {basket, addBasket} = useContext(BasketContext)
+    const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
 
 
     useEffect(() => {
@@ -64,9 +64,9 @@ const Product = (props) => {
                         </View>
 
                        
-                        <View style={[productStyles.bottom, productStyles.card] } >
-                            <Pressable onPress = { ()=>{ addBasket(item) } } >
-                                <Text numberOfLines={1} style={[customText.text, productStyles.category]}>Ajouter Au Panier</Text>
+                        <View style={[productStyles.bottom, productStyles.card, isBasketPresent(item)[0]?productStyles.isBasketPresent:false] } >
+                            <Pressable onPress = { ()=>{isBasketPresent(item)[0]?false:addBasket(item) } }>
+                                <Text numberOfLines={1} style={[customText.text, productStyles.category, isBasketPresent(item)[0]?productStyles.isBasketPresentText:false]}>{isBasketPresent(item)[0]? "Déja Dans Le Panier":"Ajouter Au Panier"}</Text>
                             </Pressable>
                         </View>
                     </View>

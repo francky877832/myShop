@@ -13,6 +13,7 @@ import AllCommets from '../components/specific/AllCommets';
 import Notifications from '../components/specific/Notifications';
 import AddProduct from '../components/specific/AddProduct';
 import Categories from '../components/common/Categories';
+import ProfilShop from '../components/specific/ProfileShop';
 import HomeNavigation from '../navigation/HomeNavigation';
 
 //Contexts
@@ -44,6 +45,8 @@ export default function MainNavigation() {
                 <Stack.Screen name="Notifications" component={Notifications}  options={{ title: 'Notifications', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="AddProduct" component={AddProduct}  options={{ title: 'Ajouter Un Produit', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Categories" component={Categories}  options={{ title: 'Choisir Une Categorie', headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="Shop" component={ProfilShop}  options={{ title: 'Choisir Une Categorie', headerShown : false, tabBarVisible: false, }} />
+
               </Stack.Navigator>
           </FilterProvider>
       </ProductItemProvider>

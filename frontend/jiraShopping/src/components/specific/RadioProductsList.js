@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, Pressable } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, Pressable, Alert } from 'react-native';
 import { RadioButton, } from 'react-native-paper';
 //custom component
 import Product from '../common/Product';
@@ -16,11 +16,12 @@ import { Icon } from 'react-native-elements';
 import { CustomButton } from '../common/CommonSimpleComponents'
 import { CheckBox } from 'react-native-elements';
 
+import { BasketContext } from '../../context/BasketContext';
+
 import { formatMoney } from '../../utils/commonAppFonctions';
 const RadioProductsList = (props) => {
     const { item, datas  } = props;
-    console.log("GGG")
-console.log(datas)
+    const {basket, removeBasket, selectedProducts, updateSelectedProducts, selectedSeller, setSelectedSeller, totalPrice} = useContext(BasketContext)
 
     const RadioProduct = (props) => {
         const {item} = props
@@ -31,21 +32,21 @@ console.log(datas)
         const inBasket = 3
         return (
             <View styles={[radioProductStyles.container,{}]}>       
-                <RadioButton.Group onValueChange={val => {}} value={{}} style={[radioProductStyles.radioGroup,radioProductStyles.radioGroup1,]}>
+                <RadioButton.Group onValueChange={val => {setSelectedSeller(val)}} value={selectedSeller} style={[radioProductStyles.radioGroup,radioProductStyles.radioGroup1,]}>
                     {
-                        item.productDetails.map((product1, key) => {
+                        item.products.map((product1, key) => {
                                
                             return(
                             <View style={[radioProductsListtStyles.seller,{}]} key={key}>
                                 { passed_sellers.includes(product1.seller) ? false :
                                     <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer1]} >
-                                        <RadioButton value={product1.id} />
+                                        <RadioButton value={product1.seller} />
                                         <SellerBrand pub={false} certified={true} username={product1.seller} /> 
                                         <Text>{/*A MODIFIER*/}</Text>
                                     </View>
                                 }
                             
-                        {item.productDetails.map((product2, key) => {
+                        {item.products.map((product2, key) => {
                              passed_sellers.push(product1.seller) 
                             if(product1.seller == product2.seller && !passed_product.includes(product2._id))
                             { 
@@ -63,7 +64,7 @@ console.log(datas)
                                                             <Text style={[customText.text, ]}>{product2.seller}</Text>
                                                             <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
                                                             <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(product2.price)} XAF{/* prix de la proposition ou real Price*/}</Text>
-                                                            <Pressable onPress={()=>{}}>
+                                                            <Pressable onPress={()=>{removeBasket(product2);updateSelectedProducts(product2)}}>
                                                                 <Icon name="trash-outline" color={appColors.black} size={18} type="ionicon" style={[{alignSelf:"flex-end"}]} />
                                                             </Pressable>
                                                         </View>
@@ -71,8 +72,8 @@ console.log(datas)
                                                 } 
                                                 containerStyle={[radioProductStyles.checkBoxContainer,{}]} 
                                                 textStyle={[customText.text,radioProductStyles.checkBoxText]} 
-                                                checked={false} 
-                                                onPress={() => {  }} 
+                                                checked={selectedSeller==product2.seller && selectedProducts[product2._id]} 
+                                                onPress={() => {selectedSeller==product2.seller ? updateSelectedProducts(product2) : Alert.alert("Infos","Veillez d'abord selectionner le vendeur adéquat.") }} 
                                             
                                                 />
 
@@ -99,15 +100,15 @@ console.log(datas)
             </View>
         )
     }
-
+    const products = [{products:datas}]
     return(
             <View style={[radioProductsListtStyles.container,]}>
 
                 <View style={radioProductsListtStyles.top}>
                     <FlatList
-                        data={datas}
+                        data={products}
                         renderItem={ ({item}) => { return <RadioProduct item={item}  /> } }
-                        keyExtractor={ (item) => { return item._id.toString(); } }
+                        keyExtractor={ (item) => { return Math.random().toString(); } }
                         horizontal={false}
                         numColumns={ 1 }
                         ItemSeparatorComponent ={ (item) => { return <View style={{height:5,}}></View> }}
@@ -119,7 +120,7 @@ console.log(datas)
                     <View style={radioProductsListtStyles.bottom}>
                         <View style={radioProductsListtStyles.bottomPrice}>
                             <Text style={[radioProductsListtStyles.price, {color:appColors.secondaryColor3}]}>Total : </Text>
-                            <Text style={[radioProductsListtStyles.price, {fontWeight:"bold",}]}>2000 XAF</Text>
+                            <Text style={[radioProductsListtStyles.price, {fontWeight:"bold",}]}>{totalPrice} XAF</Text>
                         </View>
                         <View style={radioProductsListtStyles.buttonView}>
                             <CustomButton text="Payer" color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{}} styles={radioProductsListtStyles} />
