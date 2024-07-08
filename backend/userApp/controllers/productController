@@ -207,7 +207,7 @@ exports.updateProductNumLikes  = (req, res, next) => {
   //const datas = req.body
   Product.updateOne({ _id : req.params.id }, { $inc : { likes : req.body.updateLikes } } )
       .then( () => { 
-        console.log("LIKEE")
+        //console.log("LIKEE")
           res.status(200).json({ message : (req.body.updateLikes==1) ? "Le produit a recu un nouveau like." : "Le produit a perdu un like." });
       })
       .catch( (error) => { 
