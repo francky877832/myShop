@@ -123,3 +123,21 @@ exports.reshapeBasketProducts = (p) => {
 
 }
 
+
+
+const serialize = (obj, prefix) => {
+    const str = [];
+    for (const p in obj) {
+      if (obj.hasOwnProperty(p)) {
+        const k = prefix ? `${prefix}[${p}]` : p;
+        const v = obj[p];
+        if (v !== null && typeof v === 'object') {
+          str.push(serialize(v, k));
+        } else {
+          str.push(`${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
+        }
+      }
+    }
+    return str.join('&');
+  }
+exports.serialize = serialize

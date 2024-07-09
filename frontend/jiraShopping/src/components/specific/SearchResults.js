@@ -13,59 +13,30 @@ import ProductsListWithFilters from '../common/ProductsListWithFilters';
 import { FilterContext } from '../../context/FilterContext';
 
 import { server } from '../../remote/server';
+import { serialize } from '../../utils/commonAppFonctions';
+
 const SearchResults = (props) => {
 
-    const [products, setProducts] = useState([])
+    //const [products, setProducts] = useState([])
     
-    const searchText = "ord"
+    
+    const searchText = " "
     const { setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice,
         selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands,
-        _handlePress, updateCategories, updateSelectedBrands,
+        _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,
         } = useContext(FilterContext)
-    //console.log(selectedOrderBy) 
-    const getSearchedProducts = async ()=> {
 
-        const serialize = (obj) => {
-            const str = [];
-            for (const p in obj)
-              if (obj.hasOwnProperty(p)) {
-                str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
-              }
-            return str.join('&');
-          };
-
-        const filters = {
-            name : searchText,
-        }
-        const queryString = serialize(filters)
-        try
-        {
-            const response = await fetch(`${server}/api/datas/products/search?${queryString}`,{
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                });
-                if(!response.ok) 
-                    throw new Error("Erreur lors de la recherhce de produit")
-                const responseJson = await response.json();
-                //console.log(responseJson)
-                setProducts(responseJson)
-        } catch (error) {
-        console.error(error);
-      }
-    }
     
     useEffect(()=>{
-        getSearchedProducts()
-    })
+        getSearchedTextWithFilters(searchText)
+    }, [refreshComponent])
         return(
                 <View style={preferencesStyles.container}>
                         <View style={preferencesStyles.top}>
                             <Top />
                         </View>
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="SearchResults" filters={true} datas={products} horizontal={false} styles={preferencesStyles} title={`Resultats de recherche "${searchText}"`}/>
+        <ProductsListWithFilters name="SearchResults" filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={`Resultats de recherche "${searchText}"`}/>
     </View>
                 </View>
         )

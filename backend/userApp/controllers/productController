@@ -160,30 +160,52 @@ exports.getUserProductsFromCategory  = (req, res, next) => {
 exports.getSearchedProducts = async (req, res, next) => {
   //console.log("SERAHC PRODUCTS")
   //console.log(req.query)
-  const { name, customFilter } = req.query;
-
+  const { name, customFilters } = req.query;
+  //console.log(customFilters)
+  let result = []
   try {
     const products = await Product.find();
 
-    const fuse = new Fuse(products, {
+    if(!name)
+    {
+      result = products
+      //console.log("vide")
+    }
+    else
+    {
+      const fuse = new Fuse(products, {
       keys: ['name', 'description', 'category'],
       threshold: 0.5, // Ajustez ce seuil selon vos besoins
-    });
+      });
 
-    // Effectuer la recherche floue
-    const result = fuse.search(name).map(result => result.item);
-
+      // Effectuer la recherche floue
+      result = fuse.search(name).map(result => result.item);
+    }
+    //console.log(result)
+    
     
     // Appliquer des filtres personnalisés si nécessaire
     let filteredResult = result;
-    if (customFilter === 'price') {
-      filteredResult = filteredResult.filter(product => product.price <= 100);
-    } else if (customFilter === 'category') {
-      filteredResult = filteredResult.filter(product => product.category === 'Electronics');
+    //console.log(customFilters.minPrice)
+    if (customFilters.categories?.length > 0) {
+      filteredResult = filteredResult.filter(product => customFilters.categories.includes(product.category));
+    }
+    if (customFilters.brands?.length > 0) {
+      filteredResult = filteredResult.filter(product => customFilters.brands.includes(product.brand));
+    }
+    if (customFilters.condition?.length > 0) {
+      filteredResult = filteredResult.filter(product => customFilters.condition.includes(product.condition));
+    }
+    if (customFilters.minPrice) {
+      filteredResult = filteredResult.filter(product => customFilters.minPrice <= product.price);
+    }
+    if (customFilters.maxPrice) {
+      filteredResult = filteredResult.filter(product => customFilters.maxPrice >= product.price);
     }
 
     res.json(filteredResult);
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: err.message });
   }
 

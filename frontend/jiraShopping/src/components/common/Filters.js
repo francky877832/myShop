@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext,  } from 'react';
 import { View, Text, Pressable, TextInput, ScrollView, FlatList} from 'react-native';
 
 import { Button, CheckBox } from 'react-native-elements';
 import { RadioButton, } from 'react-native-paper';
 
-import { ConditionChoice } from "../common/CommonSimpleComponents"
+import { ConditionChoice, CustomButton} from "../common/CommonSimpleComponents"
 import { Icon } from 'react-native-elements';
 
 import { appColors, appFont } from '../../styles/commonStyles';
@@ -24,10 +24,12 @@ import { ProductItemContext } from '../../context/ProductItemContext';
 
 const Filters = (props) => {
 
-    const {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, _handlePress, updateCategories }  =  useContext(FilterContext)
+    const {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, setSelectCategories, setSelectedOrderBy, refreshComponent,
+        setRefreshComponent, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, _handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters
+     }  =  useContext(FilterContext)
     const { categories, brands } = useContext(ProductItemContext)
 //console.log(categories)
-    const { suggestion } = props
+    const { suggestion, searchText } = props
     const [showSuggestion, setShowSuggestion] = useState(suggestion)
 
 
@@ -304,7 +306,10 @@ const setOtherModalToFalse = (modal)=>{
                         </View>
                     </View>
         }
-
+        <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5}}>
+            <CustomButton text="Vider" color={appColors.white} backgroundColor={appColors.red} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{resetAllFilters();setRefreshComponent(!refreshComponent)}} />
+            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters(searchText||"")}} />
+        </View>
             </View>
             </View>}
         </View>

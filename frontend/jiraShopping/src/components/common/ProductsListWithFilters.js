@@ -8,7 +8,7 @@ import { preferencesStyles } from '../../styles/preferencesStyles';
 import { customText, appColors, appFont } from '../../styles/commonStyles';
 
 const ProductsListWithFilters = React.forwardRef((props, ref) => {
-    const { datas, horizontal, title, onEndReached, filters, name} = props;
+    const { datas, horizontal, title, onEndReached, filters, name, searchText} = props;
    
     return(
             <View style={[productsListWithFiltersStyles.container]}>
@@ -18,7 +18,7 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
 
                 <View style={{flex:1,flexDirection:"column",}}>
                     {filters &&
-                        <Filters suggestion={false} />
+                        <Filters suggestion={false} searchText={searchText} />
                     }
                     <ProductsList name={name} onEndReached={onEndReached} ref={ref} datas={datas} horizontal={false} styles={preferencesStyles} />
                 </View>

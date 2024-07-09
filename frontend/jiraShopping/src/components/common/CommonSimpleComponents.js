@@ -71,12 +71,13 @@ exports.ConditionChoice = (props) => {
 
 exports.CustomButton = (props) => {
     const { text, color, backgroundColor, onPress, styles } = props
+    
     const styles_ = StyleSheet.create({
         bg:{backgroundColor:(backgroundColor || appColors.blue)},
         color:{color:(color || appColors.white),}
     })
     return(
-       <Pressable style={[styles.pressable, styles_.bg]} onPress={onPress}>
+       <Pressable style={[{justifyContent:"center",alignItems:"center"},styles.pressable, styles_.bg]} onPress={onPress}>
             <Text style={[styles.text, styles_.color]}>{text}</Text>
        </Pressable> 
         )
