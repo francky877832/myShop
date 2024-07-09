@@ -16,8 +16,8 @@ const offerSchema = new Schema({
     hasGotResponse : { type: Number, enum : [0, 1, 2], default : 2, required : true },
 
     validity : {type : Date, default : Date.now() + 3600*24*1000 },
-    createdAt : { type : Date, default : Date.now() },
-    updatedAt : { type : Date, default : Date.now() }
+    createdAt : { type : Date, default : Date.now },
+    updatedAt : { type : Date, default : Date.now }
 });
 
 offerSchema.index({ seller: 1, buyer: 1, product : 1 }, { unique: true });

@@ -73,7 +73,7 @@ export const commentsStyles = StyleSheet.create({
     },
     inputFocused :
     {
-      borderWidth : 1,
+      borderBottomWidth : 1,
       borderColor : appColors.secondaryColor1,
     }
   

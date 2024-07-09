@@ -9,8 +9,8 @@ const complaintSchema = new Schema({
     message : { type : String, required : true },
     product: { type: Schema.Types.ObjectId, ref: 'Product', required: true }, 
 
-    createdAt : { type : Date, default : Date.now() },
-    updatedAt : { type : Date, default : Date.now() },
+    createdAt : { type : Date, default : Date.now },
+    updatedAt : { type : Date, default : Date.now },
 });
 
 module.exports = mongoose.model('Complaint', complaintSchema);

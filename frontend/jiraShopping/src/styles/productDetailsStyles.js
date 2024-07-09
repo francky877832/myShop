@@ -24,7 +24,7 @@ export const productDetailsStyles = StyleSheet.create({
         ...filtersStyles.similarContainer,
         top : 20,
         //paddingLeft : 1,
-        paddingBottom :  130,
+        paddingBottom :  20,
         //backgroundColor : appColors.white,
     },
     getBackPosition :
@@ -117,7 +117,7 @@ export const productDetailsStyles = StyleSheet.create({
         flexDirection : "row",
         justifyContent : "space-between",
         alignItems : "center",
-        position : "absolute",
+        position : "relative",
         left : 0,
         right : 0,
         bottom : 0,
@@ -127,6 +127,8 @@ export const productDetailsStyles = StyleSheet.create({
         borderColor : appColors.secondaryColor3,
         //paddingVertical : 10, height est fixe
         paddingHorizontal : 10,
+        //zIndex : 0,
+
     },
     button:
     {

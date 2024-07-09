@@ -10,11 +10,11 @@ const preferenceSchema = new Schema({
                 /*//POUR LES TESTS*/
                 category : { type : String, required : true  },
                 
-                createdAt : { type : Date, default : Date.now() },
-                updatedAt : { type : Date, default : Date.now() },
+                createdAt : { type : Date, default : Date.now },
+                updatedAt : { type : Date, default : Date.now },
             }],
-    createdAt : { type : Date, default : Date.now() },
-    updatedAt : { type : Date, default : Date.now() },
+    createdAt : { type : Date, default : Date.now },
+    updatedAt : { type : Date, default : Date.now },
 });
 
 module.exports = mongoose.model('Preference', preferenceSchema);

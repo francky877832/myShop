@@ -13,8 +13,8 @@ const cacheCommentSchema = new Schema({
     etat :  { type: String, enum: [0, 1], default: 1 },
 
     
-    createdAt : { type : Date, default : Date.now() },
-    updatedAt : { type : Date, default : Date.now() }
+    createdAt : { type : Date, default : Date.now },
+    updatedAt : { type : Date, default : Date.now }
 });
 
 

@@ -1,7 +1,8 @@
 import React, { useState, useRef, useContext } from 'react';
-import { View, Text, Pressable, StyleSheet, ScrollView, Animated, PanResponder, Alert } from 'react-native';
+import { View, Text, Pressable, StyleSheet, ScrollView, Animated, PanResponder, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import CarouselImage from '../common/CarouselImages';
 import { PrevButton, ShareButton, LikeButton, CustomButton } from "../common/CommonSimpleComponents";
@@ -68,6 +69,8 @@ const ProductDetails = (props) => {
       }
     };
   */
+
+    /*
     const panResponder = useRef(
       PanResponder.create({
         onMoveShouldSetPanResponder: () => true,
@@ -92,12 +95,12 @@ const ProductDetails = (props) => {
                 if (gestureState.dy < 0) {
                     // Si le geste va vers le haut (vers le haut de l'écran)
                     finalValue = lastValidHeight //+ gestureState.dy;
-                    Alert.alert("",`${gestureState.dy}Ok`)
+                    //Alert.alert("",`${gestureState.dy}Ok`)
                     if (gestureState.dy < -20) {
                         finalValue = minHeight ; // Revenir à la hauteur initiale si moins de la moitié
                     } /*else {
                         finalValue = initialHeight; // Aller à la hauteur minimale sinon
-                    }*/
+                    }*//*
                 } else {
                     // Si le geste va vers le bas (vers le bas de l'écran)
                     finalValue = lastValidHeight + gestureState.dy;
@@ -105,7 +108,7 @@ const ProductDetails = (props) => {
                         finalValue = initialHeight; // Revenir à la hauteur initiale si moins de la moitié
                     } /*else {
                         finalValue = minHeight; // Aller à la hauteur minimale sinon
-                    }*/
+                    }*//*
                     //finalValue = initialHeight; // Revenir à la hauteur initiale
                     
                 }
@@ -124,12 +127,21 @@ const ProductDetails = (props) => {
         }
       })
     ).current;
+*/
 
-
-    
+   /*
+    {...panResponder.panHandlers}
+   */ 
+    //const now = new Date();
+    //console.log(now.toLocaleString());
     return (
-        
-        <View style={productDetailsStyles.container}>
+
+  <View style={productDetailsStyles.container}>
+<KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
+<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+        <ScrollView style={[productDetailsStyles.scrollView,]} ref={scrollViewRef} horizontal={false} nestedScrollEnabled={true} >
+
             <View contentContainerStyle={[productDetailsStyles.getBackPosition, {}]}>
                 <View style={productDetailsStyles.buttonContainer}>
                     <PrevButton styles={productDetailsStyles.prevButton} />
@@ -140,13 +152,17 @@ const ProductDetails = (props) => {
                     </View>
                 </View>
 
-                <Animated.View style={[productDetailsStyles.carousselIamge, { height: animatedHeight }]}>
+                {/*<Animated.View style={[productDetailsStyles.carousselIamge, { height: animatedHeight }]}>
                     <CarouselImage images={data.images} styles={{ }} />
                 </Animated.View>
+                */}
+                <View style={[productDetailsStyles.carousselIamge, {height:screenHeight/2,}]}>
+                    <CarouselImage images={data.images} styles={{ }} />
+                </View>
+                
 
-<View style={[productDetailsStyles.underCaroussel]} {...panResponder.panHandlers} >
-                <ScrollView style={[productDetailsStyles.scrollView,]} ref={scrollViewRef}horizontal={false} nestedScrollEnabled={true} >
-                    <View style={[productDetailsStyles.infosBox]}>
+<View style={[productDetailsStyles.underCaroussel,{borderTopWidth:1,borderColor:appColors.lightWhite}]}>
+                <View style={[productDetailsStyles.infosBox]}  >
                     <View style={productDetailsStyles.since}>
                         <View style={{ flexDirection: "row" }}>
                             <BadgeIcon name="time-sharp" size={18} color={appColors.secondaryColor4} styles={{}} isCard={false} />
@@ -160,9 +176,9 @@ const ProductDetails = (props) => {
                     </View>
 
                     <View style={[productDetailsStyles.name]}>
-                        <Text numberOfLines={2} style={[customText.text, { fontWeight: "bold" }]}>{capitalizeFirstLetter(data.username)}</Text>
+                        <Text numberOfLines={2} style={[customText.text, { fontWeight: "bold" }]}>@{capitalizeFirstLetter(data.sellerName)}</Text>
                         <View style={{ flexDirection: "row", top: 0 }}>
-                            <Text style={[customText.text,{fontWeight:"bold",fontSize:15,}]}>{data.category.replace(/\//g, ' | ')}</Text>
+                            <Text style={[customText.text,{fontWeight:"bold",fontSize:15,color:appColors.gray}]}>{data.category.replace(/\//g, ' | ')}</Text>
                         </View>
                     </View>
 
@@ -223,10 +239,14 @@ const ProductDetails = (props) => {
                         <ProductsList datas={favourites} horizontal={true} styles={{}} />
                     </View>
                 </View>
-</ScrollView>
-</View>
 
+</View>
             </View>
+        
+        </ScrollView>
+    </TouchableWithoutFeedback>
+    
+</KeyboardAwareScrollView>    
 
             <View style={[productDetailsStyles.bottom]}>
                 <View style={[productDetailsStyles.button, productDetailsStyles.price]}>
@@ -239,7 +259,8 @@ const ProductDetails = (props) => {
                     <CustomButton text="Acheter" styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />
                 </View>
             </View>
-        </View>
+</View>
+
     );
 };
 

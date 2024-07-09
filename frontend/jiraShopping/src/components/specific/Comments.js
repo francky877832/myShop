@@ -25,7 +25,7 @@ const Comments = (props) =>
     //modifier comments avec un champ subComment au lieur de isResponseTo length
     const [inputValue, setInputValue] = useState("")
     const [isFocused, setIsFocused] = useState(false)
-    const [isResponseTo, setIsResponseTo] = useState("")
+    const [isResponseTo, setIsResponseTo] = useState(product._id)
     const [isAll, setIsAll] = useState(all)
     const [comments, setComments] = useState([])
     const [onNewCommnent, setOnNewCommnent] = useState(false)
@@ -79,7 +79,7 @@ const fetchProductComments = async () =>{
         //console.log(datasdatas[0].products)
         //console.log(datas)
         setComments(reshapeComments(all?datas:datas.slice(0,2)))
-        Alert.alert("Commentaire recuperes avec success")
+        //Alert.alert("Commentaire recuperes avec success")
     }catch(error){
         Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
     }
@@ -196,7 +196,7 @@ useEffect(()=>{
             }
             </View>
         { !all &&  
-            <View style={[commentsStyles.inputContainer, {borderWidth:isFocused?0:1,}]}>
+            <View style={[commentsStyles.inputContainer, {borderWidth:isFocused?1:1,}]}>
                <Input placeholder="Posez une question" onChangeText={(text)=>{setInputValue(text)}}
                     multiline={true}
                     numberOfLines={1}

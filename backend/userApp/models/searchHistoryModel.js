@@ -13,6 +13,8 @@ const searchHistorytSchema = new Schema({
                     maxPrice : { type : Number },
                     feesBy : { type : String, enum : ['seller', 'buyer'] },*/
                 },
+    createdAt : { type : Date, default : Date.now },
+    updatedAt : { type : Date, default : Date.now }
 });
 
 module.exports = mongoose.model('SearchHistory', searchHistorytSchema);

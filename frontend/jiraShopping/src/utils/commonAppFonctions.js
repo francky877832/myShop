@@ -4,7 +4,9 @@ exports.capitalizeFirstLetter = str => str ? str[0].toUpperCase() + str.slice(1)
 
 exports.sinceDate = (_date) => {
     const date2 = new Date(_date)
-    const date = Date.now() - date2.getTime()
+    const date1 = new Date()
+    const date = date1.getTime() - date2.getTime()
+    //console.log(date1)
     //console.log(Date.now() + " - " + date2.getTime() + " = " + date)
     let oneDay = 1000 * 60 * 60 * 24
 
@@ -16,6 +18,7 @@ exports.sinceDate = (_date) => {
     let minutes = Math.floor(date/(oneDay/(24*60)))
     let seconds = Math.floor(date/(oneDay/60*60*24))
 
+    
     if(years != 0)
         return [years, years==1 ? "an" : "ans"]
     else if(months != 0)

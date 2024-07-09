@@ -4,14 +4,14 @@ const ObjectId = mongoose.Types.ObjectId;
 
 
 exports.addProductComment = (req, res, next) => {
-    
+   
     //const commentObject = req.body.comment
     //delete commentObject._id
     //delete commentObject.user
     const comment = new Comment({
         user : req.body.user,
         username : req.body.username,
-        product : req.body.product,
+        product : req.params.product,
         text : req.body.text,
         isResponseTo : req.body.isResponseTo
     })
@@ -49,8 +49,9 @@ exports.removeProductComment = (req, res, next) => {
 
 exports.getProductComments = (req, res, next) => {
     Comment.find({product : req.params.id})
+    .sort({createdAt : -1})
     .then( (products) => {
-        console.log("SUCCESS GET COMMENT")
+        //console.log("SUCCESS GET COMMENT")
         res.status(200).json(products);
     })
     .catch( (error) => {

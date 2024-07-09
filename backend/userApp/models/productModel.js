@@ -26,8 +26,8 @@ const productSchema = new Schema({
     sold : { type : Number, enum : [0, 1], default : 0 },
     visibility : { type : Number, enum : [0, 1], default : 1  },
 
-    createdAt : { type : Date, default : Date.now() },
-    updatedAt : { type : Date, default : Date.now() }
+    createdAt : { type : Date, default : Date.now },
+    updatedAt : { type : Date, default : Date.now }
 });
 
 module.exports = mongoose.model('Product', productSchema);

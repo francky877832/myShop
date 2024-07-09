@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, useContext, useRef, useCallb
 import { View, Text, Animated, Pressable, ScrollView, FlatList, Image, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { RadioButton, } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Input } from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
@@ -73,7 +74,7 @@ const AddProduct = (props) => {
             { text: "Non", onPress: () => null, style: "cancel" },
             { text: "Oui", onPress: () =>{
                     setAllowBack(true);
-                    navigation.goBack();
+                    //navigation.goBack();
                     navigation.dispatch(e.data.action);
                 }
              }
@@ -244,11 +245,13 @@ const submitProduct = async () => {
         console.error(error);
       }
 };
-
+//Jai pas encore testé
 
    return (
-<KeyboardAvoidingView style={{flex:1}}  keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+<View style={{flex:1}}>
+<KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
+<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={[addProductStyles.container,{}]}>
             <View style={[addProductStyles.containers]}>
                 <View style={[addProductStyles.titles]}>
@@ -485,10 +488,9 @@ const submitProduct = async () => {
                     </View>
             </View>
 
-
-            
             </ScrollView>
         </TouchableWithoutFeedback>
+</KeyboardAwareScrollView>
         
         {cameraOrGalery &&
             <View style={[addProductStyles.bottomPicker]}>
@@ -505,7 +507,7 @@ const submitProduct = async () => {
         <View style={[addProductStyles.addProductSubmitView,{}]}>
                 <CustomButton text="Publier Le Produit" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={submitProduct} />
         </View>
-    </KeyboardAvoidingView>
+</View>
     )
 }
 export default AddProduct

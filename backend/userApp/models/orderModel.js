@@ -13,8 +13,8 @@ const orderSchema = new  Schema({
         city: { type: String, required : true },
         country: { type: String, required : true, default : "Cameroun" }
     },
-    createdAt : { type : Date, default : Date.now() },
-    updatedAt : { type : Date, default : Date.now() }
+    createdAt : { type : Date, default : Date.now },
+    updatedAt : { type : Date, default : Date.now }
 });
 
 module.exports = mongoose.model('Order', orderSchema);

@@ -11,8 +11,8 @@ const notificatonSchema = new Schema({
     link : { type : String, required : true },
     read : { type : Number, enum: [0, 1], default : 0, required : true },
     
-    createdAt : { type : Date, default : Date.now() },
-    updatedAt : { type : Date, default : Date.now() },
+    createdAt : { type : Date, default : Date.now },
+    updatedAt : { type : Date, default : Date.now },
 });
 
 module.exports = mongoose.model('Notification', notificatonSchema);

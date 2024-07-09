@@ -9,8 +9,8 @@ const serviceSchema = new Schema({
     message : { type : String, required : true },
     isResponseTo : { type : Schema.Types.ObjectId,  ref : "Service", default : function () {  return this._id; } },
 
-    createdAt : { type : Date, default : Date.now() },
-    updatedAt : { type : Date, default : Date.now() },
+    createdAt : { type : Date, default : Date.now },
+    updatedAt : { type : Date, default : Date.now },
 });
 
 module.exports = mongoose.model('Service', serviceSchema);

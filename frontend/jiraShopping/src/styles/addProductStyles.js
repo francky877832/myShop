@@ -115,7 +115,7 @@ export const addProductStyles = StyleSheet.create({
 
     addProductSubmitView :
     {
-        //position : "absolute",
+        position : "relative",
         left : 0,
         right : 0,
         bottom : 0,
