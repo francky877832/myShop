@@ -51,8 +51,9 @@ const FilterProvider = ({children}) => {
 
     }
 
-    const getSearchedTextWithFilters = async (searchText) =>
+    const getSearchedTextWithFilters = async (searchText, orderBy) =>
     {
+        setSelectedOrderBy(orderBy);
         let categories = Object.keys(selectedCategories).filter((key)=>{ return selectedCategories[key]==true})
         //console.log(categories)
         let brands = Object.keys(selectedBrands).filter((key)=>{ return selectedBrands[key]==true})
@@ -61,18 +62,47 @@ const FilterProvider = ({children}) => {
         isOldFocused && condition.push("used")
         isNewFocused && condition.push("new")
         //console.log(condition)
-
+        
         const filters = {
             name : searchText.trim(),
             customFilters : {
                 categories : categories || [],
                 brands : brands || [],
-                orderBy : selectedOrderBy,
                 minPrice : minPrice.replace('.',''),
                 maxPrice : maxPrice.replace('.',''),
                 condition : condition || [],
-            }
+            },
         }
+        let order_by = {};
+        switch(orderBy?.toLowerCase())
+        {
+            case "prix asc" :
+                order_by = {price : 1}
+                filters["customFilters"]["orderBy"] = order_by
+                break;
+            case "prix desc" :
+                order_by = {price : -1}
+                filters["customFilters"]["orderBy"] = order_by
+                break
+            case "plus recents" :
+                order_by = {updatedAt : -1}
+                filters["customFilters"]["orderBy"] = order_by
+                break
+            case "plus anciens" :
+                order_by = {updatedAt : 1}
+                filters["customFilters"]["orderBy"] = order_by
+                break
+            case "nom asc" :
+                order_by = {name : 1}
+                filters["customFilters"]["orderBy"] = order_by
+            case  "nom desc" :
+              order_by = {name : -1}
+                filters["customFilters"]["orderBy"] = order_by  
+                break
+            default : break;
+        }
+     
+        //console.log(filters)
         const queryString = serialize(filters)
        // console.log(queryString)
         try
@@ -103,6 +133,7 @@ const FilterProvider = ({children}) => {
         setIsOldFocused("")
         setMinPrice("")
         setMaxPrice("")
+        setRefreshComponent(!refreshComponent)
         getSearchedTextWithFilters(" ")
     }
 

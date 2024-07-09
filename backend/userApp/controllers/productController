@@ -164,7 +164,20 @@ exports.getSearchedProducts = async (req, res, next) => {
   //console.log(customFilters)
   let result = []
   try {
-    const products = await Product.find();
+        let products = []
+        if(customFilters.hasOwnProperty("orderBy"))
+        {
+          let filed = Object.keys(customFilters.orderBy)[0]
+          let sortValue = {[filed]:parseInt(customFilters.orderBy[filed])}
+          //console.log(sortValue)
+          products  = await Product.find().sort(sortValue);
+        }
+        else
+        {
+          products  = await Product.find()
+        }
+        
+        
 
     if(!name)
     {

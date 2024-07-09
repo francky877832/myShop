@@ -83,8 +83,9 @@ export const filtersStyles = StyleSheet.create({
     categoryContainer :
     {
         width: "100%",
+        //height : 300,
         top : 10,
-        paddingBottom : 50,
+        paddingBottom : 25,
         justifyContent:"center",
     },
     orderByContainer :
@@ -233,6 +234,7 @@ export const filtersStyles = StyleSheet.create({
         top : 10,
         alignSelf : "center",
         width : "100%",
+        //backgroundColor:"red",
     },
     category :
     {

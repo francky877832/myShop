@@ -21,14 +21,14 @@ const SearchResults = (props) => {
     
     
     const searchText = " "
-    const { setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice,
+    const { setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, 
         selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands,
         _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,
         } = useContext(FilterContext)
 
     
     useEffect(()=>{
-        getSearchedTextWithFilters(searchText)
+        getSearchedTextWithFilters(searchText,selectedOrderBy)
     }, [refreshComponent])
         return(
                 <View style={preferencesStyles.container}>

@@ -52,7 +52,7 @@ const Filters = (props) => {
         },
      
     ]*/
-    const orderByItems = [{id:1,name:"Prix DESC"},{id:2, name:"Prix ASC"}, {id:3,name:"Plus Recents"},{id:4, name:"Plus Anciens"}, {id:5,name:"Plus Recents"} ,{id:6,name:"Plus Anciens"}]
+    const orderByItems = [{id:1,name:"Prix DESC"},{id:2, name:"Prix ASC"}, {id:3,name:"Nom ASC"},{id:4, name:"Nom DESC"}, {id:5,name:"Plus Recents"} ,{id:6,name:"Plus Anciens"}]
 
     
 
@@ -186,7 +186,7 @@ const setOtherModalToFalse = (modal)=>{
                 </View>
 
                     <View style={[filtersStyles.filterFlatlist, filtersStyles.radioBox]}>
-                        <RadioButton.Group onValueChange={val => setSelectedOrderBy(val)} value={selectedOrderBy} style={[filtersStyles.radioGroup,]}>
+                        <RadioButton.Group onValueChange={val => {getSearchedTextWithFilters(searchText,val); return val}} value={selectedOrderBy} style={[filtersStyles.radioGroup,]}>
                             {
                                 orderByItems.map((item) => {
                                     return(
@@ -198,6 +198,8 @@ const setOtherModalToFalse = (modal)=>{
                                 })
                             }
                         </RadioButton.Group>
+                        <CustomButton text="Vider" color={appColors.white} backgroundColor={appColors.gray} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"100%",}}} onPress={()=>{resetAllFilters();}} />
+
                     </View>
                     <View style={{height:20,}}></View>
                 
@@ -272,14 +274,15 @@ const setOtherModalToFalse = (modal)=>{
 
                         <View style={[filtersStyles.filterFlatlist, filtersStyles.cardItem,]}>
                             <FlatList
-                                data={categories}
+                                data={[...categories,]}
+                                nestedScrollEnabled={true}
                                 renderItem={ ({item}) => { return <FilterItem tag="category" item={item} /> } }
                                 keyExtractor={ (item) => { return Math.random().toString(); } }
                                 ItemSeparatorComponent ={ (item) => { return <View style={filtersStyles.categorySeparator}></View> }}
                                 horizontal={false}
                                 numColumns={2}
                                 showsHorizontalScrollIndicator={false}
-                                contentContainerStyle={{  maxHeight : 500,  }}
+                                contentContainerStyle={{ maxHeight:500 }}
                             />
                         </View>
                     </View>
