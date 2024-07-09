@@ -40,7 +40,7 @@ const Comments = (props) =>
 const addComment = async (item) => {
     const checkNumber =  convertWordsToNumbers(inputValue)
     console.log(checkNumber)
-    if(containsEmail(inputValue) || checkNumber.length <= 0)
+    if(containsEmail(inputValue) || checkNumber==false)
     {
         Alert.alert("Erreur!!!","Votre commentaire viole les regles de la commnauté. Evitez de partager les contacts : numéro de téléphone, email, profil reseau sauciaux.\
                     Si vous pensez que ceci est une erreur, veillez contacter le service client.")

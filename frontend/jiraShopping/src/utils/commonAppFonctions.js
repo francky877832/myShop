@@ -228,12 +228,13 @@ exports.convertWordsToNumbers = (text) => {
         const text = input.replace(/[^a-zA-Z0-9]/g, '');
         console.log(text)
         const longNumberRegex = /\d{7,}/g;
-        const matches = input.match(longNumberRegex);
-
+        const matches = text.match(longNumberRegex);
+//console.log(matches)
         if (matches) {
-            return matches;
+            //console.log("Plus de 7")
+            return false;
         } else {
-            return [];
+            return true;
         }
     }
     
