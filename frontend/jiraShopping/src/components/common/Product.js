@@ -65,8 +65,8 @@ const Product = (props) => {
 
                        
                         <View style={[productStyles.bottom, productStyles.card, isBasketPresent(item)[0]?productStyles.isBasketPresent:false] } >
-                            <Pressable onPress = { ()=>{isBasketPresent(item)[0]?false:addBasket(item) } }>
-                                <Text numberOfLines={1} style={[customText.text, productStyles.category, isBasketPresent(item)[0]?productStyles.isBasketPresentText:false]}>{isBasketPresent(item)[0]? "Déja Dans Le Panier":"Ajouter Au Panier"}</Text>
+                            <Pressable onPress = { ()=>{isBasketPresent(item)[0]?navigation.navigate("Basket"):addBasket(item) } }>
+                                <Text numberOfLines={1} style={[customText.text, productStyles.category, isBasketPresent(item)[0]?productStyles.isBasketPresentText:false]}>{isBasketPresent(item)[0]? "Aller Au Panier":"Ajouter Au Panier"}</Text>
                             </Pressable>
                         </View>
                     </View>

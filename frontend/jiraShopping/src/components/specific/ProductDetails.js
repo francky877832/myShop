@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet, ScrollView, Animated, PanResponder, 
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import nlp from 'compromise';
 
 import CarouselImage from '../common/CarouselImages';
 import { PrevButton, ShareButton, LikeButton, CustomButton } from "../common/CommonSimpleComponents";
@@ -15,8 +16,9 @@ import BadgeIcon from '../common/BadgeIcon';
 import ProductsList from '../common/ProductsList';
 import SellerBrand from '../common/SellerBrand';
 import { screenHeight, screenWidth } from '../../styles/commentsStyles';
-import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
+import { capitalizeFirstLetter, convertWordsToNumbers } from '../../utils/commonAppFonctions';
 import { FavouritesContext } from '../../context/FavouritesContext';
+import { BasketContext } from '../../context/BasketContext';
 
 
 const loggedUserId = "66731fcb569b492d3ef429ba"
@@ -34,6 +36,7 @@ const ProductDetails = (props) => {
     
     const [description, setDescription] = useState(truncateText(data.description, numChars));
     const {favourites} = useContext(FavouritesContext)
+    const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
    
     const minHeight = 0;
     const maxHeight = screenHeight / 2;
@@ -134,6 +137,12 @@ const ProductDetails = (props) => {
    */ 
     //const now = new Date();
     //console.log(now.toLocaleString());
+    //console.log((Date.now()).toString().split('').reverse().join('').substring(0,4))
+    // Exemple d'utilisation
+const originalText = "mon numéro trente-deux est : six cent 77 douze 79 zero sept";
+const convertedText = convertWordsToNumbers(originalText);
+console.log(convertedText); 
+
     return (
 
   <View style={productDetailsStyles.container}>
@@ -252,8 +261,11 @@ const ProductDetails = (props) => {
                 <View style={[productDetailsStyles.button, productDetailsStyles.price]}>
                     <Text numberOfLines={2} style={[customText.text, productDetailsStyles.buttonText, { color: appColors.secondaryColor1 }]}>{formatMoney(data.price)} XAF</Text>
                 </View>
-                <View style={[productDetailsStyles.panier]}>
-                    <CustomButton text="Ajouter au panier" styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText }} color={appColors.secondaryColor1} backgroundColor={appColors.white} onPress={() => { }} />
+
+                <View style={[productDetailsStyles.panier, ]}>
+                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{isBasketPresent(data)[0]?navigation.navigate("Basket"):addBasket(data); } }>
+                            <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{isBasketPresent(data)[0]? "Aller Au Panier":"Ajouter Au Panier"}</Text>
+                        </Pressable>
                 </View>
                 <View style={[productDetailsStyles.acheter]}>
                     <CustomButton text="Acheter" styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />

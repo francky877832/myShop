@@ -4,7 +4,7 @@ import { Input } from 'react-native-elements';
 
 import { appColors, appFont, customText } from '../../styles/commonStyles';
 import { commentsStyles } from '../../styles/commentsStyles';
-import { reshapeComments } from '../../utils/commonAppFonctions';
+import { reshapeComments, convertWordsToNumbers, containsEmail } from '../../utils/commonAppFonctions';
 import { Icon } from 'react-native-elements';
 import { sinceDate, countDatas} from '../../utils/commonAppFonctions';
 
@@ -28,6 +28,7 @@ const Comments = (props) =>
     const [isResponseTo, setIsResponseTo] = useState(product._id)
     const [isAll, setIsAll] = useState(all)
     const [comments, setComments] = useState([])
+    const [numComments, setNumComments] = useState(0)
     const [onNewCommnent, setOnNewCommnent] = useState(false)
         const initialNumberOfComments = 2
         let data = [...comments] ; data = !all ? data.slice(0, initialNumberOfComments+1) : comments
@@ -37,6 +38,17 @@ const Comments = (props) =>
         //console.log(reshapedComments)
 //username
 const addComment = async (item) => {
+    const checkNumber =  convertWordsToNumbers(inputValue)
+    console.log(checkNumber)
+    if(containsEmail(inputValue) || checkNumber.length <= 0)
+    {
+        Alert.alert("Erreur!!!","Votre commentaire viole les regles de la commnauté. Evitez de partager les contacts : numéro de téléphone, email, profil reseau sauciaux.\
+                    Si vous pensez que ceci est une erreur, veillez contacter le service client.")
+                return;
+    }
+ 
+    
+
     const comment = {
         user: loggedUserId,
         username : loggedUser,
@@ -78,6 +90,7 @@ const fetchProductComments = async () =>{
         }
         //console.log(datasdatas[0].products)
         //console.log(datas)
+        setNumComments(datas.length)
         setComments(reshapeComments(all?datas:datas.slice(0,2)))
         //Alert.alert("Commentaire recuperes avec success")
     }catch(error){
@@ -165,7 +178,7 @@ useEffect(()=>{
         
                     <Pressable onPress={()=>{navigation.navigate("AllComments",{comments:comments,product:product})}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
                             <Text style={[customText.text,{color:appColors.green,}]}>Tout Afficher</Text>
-                            <Text style={[customText.text,{color:appColors.black,}]}>({countDatas(datas)})</Text>
+                            <Text style={[customText.text,{color:appColors.black,}]}>({numComments})</Text>
                     </Pressable>
             </View>
         }

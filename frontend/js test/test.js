@@ -1,5 +1,3 @@
-<b>OK</b>
-<script>
 const nlp = require('compromise');
 
 // Fonction pour transformer les nombres écrits en lettres en chiffres dans un texte
@@ -80,6 +78,3 @@ function convertWordsToNumbers(text) {
 const originalText = "mon numéro est : six cent 77 douze 79 zero sept";
 const convertedText = convertWordsToNumbers(originalText);
 console.log(convertedText); // Affiche : "mon numéro est : 600 77 12 79 0 7"
-
-</script>
-

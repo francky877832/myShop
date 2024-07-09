@@ -11,6 +11,7 @@ const productSchema = new Schema({
     maxPrice : { type : Number, default : () => { return this.price; } },
     condition : { type : String, enum : ['new', 'used', "new used"], default : 'new' },
     seller : { type : Schema.Types.ObjectId, ref : 'User', required : true },
+    sellerName : { type : String, required : false, },
 
     //category : { type : Schema.Types.ObjectId, ref : 'Category', required : true  },
     category : { type : String, required : false, default:"Autres/Autres" },
