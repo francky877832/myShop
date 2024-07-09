@@ -198,7 +198,7 @@ const setOtherModalToFalse = (modal)=>{
                                 })
                             }
                         </RadioButton.Group>
-                        <CustomButton text="Vider" color={appColors.white} backgroundColor={appColors.gray} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"100%",}}} onPress={()=>{resetAllFilters();}} />
+                        <CustomButton text="Vider" color={appColors.white} backgroundColor={appColors.gray} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"100%",}}} onPress={()=>{resetAllFilters(searchText);}} />
 
                     </View>
                     <View style={{height:20,}}></View>
@@ -310,7 +310,7 @@ const setOtherModalToFalse = (modal)=>{
                     </View>
         }
         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5}}>
-            <CustomButton text="Vider" color={appColors.white} backgroundColor={appColors.red} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{resetAllFilters();setRefreshComponent(!refreshComponent)}} />
+            <CustomButton text="Vider" color={appColors.white} backgroundColor={appColors.red} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{resetAllFilters(searchText);setRefreshComponent(!refreshComponent)}} />
             <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters(searchText||"")}} />
         </View>
             </View>

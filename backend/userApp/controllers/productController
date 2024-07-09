@@ -176,8 +176,10 @@ exports.getSearchedProducts = async (req, res, next) => {
         {
           products  = await Product.find()
         }
-        
-        
+     //Introduire un champ comme memoire mour le tri   
+        products.forEach((product, index) => {
+          product.sortIndex = index;
+        });
 
     if(!name)
     {
@@ -193,9 +195,11 @@ exports.getSearchedProducts = async (req, res, next) => {
 
       // Effectuer la recherche floue
       result = fuse.search(name).map(result => result.item);
+
+      //comme FUSE JS ne conserve pas l'ordre, utiliser la memoire de tri
+        result.sort((a, b) => a.sortIndex - b.sortIndex);
     }
     //console.log(result)
-    
     
     // Appliquer des filtres personnalisés si nécessaire
     let filteredResult = result;
@@ -215,6 +219,8 @@ exports.getSearchedProducts = async (req, res, next) => {
     if (customFilters.maxPrice) {
       filteredResult = filteredResult.filter(product => customFilters.maxPrice >= product.price);
     }
+
+
 
     res.json(filteredResult);
   } catch (err) {

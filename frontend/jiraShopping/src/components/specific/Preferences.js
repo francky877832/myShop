@@ -15,6 +15,7 @@ import { appColors } from '../../styles/commonStyles';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
 
 import { FavouritesContext } from '../../context/FavouritesContext';
+import { FilterContext } from '../../context/FilterContext';
 import { server } from '../../remote/server';
 import { Button } from 'react-native-elements';
 
@@ -22,7 +23,7 @@ const Preferences = (props) => {
     const [isSearch, setIsSearch] = useState(false) 
     const [products, setProducts] = useState([])
     const {favourites, liked, setLikedIcon } = useContext(FavouritesContext)
-    const [refreshComponent, setRefreshComponent] = useState(false)
+    const {getSearchedTextWithFilters, refreshComponent, setRefreshComponent} = useContext(FilterContext)
 const getProducts = async ()=> {
     try
     {
@@ -40,29 +41,7 @@ const getProducts = async ()=> {
 }
 
 useEffect(()=>{
-        getProducts()
-        //console.log("WE ARE IN PREF")
-        //console.log(products)
-       /* let p = [...products]
-       for(let el of p)
-        {
-            el.liked = false
-            for(let f of favourites)
-            {
-                if(el._id==f._id)
-                {
-                    el.liked = f.liked
-                    
-                }
-            }
-        }
-    setProducts(p)
-    console.log(products)
-    for(let el of products)
-    {
-       console.log(el.liked)
-    }
-    //Alert.alert("ChokPref")*/
+    getProducts()
 }, [refreshComponent])
     return(
             <View style={preferencesStyles.container}>
@@ -70,12 +49,11 @@ useEffect(()=>{
                         <Top />
                     </View>
 <View style={[{flex:1,}]}>
-    <Button title="Ok" onPress={()=>setRefreshComponent(!refreshComponent)}></Button>
                 { isSearch ?
                         <ProductsListWithFilters name="Preference" filters={true} datas={products} horizontal={false} styles={preferencesStyles} title="Resultats de recherche" />
                     :
                     <View style={{flex:1}}>
-                        <ProductsListWithFilters name="Preference" filters={true} datas={products} horizontal={false} styles={preferencesStyles} title="Produits tendances..." />
+                        <ProductsListWithFilters name="Preference" filters={false} datas={products} horizontal={false} styles={preferencesStyles} title="Produits tendances..." />
                     </View>
                 }
 

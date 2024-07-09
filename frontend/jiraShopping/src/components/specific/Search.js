@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, SafeAreaView, TextInput, FlatList, Pressable, TouchableHighlight, ScrollView, Modal, Alert } from 'react-native';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { View, Text, SafeAreaView, TextInput, FlatList, Pressable, TouchableHighlight, ScrollView, Modal, Alert, RefreshControlComponent } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -21,7 +21,7 @@ import { screenHeight } from '../../styles/commentsStyles';
 
 import { server } from '../../remote/server';
 import { useNavigation } from '@react-navigation/native';
-
+import { FilterContext } from '../../context/FilterContext';
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
 
@@ -31,6 +31,8 @@ const Search = (props) => {
     const searchBarRef = useRef(null)
     const scrollViewRef = useRef(null)
     const navigation = useNavigation()
+    const {refreshComponent, setRefreshComponent, resetAllFilters} = useContext(FilterContext)
+    
     //const datas = []
 
 /*
@@ -50,6 +52,7 @@ const onChangeText = (val) =>{
     }
 
 const onSubmitEditing = async () =>{
+    resetAllFilters()
         let response = null;
         const search = {
             user : loggedUserId,
@@ -124,7 +127,8 @@ const removeUserHistorique = async (name) => {
                     throw new Error("Erreur ",`${response.status}: ${errorData.message}`)
                 }
               
-                Alert.alert("", "Historique ajoute avec success")
+                //Alert.alert("", "Historique ajoute avec success")
+                setRefreshComponent(!refreshComponent)
             }catch(error)
             {
                 console.log(error)
@@ -154,18 +158,18 @@ const removeAllUserHistorique = async (name) => {
                     const errorData = await response.json();
                     throw new Error("Erreur ",`${response.status}: ${errorData.message}`)
                 }
-              
+                setRefreshComponent(!refreshComponent)
                 //Alert.alert("", "Historique vidé avec success")
             }catch(error)
             {
-                console.log(error)
+                //console.log(error)
                 Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
             }
 }
 
 useEffect(()=>{
     fetchUserHistorique()
-}, [historique])
+}, [refreshComponent])
 
     return(
 <View style={[searchStyles.container,{flex:1}]}>
@@ -204,8 +208,8 @@ useEffect(()=>{
                            <FlatList
                                 data={historique}
                                 renderItem={ ({item}) => {  return (
-                                    <Pressable style={[ searchStyles.history, ]} onPress={()=>{navigation.navigate("SearchResults", {searchText:item})}} >
-                                        <Pressable style={{}} onPress={()=>{removeUserHistorique(item)}}>
+                                    <Pressable style={[ searchStyles.history,  ]} onPress={()=>{ resetAllFilters();navigation.navigate("SearchResults", {searchText:item})}} >
+                                        <Pressable style={{}} onPress={()=>{removeUserHistorique(item);}}>
                                             <Ionicons name="close" size={20} color={appColors.secondaryColor1} />
                                         </Pressable>
                                         <Text style={searchStyles.textHistory}>{item}</Text>

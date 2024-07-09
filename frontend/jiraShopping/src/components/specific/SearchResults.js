@@ -6,6 +6,7 @@ import { RadioButton, } from 'react-native-paper';
 import { appColors, appFont } from '../../styles/commonStyles';
 import { searchResultsStyles } from '../../styles/searchStyles';
 import { preferencesStyles } from '../../styles/preferencesStyles';
+import { useRoute } from '@react-navigation/native';
 
 import Top from '../common/Top';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
@@ -20,7 +21,8 @@ const SearchResults = (props) => {
     //const [products, setProducts] = useState([])
     
     
-    const searchText = " "
+    const route = useRoute()
+    const searchText = route.params.searchText
     const { setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, 
         selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands,
         _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,

@@ -64,7 +64,7 @@ const FilterProvider = ({children}) => {
         //console.log(condition)
         
         const filters = {
-            name : searchText.trim(),
+            name : searchText?.trim(),
             customFilters : {
                 categories : categories || [],
                 brands : brands || [],
@@ -96,7 +96,7 @@ const FilterProvider = ({children}) => {
                 order_by = {name : 1}
                 filters["customFilters"]["orderBy"] = order_by
             case  "nom desc" :
-              order_by = {name : -1}
+                order_by = {name : -1}
                 filters["customFilters"]["orderBy"] = order_by  
                 break
             default : break;
@@ -119,13 +119,16 @@ const FilterProvider = ({children}) => {
                     throw new Error(`Erreur lors de la recherhce de produit${response.text()}`)
                 const responseJson = await response.json();
                 //console.log(responseJson)
+                
                 setProducts(responseJson)
+                //setRefreshComponent(!refreshComponent)
+
         } catch (error) {
         console.error(error.message);
       }
     }
 
-    const resetAllFilters = () => {
+    const resetAllFilters = (searchText) => {
         setSelectCategories([])
         setSelectedBrands([])
         setSelectedOrderBy()
@@ -134,7 +137,7 @@ const FilterProvider = ({children}) => {
         setMinPrice("")
         setMaxPrice("")
         setRefreshComponent(!refreshComponent)
-        getSearchedTextWithFilters(" ")
+        getSearchedTextWithFilters(searchText)
     }
 
     useEffect(()=>{
