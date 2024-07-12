@@ -1,12 +1,16 @@
-import React, { createContext, useState, useEffect } from 'react'
+import React, { createContext, useState, useEffect, useContext} from 'react'
+import { Alert } from 'react-native'
 
 import { server } from '../remote/server'
+import { UserContext } from './UserContext'
 
 const ProductItemContext = createContext()
+
 const ProductItemProvider = ({children}) => {
     const [selectedCategories, setSelectedCategories] = useState({}) //Normalemet category, categories est dans FilterItem
     const [selectedBrand, setSelectedBrand] = useState("")
     const [selectedColor, setSelectedColor] = useState("")
+    const {user} = useContext(UserContext)
 
     const [ categories, setCategories ] = useState([])
     const [ brands, setBrands ] = useState([])
@@ -30,8 +34,12 @@ const ProductItemProvider = ({children}) => {
 useEffect(() => {
     const fetchCategories = async () =>{
         try{
-
-            const response = await fetch(`${server}/api/datas/categories/get`);            
+//console.log(user)
+            const response = await fetch(`${server}/api/datas/categories/get`, {
+                headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.token}`,
+              },});            
             const datas = await response.json()
             //console.log(datas)
             setCategories(datas)
@@ -51,7 +59,7 @@ useEffect(() => {
     }
     fetchCategories()
     fetchBrands()
-}, [])
+}, [user])
     const productItemStateVars = {selectedCategories,selectedBrand, selectedColor, categories, brands}
     const productItemStateSetters = {}
     const utilsFunctions = {updateSelectedCategory, setSelectedBrand, setSelectedColor,}

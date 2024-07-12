@@ -4,13 +4,6 @@ import { Input } from 'react-native-elements';
 import { useRoute } from '@react-navigation/native';
 
 
-import { appColors, appFont, customText } from '../../styles/commonStyles';
-import { commentsStyles } from '../../styles/commentsStyles';
-import { reshapeComments } from '../../utils/commonAppFonctions';
-import { Icon } from 'react-native-elements';
-import { sinceDate, countDatas} from '../../utils/commonAppFonctions';
-
-import { datas } from '../../utils/sampleDatas';
 
 import Comments from './Comments';
 

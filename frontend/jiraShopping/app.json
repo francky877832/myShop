@@ -19,6 +19,7 @@
       }
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -45,7 +46,9 @@
       "url": "https://u.expo.dev/441d6134-6168-400a-a5d5-69821456096d"
     },
     "plugins": [
-      "expo-secure-store"
+      "expo-secure-store",
+      "@react-native-firebase/app", 
+      "@react-native-firebase/auth"
     ]
   }
 }

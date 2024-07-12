@@ -1,0 +1,5 @@
+eas credentials
+
+or
+
+npx eas-cli credentials.

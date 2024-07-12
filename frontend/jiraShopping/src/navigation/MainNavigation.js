@@ -15,6 +15,11 @@ import AddProduct from '../components/specific/AddProduct';
 import Categories from '../components/common/Categories';
 import ProfilShop from '../components/specific/ProfileShop';
 import SearchResults from '../components/specific/SearchResults';
+import UserLogin from '../components/user/UserLogin';
+import UserSignup from '../components/user/UserSignup';
+import PhoneAuth from '../components/specific/PhoneAuth';
+import HeaderNavigation from '../components/common/HeaderNavigation';
+
 import HomeNavigation from '../navigation/HomeNavigation';
 
 //Contexts
@@ -22,6 +27,7 @@ import { FilterProvider } from '../context/FilterContext';
 import { FavouritesProvider } from '../context/FavouritesContext';
 import { ProductItemProvider } from '../context/ProductItemContext';
 import { BasketProvider } from '../context/BasketContext';
+import { UserProvider } from '../context/UserContext';
 
 const Stack = createStackNavigator();
 
@@ -31,13 +37,14 @@ export default function MainNavigation() {
 
   return ( 
 <SafeAreaView style={{ flex: 1 }}>
+  <UserProvider>
 <FavouritesProvider>
   <BasketProvider>
   <NavigationContainer> 
     <ProductItemProvider>
         
           <FilterProvider>
-              <Stack.Navigator initialRouteName="Preferences">
+              <Stack.Navigator initialRouteName="PhoneAuth">
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
                 <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
                 <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
@@ -48,14 +55,17 @@ export default function MainNavigation() {
                 <Stack.Screen name="Categories" component={Categories}  options={{ title: 'Choisir Une Categorie', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Shop" component={ProfilShop}  options={{ title: 'Choisir Une Categorie', headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="SearchResults" component={SearchResults}  options={{ title: 'Resultats De Recherche', headerShown : false, tabBarVisible: false, }} />
+                <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : false, tabBarVisible: false, }} />
+                <Stack.Screen name="UserSignup" component={UserSignup}  options={{ title: <HeaderNavigation title="Sign Up"/>, headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="PhoneAuth" component={PhoneAuth}  options={{ title: <HeaderNavigation title="PhoneAuth"/>, headerShown : true, tabBarVisible: false, }} />
 
               </Stack.Navigator>
           </FilterProvider>
       </ProductItemProvider>
     </NavigationContainer>
     </BasketProvider>
-            </FavouritesProvider>
-
+      </FavouritesProvider>
+  </UserProvider>
   </SafeAreaView>
   );
 

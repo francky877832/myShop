@@ -135,13 +135,7 @@ const ProductDetails = (props) => {
    /*
     {...panResponder.panHandlers}
    */ 
-    //const now = new Date();
-    //console.log(now.toLocaleString());
-    //console.log((Date.now()).toString().split('').reverse().join('').substring(0,4))
-    // Exemple d'utilisation
-const originalText = "mon numéro trente-deux est : six cent 77 douze 79 zero sept";
-const convertedText = convertWordsToNumbers(originalText);
-console.log(convertedText); 
+ 
 
     return (
 

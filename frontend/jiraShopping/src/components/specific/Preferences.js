@@ -18,12 +18,14 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 import { FilterContext } from '../../context/FilterContext';
 import { server } from '../../remote/server';
 import { Button } from 'react-native-elements';
+import { UserContext } from '../../context/UserContext';
 
 const Preferences = (props) => {
     const [isSearch, setIsSearch] = useState(false) 
     const [products, setProducts] = useState([])
     const {favourites, liked, setLikedIcon } = useContext(FavouritesContext)
     const {getSearchedTextWithFilters, refreshComponent, setRefreshComponent} = useContext(FilterContext)
+    const {user} = useContext(UserContext)
 const getProducts = async ()=> {
     try
     {
@@ -31,8 +33,8 @@ const getProducts = async ()=> {
             method: 'GET',
             headers: {
                 'Content-Type': 'Application/json',
-            },
-            });
+                 'Authorization': `Bearer ${user.token}`, //Vue protege
+            },});
             const responseJson = await response.json();
             setProducts(responseJson)
     } catch (error) {
