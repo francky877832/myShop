@@ -5,7 +5,7 @@ import { server } from '../remote/server'
 
 const FilterContext = createContext()
 const FilterProvider = ({children}) => {
-    const [selectedCategories, setSelectCategories] = useState({})
+    const [selectedCategories, setSelectCategories] = useState({"Vetements":true})
     const [selectedBrands, setSelectedBrands] = useState({})
 
     const [selectedOrderBy, setSelectedOrderBy] = useState("")

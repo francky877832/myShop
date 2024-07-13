@@ -29,7 +29,7 @@ const Categories = (props) => {
     const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedColor, setSelectedColor, categories, brands,} = useContext(ProductItemContext)
     const navigation = useNavigation()
    
-
+//console.log(selectedCategories)
     //Appel side effect pour recuperer les cat, marque et couleur de la BD
    /* let categorie = [
         {
