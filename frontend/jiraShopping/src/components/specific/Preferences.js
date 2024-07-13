@@ -1,10 +1,13 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, Alert} from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, Alert, Dimensions} from 'react-native';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+const initialLayout = { width: Dimensions.get('window').width };
+
 
 //custom component
 import Top from '../common/Top';
 import ProductsList from '../common/ProductsList';
-
+import Categories from '../common/Categories';
 //custom styles
 import { preferencesStyles } from '../../styles/preferencesStyles';
 import SearchResults from './SearchResults';
@@ -19,13 +22,15 @@ import { FilterContext } from '../../context/FilterContext';
 import { server } from '../../remote/server';
 import { Button } from 'react-native-elements';
 import { UserContext } from '../../context/UserContext';
+import { useNavigation } from '@react-navigation/native';
 
 const Preferences = (props) => {
+    const navigation = useNavigation()
     const [isSearch, setIsSearch] = useState(false) 
     const [products, setProducts] = useState([])
     const {favourites, liked, setLikedIcon } = useContext(FavouritesContext)
-    const {getSearchedTextWithFilters, refreshComponent, setRefreshComponent} = useContext(FilterContext)
-    const {user} = useContext(UserContext)
+    const {getSearchedTextWithFilters, refreshComponent, setRefreshComponent, } = useContext(FilterContext)
+    const {user, loginUserWithEmailAndPassword, isAuthenticated } = useContext(UserContext)
 const getProducts = async ()=> {
     try
     {
@@ -43,25 +48,86 @@ const getProducts = async ()=> {
 }
 
 useEffect(()=>{
-    getProducts()
-}, [refreshComponent])
+    loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
+}, [])
+
+useEffect(() => {
+    if (isAuthenticated) {
+        getProducts()
+    }
+    else{
+        navigation.navigate("UserLogin")
+    }
+  }, [isAuthenticated, refreshComponent, navigation]);
+
+console.log(user)
+
+
+const ProductsListWithFilters_ = () => {
+    return (
+        <ProductsListWithFilters name="Preference" filters={false} datas={products} horizontal={false} styles={preferencesStyles} title="...Choisis Pour Vous" />
+    )
+}
+const Categories_ = () => {
+    return (
+        <Categories page="category" goBackTo="SearchResults" route={{}} />
+    )
+}
+
+
+const [index, setIndex] = useState(0);
+
+const [routes] = useState([
+  { key: 'products', title: 'Préférences' },
+  { key: 'categories', title: 'Categories' },
+]);
+
+const renderScene = SceneMap({
+    products: ProductsListWithFilters_,
+  categories: Categories_,
+
+});
+
+
+const renderTabBar = (props) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{backgroundColor : (index === 0 || index==1 ? appColors.secondaryColor1 : false), }}
+      style={{ backgroundColor:appColors.white, borderColor:appColors.white, }} // Changez cette couleur pour la barre d'onglets
+      //labelStyle={{ color: appColors.secondaryColor1 }} // Changez cette couleur pour le texte des onglets
+      renderLabel={({ route, focused, color }) => {
+        return (
+            <Text style={{ color: focused ? appColors.secondaryColor1 : appColors.gray, fontWeight: focused ? 'bold' : 'normal' }}>
+                {route.title}
+            </Text>
+        )
+      }}
+      onIndexChange={(index) => {
+        setIndex(index);
+      }}
+    />
+  );
+
     return(
-            <View style={preferencesStyles.container}>
+        <View style={preferencesStyles.container}>
                     <View style={preferencesStyles.top}>
                         <Top />
                     </View>
-<View style={[{flex:1,}]}>
+            <View style={[{flex:1,}]}>
                 { isSearch ?
                         <ProductsListWithFilters name="Preference" filters={true} datas={products} horizontal={false} styles={preferencesStyles} title="Resultats de recherche" />
                     :
+                    
                     <View style={{flex:1}}>
-                        <ProductsListWithFilters name="Preference" filters={false} datas={products} horizontal={false} styles={preferencesStyles} title="Produits tendances..." />
+                        <TabView navigationState={{ index, routes }} renderScene={renderScene} onIndexChange={setIndex} initialLayout={initialLayout} renderTabBar={renderTabBar}/>
                     </View>
                 }
 
+        </View>
     </View>
-            </View>
     )
+
+
 }
 
 export default  Preferences

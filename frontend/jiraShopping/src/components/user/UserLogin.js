@@ -21,7 +21,7 @@ const UserLogin = (props) =>
     const {  } = props
     const route = useRoute()
     const navigation = useNavigation()
-    const {checkEmail, checkPassword, checkUsername, user, setUser, isAuthenticated, setIsAuthenticated} = useContext(UserContext)
+    const {checkEmail, checkPassword, checkUsername, user, setUser, isAuthenticated, setIsAuthenticated, loginUserWithEmailAndPassword} = useContext(UserContext)
 
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
@@ -39,47 +39,7 @@ const UserLogin = (props) =>
 
 
 //console.log(user)
-    const loginUserWithEmailAndPassword = async (email, username, password) => {
-            const user = {
-                email : "francky877832@gmail.com",
-                username : "francky877832",
-                password : "0000000",
-            }
-        // console.log(JSON.stringify(user))
-            try
-            {
-                const response = await fetch(`${server}/api/auth/login`, {
-                    method: 'POST',
-                    body: JSON.stringify(user),
-                    headers : {
-                        'Content-Type': 'application/json',
-                    },
-                })
-            
-
-                if(response.ok)
-                {
-                    const loggedUser = await response.json()
-                    //Mis a jour de async storage
-                    await SecureStore.setItemAsync('authToken', loggedUser.token);
-                    await SecureStore.setItemAsync('user', JSON.stringify({email:loggedUser.email, username:loggedUser.username,password:loggedUser.password}));
-                    //console.log(loggedUser)
-                    
-                    //Mis a jour du contexte User
-                    setUser(loggedUser)
-                    setIsAuthenticated(true);
-
-                }
-            
-                //Alert.alert("Signed In")
-            }
-            catch(error)
-            {
-                console.log(error)
-                Alert.alert("Une erreur est survenue", `${error.message} => Verifier votre connexion Internet.`)
-                setIsAuthenticated(false);
-            }
-    }
+    
 
 useEffect(() => {
     const checkToken = async () => {
@@ -93,7 +53,7 @@ useEffect(() => {
             {
                 const user = JSON.parse(await SecureStore.getItemAsync('user'));
                 //A remplace par user.email...
-                loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
+                setIsAuthenticated(true);
                 return;
             }
         }

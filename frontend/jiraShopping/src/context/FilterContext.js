@@ -20,7 +20,7 @@ const FilterProvider = ({children}) => {
 
     const _handlePress = (id) => {
         setSelectCategories((prevSlectedCategories)=>{
-            console.log(prevSlectedCategories)
+            //console.log(prevSlectedCategories)
             return ({
                 ...prevSlectedCategories,
                 [id] : !prevSlectedCategories[id], 
@@ -145,7 +145,7 @@ const FilterProvider = ({children}) => {
     })
 
     const filterStateVars = {refreshComponent, selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands, products}
-    const filterStateSetters = {setRefreshComponent, setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice}
+    const filterStateSetters = {setRefreshComponent, setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
     const utilsFunctions = { _handlePress, updateCategories, updateSelectedBrands, resetAllFilters, getSearchedTextWithFilters }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>

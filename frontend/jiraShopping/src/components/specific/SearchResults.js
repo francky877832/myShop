@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef, useContext,  } from 'react';
-import { View, Text, Pressable, TextInput, ScrollView, FlatList} from 'react-native';
+import { View, Text, Pressable, Alert} from 'react-native';
 
 import { CheckBox } from 'react-native-elements';
 import { RadioButton, } from 'react-native-paper';
 import { appColors, appFont } from '../../styles/commonStyles';
 import { searchResultsStyles } from '../../styles/searchStyles';
 import { preferencesStyles } from '../../styles/preferencesStyles';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import Top from '../common/Top';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
 
 import { FilterContext } from '../../context/FilterContext';
+import { UserContext } from '../../context/UserContext';
+import { ProductItemContext } from '../../context/ProductItemContext';
 
 import { server } from '../../remote/server';
 import { serialize } from '../../utils/commonAppFonctions';
@@ -22,15 +24,48 @@ const SearchResults = (props) => {
     
     
     const route = useRoute()
-    const searchText = route.params.searchText
+    const {searchText, display} = route.params
     const { setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, 
-        selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands,
+        selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands,
         _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,
         } = useContext(FilterContext)
-
+        const {selectedCategories, } = useContext(ProductItemContext)
     
+        const {user} = useContext(UserContext)
+        const navigation = useNavigation()
+
+
+        const getProductsFromCategories = async () =>{
+            //console.log(selectedCategories)
+            const category = {
+                category : selectedCategories.name,
+                subCategory : JSON.stringify([selectedCategories.subCategories])
+
+            }
+        //console.log(serialize(category))
+            try{
+                //console.log(user)
+                            const response = await fetch(`${server}/api/datas/products/categories?${serialize(category)}`, {
+                                headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${user.token}`,
+                              },});            
+                            const datas = await response.json()
+                            //console.log(datas)
+                            setProducts(datas)
+                        }catch(error){
+                            Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
+                        }
+        }
+
     useEffect(()=>{
-        getSearchedTextWithFilters(searchText,selectedOrderBy)
+        if(!!display && display == "category")
+        {
+            getProductsFromCategories()
+        }
+        else{
+            getSearchedTextWithFilters(searchText,selectedOrderBy)
+        }
     }, [refreshComponent])
         return(
                 <View style={preferencesStyles.container}>

@@ -23,8 +23,10 @@ import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
 
 const Categories = (props) => {
     const { params } = props.route
-
-    const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedColor, setSelectedColor, categories, brands} = useContext(ProductItemContext)
+    const {page,} = props
+    const goBackTo = params?.datas?.goBackTo || props.goBackTo
+//console.log(page)
+    const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedColor, setSelectedColor, categories, brands,} = useContext(ProductItemContext)
     const navigation = useNavigation()
    
 
@@ -55,9 +57,13 @@ useEffect(() => {
 
 
     const Category = (props) => {
-        const { item, selectedCategories, updateSelectedCategory } = props
+        const { item, selectedCategories, updateSelectedCategory,} = props
         //console.log(item.subCategories)
-        console.log(selectedCategories)
+        //console.log(selectedCategories)
+        /*useEffect(()=>{
+            updateSelectedCategory("Vetements")
+        }, [])*/
+        //console.log(selectedCategories)
         return(
             <View style={{flex:1,}}>
                 <View pointerEvents='auto' style={[categoriesStyles.categoryContainer,{flex:1,}]}>
@@ -93,22 +99,25 @@ useEffect(() => {
         <View style={[categoriesStyles.container]}>
 
         {
-            params.datas.page=="category" &&
+            (page=="category" || params?.datas.page=="category") &&
+            
             <View style={{flexDirection:"row",}}>
-            <View style={[categoriesStyles.categoriesContainer]}>
-                <FlatList
-                        data={categories}
-                        nestedScrollEnabled={true}
-                        renderItem={ ({item}) => { return <Category item={item} selectedCategories={selectedCategories} updateSelectedCategory={updateSelectedCategory} /> } }
-                        keyExtractor={ (item) => { return item._id.toString(); } }
-                        horizontal={false}
-                        numColumns={ 1 }
-                        ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={[categoriesStyles.flatlist,]}
-                    />
-            </View>
-            <View style={[categoriesStyles.subCategoryContainer, {}]}>
+                
+                <View style={[categoriesStyles.categoriesContainer]}>
+                    <FlatList
+                            data={categories}
+                            nestedScrollEnabled={true}
+                            renderItem={ ({item}) => { return <Category item={item} selectedCategories={selectedCategories} updateSelectedCategory={updateSelectedCategory} /> } }
+                            keyExtractor={ (item) => { return item._id.toString(); } }
+                            horizontal={false}
+                            numColumns={ 1 }
+                            ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={[categoriesStyles.flatlist,]}
+                        />
+                    
+                </View>
+            <View style={[categoriesStyles.subCategoryContainer, {flex:1}]}>
             <FlatList
                     data={categories}
                     nestedScrollEnabled={true}
@@ -117,9 +126,11 @@ useEffect(() => {
                             {  selectedCategories[item.name] &&
                                 item.subCategories.map((cat, index) => {
                                     return (
-                                            <Pressable key={cat._id} style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateSelectedCategory(item.name, cat.name); navigation.goBack();}}>
+                                        <View  key={cat._id} >
+                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateSelectedCategory(item.name, cat.name); navigation.navigate(goBackTo, {searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***`, display:"category"});}}>
                                                 <Text>{cat.name}</Text>
                                             </Pressable>
+                                        </View>
                                     )
                                 })
                             }
@@ -130,14 +141,24 @@ useEffect(() => {
                     numColumns={ 1 }
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={[categoriesStyles.flatlist,]}
+                    contentContainerStyle={[categoriesStyles.flatlist,{flex:1,}]}
+                    ListFooterComponent={ (item) => { return (
+                            <View style={{height:20,top:10, alignSelf:"center"}}>
+                                <Pressable onPress={()=>{updateSelectedCategory(selectedCategories.name, ""); navigation.navigate(goBackTo, {searchText:`***${selectedCategories.name}/***`, display:"category"});}}>
+                                    <Text style={[{...customText.text, color:appColors.secondaryColor1, textDecorationLine:"underline", fontSize:16,}]}>Afficher La Categorie Complete{">>"} </Text>
+                                </Pressable>
+                            </View>
+                        )}
+                }
                 />
+                    
         </View>
+                    
         </View>
         }
 
 {
-            params.datas.page=="brand" &&
+            params?.datas.page=="brand" &&
             <View style={[categoriesStyles.brandContainer]}>
                 <FlatList
                         data={brands}
@@ -162,7 +183,7 @@ useEffect(() => {
         }
 
 {
-            params.datas.page=="color" &&
+            params?.datas.page=="color" &&
             <View style={[categoriesStyles.colorContainer,{}]}>
                 <FlatList
                         data={colors}

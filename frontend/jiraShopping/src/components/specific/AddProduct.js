@@ -375,7 +375,7 @@ const submitProduct = async () => {
                 </View>
 
                 <View style={[addProductStyles.contents,addProductStyles.categoryContainer]}>
-                        <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{datas:{page:"category"}})}}>
+                        <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{datas:{page:"category", goBackTo:"AddProduct"}})}}>
                                 <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Categorie</Text>
                                 <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
                           

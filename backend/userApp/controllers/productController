@@ -118,16 +118,30 @@ exports.getProduct  = (req, res, next) => {
    });
 };
 
-exports.getProductsFromCategories  = (req, res, next) => {
-  const datas = req.body 
-  Product.find({ category : { $in : datas.category } })
-  .then( (products) => { 
-    console.log(products)
+exports.getProductsFromCategories  =async  (req, res, next) => {
+  console.log(req.query)
+  const {category, } = req.query
+  let subCategory = JSON.parse(req.query.subCategory)[0]
+  let products;
+  try
+  {
+    if(!!subCategory)
+    { //console.log("HERE")
+      //console.log([`${category}/${subCategory[0]}`])
+      products = await Product.find({ category : { $in : [`${category}/${subCategory}`] } })
+    }
+    else
+    {
+      //console.log("THERE")
+      products = await Product.find({ category: { $regex: `${category}`, $options: "i" } })
+    }
+    //console.log(JSON.parse(datas.category))
+  
+      //console.log(products)
       res.status(200).json(products);
-   })
-  .catch( (error) => { 
+  }catch(error) { 
       res.status(400).json({ error: error });
-   });
+  }
 };
 
 exports.getProductsUser  = (req, res, next) => {

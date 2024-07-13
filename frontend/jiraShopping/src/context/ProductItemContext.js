@@ -7,7 +7,7 @@ import { UserContext } from './UserContext'
 const ProductItemContext = createContext()
 
 const ProductItemProvider = ({children}) => {
-    const [selectedCategories, setSelectedCategories] = useState({}) //Normalemet category, categories est dans FilterItem
+    const [selectedCategories, setSelectedCategories] = useState({"Vetements":true}) //Normalemet category, categories est dans FilterItem
     const [selectedBrand, setSelectedBrand] = useState("")
     const [selectedColor, setSelectedColor] = useState("")
     const {user} = useContext(UserContext)
@@ -20,7 +20,7 @@ const ProductItemProvider = ({children}) => {
            
             if(path==undefined)
             {
-                return {[id] : !prevSelectedCategories[id]}
+                return {[id] : !prevSelectedCategories[id], name:id,}
             }
             else
             {
@@ -29,7 +29,6 @@ const ProductItemProvider = ({children}) => {
         })
     }
 
-    
 
 useEffect(() => {
     const fetchCategories = async () =>{

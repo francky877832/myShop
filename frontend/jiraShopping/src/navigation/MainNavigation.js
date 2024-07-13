@@ -44,7 +44,7 @@ export default function MainNavigation() {
     <ProductItemProvider>
         
           <FilterProvider>
-              <Stack.Navigator initialRouteName="PhoneAuth">
+              <Stack.Navigator initialRouteName="UserLogin">
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
                 <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
                 <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
