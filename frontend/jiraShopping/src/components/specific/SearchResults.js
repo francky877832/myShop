@@ -29,7 +29,7 @@ const SearchResults = (props) => {
         selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands,
         _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,
         } = useContext(FilterContext)
-        const {selectedCategories, } = useContext(ProductItemContext)
+        const {selectedCategories,  } = useContext(ProductItemContext)
     
         const {user} = useContext(UserContext)
         const navigation = useNavigation()
@@ -61,10 +61,12 @@ const SearchResults = (props) => {
     useEffect(()=>{
         if(!!display && display == "category")
         {
+            //console.log("pkkkk")
             getProductsFromCategories()
+            //getSearchedTextWithFilters(searchText, selectedOrderBy)
         }
         else{
-            getSearchedTextWithFilters(searchText,selectedOrderBy)
+            getSearchedTextWithFilters(searchText, selectedOrderBy)
         }
     }, [refreshComponent])
         return(

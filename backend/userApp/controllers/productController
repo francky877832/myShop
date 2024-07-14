@@ -119,7 +119,7 @@ exports.getProduct  = (req, res, next) => {
 };
 
 exports.getProductsFromCategories  =async  (req, res, next) => {
-  console.log(req.query)
+  //console.log(req.query)
   const {category, } = req.query
   let subCategory = JSON.parse(req.query.subCategory)[0]
   let products;
@@ -173,7 +173,7 @@ exports.getUserProductsFromCategory  = (req, res, next) => {
 //resultats de recherches, puis avec filtres
 exports.getSearchedProducts = async (req, res, next) => {
   //console.log("SERAHC PRODUCTS")
-  //console.log(req.query)
+  console.log(req.query)
   const { name, customFilters } = req.query;
   //console.log(customFilters)
   let result = []
@@ -188,7 +188,7 @@ exports.getSearchedProducts = async (req, res, next) => {
         }
         else
         {
-          products  = await Product.find()
+          products  = await Product.find().sort({updatedAt:-1})
         }
      //Introduire un champ comme memoire mour le tri   
         products.forEach((product, index) => {
@@ -219,7 +219,22 @@ exports.getSearchedProducts = async (req, res, next) => {
     let filteredResult = result;
     //console.log(customFilters.minPrice)
     if (customFilters.categories?.length > 0) {
-      filteredResult = filteredResult.filter(product => customFilters.categories.includes(product.category));
+
+      filteredResult = filteredResult.filter(product => {
+        
+          if(customFilters.categories[0].split('/').length == 2)
+          {
+            return customFilters.categories.includes(product.category);
+          }
+          else
+          {
+            const escapedCategory = product.category.split('/')[0]
+            const categoryRegex = new RegExp(`^${escapedCategory}`, 'i');
+            //console.log(escapedCategory)
+            return customFilters.categories.some(cat => categoryRegex.test(cat));
+          }
+      
+      })
     }
     if (customFilters.brands?.length > 0) {
       filteredResult = filteredResult.filter(product => customFilters.brands.includes(product.brand));

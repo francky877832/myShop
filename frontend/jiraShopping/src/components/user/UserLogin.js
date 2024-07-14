@@ -69,7 +69,7 @@ useEffect(() => {
       useEffect(() => {
         if (isAuthenticated) {
           // Naviguer vers une autre page si l'utilisateur est authentifié
-          navigation.navigate('Preferences');
+          navigation.replace('Preferences');
         }
       }, [isAuthenticated, navigation]);
     

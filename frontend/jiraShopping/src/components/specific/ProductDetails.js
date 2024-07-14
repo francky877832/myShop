@@ -37,6 +37,8 @@ const ProductDetails = (props) => {
     const [description, setDescription] = useState(truncateText(data.description, numChars));
     const {favourites} = useContext(FavouritesContext)
     const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
+    const [onNewComment, setOnNewComment] = useState(false)
+
    
     const minHeight = 0;
     const maxHeight = screenHeight / 2;
@@ -230,7 +232,7 @@ const ProductDetails = (props) => {
                         <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={data.seller}/>
                     </Pressable>
                     <View style={{height:20}}></View>
-                    <Comments navigation={navigation} product={data} />
+                    <Comments setters={{onNewComment:onNewComment}} navigation={navigation} product={data} />
                 </View>
 
                 <View style={[productDetailsStyles.similarContainer]}>

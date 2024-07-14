@@ -12,6 +12,7 @@ const ProductItemProvider = ({children}) => {
     const [selectedColor, setSelectedColor] = useState("")
     const {user} = useContext(UserContext)
 
+
     const [ categories, setCategories ] = useState([])
     const [ brands, setBrands ] = useState([])
 
@@ -59,6 +60,9 @@ useEffect(() => {
     fetchCategories()
     fetchBrands()
 }, [user])
+
+
+
     const productItemStateVars = {selectedCategories,selectedBrand, selectedColor, categories, brands}
     const productItemStateSetters = {}
     const utilsFunctions = {updateSelectedCategory, setSelectedBrand, setSelectedColor,}

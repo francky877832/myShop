@@ -23,29 +23,34 @@ import { server } from '../../remote/server';
 import { Button } from 'react-native-elements';
 import { UserContext } from '../../context/UserContext';
 import { useNavigation } from '@react-navigation/native';
+import { ProductItemContext } from '../../context/ProductItemContext';
 
 const Preferences = (props) => {
     const navigation = useNavigation()
     const [isSearch, setIsSearch] = useState(false) 
-    const [products, setProducts] = useState([])
     const {favourites, liked, setLikedIcon } = useContext(FavouritesContext)
-    const {getSearchedTextWithFilters, refreshComponent, setRefreshComponent, } = useContext(FilterContext)
+    const [products, setProducts]  = useState([])
+
+    const {refreshComponent, setRefreshComponent,
+         resetAllFilters } = useContext(FilterContext)
+
     const {user, loginUserWithEmailAndPassword, isAuthenticated } = useContext(UserContext)
-const getProducts = async ()=> {
-    try
-    {
-        const response = await fetch(`${server}/api/datas/products/get`,{
-            method: 'GET',
-            headers: {
-                'Content-Type': 'Application/json',
-                 'Authorization': `Bearer ${user.token}`, //Vue protege
-            },});
-            const responseJson = await response.json();
-            setProducts(responseJson)
-    } catch (error) {
-    console.error(error);
-  }
-}
+
+    const getProducts = async ()=> {
+        try
+        {
+            const response = await fetch(`${server}/api/datas/products/get`,{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'Application/json',
+                     'Authorization': `Bearer ${user.token}`, //Vue protege
+                },});
+                const responseJson = await response.json();
+                setProducts(responseJson)
+        } catch (error) {
+        console.error(error);
+      }
+    }
 
 useEffect(()=>{
     loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
@@ -56,11 +61,11 @@ useEffect(() => {
         getProducts()
     }
     else{
-        navigation.navigate("UserLogin")
+        navigation.replace("UserLogin")
     }
-  }, [isAuthenticated, refreshComponent, navigation]);
+  }, [refreshComponent, isAuthenticated, navigation]);
 
-console.log(user)
+//console.log(user)
 
 
 const ProductsListWithFilters_ = () => {

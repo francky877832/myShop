@@ -144,7 +144,7 @@ useEffect(() => {
                     contentContainerStyle={[categoriesStyles.flatlist,{flex:1,}]}
                     ListFooterComponent={ (item) => { return (
                             <View style={{height:20,top:10, alignSelf:"center"}}>
-                                <Pressable onPress={()=>{updateSelectedCategory(selectedCategories.name, ""); navigation.navigate(goBackTo, {searchText:`***${selectedCategories.name}/***`, display:"category"});}}>
+                                <Pressable onPress={()=>{updateSelectedCategory(selectedCategories.name, ""); navigation.navigate(goBackTo, {searchText:`${selectedCategories.name}`, display:"category"});}}>
                                     <Text style={[{...customText.text, color:appColors.secondaryColor1, textDecorationLine:"underline", fontSize:16,}]}>Afficher La Categorie Complete{">>"} </Text>
                                 </Pressable>
                             </View>

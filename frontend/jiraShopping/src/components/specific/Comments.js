@@ -18,65 +18,23 @@ const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const Comments = (props) =>
 {
-    const { all, navigation, product, allComments} = props 
+    const { all, navigation, product, allComments, onNewComment, setters} = props
+    const {inputValue,setInputValue, setIsResponseTo} = setters 
     //console.log("allComments")
     //console.log(allComments)
     //Requete parametres avec le nombre  de comments a afficher
     //modifier comments avec un champ subComment au lieur de isResponseTo length
-    const [inputValue, setInputValue] = useState("")
-    const [isFocused, setIsFocused] = useState(false)
-    const [isResponseTo, setIsResponseTo] = useState(product._id)
-    const [isAll, setIsAll] = useState(all)
+    //const [inputValue, setInputValue] = useState("")
+//    const [isFocused, setIsFocused] = useState(false)
+//    const [isAll, setIsAll] = useState(all)
     const [comments, setComments] = useState([])
     const [numComments, setNumComments] = useState(0)
-    const [onNewCommnent, setOnNewCommnent] = useState(false)
         const initialNumberOfComments = 2
         let data = [...comments] ; data = !all ? data.slice(0, initialNumberOfComments+1) : comments
         const comments_ = {comments : [...data], count:2, total : 3} //format de retourn cote server Express
         let  reshapedComments = reshapeComments(comments_.comments)
 
         //console.log(reshapedComments)
-//username
-const addComment = async (item) => {
-    const checkNumber =  convertWordsToNumbers(inputValue)
-    console.log(checkNumber)
-    if(containsEmail(inputValue) || checkNumber==false)
-    {
-        Alert.alert("Erreur!!!","Votre commentaire viole les regles de la commnauté. Evitez de partager les contacts : numéro de téléphone, email, profil reseau sauciaux.\
-                    Si vous pensez que ceci est une erreur, veillez contacter le service client.")
-                return;
-    }
- 
-    
-
-    const comment = {
-        user: loggedUserId,
-        username : loggedUser,
-        product : item._id,
-        text : inputValue,
-        isResponseTo : isResponseTo,
-    }
-    
-        try{
-            //console.log("Ok")
-            const response = await fetch(`${server}/api/datas/comments/add/${item._id}`, {
-                method: 'POST',
-                body: JSON.stringify(comment),
-                headers: {
-                    'Content-Type': 'application/json',
-                },})
-                        //console.log(datas)
-            if (!response.ok) {
-                throw new Error('Erreur lors de la requête');
-            }
-
-            Alert.alert("Comment ajouté avec success.")
-                        
-        }catch(error){
-            Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
-        }
-
-}
 
 
 const fetchProductComments = async () =>{
@@ -100,8 +58,8 @@ const fetchProductComments = async () =>{
 useEffect(()=>{
    // all ? false : 
    fetchProductComments()
-    console.log(comments)
-}, [onNewCommnent])
+    //console.log(comments)
+}, [onNewComment])
 
     const Comment = (props) => {
         const { comment, styles, all, } = props
@@ -209,23 +167,23 @@ useEffect(()=>{
             }
             </View>
         { !all &&  
-            <View style={[commentsStyles.inputContainer, {borderWidth:isFocused?1:1,}]}>
-               <Input placeholder="Posez une question" onChangeText={(text)=>{setInputValue(text)}}
-                    multiline={true}
-                    numberOfLines={1}
-                    placeholderTextColor={appColors.lightWhite}
-                    inputStyle = {[commentsStyles.searchBarInput, commentsStyles.input, isFocused && commentsStyles.inputFocused,]}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    underlineColorAndroid='transparent'
-                    inputContainerStyle={ { borderBottomWidth:isFocused?0:1, }}
-                    rightIcon={ 
-                        <Pressable onPress={() => {addComment(product);setOnNewCommnent(!onNewCommnent)}} style={[commentsStyles.sendButton, {}]}>
-                            <Icon name='send-sharp' type='ionicon' size={40} color={appColors.secondaryColor1} />
-                        </Pressable>
-                    }
-                    value={inputValue}
-                />
+            <View style={[commentsStyles.inputContainer,]}>
+                <Pressable onPress={()=>{navigation.navigate("AllComments",{comments:comments,product:product,inputFocused:true})}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
+                    <Input placeholder="Posez une question" onChangeText={(text)=>{(text)}}
+                        multiline={true}
+                        numberOfLines={1}
+                        placeholderTextColor={appColors.lightWhite}
+                        inputStyle = {[commentsStyles.searchBarInput, commentsStyles.input,]}
+                        underlineColorAndroid='transparent'
+                        inputContainerStyle={ { }}
+                        rightIcon={ 
+                            <Pressable onPress={() =>{}} style={[commentsStyles.sendButton, {}]}>
+                                <Icon name='send-sharp' type='ionicon' size={40} color={appColors.secondaryColor1} />
+                            </Pressable>
+                        }
+                        readOnly={true}
+                    />
+                </Pressable>
             </View>
         }
         </View>

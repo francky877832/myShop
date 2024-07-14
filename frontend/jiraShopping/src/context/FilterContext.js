@@ -1,8 +1,8 @@
-import React, { createContext, useState, useEffect } from 'react'
+import React, { createContext, useState, useEffect, useContext } from 'react'
 
 import { serialize } from '../utils/commonAppFonctions'
 import { server } from '../remote/server'
-
+import { UserContext } from './UserContext'
 const FilterContext = createContext()
 const FilterProvider = ({children}) => {
     const [selectedCategories, setSelectCategories] = useState({"Vetements":true})
@@ -17,6 +17,8 @@ const FilterProvider = ({children}) => {
     const [products, setProducts] = useState([])
 
     const [refreshComponent, setRefreshComponent] = useState(false)
+    const {user} = useContext(UserContext)
+
 
     const _handlePress = (id) => {
         setSelectCategories((prevSlectedCategories)=>{
@@ -128,6 +130,9 @@ const FilterProvider = ({children}) => {
       }
     }
 
+    
+
+
     const resetAllFilters = (searchText) => {
         setSelectCategories([])
         setSelectedBrands([])
@@ -146,7 +151,7 @@ const FilterProvider = ({children}) => {
 
     const filterStateVars = {refreshComponent, selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands, products}
     const filterStateSetters = {setRefreshComponent, setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
-    const utilsFunctions = { _handlePress, updateCategories, updateSelectedBrands, resetAllFilters, getSearchedTextWithFilters }
+    const utilsFunctions = {_handlePress, updateCategories, updateSelectedBrands, resetAllFilters, getSearchedTextWithFilters }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

@@ -1,4 +1,5 @@
 import nlp from "compromise";
+const Fuse = require('fuse.js');
 
 exports.capitalizeFirstLetter = str => str ? str[0].toUpperCase() + str.slice(1).toLowerCase() : str;
 
@@ -146,10 +147,6 @@ const serialize = (obj, prefix) => {
 exports.serialize = serialize
 
 
-
-
-
-
 // Fonction pour transformer les nombres écrits en lettres en chiffres dans un texte
 exports.convertWordsToNumbers = (text) => {
     // Utilisation de Compromise.js pour analyser le texte
@@ -253,6 +250,56 @@ exports.containsEmail = (text) => {
     const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b/;
     return emailRegex.test(text);
 }
+
+
+
+
+exports.getSearchedProducts = async (filters, products) => {
+    const { name, customFilters } = filters;
+    let result;
+        if(!name)
+        {
+          result = products
+          //console.log("vide")
+        }
+        else
+        {
+          const fuse = new Fuse(products, {
+          keys: ['name', 'description', 'category'],
+          threshold: 0.5, // Ajustez ce seuil selon vos besoins
+          });
+    
+          // Effectuer la recherche floue
+          result = fuse.search(name).map(result => result.item);
+    
+          //comme FUSE JS ne conserve pas l'ordre, utiliser la memoire de tri
+            result.sort((a, b) => a.sortIndex - b.sortIndex);
+        }
+        //console.log(result)
+        
+        // Appliquer des filtres personnalisés si nécessaire
+        let filteredResult = result;
+        //console.log(customFilters.minPrice)
+        if (customFilters.categories?.length > 0) {
+          filteredResult = filteredResult.filter(product => customFilters.categories.includes(product.category));
+        }
+        if (customFilters.brands?.length > 0) {
+          filteredResult = filteredResult.filter(product => customFilters.brands.includes(product.brand));
+        }
+        if (customFilters.condition?.length > 0) {
+          filteredResult = filteredResult.filter(product => customFilters.condition.includes(product.condition));
+        }
+        if (customFilters.minPrice) {
+          filteredResult = filteredResult.filter(product => customFilters.minPrice <= product.price);
+        }
+        if (customFilters.maxPrice) {
+          filteredResult = filteredResult.filter(product => customFilters.maxPrice >= product.price);
+        }
+    
+        return filteredResult
+}
+
+
 
 
 
