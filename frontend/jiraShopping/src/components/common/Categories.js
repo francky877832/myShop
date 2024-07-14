@@ -16,6 +16,7 @@ import { Icon } from 'react-native-elements';
 
 import { formatMoney } from '../../utils/commonAppFonctions';
 import { ProductItemContext } from '../../context/ProductItemContext';
+import { FilterContext } from '../../context/FilterContext';
 
 import { server } from '../../remote/server';
 import { colors } from '../../utils/sampleDatas';
@@ -26,7 +27,8 @@ const Categories = (props) => {
     const {page,} = props
     const goBackTo = params?.datas?.goBackTo || props.goBackTo
 //console.log(page)
-    const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedColor, setSelectedColor, categories, brands,} = useContext(ProductItemContext)
+    const {setSelectedBrand, selectedColor, setSelectedColor, categories, brands,} = useContext(ProductItemContext)
+    const { selectedCategories, updateCategories } = useContext(FilterContext)
     const navigation = useNavigation()
    
 //console.log(selectedCategories)
@@ -57,17 +59,17 @@ useEffect(() => {
 
 
     const Category = (props) => {
-        const { item, selectedCategories, updateSelectedCategory,} = props
+        const { item, selectedCategories, updateCategories,} = props
         //console.log(item.subCategories)
         //console.log(selectedCategories)
         /*useEffect(()=>{
-            updateSelectedCategory("Vetements")
+            updateselectedCategories("Vetements")
         }, [])*/
         //console.log(selectedCategories)
         return(
             <View style={{flex:1,}}>
                 <View pointerEvents='auto' style={[categoriesStyles.categoryContainer,{flex:1,}]}>
-                    <Pressable style={[categoriesStyles.pressableCat]} onPress={()=>{updateSelectedCategory(item.name); }}>
+                    <Pressable style={[categoriesStyles.pressableCat]} onPress={()=>{updateCategories(item.name); }}>
                         <Icon name={item.icon.split("/")[1]} type={item.icon.split("/")[0]} color={selectedCategories[item.name]  ? appColors.secondaryColor1 : appColors.secondaryColor4} />
                         <Text style={[customText.text, {color:selectedCategories[item.name]  ? appColors.secondaryColor1 : appColors.secondaryColor4} ]}>{item.name}</Text>
                     </Pressable>
@@ -80,7 +82,7 @@ useEffect(() => {
                             {
                                 item.subCategories.map((cat, index) => {
                                     return (
-                                            <Pressable key={cat._id} style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateSelectedCategory(item.name, cat.name); navigation.goBack();}}>
+                                            <Pressable key={cat._id} style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateselectedCategories(item.name, cat.name); navigation.goBack();}}>
                                                 <Text>{cat.name}</Text>
                                             </Pressable>
                                     )
@@ -107,7 +109,7 @@ useEffect(() => {
                     <FlatList
                             data={categories}
                             nestedScrollEnabled={true}
-                            renderItem={ ({item}) => { return <Category item={item} selectedCategories={selectedCategories} updateSelectedCategory={updateSelectedCategory} /> } }
+                            renderItem={ ({item}) => { return <Category item={item} selectedCategories={selectedCategories} updateCategories={updateCategories} /> } }
                             keyExtractor={ (item) => { return item._id.toString(); } }
                             horizontal={false}
                             numColumns={ 1 }
@@ -127,7 +129,7 @@ useEffect(() => {
                                 item.subCategories.map((cat, index) => {
                                     return (
                                         <View  key={cat._id} >
-                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateSelectedCategory(item.name, cat.name); navigation.navigate(goBackTo, {searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***`, display:"category"});}}>
+                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateCategories(item.name, cat.name); navigation.navigate(goBackTo, {searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***`, display:"category"});}}>
                                                 <Text>{cat.name}</Text>
                                             </Pressable>
                                         </View>
@@ -144,7 +146,7 @@ useEffect(() => {
                     contentContainerStyle={[categoriesStyles.flatlist,{flex:1,}]}
                     ListFooterComponent={ (item) => { return (
                             <View style={{height:20,top:10, alignSelf:"center"}}>
-                                <Pressable onPress={()=>{updateSelectedCategory(selectedCategories.name, ""); navigation.navigate(goBackTo, {searchText:`${selectedCategories.name}`, display:"category"});}}>
+                                <Pressable onPress={()=>{updateCategories(selectedCategories.name); navigation.navigate(goBackTo, {searchText:`${selectedCategories.name}`, display:"category"});}}>
                                     <Text style={[{...customText.text, color:appColors.secondaryColor1, textDecorationLine:"underline", fontSize:16,}]}>Afficher La Categorie Complete{">>"} </Text>
                                 </Pressable>
                             </View>

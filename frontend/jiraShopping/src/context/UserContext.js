@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react'
-
+import { Alert } from 'react-native';
 import { serialize } from '../utils/commonAppFonctions'
 import { server } from '../remote/server'
 import * as SecureStore from 'expo-secure-store';
@@ -50,15 +50,14 @@ const UserProvider = ({children}) => {
     // console.log(JSON.stringify(user))
         try
         {
-            const response = await fetch(`${server}/api/auth/login`, {
-                method: 'POST',
-                body: JSON.stringify(user),
+            const response = await fetch(`${server}/api/auth/login?${serialize(user)}`, {
+                method: 'GET',
                 headers : {
                     'Content-Type': 'application/json',
                 },
             })
-        
-
+            
+            //console.log("jj")
             if(response.ok)
             {
                 const loggedUser = await response.json()
@@ -71,6 +70,11 @@ const UserProvider = ({children}) => {
                 setUser(loggedUser)
                 setIsAuthenticated(true);
 
+            }
+            else
+            {
+                throw new Error((await response.json()).error)
+                //throw new Error("await response.json()")
             }
         
             //Alert.alert("Signed In")

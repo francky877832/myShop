@@ -25,11 +25,11 @@ const SearchResults = (props) => {
     
     const route = useRoute()
     const {searchText, display} = route.params
-    const { setSelectCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, 
+    const { selectedCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, 
         selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands,
         _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,
         } = useContext(FilterContext)
-        const {selectedCategories,  } = useContext(ProductItemContext)
+        //const {selectedCategory,  } = useContext(ProductItemContext)
     
         const {user} = useContext(UserContext)
         const navigation = useNavigation()

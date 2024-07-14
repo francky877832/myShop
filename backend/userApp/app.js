@@ -2,7 +2,7 @@ const express = require('express');
 const {connectDB, mongoose} = require('../shared/db');
 const routes = require('./routes');
 const path = require('path');
-const userRoutes = require('./routes/userRoutes.js');
+const userRoutes = require('./routes/userRoutes');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -18,6 +18,8 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use('/api/auth', userRoutes);
+
 const imagesPath =  path.join(__dirname, '/assets/images').replace(/\\/g, '/')
 app.use('/api/datas', routes);
 console.log( path.join(__dirname, '/assets/images').replace(/\\/g, '/'))
@@ -25,7 +27,7 @@ app.use('/userApp/assets/images', express.static(path.join(__dirname, '/assets/i
 app.get('/userApp/assets/images/:imageName', (req, res) => {
   res.sendFile(path.join(imagesPath, req.params.imageName));
 });
-app.use('/api/auth', userRoutes);
+
 
 
 module.exports = app;

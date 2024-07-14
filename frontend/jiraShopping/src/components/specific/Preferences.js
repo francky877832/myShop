@@ -60,9 +60,7 @@ useEffect(() => {
     if (isAuthenticated) {
         getProducts()
     }
-    else{
-        navigation.replace("UserLogin")
-    }
+    
   }, [refreshComponent, isAuthenticated, navigation]);
 
 //console.log(user)

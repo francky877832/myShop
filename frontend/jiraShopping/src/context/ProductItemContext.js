@@ -7,7 +7,7 @@ import { UserContext } from './UserContext'
 const ProductItemContext = createContext()
 
 const ProductItemProvider = ({children}) => {
-    const [selectedCategories, setSelectedCategories] = useState({"Vetements":true,name:"Vetements"}) //Normalemet category, categories est dans FilterItem
+    const [selectedCategory, setSelectedCategory] = useState({"Vetements":true,name:"Vetements"}) //Normalemet category, categories est dans FilterItem
     const [selectedBrand, setSelectedBrand] = useState("")
     const [selectedColor, setSelectedColor] = useState("")
     const {user} = useContext(UserContext)
@@ -17,11 +17,12 @@ const ProductItemProvider = ({children}) => {
     const [ brands, setBrands ] = useState([])
 
     const updateSelectedCategory = (id, path) => {
-        setSelectedCategories((prevSelectedCategories) => {
+        setSelectedCategory((prevSelectedCategory) => {
            
             if(path==undefined)
-            {
-                return {[id] : !prevSelectedCategories[id], name:id,}
+            {        console.log(id)
+
+                return {[id] : !prevSelectedCategory[id], name:id,}
             }
             else
             {
@@ -63,9 +64,9 @@ useEffect(() => {
 
 
 
-    const productItemStateVars = {selectedCategories,selectedBrand, selectedColor, categories, brands}
+    const productItemStateVars = {selectedBrand, selectedColor, categories, brands}
     const productItemStateSetters = {}
-    const utilsFunctions = {updateSelectedCategory, setSelectedBrand, setSelectedColor,}
+    const utilsFunctions = {setSelectedBrand, setSelectedColor,}
     return (
         <ProductItemContext.Provider value={{...productItemStateVars, ...productItemStateSetters, ...utilsFunctions}}>
             {children}
