@@ -249,8 +249,6 @@ exports.getSearchedProducts = async (req, res, next) => {
       filteredResult = filteredResult.filter(product => customFilters.maxPrice >= product.price);
     }
 
-
-
     res.json(filteredResult);
   } catch (err) {
     console.log(err)
