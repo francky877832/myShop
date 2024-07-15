@@ -24,9 +24,10 @@ import { ProductItemContext } from '../../context/ProductItemContext';
 
 const Filters = (props) => {
 
-    const {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, setSelectCategories, setSelectedOrderBy, refreshComponent,
-        setRefreshComponent, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, _handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters
-     }  =  useContext(FilterContext)
+    const {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, setSelectedCategories, setSelectedOrderBy, refreshComponent,
+        setRefreshComponent, setIsNewFocused, setIsOldFocused, setIsNewOldFocused, isNewOldFocused, setMinPrice, setMaxPrice, _handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters,
+        setSelectedBrands, updateModalCategories, selectedModalCategories, setSelectedModalCategories,
+    }  =  useContext(FilterContext)
     const { categories, brands } = useContext(ProductItemContext)
 //console.log(categories)
     const { suggestion, searchText } = props
@@ -198,8 +199,9 @@ const setOtherModalToFalse = (modal)=>{
                                 })
                             }
                         </RadioButton.Group>
-                        <CustomButton text="Vider" color={appColors.white} backgroundColor={appColors.gray} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"100%",}}} onPress={()=>{resetAllFilters(searchText);}} />
-
+                        <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0,width:"100%",}}>
+                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"100%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setSelectedOrderBy("")}} />
+                        </View>
                     </View>
                     <View style={{height:20,}}></View>
                 
@@ -253,6 +255,10 @@ const setOtherModalToFalse = (modal)=>{
                         </View>
                     </View>
                     <View style={{height:20,}}></View>
+                        <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0}}>
+                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setMaxPrice("");setMinPrice("");}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters(searchText||" ")}} />
+                        </View>
                 </View>
             }
         { /*modalFiltersVisible &&*/ modalConditionVisible &&
@@ -260,7 +266,12 @@ const setOtherModalToFalse = (modal)=>{
                         <View style={{alignSelf : "center",}}>
                             <Text style={[customText.text,filtersStyles.label]}>Condition</Text>
                         </View>
-                        <ConditionChoice styles={{}} isNewFocused={isNewFocused} isOldFocused={isOldFocused} setIsNewFocused={setIsNewFocused} setIsOldFocused={setIsOldFocused} />
+                        <ConditionChoice styles={{}} conditions={{isNewFocused:isNewFocused, isOldFocused:isOldFocused, setIsNewFocused:setIsNewFocused, setIsOldFocused:setIsOldFocused, setIsNewOldFocused:setIsNewOldFocused, isNewOldFocused:isNewOldFocused }} />
+                    
+                        <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0}}>
+                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setIsNewFocused(false);setIsOldFocused(false);setIsNewOldFocused(false);}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters(searchText||" ")}} />
+                        </View>
                     </View>
         }
 
@@ -285,6 +296,10 @@ const setOtherModalToFalse = (modal)=>{
                                 contentContainerStyle={{ maxHeight:500 }}
                             />
                         </View>
+                        <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:15}}>
+                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setSelectedModalCategories({});}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters(searchText||" ")}} />
+                        </View>
                     </View>
         }
 
@@ -307,12 +322,13 @@ const setOtherModalToFalse = (modal)=>{
                                 contentContainerStyle={{  maxHeight : 500,  }}
                             />
                         </View>
+
+                        <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:15}}>
+                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setSelectedBrands({});}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters(searchText||"")}} />
+                        </View>
                     </View>
         }
-        <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5}}>
-            <CustomButton text="Vider" color={appColors.white} backgroundColor={appColors.red} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{resetAllFilters(searchText);setRefreshComponent(!refreshComponent)}} />
-            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters(searchText||"")}} />
-        </View>
             </View>
             </View>}
         </View>

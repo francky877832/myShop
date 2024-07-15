@@ -126,11 +126,11 @@ useEffect(() => {
                     renderItem={ ({item}) => { return (
                         <View pointerEvents='auto'>
                             {  selectedCategories[item.name] &&
-                                item.subCategories.map((cat, index) => {
+                                item.subCategories.map((subCat, index) => {
                                     return (
-                                        <View  key={cat._id} >
-                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateCategories(item.name, cat.name); navigation.navigate(goBackTo, {searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***`, display:"category"});}}>
-                                                <Text>{cat.name}</Text>
+                                        <View  key={subCat._id} >
+                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateCategories(item.name, subCat.name); navigation.navigate(goBackTo, {searchText:" ", display:"category"});}}>
+                                                <Text>{subCat.name}</Text>
                                             </Pressable>
                                         </View>
                                     )
@@ -146,7 +146,8 @@ useEffect(() => {
                     contentContainerStyle={[categoriesStyles.flatlist,{flex:1,}]}
                     ListFooterComponent={ (item) => { return (
                             <View style={{height:20,top:10, alignSelf:"center"}}>
-                                <Pressable onPress={()=>{updateCategories(selectedCategories.name); navigation.navigate(goBackTo, {searchText:`${selectedCategories.name}`, display:"category"});}}>
+                                 <Text>{/* searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***` */}</Text>
+                                <Pressable onPress={()=>{updateCategories(selectedCategories.name, "complete_category"); navigation.navigate(goBackTo, {searchText:" ", display:"category"});}}>
                                     <Text style={[{...customText.text, color:appColors.secondaryColor1, textDecorationLine:"underline", fontSize:16,}]}>Afficher La Categorie Complete{">>"} </Text>
                                 </Pressable>
                             </View>

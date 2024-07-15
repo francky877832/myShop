@@ -28,7 +28,7 @@ exports.signupUser = (req, res, next) => {
   };
 
   exports.loginUser =  (req, res, next) => {
-    //console.log("ok")
+    console.log("LOGIN")
     User.findOne({ username: req.query.username })
         .then(user => {
             if (!user) {

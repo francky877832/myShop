@@ -45,7 +45,7 @@ useEffect(() => {
             //console.log(datas)
             setCategories(datas)
         }catch(error){
-            Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
+            Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok"}]) //onPress:()=>navigation.goBack()
         }
     }
     const fetchBrands= async () =>{
@@ -55,7 +55,7 @@ useEffect(() => {
             const datas = await response.json()
             setBrands(datas)
         }catch(error){
-            Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
+            Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok",}]) // onPress:()=>navigation.goBack()
         }
     }
     fetchCategories()

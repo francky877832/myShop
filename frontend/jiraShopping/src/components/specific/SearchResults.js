@@ -27,7 +27,7 @@ const SearchResults = (props) => {
     const {searchText, display} = route.params
     const { selectedCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, 
         selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands,
-        _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,
+        _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas
         } = useContext(FilterContext)
         //const {selectedCategory,  } = useContext(ProductItemContext)
     
@@ -62,13 +62,23 @@ const SearchResults = (props) => {
         if(!!display && display == "category")
         {
             //console.log("pkkkk")
-            getProductsFromCategories()
-            //getSearchedTextWithFilters(searchText, selectedOrderBy)
+            //getProductsFromCategories()
+            getSearchedTextWithFilters(" ", selectedOrderBy)
         }
         else{
             getSearchedTextWithFilters(searchText, selectedOrderBy)
         }
     }, [refreshComponent])
+
+useEffect(() => {
+        const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
+            e.preventDefault();
+            resetAllFiltersWithoutFecthingDatas()
+          navigation.dispatch(e.data.action)
+        })
+        return beforeRemoveListener;
+}, [navigation]);
+
         return(
                 <View style={preferencesStyles.container}>
                         <View style={preferencesStyles.top}>

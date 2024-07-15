@@ -126,7 +126,7 @@ exports.getProductsFromCategories  =async  (req, res, next) => {
   try
   {
     if(!!subCategory)
-    { //console.log("HERE")
+    { console.log("HERE")
       //console.log([`${category}/${subCategory[0]}`])
       products = await Product.find({ category : { $in : [`${category}/${subCategory}`] } })
     }
@@ -206,12 +206,8 @@ exports.getSearchedProducts = async (req, res, next) => {
       keys: ['name', 'description', 'category'],
       threshold: 0.5, // Ajustez ce seuil selon vos besoins
       });
-
       // Effectuer la recherche floue
       result = fuse.search(name).map(result => result.item);
-
-      //comme FUSE JS ne conserve pas l'ordre, utiliser la memoire de tri
-        result.sort((a, b) => a.sortIndex - b.sortIndex);
     }
     //console.log(result)
     
@@ -223,11 +219,12 @@ exports.getSearchedProducts = async (req, res, next) => {
       filteredResult = filteredResult.filter(product => {
         
           if(customFilters.categories[0].split('/').length == 2)
-          {
+          { 
             return customFilters.categories.includes(product.category);
           }
           else
           {
+            //console.log(product)
             const escapedCategory = product.category.split('/')[0]
             const categoryRegex = new RegExp(`^${escapedCategory}`, 'i');
             //console.log(escapedCategory)
@@ -248,7 +245,8 @@ exports.getSearchedProducts = async (req, res, next) => {
     if (customFilters.maxPrice) {
       filteredResult = filteredResult.filter(product => customFilters.maxPrice >= product.price);
     }
-
+      //comme FUSE JS ne conserve pas l'ordre, utiliser la memoire de tri
+      filteredResult.sort((a, b) => a.sortIndex - b.sortIndex);
     res.json(filteredResult);
   } catch (err) {
     console.log(err)

@@ -15,7 +15,8 @@ import { FilterContext } from '../../context/FilterContext';
 const FilterItem = (props) => {
     const { item, tag } = props
     
-    const { updateCategories, selectedCategories, selectedBrands, updateSelectedBrands  } = useContext(FilterContext)
+    const { updateCategories, selectedCategories, selectedBrands, updateSelectedBrands,
+        updateModalCategories, selectedModalCategories, setSelectedModalCategories,  } = useContext(FilterContext)
       
      //console.log(tag)
         if(tag=="category")
@@ -31,7 +32,7 @@ const FilterItem = (props) => {
                             item.subCategories.map((it, index) =>{
                                 return(
                                 <View style={filterItemStyles.checkBox} key={index}>
-                                    <CheckBox title={it.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} checked={selectedCategories[item.name+"/"+it.name]} onPress={() => { updateCategories(item.name+"/"+it.name);  }} />
+                                    <CheckBox title={it.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} onPress={() => { updateModalCategories(item.name+"/"+it.name);  }} checked={selectedModalCategories[item.name+"/"+it.name]} />
                                 </View>
                             )})
                         }

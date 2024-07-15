@@ -34,7 +34,7 @@ const Preferences = (props) => {
     const {refreshComponent, setRefreshComponent,
          resetAllFilters } = useContext(FilterContext)
 
-    const {user, loginUserWithEmailAndPassword, isAuthenticated } = useContext(UserContext)
+    const {user, loginUserWithEmailAndPassword, isAuthenticated, setIsAuthenticated } = useContext(UserContext)
 
     const getProducts = async ()=> {
         try
@@ -53,12 +53,13 @@ const Preferences = (props) => {
     }
 
 useEffect(()=>{
-    loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
+    //loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
 }, [])
 
 useEffect(() => {
     if (isAuthenticated) {
         getProducts()
+        console.log("ok")
     }
     
   }, [refreshComponent, isAuthenticated, navigation]);
