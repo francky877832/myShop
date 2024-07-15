@@ -6,7 +6,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { productStyles } from '../../styles/productStyles';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
 import { appFont, appColors, appFontSize } from '../../styles/commonStyles';
-import { CheckBox } from 'react-native-elements';
+//import { CheckBox } from 'react-native-elements';
+import { CheckBox } from '@rneui/themed';
+
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 

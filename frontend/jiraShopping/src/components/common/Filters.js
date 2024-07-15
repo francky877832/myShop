@@ -26,7 +26,7 @@ const Filters = (props) => {
 
     const {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, setSelectedCategories, setSelectedOrderBy, refreshComponent,
         setRefreshComponent, setIsNewFocused, setIsOldFocused, setIsNewOldFocused, isNewOldFocused, setMinPrice, setMaxPrice, _handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters,
-        setSelectedBrands, updateModalCategories, selectedModalCategories, setSelectedModalCategories,
+        setSelectedBrands, setSelectedModalCategories,
     }  =  useContext(FilterContext)
     const { categories, brands } = useContext(ProductItemContext)
 //console.log(categories)
@@ -74,7 +74,7 @@ const Filters = (props) => {
         "marque" :  [modalBrandVisible, setModalBrandVisible],
     }
 
-   
+
 
     const [isMinPriceFocused, setIsMinPriceFocused] = useState(false)
     const [isMaxPriceFocused, setIsMaxPriceFocused] = useState(false)
@@ -192,9 +192,9 @@ const setOtherModalToFalse = (modal)=>{
                                 orderByItems.map((item) => {
                                     return(
                                         <View style={filtersStyles.radioContainer} key={item.id}>
-                                        <RadioButton value={item.name} />
-                                            <Text>{item.name}</Text>
-                                    </View>
+                                            <RadioButton value={item.name} />
+                                                <Text>{item.name}</Text>
+                                        </View>
                                     )
                                 })
                             }
@@ -227,7 +227,7 @@ const setOtherModalToFalse = (modal)=>{
                             <Text style={filtersStyles.label}>Prix Max.</Text>
                         </View>
 
-                        <View style={filtersStyles.price}>
+                        <View style={[filtersStyles.price,{}]}>
                             <View style = {[filtersStyles.minPrice]}>
                                 <TextInput placeholder="Prix min."
                                     placeholderTextColor={appColors.mainColor}
@@ -349,4 +349,4 @@ const setOtherModalToFalse = (modal)=>{
 
 )}
 
-export default Filters
+export default  Filters;

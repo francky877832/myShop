@@ -1,11 +1,11 @@
-import React, { createContext, useState, useEffect, useContext } from 'react'
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react'
 
 import { serialize } from '../utils/commonAppFonctions'
 import { server } from '../remote/server'
 import { UserContext } from './UserContext'
 const FilterContext = createContext()
 const FilterProvider = ({children}) => {
-    const [selectedCategories, setSelectedCategories] = useState({"Vetements":true,name:"Vetements"})
+    const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
     const [selectedModalCategories, setSelectedModalCategories] = useState({})
 
     const [selectedBrands, setSelectedBrands] = useState({})
@@ -34,10 +34,10 @@ const FilterProvider = ({children}) => {
     }
     const updateModalCategories = (id) => {
         setSelectedModalCategories((prevSlectedCategories) => {
-            console.log(({
+            /*console.log(({
                 ...prevSlectedCategories,
                 [id] : !prevSlectedCategories[id], 
-            }))
+            }))*/
 
             return ({
                 ...prevSlectedCategories,
@@ -49,8 +49,10 @@ const FilterProvider = ({children}) => {
         setSelectedCategories((prevSelectedCategory) => {
             if(path==undefined)
             {        //console.log(id)
-                console.log({[id] : !prevSelectedCategory[id], name:id,})
+                if(prevSelectedCategory["name"] == id)
+                    return {[id] : prevSelectedCategory[id], name:id,}
                 return {[id] : !prevSelectedCategory[id], name:id,}
+                
             }
             else if(path=="complete_category")
             {
@@ -169,7 +171,7 @@ const FilterProvider = ({children}) => {
     
 
     const resetAllFiltersWithoutFecthingDatas = () => {
-        setSelectedCategories([])
+        //setSelectedCategories([])
         setSelectedBrands([])
         setSelectedOrderBy()
         setIsNewFocused(true)
@@ -182,7 +184,7 @@ const FilterProvider = ({children}) => {
     }
 
     const resetAllFilters = (searchText) => {
-        setSelectedCategories([])
+        //setSelectedCategories([])
         setSelectedBrands([])
         setSelectedOrderBy()
         setIsNewFocused(true)
@@ -200,7 +202,7 @@ const FilterProvider = ({children}) => {
 
     const filterStateVars = {refreshComponent, selectedCategories, selectedModalCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands, products}
     const filterStateSetters = {setRefreshComponent, setSelectedBrands, setSelectedModalCategories, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
-    const utilsFunctions = {_handlePress, updateCategories, updateModalCategories, resetAllFilters, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas }
+    const utilsFunctions = {_handlePress, updateCategories, updateModalCategories, updateSelectedBrands, resetAllFilters, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

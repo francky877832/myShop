@@ -1,8 +1,8 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Pressable, Modal, Dimensions } from 'react-native';
+import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Pressable, Modal, Dimensions, TouchableWithoutFeedback} from 'react-native';
 
-import { CheckBox } from 'react-native-elements';
-
+//import { CheckBox } from 'react-native-elements';
+import { CheckBox } from '@rneui/themed';
 
 import { appColors, appFont } from '../../styles/commonStyles';
 import { searchStyles } from '../../styles/searchStyles';
@@ -14,13 +14,22 @@ import { FilterContext } from '../../context/FilterContext';
 
 const FilterItem = (props) => {
     const { item, tag } = props
-    
+    const [checked, setChecked] = useState("")
+
     const { updateCategories, selectedCategories, selectedBrands, updateSelectedBrands,
         updateModalCategories, selectedModalCategories, setSelectedModalCategories,  } = useContext(FilterContext)
-      
+
+      const handlePress = useCallback((item, it) => {
+        updateModalCategories(item.name+"/"+it.name);
+      },[])
      //console.log(tag)
+     useEffect(() => {
+        console.log("2");
+       
+     })
         if(tag=="category")
         {
+
         
             return(
 
@@ -31,8 +40,8 @@ const FilterItem = (props) => {
                         {
                             item.subCategories.map((it, index) =>{
                                 return(
-                                <View style={filterItemStyles.checkBox} key={index}>
-                                    <CheckBox title={it.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} onPress={() => { updateModalCategories(item.name+"/"+it.name);  }} checked={selectedModalCategories[item.name+"/"+it.name]} />
+                                <View activeOpacity={1} style={[filterItemStyles.checkBox,]} key={index}>
+                                    <CheckBox title={it.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} onPress={(e) => {handlePress(item,it)}} checked={selectedModalCategories[item.name+"/"+it.name]} />
                                 </View>
                             )})
                         }
@@ -44,7 +53,7 @@ const FilterItem = (props) => {
             return(
                 <View style={[filterItemStyles.container,{}]} >
                     <View style={[filterItemStyles.title]}>
-                    <CheckBox title={item.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} checked={selectedBrands[item.name]} onPress={() => { updateSelectedBrands(item.name);  }} />
+                        <CheckBox title={item.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} checked={selectedBrands[item.name]} onPress={() => { updateSelectedBrands(item.name);  }} />
                     </View>
                 </View>
             )
@@ -86,4 +95,4 @@ const filterItemStyles =  StyleSheet.create({
 
 })
 
-export default FilterItem
+export default React.memo(FilterItem);
