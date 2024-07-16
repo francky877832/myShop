@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext,  } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback, useMemo  } from 'react';
 import { View, Text, Pressable, TextInput, ScrollView, FlatList} from 'react-native';
 
 import { Button, CheckBox } from 'react-native-elements';
@@ -23,16 +23,68 @@ import { FilterContext } from '../../context/FilterContext';
 import { ProductItemContext } from '../../context/ProductItemContext';
 
 const Filters = (props) => {
+    const [selectedModalCategories, setSelectedModalCategories] = useState({})
+    const [selectedBrands, setSelectedBrands] = useState({})
+    const [isNewFocused, setIsNewFocused] = useState(true)
+    const [isOldFocused, setIsOldFocused] = useState(true)
+    const [isNewOldFocused, setIsNewOldFocused] = useState(true)
+    const [conditions, setConditions] = useState({})
 
-    const {selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, setSelectedCategories, setSelectedOrderBy, refreshComponent,
-        setRefreshComponent, setIsNewFocused, setIsOldFocused, setIsNewOldFocused, isNewOldFocused, setMinPrice, setMaxPrice, _handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters,
-        setSelectedBrands, setSelectedModalCategories,
+    const {selectedCategories, selectedOrderBy, minPrice, maxPrice, setSelectedCategories, setSelectedOrderBy, refreshComponent,
+        setRefreshComponent, setMinPrice, setMaxPrice, _handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters,
     }  =  useContext(FilterContext)
     const { categories, brands } = useContext(ProductItemContext)
 //console.log(categories)
     const { suggestion, searchText } = props
     const [showSuggestion, setShowSuggestion] = useState(suggestion)
 
+
+    const updateConditions = useCallback((name) =>
+    {
+        setConditions((prevSelectedConditions)=>{
+            switch(name){
+                case "new":
+                    setIsNewFocused(!isNewFocused)
+                    return {...prevSelectedConditions, [name]:isNewFocused}
+                    break
+                case "old":
+                    setIsOldFocused(!isOldFocused)
+                    return {...prevSelectedConditions, [name]:isOldFocused}
+                    break
+                case "new used":
+                    setIsNewOldFocused(!isNewOldFocused)
+                    return {...prevSelectedConditions, [name]:isNewOldFocused}
+                    break
+                default : return{...prevSelectedConditions}
+            }
+            
+        })
+    })
+    const updateModalCategories = useCallback((id) => {
+        setSelectedModalCategories((prevSelectedCategories) => {
+            /*console.log(({
+                ...prevSlectedCategories,
+                [id] : !prevSlectedCategories[id], 
+            }))*/
+
+            return ({
+                ...prevSelectedCategories,
+                [id] : !prevSelectedCategories[id], 
+            })
+        })
+    })
+
+    const updateSelectedBrands = useCallback((name) => {
+        setSelectedBrands((prevSlectedBrands)=>{
+                //console.log(prevSlectedCategories)
+        
+                return ({
+                    ...prevSlectedBrands,
+                    [name] : !prevSlectedBrands[name], 
+                })
+            })
+
+    })
 
    /* const categories = [
         {
@@ -53,10 +105,13 @@ const Filters = (props) => {
         },
      
     ]*/
-    const orderByItems = [{id:1,name:"Prix DESC"},{id:2, name:"Prix ASC"}, {id:3,name:"Nom ASC"},{id:4, name:"Nom DESC"}, {id:5,name:"Plus Recents"} ,{id:6,name:"Plus Anciens"}]
-
+    const orderByItem = [{id:1,name:"Prix DESC"},{id:2, name:"Prix ASC"}, {id:3,name:"Nom ASC"},{id:4, name:"Nom DESC"}, {id:5,name:"Plus Recents"} ,{id:6,name:"Plus Anciens"}]
+    const orderByItems = useMemo(()=>(orderByItem),[])
     
-
+    useEffect(() => {
+        //console.log("2**");
+       
+    })
 
     const [modalPriceVisible, setModalPriceVisible] = useState(false);
     const [modalConditionVisible, setModalConditionVisible] = useState(false);
@@ -81,14 +136,14 @@ const Filters = (props) => {
 
     const filters = [{name:"Categories"},{name:"Price"},{name:"Condition"}, {name:"Marque"}]
 
-const setOtherModalToFalse = (modal)=>{
+const setOtherModalToFalse = useCallback((modal)=>{
     Object.keys(functionsCatalog).map((key)=>{
         if(modal!=key)
             //console.log(key)
             functionsCatalog[key][1](false)
     })
-}
-    const showFilters = (filter) => {
+})
+    const showFilters = useCallback((filter) => {
         filter = filter.toLowerCase()
         //console.log(filter)
             switch(filter)
@@ -136,7 +191,7 @@ const setOtherModalToFalse = (modal)=>{
                     break;
                 default :  break;
             }
-    }
+    })
 
 
     return (
@@ -165,7 +220,7 @@ const setOtherModalToFalse = (modal)=>{
                 </View>
             {//modalFiltersVisible &&
                 <View style={[filtersStyles.filtres]}>
-                        <FlatList data={filters} keyExtractor={(item)=>Math.random().toString()} renderItem={({item}) => {return (
+                        <FlatList data={filters} keyExtractor={(item)=>{ return item.name.toString();}} renderItem={({item}) => {return (
                             <Pressable style={[filtersStyles.pressableFilter, functionsCatalog[item.name.toLowerCase()][0] ? filtersStyles.pressableFilterFocused : false]} onPress={()=>{showFilters(item.name)}} >
                                 <Text style={[customText.text]}>{item.name}</Text>
                             </Pressable>
@@ -187,7 +242,7 @@ const setOtherModalToFalse = (modal)=>{
                 </View>
 
                     <View style={[filtersStyles.filterFlatlist, filtersStyles.radioBox]}>
-                        <RadioButton.Group onValueChange={val => {getSearchedTextWithFilters(searchText,val); return val}} value={selectedOrderBy} style={[filtersStyles.radioGroup,]}>
+                        <RadioButton.Group onValueChange={val => {getSearchedTextWithFilters({searchText:searchText,orderBy:val,selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions}); return val}} value={selectedOrderBy} style={[filtersStyles.radioGroup,]}>
                             {
                                 orderByItems.map((item) => {
                                     return(
@@ -257,7 +312,7 @@ const setOtherModalToFalse = (modal)=>{
                     <View style={{height:20,}}></View>
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0}}>
                             <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setMaxPrice("");setMinPrice("");}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters(searchText||" ")}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
                         </View>
                 </View>
             }
@@ -266,11 +321,11 @@ const setOtherModalToFalse = (modal)=>{
                         <View style={{alignSelf : "center",}}>
                             <Text style={[customText.text,filtersStyles.label]}>Condition</Text>
                         </View>
-                        <ConditionChoice styles={{}} conditions={{isNewFocused:isNewFocused, isOldFocused:isOldFocused, setIsNewFocused:setIsNewFocused, setIsOldFocused:setIsOldFocused, setIsNewOldFocused:setIsNewOldFocused, isNewOldFocused:isNewOldFocused }} />
+                        <ConditionChoice styles={{}} updateConditions={updateConditions} conditions={conditions} />
                     
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0}}>
                             <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setIsNewFocused(false);setIsOldFocused(false);setIsNewOldFocused(false);}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters(searchText||" ")}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
                         </View>
                     </View>
         }
@@ -287,8 +342,8 @@ const setOtherModalToFalse = (modal)=>{
                             <FlatList
                                 data={[...categories,]}
                                 nestedScrollEnabled={true}
-                                renderItem={ ({item}) => { return <FilterItem tag="category" item={item} /> } }
-                                keyExtractor={ (item) => { return Math.random().toString(); } }
+                                renderItem={ ({item}) => { return <FilterItem updateModalCategories={updateModalCategories} selectedModalCategories={selectedModalCategories} tag="category" item={item} /> } }
+                                keyExtractor={ (item) => { return item._id.toString(); } }
                                 ItemSeparatorComponent ={ (item) => { return <View style={filtersStyles.categorySeparator}></View> }}
                                 horizontal={false}
                                 numColumns={2}
@@ -298,7 +353,7 @@ const setOtherModalToFalse = (modal)=>{
                         </View>
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:15}}>
                             <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setSelectedModalCategories({});}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters(searchText||" ")}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
                         </View>
                     </View>
         }
@@ -313,8 +368,8 @@ const setOtherModalToFalse = (modal)=>{
                         <View style={[filtersStyles.filterFlatlist, filtersStyles.cardItem,]}>
                             <FlatList
                                 data={brands}
-                                renderItem={ ({item}) => { return <FilterItem tag="brand" item={item}  /> } }
-                                keyExtractor={ (item) => { return Math.random().toString(); } }
+                                renderItem={ ({item}) => { return <FilterItem tag="brand" item={item} updateSelectedBrands={updateSelectedBrands} selectedBrands={selectedBrands} /> } }
+                                keyExtractor={ (item) => { return item._id.toString(); } }
                                 ItemSeparatorComponent ={ (item) => { return <View style={filtersStyles.categorySeparator}></View> }}
                                 horizontal={false}
                                 numColumns={2}
@@ -325,7 +380,7 @@ const setOtherModalToFalse = (modal)=>{
 
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:15}}>
                             <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setSelectedBrands({});}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters(searchText||"")}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters({searchText:searchText||"",selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
                         </View>
                     </View>
         }

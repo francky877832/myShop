@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext} from 'react'
+import React, { createContext, useState, useEffect, useContext, useMemo} from 'react'
 import { Alert } from 'react-native'
 
 import { server } from '../remote/server'
@@ -12,9 +12,9 @@ const ProductItemProvider = ({children}) => {
     const [selectedColor, setSelectedColor] = useState("")
     const {user} = useContext(UserContext)
 
-
-    const [ categories, setCategories ] = useState([])
+    const [ categorie, setCategories ] = useState([])
     const [ brands, setBrands ] = useState([])
+    const categories = useMemo(()=>(categorie))
 
     const updateSelectedCategory = (id, path) => {
         setSelectedCategory((prevSelectedCategory) => {
@@ -35,7 +35,7 @@ const ProductItemProvider = ({children}) => {
 useEffect(() => {
     const fetchCategories = async () =>{
         try{
-//console.log(user)
+console.log("user")
             const response = await fetch(`${server}/api/datas/categories/get`, {
                 headers: {
                 'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ useEffect(() => {
     }
     fetchCategories()
     fetchBrands()
-}, [user])
+}, [])
 
 
 

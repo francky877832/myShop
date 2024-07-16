@@ -60,13 +60,13 @@ exports.ShareButton = (props) => {
 
 
 exports.ConditionChoice = (props) => {
-    const { setIsNewFocused, setIsOldFocused,  isNewFocused, isOldFocused, setIsNewOldFocused, isNewOldFocused } = props.conditions
+    const { updateConditions, conditions } = props
     
     return(
         <View style={commonSimpleComponentsStyles.conditionChoice.checkBox}>
-            <CheckBox title='Neuf' checked={isNewFocused} onPress={() => { setIsNewFocused(!isNewFocused);  }} />
-            <CheckBox title='Utilisé' checked={isOldFocused} onPress={() => { setIsOldFocused(!isOldFocused); }} />
-            <CheckBox title='Peu Utilisé' checked={isNewOldFocused} onPress={() => { setIsNewOldFocused(!isNewOldFocused);  }} />
+            <CheckBox title='Neuf' checked={conditions["new"]} onPress={() => { updateConditions("new")  }} />
+            <CheckBox title='Utilisé' checked={conditions["old"]} onPress={() => { updateConditions("old"); }} />
+            <CheckBox title='Peu Utilisé' checked={conditions["new used"]} onPress={() => { updateConditions("new used");  }} />
         </View>    
         )
 }

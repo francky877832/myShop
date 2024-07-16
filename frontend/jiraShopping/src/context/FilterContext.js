@@ -6,9 +6,9 @@ import { UserContext } from './UserContext'
 const FilterContext = createContext()
 const FilterProvider = ({children}) => {
     const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
-    const [selectedModalCategories, setSelectedModalCategories] = useState({})
+    //const [selectedModalCategories, setSelectedModalCategories] = useState({})
 
-    const [selectedBrands, setSelectedBrands] = useState({})
+    //const [selectedBrands, setSelectedBrands] = useState({})
 
     const [selectedOrderBy, setSelectedOrderBy] = useState("")
 
@@ -23,7 +23,7 @@ const FilterProvider = ({children}) => {
     const {user} = useContext(UserContext)
 
 
-    const _handlePress = (id) => {
+    const _handlePress = useCallback((id) => {
         setSelectedCategories((prevSlectedCategories)=>{
             //console.log(prevSlectedCategories)
             return ({
@@ -31,21 +31,23 @@ const FilterProvider = ({children}) => {
                 [id] : !prevSlectedCategories[id], 
             })
         })
-    }
-    const updateModalCategories = (id) => {
-        setSelectedModalCategories((prevSlectedCategories) => {
+    })
+
+   /* const updateModalCategories = useCallback((id) => {
+        setSelectedModalCategories((prevSelectedCategories) => {
             /*console.log(({
                 ...prevSlectedCategories,
                 [id] : !prevSlectedCategories[id], 
             }))*/
-
+/*
             return ({
-                ...prevSlectedCategories,
-                [id] : !prevSlectedCategories[id], 
+                ...prevSelectedCategories,
+                [id] : !prevSelectedCategories[id], 
             })
         })
-    }
-    const updateCategories = (id, path) => {
+    })*/
+
+    const updateCategories = useCallback((id, path) => {
         setSelectedCategories((prevSelectedCategory) => {
             if(path==undefined)
             {        //console.log(id)
@@ -63,9 +65,9 @@ const FilterProvider = ({children}) => {
                 return {[id] : true, name:id, subCategories:path}
             }
         })
-    }
+    })
 
-    const updateSelectedBrands = (name) => {
+    /*const updateSelectedBrands = useCallback((name) => {
         setSelectedBrands((prevSlectedBrands)=>{
                 //console.log(prevSlectedCategories)
         
@@ -75,12 +77,14 @@ const FilterProvider = ({children}) => {
                 })
             })
 
-    }
+    })*/
 
-    const getSearchedTextWithFilters = async (searchText, orderBy) =>
+    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions}) =>
     {
+        console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions})
         setSelectedOrderBy(orderBy);
-        //console.log(selectedModalCategories)
+        console.log(selectedCategories)
+        selectedModalCategories = selectedModalCategories || {}
         let categories;
         if(Object.keys(selectedModalCategories).length>0)
         {
@@ -91,16 +95,17 @@ const FilterProvider = ({children}) => {
         else
         {
             categories = Object.keys(selectedCategories).filter((key)=>{ return selectedCategories[key]===true})
-            setSelectedModalCategories({})
+            selectedModalCategories={}
         }
         //console.log(categories)
         //console.log(categories)
+        selectedBrands = selectedBrands || {}
         let brands = Object.keys(selectedBrands).filter((key)=>{ return selectedBrands[key]==true})
         //console.log(selectedBrands)
         let condition = []
-        isOldFocused && condition.push("used")
-        isNewFocused && condition.push("new")
-        isNewOldFocused && condition.push("new used")
+        conditions["old"] && condition.push("used")
+        conditions["new"] && condition.push("new")
+        conditions["new used"] && condition.push("new used")
         //console.log(condition)
         
         const filters = {
@@ -166,14 +171,14 @@ const FilterProvider = ({children}) => {
         } catch (error) {
         console.error(error.message);
       }
-    }
+    })
 
     
 
-    const resetAllFiltersWithoutFecthingDatas = () => {
+    const resetAllFiltersWithoutFecthingDatas = useCallback(() => {
         //setSelectedCategories([])
-        setSelectedBrands([])
-        setSelectedOrderBy()
+        //setSelectedBrands([])
+        setSelectedOrderBy("")
         setIsNewFocused(true)
         setIsOldFocused(true)
         setIsNewOldFocused(true)
@@ -181,11 +186,11 @@ const FilterProvider = ({children}) => {
         setMaxPrice("")
         setRefreshComponent(!refreshComponent)
         //console.log("resetAllFiltersWithoutFecthingDatas")
-    }
+    })
 
-    const resetAllFilters = (searchText) => {
+    const resetAllFilters = useCallback((searchText) => {
         //setSelectedCategories([])
-        setSelectedBrands([])
+        //setSelectedBrands([])
         setSelectedOrderBy()
         setIsNewFocused(true)
         setIsOldFocused(true)
@@ -193,16 +198,16 @@ const FilterProvider = ({children}) => {
         setMinPrice("")
         setMaxPrice("")
         setRefreshComponent(!refreshComponent)
-        getSearchedTextWithFilters(searchText)
-    }
+        getSearchedTextWithFilters({searchText:searchText})
+    })
 
     useEffect(()=>{
         //getSearchedTextWithFilters("ord")
     })
 
-    const filterStateVars = {refreshComponent, selectedCategories, selectedModalCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands, products}
-    const filterStateSetters = {setRefreshComponent, setSelectedBrands, setSelectedModalCategories, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
-    const utilsFunctions = {_handlePress, updateCategories, updateModalCategories, updateSelectedBrands, resetAllFilters, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas }
+    const filterStateVars = {refreshComponent, selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, products}
+    const filterStateSetters = {setRefreshComponent, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
+    const utilsFunctions = {_handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

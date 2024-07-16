@@ -13,23 +13,20 @@ import { ProductItemContext } from '../../context/ProductItemContext';
 import { FilterContext } from '../../context/FilterContext';
 
 const FilterItem = (props) => {
-    const { item, tag } = props
+    const { item, tag, } = props
+   
     const [checked, setChecked] = useState("")
 
-    const { updateCategories, selectedCategories, selectedBrands, updateSelectedBrands,
-        updateModalCategories, selectedModalCategories, setSelectedModalCategories,  } = useContext(FilterContext)
-
-      const handlePress = useCallback((item, it) => {
-        updateModalCategories(item.name+"/"+it.name);
-      },[])
+        
+        
      //console.log(tag)
-     useEffect(() => {
-        console.log("2");
+    useEffect(() => {
+        //console.log("2");
        
-     })
+    })
         if(tag=="category")
         {
-
+            const {updateModalCategories, selectedModalCategories} = props
         
             return(
 
@@ -41,7 +38,7 @@ const FilterItem = (props) => {
                             item.subCategories.map((it, index) =>{
                                 return(
                                 <View activeOpacity={1} style={[filterItemStyles.checkBox,]} key={index}>
-                                    <CheckBox title={it.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} onPress={(e) => {handlePress(item,it)}} checked={selectedModalCategories[item.name+"/"+it.name]} />
+                                    <CheckBox title={it.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} onPress={(e) => { updateModalCategories(item.name+"/"+it.name);}/*setChecked(!checked)*/ } checked={ selectedModalCategories[item.name+"/"+it.name] } />
                                 </View>
                             )})
                         }
@@ -50,6 +47,8 @@ const FilterItem = (props) => {
         }
         else if(tag=="brand")
         {
+            const {selectedBrands, updateSelectedBrands} = props
+           
             return(
                 <View style={[filterItemStyles.container,{}]} >
                     <View style={[filterItemStyles.title]}>

@@ -63,10 +63,10 @@ const SearchResults = (props) => {
         {
             //console.log("pkkkk")
             //getProductsFromCategories()
-            getSearchedTextWithFilters(" ", selectedOrderBy)
+            getSearchedTextWithFilters({searchText:" ", orderBy:selectedOrderBy})
         }
         else{
-            getSearchedTextWithFilters(searchText, selectedOrderBy)
+            getSearchedTextWithFilters({searchText:searchText, orderBy:selectedOrderBy})
         }
     }, [refreshComponent])
 
