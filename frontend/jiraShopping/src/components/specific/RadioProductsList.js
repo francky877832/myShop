@@ -21,13 +21,13 @@ import { BasketContext } from '../../context/BasketContext';
 import { formatMoney } from '../../utils/commonAppFonctions';
 const RadioProductsList = (props) => {
     const { item, datas  } = props;
-    const {basket, removeBasket, selectedProducts, updateSelectedProducts, selectedSeller, setSelectedSeller, totalPrice} = useContext(BasketContext)
+    const {basket, removeBasket, selectedProducts, updateSelectedProducts, selectedSeller, setSelectedSeller, totalPrice, updateTotalPrice} = useContext(BasketContext)
 
     const RadioProduct = (props) => {
         const {item} = props
         let passed_sellers = []
         let passed_product = []
-        console.log(item)
+        //console.log(item)
         //const profile = item.productDetails.images[0] || require('../../assets/images/product5.png')
         const inBasket = 3
         return (
@@ -64,7 +64,7 @@ const RadioProductsList = (props) => {
                                                             <Text style={[customText.text, ]}>{product2.seller}</Text>
                                                             <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
                                                             <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(product2.price)} XAF{/* prix de la proposition ou real Price*/}</Text>
-                                                            <Pressable onPress={()=>{removeBasket(product2);updateSelectedProducts(product2)}}>
+                                                            <Pressable onPress={()=>{removeBasket(product2);updateSelectedProducts(product2,"remove");}}>
                                                                 <Icon name="trash-outline" color={appColors.black} size={18} type="ionicon" style={[{alignSelf:"flex-end"}]} />
                                                             </Pressable>
                                                         </View>
@@ -120,7 +120,7 @@ const RadioProductsList = (props) => {
                     <View style={radioProductsListtStyles.bottom}>
                         <View style={radioProductsListtStyles.bottomPrice}>
                             <Text style={[radioProductsListtStyles.price, {color:appColors.secondaryColor3}]}>Total : </Text>
-                            <Text style={[radioProductsListtStyles.price, {fontWeight:"bold",}]}>{totalPrice} XAF</Text>
+                            <Text style={[radioProductsListtStyles.price, {fontWeight:"bold",}]}>{formatMoney(totalPrice)} XAF</Text>
                         </View>
                         <View style={radioProductsListtStyles.buttonView}>
                             <CustomButton text="Payer" color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{}} styles={radioProductsListtStyles} />

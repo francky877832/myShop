@@ -32,7 +32,7 @@ const BasketProvider = ({children}) => {
                 let tmp_fav = [...prevState]
                 //console.log(tmp_fav)
                 tmp_fav.splice(i,1)
-                console.log("tmp_fav")
+                //console.log("tmp_fav")
                 //console.log([...prevState])
                 return tmp_fav
             }
@@ -117,20 +117,38 @@ const isBasketPresent = (item) => {
     return [bool, i]
 }
 
-const updateSelectedProducts = (item) => {
+const updateSelectedProducts = (item, bool) => {
     setSelectedProducts((prevState)=>{
-        let price = totalPrice
-        if(prevState[item._id])
+       /* let price = totalPrice
+        if(!!prevState[item._id])
             price -= item.price
         else
             price += item.price
         price = price<0 ? price*-1 :price
         setTotalPrice(price) //a modifier pour gerer les propositions + la commission
+*/
+    const sp = { ...prevState,
+        [item._id] : bool==="remove" ? false : !prevState[item._id]
+    }
+    updateTotalPrice(sp)
 
-        return {
-            ...prevState,
-            [item._id] : !prevState[item._id]
+        return sp
+    })
+}
+
+const updateTotalPrice = (spro) => {
+    console.log(spro)
+    //console.log("ok")
+    let price = 0
+    setTotalPrice((prevPrice)=>{
+        let sp = basket.filter((item)=>{
+                return (spro[item._id]===true)
+        })
+        //console.log(sp)
+        for(let el of sp){
+            price += el.price //OR new price or Personnal Price
         }
+        return price
     })
 }
 
@@ -166,7 +184,7 @@ const fetchUserBasket = async () =>{
 
     const basketStateVars = {basket,selectedProducts, selectedSeller, totalPrice, isLoading}
     const  basketStateStters = {setBasket, setSelectedSeller, setIsLoading}
-    const utilsFunctions = {addBasket, fetchUserBasket, removeBasket, updateSelectedProducts, isBasketPresent}// removeFavourite}
+    const utilsFunctions = {addBasket, fetchUserBasket, removeBasket, updateSelectedProducts, isBasketPresent, updateTotalPrice}// removeFavourite}
     return (
         <BasketContext.Provider value={{...basketStateVars, ...basketStateStters, ...utilsFunctions}}>
             {children}
