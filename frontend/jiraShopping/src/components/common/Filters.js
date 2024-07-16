@@ -60,6 +60,7 @@ const Filters = (props) => {
             
         })
     })
+
     const updateModalCategories = useCallback((id) => {
         setSelectedModalCategories((prevSelectedCategories) => {
             /*console.log(({
@@ -254,9 +255,11 @@ const setOtherModalToFalse = useCallback((modal)=>{
                                 })
                             }
                         </RadioButton.Group>
+
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0,width:"100%",}}>
-                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"100%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setSelectedOrderBy("")}} />
+                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"100%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{resetAllFilters("")}} />
                         </View>
+                        
                     </View>
                     <View style={{height:20,}}></View>
                 
@@ -309,6 +312,7 @@ const setOtherModalToFalse = useCallback((modal)=>{
                             />
                         </View>
                     </View>
+
                     <View style={{height:20,}}></View>
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0}}>
                             <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setMaxPrice("");setMinPrice("");}} />

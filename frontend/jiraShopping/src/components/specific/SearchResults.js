@@ -74,7 +74,7 @@ useEffect(() => {
         const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
             e.preventDefault();
             resetAllFiltersWithoutFecthingDatas()
-          navigation.dispatch(e.data.action)
+            navigation.dispatch(e.data.action)
         })
         return beforeRemoveListener;
 }, [navigation]);
