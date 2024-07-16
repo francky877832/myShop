@@ -1,6 +1,7 @@
 import React, { useState, forwardRef, useRef, useEffect } from 'react';
 import { View, Text, Pressable, FlatList, ScrollView, TextInput, Alert} from 'react-native';
 import { Input } from 'react-native-elements';
+import {CustomActivityIndicator} from '../common/CommonSimpleComponents'
 
 import { appColors, appFont, customText } from '../../styles/commonStyles';
 import { commentsStyles } from '../../styles/commentsStyles';
@@ -20,6 +21,8 @@ const Comments = (props) =>
 {
     const { all, navigation, product, allComments, onNewComment, setters} = props
     const {inputValue,setInputValue, setIsResponseTo} = setters 
+    const [isLoading, setIsLoading]  = useState(true)
+
     //console.log("allComments")
     //console.log(allComments)
     //Requete parametres avec le nombre  de comments a afficher
@@ -57,9 +60,17 @@ const fetchProductComments = async () =>{
 }
 useEffect(()=>{
    // all ? false : 
-   fetchProductComments()
-    //console.log(comments)
-}, [onNewComment])
+  
+   const fetchData = async () => {
+    //setIsLoading(true);
+    await fetchProductComments()
+    setIsLoading(false);
+  };
+
+  if (isLoading) {
+    fetchData();
+  }
+}, [onNewComment, isLoading])
 
     const Comment = (props) => {
         const { comment, styles, all, } = props
@@ -186,6 +197,9 @@ useEffect(()=>{
                 </Pressable>
             </View>
         }
+                    {isLoading && 
+                        <CustomActivityIndicator styles={{}} /> 
+                    }
         </View>
     )
 }
