@@ -10,7 +10,7 @@ import { Input } from 'react-native-elements';
 import { appColors, customText } from '../../styles/commonStyles';
 import { categoriesStyles } from '../../styles/categoriesStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
-import { CustomButton } from "./CommonSimpleComponents"
+import { CustomButton, CustomActivityIndicator } from "./CommonSimpleComponents"
 
 import { Icon } from 'react-native-elements';
 
@@ -27,9 +27,10 @@ const Categories = (props) => {
     const {page,} = props
     const goBackTo = params?.datas?.goBackTo || props.goBackTo
 //console.log(page)
-    const {setSelectedBrand, selectedColor, setSelectedColor, categories, brands,} = useContext(ProductItemContext)
+    const {setSelectedBrand, selectedColor, setSelectedColor, categories, brands, isLoading} = useContext(ProductItemContext)
     const { selectedCategories, updateCategories } = useContext(FilterContext)
     const navigation = useNavigation()
+    
    
 //console.log(selectedCategories)
     //Appel side effect pour recuperer les cat, marque et couleur de la BD
@@ -54,7 +55,7 @@ const Categories = (props) => {
     
 useEffect(() => {
     
-}, [])
+})
 
 
 
@@ -224,6 +225,10 @@ useEffect(() => {
                     />
             </View>
         }
+
+            {isLoading && 
+                <CustomActivityIndicator styles={{}} /> 
+            }
         </View>
     )
 }

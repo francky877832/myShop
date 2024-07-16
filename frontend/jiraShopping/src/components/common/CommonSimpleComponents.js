@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, Pressable, ScrollView, SafeAreaView, Dimensions, } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 
 import BadgeIcon from './BadgeIcon';
 import { Ionicons } from '@expo/vector-icons';
@@ -84,6 +84,15 @@ exports.CustomButton = (props) => {
             <Text style={[styles.text, styles_.color]}>{text}</Text>
        </Pressable> 
         )
+}
+
+exports.CustomActivityIndicator = (props) => {
+
+    return (
+        <View style={[commonSimpleComponentsStyles.activityIndicator.container,{}]}>
+                <ActivityIndicator style={[commonSimpleComponentsStyles.activityIndicator.activityIndicator,{}]} />
+        </View>
+    )
 }
 
 

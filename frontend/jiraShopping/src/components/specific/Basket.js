@@ -5,6 +5,8 @@ import { View, Text, Alert} from 'react-native';
 import Top from '../common/Top';
 import Filters from '../common/Filters';
 import RadioProductsList from './RadioProductsList';
+import { CustomActivityIndicator } from '../common/CommonSimpleComponents'
+
 //custom styles
 import { basketStyles } from '../../styles/basketStyles';
 //custom app datas
@@ -13,7 +15,6 @@ import ProductsListWithFilters from '../common/ProductsListWithFilters';
 import { productStyles } from '../../styles/productStyles';
 
 import { BasketContext } from '../../context/BasketContext';
-
 import { basketsProducts } from '../../utils/sampleDatas';
 
 import { server } from '../../remote/server';
@@ -23,18 +24,22 @@ const loggedUserId = "66715deae5f65636347e7f9e"
 const Basket = (props) => {
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
     //const [basket, setBasket] = useState([])
-    const {basket, fetchUserBasket} = useContext(BasketContext)
+    const {basket, fetchUserBasket, isLoading} = useContext(BasketContext)
 
 useEffect(()=>{
-    //fetchUserBasket()
+    //await fetchUserBasket()
     //console.log(basket)
 }, [basket])
 
     return(
         <View style={[basketStyles.container,]}>
-                    <View style={[{flex:1,}]}>
-                        <RadioProductsList datas={basket} styles={{}} />
-                    </View>
+            <View style={[{flex:1,}]}>
+                <RadioProductsList datas={basket} styles={{}} />   
+                    {
+                        isLoading && 
+                            <CustomActivityIndicator styles={{}} /> 
+                    }
+            </View>
         </View>
     )
 }

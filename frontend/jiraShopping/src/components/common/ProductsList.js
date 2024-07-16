@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Dimensions 
 
 //custom component
 import Product from './Product';
+import { CustomActivityIndicator } from '../common/CommonSimpleComponents'
+
 //custom styles
 import { productsListStyles } from '../../styles/productsListStyles';
 import { numProduct } from '../../styles/productStyles';
@@ -13,7 +15,7 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 import { server } from '../../remote/server';
 
 const ProductsList = React.forwardRef((props, ref) => {
-    const { datas, horizontal, styles, onEndReached, name } = props;
+    const { datas, horizontal, styles, onEndReached, name, isLoading} = props;
     const {favourites} = useContext(FavouritesContext)
     //console.log(datas[0].product)
     useEffect(()=>{
@@ -30,13 +32,16 @@ const ProductsList = React.forwardRef((props, ref) => {
                         keyExtractor={ (item) => { return item._id.toString(); } }
                         horizontal={horizontal}
                         numColumns={ horizontal ? 1 : numProduct }
-                        ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
+                        ItemSeparatorComponent={ (item) => { return <View style={{width:5,}}></View> }}
                         showsHorizontalScrollIndicator={horizontal}
                         contentContainerStyle={[productsListStyles.flatlist, horizontal ? productsListStyles.flatlistHorizontal : false, styles.flatlist]}
                         ref={ref}
                         onEndReached={onEndReached}
                         onEndReachedThreshold={0.75}
                     />
+                    {isLoading && 
+                        <CustomActivityIndicator styles={{}} /> 
+                    }
             </View>
     )
 })

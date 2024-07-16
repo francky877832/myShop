@@ -17,6 +17,8 @@ const BasketProvider = ({children}) => {
     const [selectedProducts, setSelectedProducts] = useState({})
     const [selectedSeller, setSelectedSeller] = useState("")
     const [totalPrice, setTotalPrice] = useState(0)
+    const [isLoading, setIsLoading]  = useState(true)
+
 
     const addBasketContext = (item) => {
         setBasket((prevState) =>{
@@ -150,12 +152,20 @@ const fetchUserBasket = async () =>{
 }
 
     useEffect(()=>{
-        fetchUserBasket()
+        const fetchData = async () => {
+            //setIsLoading(true);
+            await fetchUserBasket()
+            setIsLoading(false);
+          };
+      
+          if (isLoading) {
+            fetchData();
+          }
         //console.log(basket)
-    }, [])
+    }, [isLoading])
 
-    const basketStateVars = {basket,selectedProducts, selectedSeller, totalPrice}
-    const  basketStateStters = {setBasket, setSelectedSeller}
+    const basketStateVars = {basket,selectedProducts, selectedSeller, totalPrice, isLoading}
+    const  basketStateStters = {setBasket, setSelectedSeller, setIsLoading}
     const utilsFunctions = {addBasket, fetchUserBasket, removeBasket, updateSelectedProducts, isBasketPresent}// removeFavourite}
     return (
         <BasketContext.Provider value={{...basketStateVars, ...basketStateStters, ...utilsFunctions}}>

@@ -15,6 +15,9 @@ const FavouritesProvider = ({children}) => {
 
     const [favourites, setFavourites] = useState([])
     const [liked, setLikedIcon ] = useState()
+    const [isLoading, setIsLoading]  = useState(true)
+
+
         
     const addFavouriteContext = (item, bool) => {
         setFavourites((prevState) =>{
@@ -163,12 +166,21 @@ const FavouritesProvider = ({children}) => {
 
 //hook pour initialiser le contexte avec les donnees de mongoDB
     useEffect(()=>{
-        fetchUserFavourites()
+       
+        const fetchData = async () => {
+            //setIsLoading(true);
+            await fetchUserFavourites()
+            setIsLoading(false);
+        };
+      
+        if (isLoading) {
+            fetchData();
+        }
         //console.log(favourites)
-    }, [])
+    }, [isLoading])
 
-    const favouritesStateVars = {favourites, liked}
-    const favouritesStateStters = {hasLiked, setLikedIcon}
+    const favouritesStateVars = {favourites, liked, isLoading}
+    const favouritesStateStters = {hasLiked, setLikedIcon, setIsLoading}
     const utilsFunctions = {addFavourite, }// removeFavourite}
     return (
         <FavouritesContext.Provider value={{...favouritesStateVars, ...favouritesStateStters, ...utilsFunctions}}>

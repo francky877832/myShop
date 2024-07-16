@@ -5,7 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import Top from '../common/Top';
 import ProductsList from '../common/ProductsList';
 import BadgeIcon from '../common/BadgeIcon';
-import { PrevButton, CustomButton } from "../common/CommonSimpleComponents"
+import { PrevButton, CustomButton, CustomActivityIndicator } from '../common/CommonSimpleComponents'
 //custom styles
 import { profilShopStyles } from '../../styles/profilShopStyles';
 import SearchResults from './SearchResults';
@@ -32,6 +32,8 @@ const ProfilShop = (props) => {
     const route = useRoute()
     const [follow, setIsFollow] = useState(true) //Je ne crois pas avoir besoin de Search
     const [products, setProducts] = useState([])
+    const [isLoading, setIsLoading]  = useState(true)
+
 
     const flatListRef = useRef(null);
 
@@ -128,10 +130,19 @@ const ProfilShop = (props) => {
     }
     
     useEffect(()=>{
-            getProducts()
+        const fetchData = async () => {
+            //setIsLoading(true);
+            await getProducts()
+            setIsLoading(false);
+          };
+      
+          if (isLoading) {
+            fetchData();
+          }
+           
             //console.log(products)
     
-    },[])
+    },[isLoading])
     
 
     return(
@@ -195,6 +206,10 @@ const ProfilShop = (props) => {
                         <View style={[profilShopStyles.addProduct,{}]}>
                                 <CustomButton color={appColors.white} backgroundColor={appColors.secondaryColor1} text="Ajouter Un Produit" onPress={()=>{navigation.navigate("AddProduct")}} styles={profilShopStyles} />
                         </View>
+                    }
+
+                    {isLoading && 
+                        <CustomActivityIndicator styles={{}} /> 
                     }
                 </View>
     )

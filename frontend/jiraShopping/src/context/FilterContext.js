@@ -5,6 +5,8 @@ import { server } from '../remote/server'
 import { UserContext } from './UserContext'
 const FilterContext = createContext()
 const FilterProvider = ({children}) => {
+    const [isLoading, setIsLoading]  = useState(true)
+
     const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
     //const [selectedModalCategories, setSelectedModalCategories] = useState({})
 
@@ -102,6 +104,7 @@ const FilterProvider = ({children}) => {
         selectedBrands = selectedBrands || {}
         let brands = Object.keys(selectedBrands).filter((key)=>{ return selectedBrands[key]==true})
         //console.log(selectedBrands)
+        conditions = conditions || {}
         let condition = []
         conditions["old"] && condition.push("used")
         conditions["new"] && condition.push("new")
@@ -199,8 +202,8 @@ const FilterProvider = ({children}) => {
         //getSearchedTextWithFilters("ord")
     })
 
-    const filterStateVars = {refreshComponent, selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, products}
-    const filterStateSetters = {setRefreshComponent, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
+    const filterStateVars = {refreshComponent, isLoading, selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, products}
+    const filterStateSetters = {setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
     const utilsFunctions = {_handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>

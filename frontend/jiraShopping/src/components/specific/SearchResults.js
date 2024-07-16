@@ -7,6 +7,7 @@ import { appColors, appFont } from '../../styles/commonStyles';
 import { searchResultsStyles } from '../../styles/searchStyles';
 import { preferencesStyles } from '../../styles/preferencesStyles';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { CustomActivityIndicator } from '../common/CommonSimpleComponents'
 
 import Top from '../common/Top';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
@@ -27,8 +28,9 @@ const SearchResults = (props) => {
     const {searchText, display} = route.params
     const { selectedCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, 
         selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands,
-        _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas
-        } = useContext(FilterContext)
+        _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
+        isLoading, setIsLoading     
+    } = useContext(FilterContext)
         //const {selectedCategory,  } = useContext(ProductItemContext)
     
         const {user} = useContext(UserContext)
@@ -58,17 +60,32 @@ const SearchResults = (props) => {
                         }
         }
 
-    useEffect(()=>{
-        if(!!display && display == "category")
+    useEffect( ()=>{
+        async function getDatas()
         {
-            //console.log("pkkkk")
-            //getProductsFromCategories()
-            getSearchedTextWithFilters({searchText:" ", orderBy:selectedOrderBy})
+            if(!!display && display == "category")
+            {
+                //console.log("pkkkk")
+                //getProductsFromCategories()
+                if(isLoading)
+                {    
+                    //setIsLoading(true)
+                    await getSearchedTextWithFilters({searchText:" ", orderBy:selectedOrderBy})
+                    setIsLoading(false)
+                }
+            }
+            else{
+                if(isLoading)
+                {  
+                    //setIsLoading(true)
+                    await getSearchedTextWithFilters({searchText:searchText, orderBy:selectedOrderBy})
+                    setIsLoading(false)
+                }
+            }
         }
-        else{
-            getSearchedTextWithFilters({searchText:searchText, orderBy:selectedOrderBy})
-        }
-    }, [refreshComponent])
+        getDatas()
+        
+    }, [refreshComponent, isLoading])
 
 useEffect(() => {
         const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
@@ -85,7 +102,7 @@ useEffect(() => {
                             <Top />
                         </View>
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="SearchResults" filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={`Resultats de recherche "${searchText}"`}/>
+        <ProductsListWithFilters name="SearchResults" isLoading={isLoading} filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={`Resultats de recherche "${searchText}"`}/>
     </View>
                 </View>
         )

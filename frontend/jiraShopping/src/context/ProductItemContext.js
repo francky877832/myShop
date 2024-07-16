@@ -15,6 +15,8 @@ const ProductItemProvider = ({children}) => {
     const [ categorie, setCategories ] = useState([])
     const [ brands, setBrands ] = useState([])
     const categories = useMemo(()=>(categorie))
+    const [isLoading, setIsLoading]  = useState(true)
+
 
     const updateSelectedCategory = (id, path) => {
         setSelectedCategory((prevSelectedCategory) => {
@@ -33,9 +35,10 @@ const ProductItemProvider = ({children}) => {
 
 
 useEffect(() => {
+    //console.log(isLoading)
     const fetchCategories = async () =>{
         try{
-console.log("user")
+//console.log("user")
             const response = await fetch(`${server}/api/datas/categories/get`, {
                 headers: {
                 'Content-Type': 'application/json',
@@ -58,15 +61,24 @@ console.log("user")
             Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok",}]) // onPress:()=>navigation.goBack()
         }
     }
-    fetchCategories()
-    fetchBrands()
-}, [])
+    
+    const fetchData = async () => {
+        //setIsLoading(true);
+        await fetchCategories();
+        await fetchBrands();
+        setIsLoading(false);
+      };
+  
+      if (isLoading) {
+        fetchData();
+      }
+}, [isLoading])
 
 
 
-    const productItemStateVars = {selectedBrand, selectedColor, categories, brands}
-    const productItemStateSetters = {}
-    const utilsFunctions = {setSelectedBrand, setSelectedColor,}
+    const productItemStateVars = {selectedBrand, selectedColor, categories, brands, isLoading}
+    const productItemStateSetters = {setSelectedBrand, setSelectedColor, setIsLoading}
+    const utilsFunctions = {}
     return (
         <ProductItemContext.Provider value={{...productItemStateVars, ...productItemStateSetters, ...utilsFunctions}}>
             {children}

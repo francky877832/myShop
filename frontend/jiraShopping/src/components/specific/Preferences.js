@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, Alert, Dimensions} from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, Alert, Dimensions, ActivityIndicator} from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 const initialLayout = { width: Dimensions.get('window').width };
 
@@ -24,12 +24,15 @@ import { Button } from 'react-native-elements';
 import { UserContext } from '../../context/UserContext';
 import { useNavigation } from '@react-navigation/native';
 import { ProductItemContext } from '../../context/ProductItemContext';
+import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
+import {CustomActivityIndicator} from '../common/CommonSimpleComponents'
 
 const Preferences = (props) => {
     const navigation = useNavigation()
     const [isSearch, setIsSearch] = useState(false) 
     const {favourites, liked, setLikedIcon } = useContext(FavouritesContext)
     const [products, setProducts]  = useState([])
+    const [isLoading, setIsLoading]  = useState(true)
 
     const {refreshComponent, setRefreshComponent,
          resetAllFilters } = useContext(FilterContext)
@@ -57,24 +60,35 @@ useEffect(()=>{
 }, [])
 
 useEffect(() => {
-    if (isAuthenticated) {
-        getProducts()
-        console.log("ok")
+
+    const fetchData = async () => {
+        //setIsLoading(true);
+        await getProducts()
+        setIsLoading(false);
+      };
+  
+    if (isAuthenticated && isLoading) {
+        fetchData()
     }
     
-  }, [refreshComponent, isAuthenticated, navigation]);
+  }, [refreshComponent, isAuthenticated, isLoading, navigation]);
 
 //console.log(user)
 
 
 const ProductsListWithFilters_ = () => {
     return (
-        <ProductsListWithFilters name="Preference" filters={false} datas={products} horizontal={false} styles={preferencesStyles} title="...Choisis Pour Vous" />
+        <View style={{flex:1,}}>
+            <ProductsListWithFilters name="Preference" filters={false} datas={products} horizontal={false} styles={preferencesStyles} title="...Choisis Pour Vous" />
+            {isLoading && 
+                <CustomActivityIndicator styles={{}} /> 
+            }
+        </View>
     )
 }
 const Categories_ = () => {
     return (
-        <Categories page="category" goBackTo="SearchResults" route={{}} />
+            <Categories page="category" goBackTo="SearchResults" route={{}} />
     )
 }
 
@@ -82,13 +96,13 @@ const Categories_ = () => {
 const [index, setIndex] = useState(0);
 
 const [routes] = useState([
-  { key: 'products', title: 'Préférences' },
-  { key: 'categories', title: 'Categories' },
+    { key: 'products', title: 'Préférences' },
+    { key: 'categories', title: 'Categories' },
 ]);
 
 const renderScene = SceneMap({
     products: ProductsListWithFilters_,
-  categories: Categories_,
+    categories: Categories_,
 
 });
 

@@ -215,7 +215,6 @@ exports.getSearchedProducts = async (req, res, next) => {
     let filteredResult = result;
     //console.log(customFilters.minPrice)
     if (customFilters.categories?.length > 0) {
-
       filteredResult = filteredResult.filter(product => {
         
           if(customFilters.categories[0].split('/').length == 2)

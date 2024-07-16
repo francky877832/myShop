@@ -17,20 +17,12 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 
 const Favourites = (props) => {
 
-    const {favourites} = useContext(FavouritesContext)
+    const {favourites, isLoading} = useContext(FavouritesContext)
     const [datas, setDatas] = useState([])
 //console.log(favourites)
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
     useEffect(()=>{
-        /*let tmp = []
-        for(el of favourites)
-        {
-            if(el.liked)
-            {
-                tmp.push(el)
-            }
-        }
-        setDatas(tmp)*/
+    
     }, [favourites])
     return(
         <View style={[favouritesStyles.container,]}>
@@ -38,7 +30,7 @@ const Favourites = (props) => {
                         <Top />
                     </View>
                     <View style={[{flex:1,paddingBottom:0,}]}>
-                        <ProductsListWithFilters filters={false} datas={favourites} horizontal={false} title="Mes Favoris" />
+                        <ProductsListWithFilters isLoading={isLoading} filters={false} datas={favourites} horizontal={false} title="Mes Favoris" />
                     </View>
         </View>
     )
