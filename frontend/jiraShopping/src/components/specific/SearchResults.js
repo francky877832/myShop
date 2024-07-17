@@ -61,10 +61,11 @@ const SearchResults = (props) => {
         }
 useEffect(()=>{
     if(!isLoading)
-        //setIsLoading(true)
+        setIsLoading(true)
     console.log(searchText)
 },[])
-    useEffect( ()=>{
+
+useEffect( ()=>{
         async function getDatas()
         {
             if(!!display && display == "category")
@@ -75,7 +76,7 @@ useEffect(()=>{
                 {    
                     //setIsLoading(true)
                     await getSearchedTextWithFilters({searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})
-                   // setIsLoading(false)
+                    setIsLoading(false)
                 }
             }
             else{console.log("There")
@@ -83,13 +84,13 @@ useEffect(()=>{
                 {  console.log("Therec")
                     //setSelectedCategories({})
                     await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:{}, selectedBrands:{}, conditions:{}, orderBy:selectedOrderBy})
-                    //setIsLoading(false)
+                    setIsLoading(false)
                 }
             }
         }
         getDatas()
         
-    }, [ ])
+    }, [isLoading, refreshComponent])
 
 /*useEffect(() => {
         const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {

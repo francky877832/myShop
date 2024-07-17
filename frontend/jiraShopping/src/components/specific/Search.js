@@ -10,11 +10,8 @@ import { ScreenHeight } from 'react-native-elements/dist/helpers';
 //custom styles
 import { appColors, appFont } from '../../styles/commonStyles';
 import { searchStyles } from '../../styles/searchStyles';
-import { productStyles } from '../../styles/productStyles';
-import { productDetailsStyles } from '../../styles/productDetailsStyles';
-import { customText } from '../../styles/commonStyles';
-import ProductsList from '../common/ProductsList';
-import Filters from '../common/Filters';
+import { CustomActivityIndicator } from '../common/CommonSimpleComponents'
+
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
 import { screenHeight } from '../../styles/commentsStyles';
@@ -31,7 +28,7 @@ const Search = (props) => {
     const searchBarRef = useRef(null)
     const scrollViewRef = useRef(null)
     const navigation = useNavigation()
-    const {refreshComponent, setRefreshComponent, resetAllFilters,resetAllFiltersWithoutFecthingDatas} = useContext(FilterContext)
+    const {refreshComponent, setRefreshComponent, resetAllFilters,resetAllFiltersWithoutFecthingDatas, isLoading, setIsLoading} = useContext(FilterContext)
     
     //const datas = []
 
@@ -77,7 +74,7 @@ const onSubmitEditing = async () =>{
 
 
               navigation.navigate("SearchResults", {searchText:searchText})
-                Alert.alert("", "Historique ajoute avec success")
+                //Alert.alert("", "Historique ajoute avec success")
 
             }catch(error)
             {
@@ -128,7 +125,7 @@ const removeUserHistorique = async (name) => {
                 }
               
                 //Alert.alert("", "Historique ajoute avec success")
-                setRefreshComponent(!refreshComponent)
+                //setRefreshComponent(!refreshComponent)
             }catch(error)
             {
                 console.log(error)
@@ -167,19 +164,21 @@ const removeAllUserHistorique = async (name) => {
             }
 }
 useEffect(()=>{
-    //console.log("OK")
+    resetAllFiltersWithoutFecthingDatas()
 },[])
 useEffect(()=>{
     const fetchData = async () => {
-        resetAllFiltersWithoutFecthingDatas()
-        //setIsLoading(true);
+        
+       if(isLoading)
+       {
         await fetchUserHistorique()
-        //setIsLoading(false);
-      };
+        setIsLoading(false);
+       }
+    };
 
       fetchData()
     
-}, [])
+}, [isLoading])
 
     return(
 <View style={[searchStyles.container,{flex:1}]}>
@@ -218,7 +217,7 @@ useEffect(()=>{
                            <FlatList
                                 data={historique}
                                 renderItem={ ({item}) => {  return (
-                                    <Pressable style={[ searchStyles.history,  ]} onPress={()=>{/*resetAllFiltersWithoutFecthingDatas()*/;navigation.navigate("SearchResults", {searchText:item})}} >
+                                    <Pressable style={[ searchStyles.history,  ]} onPress={()=>{/*resetAllFiltersWithoutFecthingDatas();*/navigation.navigate("SearchResults", {searchText:item})}} >
                                         <Pressable style={{}} onPress={()=>{removeUserHistorique(item);}}>
                                             <Ionicons name="close" size={20} color={appColors.secondaryColor1} />
                                         </Pressable>
@@ -232,7 +231,9 @@ useEffect(()=>{
                                 contentContainerStyle={{}}
                                 ListEmptyComponent={<EmptyLit giveFocus={_handleFocusTextInput} text="Historique de recherche vide.|Effectuer une recherche." />}
                             />
-    
+                    {isLoading && 
+                        <CustomActivityIndicator styles={{}} /> 
+                    }
                         </View>
                     </View>
                 </View>

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import { NavigationContainer, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { TransitionPresets } from '@react-navigation/stack';
 
 import BadgeIcon from '../components/common/BadgeIcon';
 import Search from '../components/specific/Search';
@@ -44,7 +44,11 @@ export default function MainNavigation() {
     <ProductItemProvider>
         
           <FilterProvider>
-              <Stack.Navigator initialRouteName="UserLogin">
+              <Stack.Navigator initialRouteName="UserLogin"  /*screenOptions={{
+                      gestureEnabled: false,
+                      cardOverlayEnabled: false,
+                      ...TransitionPresets.ModalPresentationIOS,
+                    }}*/>
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
                 <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false, }} />
                 <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />

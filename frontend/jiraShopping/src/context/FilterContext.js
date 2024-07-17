@@ -84,7 +84,7 @@ const FilterProvider = ({children}) => {
     const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions}) =>
     {
         console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions})
-       setIsLoading(true)
+        setIsLoading(true)
         setSelectedOrderBy(orderBy);
         //console.log(selectedCategories)
         selectedModalCategories = selectedModalCategories || {}
@@ -168,37 +168,42 @@ const FilterProvider = ({children}) => {
                     throw new Error(`Erreur lors de la recherhce de produit${response.text()}`)
                 const responseJson = await response.json();
                 //console.log(responseJson)
-                
                 setProducts(responseJson)
-                setIsLoading(false)
+                //setIsLoading(false)
+               
+                //setSelectedCategories({"Vetements": true, "name": "Vetements"}) //OR NOT
                 //setRefreshComponent(!refreshComponent)
 
         } catch (error) {
-        console.error(error.message);
+            setIsLoading(false)
+            console.error(error.message);
+        
       }
     })
 
     
 
     const resetAllFiltersWithoutFecthingDatas = useCallback(() => {
+        setIsLoading(true)
         setSelectedCategories({})
         //setSelectedBrands([])
         setSelectedOrderBy("")
         setMinPrice("")
         setMaxPrice("")
-        setIsLoading(true)
+        
         //setRefreshComponent(!refreshComponent)
         //console.log("resetAllFiltersWithoutFecthingDatas")
     })
 
     const resetAllFilters = useCallback((searchText) => {
+        setIsLoading(true)
         setSelectedCategories({})
         //setSelectedBrands([])
         setSelectedOrderBy("")
         setMinPrice("")
         setMaxPrice("")
         //setRefreshComponent(!refreshComponent)
-        setIsLoading(true)
+        
         //getSearchedTextWithFilters({searchText:searchText})
     })
 
