@@ -84,7 +84,7 @@ const FilterProvider = ({children}) => {
     const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions}) =>
     {
         console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions})
-       
+       setIsLoading(true)
         setSelectedOrderBy(orderBy);
         //console.log(selectedCategories)
         selectedModalCategories = selectedModalCategories || {}
@@ -170,6 +170,7 @@ const FilterProvider = ({children}) => {
                 //console.log(responseJson)
                 
                 setProducts(responseJson)
+                setIsLoading(false)
                 //setRefreshComponent(!refreshComponent)
 
         } catch (error) {
@@ -185,6 +186,7 @@ const FilterProvider = ({children}) => {
         setSelectedOrderBy("")
         setMinPrice("")
         setMaxPrice("")
+        setIsLoading(true)
         //setRefreshComponent(!refreshComponent)
         //console.log("resetAllFiltersWithoutFecthingDatas")
     })
@@ -196,6 +198,7 @@ const FilterProvider = ({children}) => {
         setMinPrice("")
         setMaxPrice("")
         //setRefreshComponent(!refreshComponent)
+        setIsLoading(true)
         //getSearchedTextWithFilters({searchText:searchText})
     })
 

@@ -26,12 +26,12 @@ const SearchResults = (props) => {
     
     const route = useRoute()
     const {searchText, display} = route.params
-    const { selectedCategories, setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, 
+    const {setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, 
         selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands,
         _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
-        isLoading, setIsLoading     
+        isLoading, setIsLoading , selectedCategories , setSelectedCategories 
     } = useContext(FilterContext)
-    
+    //console.log(selectedCategories)
         //const {selectedCategory,  } = useContext(ProductItemContext)
         const {user} = useContext(UserContext)
         const navigation = useNavigation()
@@ -60,7 +60,9 @@ const SearchResults = (props) => {
                         }
         }
 useEffect(()=>{
-    setIsLoading(true)
+    if(!isLoading)
+        //setIsLoading(true)
+    console.log(searchText)
 },[])
     useEffect( ()=>{
         async function getDatas()
@@ -72,22 +74,22 @@ useEffect(()=>{
                 if(isLoading)
                 {    
                     //setIsLoading(true)
-                    await getSearchedTextWithFilters({searchText:" ", orderBy:selectedOrderBy})
-                    setIsLoading(false)
+                    await getSearchedTextWithFilters({searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})
+                   // setIsLoading(false)
                 }
             }
             else{console.log("There")
                 if(isLoading)
                 {  console.log("Therec")
-                    //setIsLoading(true)
+                    //setSelectedCategories({})
                     await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:{}, selectedBrands:{}, conditions:{}, orderBy:selectedOrderBy})
-                    setIsLoading(false)
+                    //setIsLoading(false)
                 }
             }
         }
         getDatas()
         
-    }, [isLoading])
+    }, [ ])
 
 /*useEffect(() => {
         const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {

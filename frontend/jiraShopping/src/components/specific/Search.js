@@ -218,7 +218,7 @@ useEffect(()=>{
                            <FlatList
                                 data={historique}
                                 renderItem={ ({item}) => {  return (
-                                    <Pressable style={[ searchStyles.history,  ]} onPress={()=>{/*resetAllFilters();*/navigation.navigate("SearchResults", {searchText:item})}} >
+                                    <Pressable style={[ searchStyles.history,  ]} onPress={()=>{/*resetAllFiltersWithoutFecthingDatas()*/;navigation.navigate("SearchResults", {searchText:item})}} >
                                         <Pressable style={{}} onPress={()=>{removeUserHistorique(item);}}>
                                             <Ionicons name="close" size={20} color={appColors.secondaryColor1} />
                                         </Pressable>

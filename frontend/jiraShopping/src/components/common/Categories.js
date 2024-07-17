@@ -29,9 +29,30 @@ const Categories = (props) => {
 //console.log(page)
     const {setSelectedBrand, selectedColor, setSelectedColor, categories, brands, isLoading} = useContext(ProductItemContext)
     const { selectedCategories, updateCategories } = useContext(FilterContext)
+    //const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
+
     const navigation = useNavigation()
     
    
+    /*const updateCategories = useCallback((id, path) => {
+        setSelectedCategories((prevSelectedCategory) => {
+            if(path==undefined)
+            {        //console.log(id)
+                if(prevSelectedCategory["name"] == id)
+                    return {[id] : prevSelectedCategory[id], name:id,}
+                return {[id] : !prevSelectedCategory[id], name:id,}
+                
+            }
+            else if(path=="complete_category")
+            {
+                return {[id] : true, name:id,}
+            }
+            else
+            { //console.log(path)
+                return {[id] : true, name:id, subCategories:path}
+            }
+        })
+    })*/
 //console.log(selectedCategories)
     //Appel side effect pour recuperer les cat, marque et couleur de la BD
    /* let categorie = [
@@ -59,7 +80,7 @@ useEffect(() => {
 
 
 
-    const Category = (props) => {
+    const Category = React.memo((props) => {
         const { item, selectedCategories, updateCategories,} = props
         //console.log(item.subCategories)
         //console.log(selectedCategories)
@@ -95,7 +116,7 @@ useEffect(() => {
                     }
         </View>
         )
-}
+})
 
 
     return(
@@ -130,7 +151,7 @@ useEffect(() => {
                                 item.subCategories.map((subCat, index) => {
                                     return (
                                         <View  key={subCat._id} >
-                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateCategories(item.name, subCat.name); navigation.navigate(goBackTo, {searchText:" ", display:"category"});}}>
+                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateCategories(item.name, subCat.name); navigation.navigate(goBackTo, {searchText:" ", display:"category",});}}>
                                                 <Text>{subCat.name}</Text>
                                             </Pressable>
                                         </View>

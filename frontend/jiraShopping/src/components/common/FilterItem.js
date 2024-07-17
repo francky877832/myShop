@@ -38,7 +38,7 @@ const FilterItem = (props) => {
                             item.subCategories.map((it, index) =>{
                                 return(
                                 <View activeOpacity={1} style={[filterItemStyles.checkBox,]} key={index}>
-                                    <CheckBox title={it.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} onPress={(e) => { updateModalCategories(item.name+"/"+it.name);}/*setChecked(!checked)*/ } checked={ selectedModalCategories[item.name+"/"+it.name] } />
+                                    <CheckBox title={it.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} onPress={(e) => { updateModalCategories(item.name+"/"+it.name);}/*setChecked(!checked)*/ } checked={ selectedModalCategories[item.name+"/"+it.name] || selectedModalCategories[item.name] } />
                                 </View>
                             )})
                         }
