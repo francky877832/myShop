@@ -19,12 +19,15 @@ import { screenHeight } from '../styles/commonStyles';
 const Tab = createBottomTabNavigator();
 
 
-
+const Test = ()=>{
+  return (<View><Text>Ok</Text></View>)
+}
 const HomeNavigation = () => {
  
   return (
     <Tab.Navigator initialRouteName='Basket'
         screenOptions={({ route }) => ({
+          lazy : true,
           headerShown : false,
           tabBarActiveTintColor: "blue",
           tabBarInactiveTintColor: "gray",

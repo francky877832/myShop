@@ -31,7 +31,7 @@ const Search = (props) => {
     const searchBarRef = useRef(null)
     const scrollViewRef = useRef(null)
     const navigation = useNavigation()
-    const {refreshComponent, setRefreshComponent, resetAllFilters} = useContext(FilterContext)
+    const {refreshComponent, setRefreshComponent, resetAllFilters,resetAllFiltersWithoutFecthingDatas} = useContext(FilterContext)
     
     //const datas = []
 
@@ -166,10 +166,20 @@ const removeAllUserHistorique = async (name) => {
                 Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
             }
 }
-
 useEffect(()=>{
-    fetchUserHistorique()
-}, [refreshComponent])
+    //console.log("OK")
+},[])
+useEffect(()=>{
+    const fetchData = async () => {
+        resetAllFiltersWithoutFecthingDatas()
+        //setIsLoading(true);
+        await fetchUserHistorique()
+        //setIsLoading(false);
+      };
+
+      fetchData()
+    
+}, [])
 
     return(
 <View style={[searchStyles.container,{flex:1}]}>
@@ -208,7 +218,7 @@ useEffect(()=>{
                            <FlatList
                                 data={historique}
                                 renderItem={ ({item}) => {  return (
-                                    <Pressable style={[ searchStyles.history,  ]} onPress={()=>{ resetAllFilters();navigation.navigate("SearchResults", {searchText:item})}} >
+                                    <Pressable style={[ searchStyles.history,  ]} onPress={()=>{/*resetAllFilters();*/navigation.navigate("SearchResults", {searchText:item})}} >
                                         <Pressable style={{}} onPress={()=>{removeUserHistorique(item);}}>
                                             <Ionicons name="close" size={20} color={appColors.secondaryColor1} />
                                         </Pressable>

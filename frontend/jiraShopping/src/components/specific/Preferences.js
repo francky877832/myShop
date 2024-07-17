@@ -1,8 +1,8 @@
-import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
+import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, Animated, Easing, Alert, Dimensions, ActivityIndicator} from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 const initialLayout = { width: Dimensions.get('window').width };
-
+import { useFocusEffect } from '@react-navigation/native';
 
 //custom component
 import Top from '../common/Top';
@@ -17,8 +17,7 @@ import { datas } from '../../utils/sampleDatas';
 import { appColors } from '../../styles/commonStyles';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
 
-import { FavouritesContext } from '../../context/FavouritesContext';
-import { FilterContext } from '../../context/FilterContext';
+
 import { server } from '../../remote/server';
 import { Button } from 'react-native-elements';
 import { UserContext } from '../../context/UserContext';
@@ -30,12 +29,9 @@ import {CustomActivityIndicator} from '../common/CommonSimpleComponents'
 const Preferences = (props) => {
     const navigation = useNavigation()
     const [isSearch, setIsSearch] = useState(false) 
-    const {favourites, liked, setLikedIcon } = useContext(FavouritesContext)
     const [products, setProducts]  = useState([])
     const [isLoading, setIsLoading]  = useState(true)
 
-    const {refreshComponent, setRefreshComponent,
-         resetAllFilters } = useContext(FilterContext)
 
     const {user, loginUserWithEmailAndPassword, isAuthenticated, setIsAuthenticated } = useContext(UserContext)
 
@@ -59,8 +55,7 @@ useEffect(()=>{
     //loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
 }, [])
 
-useEffect(() => {
-
+useEffect( () => {
     const fetchData = async () => {
         //setIsLoading(true);
         await getProducts()
@@ -71,7 +66,7 @@ useEffect(() => {
         fetchData()
     }
     
-  }, [refreshComponent, isAuthenticated, isLoading, navigation]);
+  }, [isLoading, navigation]); //refreshComponent, isAuthenticated,
 
 //console.log(user)
 

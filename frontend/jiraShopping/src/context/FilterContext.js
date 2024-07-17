@@ -84,8 +84,9 @@ const FilterProvider = ({children}) => {
     const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions}) =>
     {
         console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions})
+       
         setSelectedOrderBy(orderBy);
-        console.log(selectedCategories)
+        //console.log(selectedCategories)
         selectedModalCategories = selectedModalCategories || {}
         let categories;
         if(Object.keys(selectedModalCategories).length>0)
@@ -179,28 +180,26 @@ const FilterProvider = ({children}) => {
     
 
     const resetAllFiltersWithoutFecthingDatas = useCallback(() => {
-        //setSelectedCategories([])
+        setSelectedCategories({})
         //setSelectedBrands([])
         setSelectedOrderBy("")
         setMinPrice("")
         setMaxPrice("")
-        setRefreshComponent(!refreshComponent)
+        //setRefreshComponent(!refreshComponent)
         //console.log("resetAllFiltersWithoutFecthingDatas")
     })
 
     const resetAllFilters = useCallback((searchText) => {
-        //setSelectedCategories([])
+        setSelectedCategories({})
         //setSelectedBrands([])
         setSelectedOrderBy("")
         setMinPrice("")
         setMaxPrice("")
-        setRefreshComponent(!refreshComponent)
-        getSearchedTextWithFilters({searchText:searchText})
+        //setRefreshComponent(!refreshComponent)
+        //getSearchedTextWithFilters({searchText:searchText})
     })
 
-    useEffect(()=>{
-        //getSearchedTextWithFilters("ord")
-    })
+
 
     const filterStateVars = {refreshComponent, isLoading, selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, products}
     const filterStateSetters = {setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}

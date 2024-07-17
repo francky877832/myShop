@@ -21,9 +21,7 @@ const Favourites = (props) => {
     const [datas, setDatas] = useState([])
 //console.log(favourites)
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
-    useEffect(()=>{
-    
-    }, [favourites])
+ 
     return(
         <View style={[favouritesStyles.container,]}>
                     <View style={[favouritesStyles.top]}>

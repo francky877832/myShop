@@ -64,7 +64,7 @@ const UserProvider = ({children}) => {
                 //Mis a jour de async storage
                 await SecureStore.setItemAsync('authToken', loggedUser.token);
                 await SecureStore.setItemAsync('user', JSON.stringify({email:loggedUser.email, username:loggedUser.username,password:loggedUser.password}));
-                //console.log(loggedUser)
+                console.log(loggedUser)
                 
                 //Mis a jour du contexte User
                 setUser(loggedUser)

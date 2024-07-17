@@ -16,7 +16,6 @@ import { server } from '../../remote/server';
 
 const ProductsList = React.forwardRef((props, ref) => {
     const { datas, horizontal, styles, onEndReached, name, isLoading} = props;
-    const {favourites} = useContext(FavouritesContext)
     //console.log(datas[0].product)
     useEffect(()=>{
 

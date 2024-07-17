@@ -31,8 +31,8 @@ const SearchResults = (props) => {
         _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
         isLoading, setIsLoading     
     } = useContext(FilterContext)
-        //const {selectedCategory,  } = useContext(ProductItemContext)
     
+        //const {selectedCategory,  } = useContext(ProductItemContext)
         const {user} = useContext(UserContext)
         const navigation = useNavigation()
 
@@ -59,7 +59,9 @@ const SearchResults = (props) => {
                             Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
                         }
         }
-
+useEffect(()=>{
+    setIsLoading(true)
+},[])
     useEffect( ()=>{
         async function getDatas()
         {
@@ -74,27 +76,27 @@ const SearchResults = (props) => {
                     setIsLoading(false)
                 }
             }
-            else{
+            else{console.log("There")
                 if(isLoading)
-                {  
+                {  console.log("Therec")
                     //setIsLoading(true)
-                    await getSearchedTextWithFilters({searchText:searchText, orderBy:selectedOrderBy})
+                    await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:{}, selectedBrands:{}, conditions:{}, orderBy:selectedOrderBy})
                     setIsLoading(false)
                 }
             }
         }
         getDatas()
         
-    }, [refreshComponent, isLoading])
+    }, [isLoading])
 
-useEffect(() => {
+/*useEffect(() => {
         const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
             e.preventDefault();
-            resetAllFiltersWithoutFecthingDatas()
+            //resetAllFiltersWithoutFecthingDatas()
             navigation.dispatch(e.data.action)
         })
         return beforeRemoveListener;
-}, [navigation]);
+}, [navigation]);*/
 
         return(
                 <View style={preferencesStyles.container}>

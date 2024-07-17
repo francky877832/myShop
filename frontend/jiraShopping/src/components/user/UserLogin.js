@@ -53,7 +53,7 @@ useEffect(() => {
             {
                 const user = JSON.parse(await SecureStore.getItemAsync('user'));
                 //A remplace par user.email...
-                loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
+                await loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
 
                 //setIsAuthenticated(true);
                 return;
