@@ -93,14 +93,22 @@ const FilterProvider = ({children}) => {
         {
             
             categories = Object.keys(selectedModalCategories).filter((key)=>{ return selectedModalCategories[key]===true})
+            if(!!selectedCategories.subCategories)
+                categories.push(`${categories.name}/${categories.subCategories}`)
             setSelectedCategories({})
         }
         else
         {
             categories = Object.keys(selectedCategories).filter((key)=>{ return selectedCategories[key]===true})
+            if(!!selectedCategories.subCategories)
+            {
+                /* En cas sous categroie, on neglige la categorie et on est plus specifique */
+                categories.pop()
+                categories.push(`${selectedCategories.name}/${selectedCategories.subCategories}`)
+            }
             selectedModalCategories={}
         }
-        //console.log(categories)
+        console.log(categories)
         //console.log(categories)
         selectedBrands = selectedBrands || {}
         let brands = Object.keys(selectedBrands).filter((key)=>{ return selectedBrands[key]==true})

@@ -74,9 +74,11 @@ const Categories = (props) => {
     let brand = [{_id:1, name:"Tecno"}, {_id:2, name:"Samsung"},]*/
 
     
-useEffect(() => {
-    
-})
+/*useFocusEffect(
+    useCallback(()=>{
+        updateCategories("Vetements")
+    }, [updateCategories])
+)*/
 
 
 

@@ -16,7 +16,7 @@ const FilterItem = (props) => {
     const { item, tag, } = props
    
     const [checked, setChecked] = useState("")
-
+    
         
         
      //console.log(tag)
@@ -26,7 +26,7 @@ const FilterItem = (props) => {
     })
         if(tag=="category")
         {
-            const {updateModalCategories, selectedModalCategories} = props
+            const {updateModalCategories, selectedModalCategories, selectedCategories} = props
         
             return(
 
@@ -38,7 +38,8 @@ const FilterItem = (props) => {
                             item.subCategories.map((it, index) =>{
                                 return(
                                 <View activeOpacity={1} style={[filterItemStyles.checkBox,]} key={index}>
-                                    <CheckBox title={it.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} onPress={(e) => { updateModalCategories(item.name+"/"+it.name);}/*setChecked(!checked)*/ } checked={ selectedModalCategories[item.name+"/"+it.name] || selectedModalCategories[item.name] } />
+                                    <CheckBox title={it.name} containerStyle={[filterItemStyles.contentContainer,{}]} textStyle={[customText.text,filterItemStyles.checkBoxText]} onPress={(e) => { updateModalCategories(item.name+"/"+it.name);}/*setChecked(!checked)*/ } checked={ selectedModalCategories[item.name+"/"+it.name] ||    /*Si je viens de categories pour afficher toute la collection ou juste une sous-collection */ /*console.log(selectedCategories.name+"/"+selectedCategories.subCategories)*/
+                                                                                                                                                                                                                                        (!!selectedCategories["subCategories"] ? item.name+"/"+it.name==selectedCategories.name+"/"+selectedCategories.subCategories :  selectedCategories[item.name] ) } />
                                 </View>
                             )})
                         }

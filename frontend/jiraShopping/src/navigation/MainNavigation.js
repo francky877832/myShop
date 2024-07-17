@@ -53,12 +53,12 @@ export default function MainNavigation() {
                 <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false,}} />
                 <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="Offers" component={Offers}  options={{ title: 'Propositions', headerShown : true, tabBarVisible: false, }} />
-                <Stack.Screen name="AllComments" component={AllCommets}  options={{ title: 'All Comments', headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="AllComments" component={AllCommets}  options={{ presentation: 'modal',  title: 'All Comments', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Notifications" component={Notifications}  options={{ title: 'Notifications', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="AddProduct" component={AddProduct}  options={{ title: 'Ajouter Un Produit', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Categories" component={Categories}  options={{ title: 'Choisir Une Categorie', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Shop" component={ProfilShop}  options={{ title: 'Choisir Une Categorie', headerShown : false, tabBarVisible: false, }} />
-                <Stack.Screen name="SearchResults" component={SearchResults}  options={{title: 'Resultats De Recherche', headerShown : false, tabBarVisible: false, }} />
+                <Stack.Screen name="SearchResults" component={SearchResults}  options={{ unmountOnBlur: true, title: 'Resultats De Recherche', headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="UserSignup" component={UserSignup}  options={{ title: <HeaderNavigation title="Sign Up"/>, headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="PhoneAuth" component={PhoneAuth}  options={{ title: <HeaderNavigation title="PhoneAuth"/>, headerShown : true, tabBarVisible: false, }} />

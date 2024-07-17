@@ -358,7 +358,7 @@ const handleOrderby = async (val)=>{
                             <FlatList
                                 data={[...categories,]}
                                 nestedScrollEnabled={true}
-                                renderItem={ ({item}) => { return <FilterItem updateModalCategories={updateModalCategories} selectedModalCategories={selectedModalCategories} tag="category" item={item} /> } }
+                                renderItem={ ({item}) => { return <FilterItem updateModalCategories={updateModalCategories} selectedModalCategories={selectedModalCategories} selectedCategories={selectedCategories} tag="category" item={item} /> } }
                                 keyExtractor={ (item) => { return item._id.toString(); } }
                                 ItemSeparatorComponent ={ (item) => { return <View style={filtersStyles.categorySeparator}></View> }}
                                 horizontal={false}

@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useContext,  } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback,  } from 'react';
 import { View, Text, Pressable, Alert} from 'react-native';
 
+import { useFocusEffect, } from '@react-navigation/native';
 import { CheckBox } from 'react-native-elements';
 import { RadioButton, } from 'react-native-paper';
 import { appColors, appFont } from '../../styles/commonStyles';
@@ -22,12 +23,7 @@ import { serialize } from '../../utils/commonAppFonctions';
 const SearchResults = (props) => {
 
     //const [products, setProducts] = useState([])
-    const [selectedBrands, setSelectedBrands] = useState({})
-    const [isNewFocused, setIsNewFocused] = useState(true)
-    const [isOldFocused, setIsOldFocused] = useState(true)
-    const [isNewOldFocused, setIsNewOldFocused] = useState(true)
-    const [conditions, setConditions] = useState({})
-    const [selectedModalCategories, setSelectedModalCategories] = useState(selectedCategories)   
+   
     //{selectedBrands:selectedBrands, isNewFocused:isNewFocused,isOldFocused:isOldFocused, isNewOldFocusedconditions:isNewOldFocusedconditions,conditions:conditions, selectedModalCategories:selectedModalCategories}
     //{setSelectedBrands:setSelectedBrands, setIsNewFocused:setIsNewFocused,setIsOldFocused:setIsOldFocused, setIsNewOldFocusedconditions:setIsNewOldFocusedconditions,conditions:conditions, selectedModalCategories:selectedModalCategories}
 
@@ -67,35 +63,43 @@ const SearchResults = (props) => {
                         }
         }
 useEffect(()=>{
-    if(!isLoading)
-        setIsLoading(true)
-    //console.log("searchText")
+    console.log(searchText)
 },[])
-
         async function getDatas({searchText, selectedModalCategories, selectedBrands, conditions, orderBy})
         {
-            console.log("GETDATAS")
-            console.log({searchText, selectedModalCategories, selectedBrands, conditions})
+            //console.log("GETDATAS")
+            //console.log({searchText, selectedModalCategories, selectedBrands, conditions})
             if(!isLoading)
                 setIsLoading(true)
 
             if(!!display && display == "category")
-            {
-                 
-                    await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
-                        //{searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})
-                  
+            {//console.log("GETDATAS2")
+                await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
+                        //{searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})    
             }
             else
-            {
+            {console.log("GETDATAS3")
+                //setSelectedCategories({})
                 await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
             }  
-            setIsLoading(false)      
+            setIsLoading(false)    
         }
-useEffect( ()=>{ 
+    
+useFocusEffect(
+    useCallback(()=>{
+        console.log(searchText)
+        if(!isLoading)
+            setIsLoading(true)
         getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
-    console.log("ok")
-}, [])
+
+    }, [searchText])
+)
+/*
+useEffect(()=>{
+        console.log(searchText)
+        getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
+
+    }, [])*/
 
 /*useEffect(() => {
         const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {

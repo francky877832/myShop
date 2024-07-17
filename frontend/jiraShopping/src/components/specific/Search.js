@@ -29,7 +29,7 @@ const Search = (props) => {
     const searchBarRef = useRef(null)
     const scrollViewRef = useRef(null)
     const navigation = useNavigation()
-    const {resetAllFiltersWithoutFecthingDatas} = useContext(FilterContext)
+    const {resetAllFiltersWithoutFecthingDatas, setSelectedCategories} = useContext(FilterContext)
     
     //const datas = []
 
@@ -185,10 +185,14 @@ useEffect(()=>{
 }, [isLoading])
 
 const handlePress = async (item) => {
-    
+
     // Naviguer immédiatement vers le nouvel écran
     //await getSearchedTextWithFilters({searchText:item, selectedModalCategories:{}, selectedBrands:{}, conditions:{}, orderBy:selectedOrderBy})
+    //setIsLoading(false)
+    //resetAllFiltersWithoutFecthingDatas()
+    setSelectedCategories({})
     navigation.navigate("SearchResults", {searchText:item})
+    
 };
 
     return(
