@@ -22,13 +22,20 @@ import { serialize } from '../../utils/commonAppFonctions';
 const SearchResults = (props) => {
 
     //const [products, setProducts] = useState([])
-    
-    
+    const [selectedBrands, setSelectedBrands] = useState({})
+    const [isNewFocused, setIsNewFocused] = useState(true)
+    const [isOldFocused, setIsOldFocused] = useState(true)
+    const [isNewOldFocused, setIsNewOldFocused] = useState(true)
+    const [conditions, setConditions] = useState({})
+    const [selectedModalCategories, setSelectedModalCategories] = useState(selectedCategories)   
+    //{selectedBrands:selectedBrands, isNewFocused:isNewFocused,isOldFocused:isOldFocused, isNewOldFocusedconditions:isNewOldFocusedconditions,conditions:conditions, selectedModalCategories:selectedModalCategories}
+    //{setSelectedBrands:setSelectedBrands, setIsNewFocused:setIsNewFocused,setIsOldFocused:setIsOldFocused, setIsNewOldFocusedconditions:setIsNewOldFocusedconditions,conditions:conditions, selectedModalCategories:selectedModalCategories}
+
     const route = useRoute()
     const {searchText, display} = route.params
-    const {setSelectedOrderBy, setIsNewFocused, setIsOldFocused, setMinPrice, setMaxPrice, 
-        selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, selectedBrands,
-        _handlePress, updateCategories, updateSelectedBrands, products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
+    const {
+        selectedOrderBy,
+       products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
         isLoading, setIsLoading , selectedCategories , setSelectedCategories 
     } = useContext(FilterContext)
     //console.log(selectedCategories)
@@ -62,35 +69,33 @@ const SearchResults = (props) => {
 useEffect(()=>{
     if(!isLoading)
         setIsLoading(true)
-    console.log(searchText)
+    //console.log("searchText")
 },[])
 
-useEffect( ()=>{
-        async function getDatas()
+        async function getDatas({searchText, selectedModalCategories, selectedBrands, conditions, orderBy})
         {
+            console.log("GETDATAS")
+            console.log({searchText, selectedModalCategories, selectedBrands, conditions})
+            if(!isLoading)
+                setIsLoading(true)
+
             if(!!display && display == "category")
             {
-                //console.log("pkkkk")
-                //getProductsFromCategories()
-                if(isLoading)
-                {    
-                    //setIsLoading(true)
-                    await getSearchedTextWithFilters({searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})
-                    setIsLoading(false)
-                }
+                 
+                    await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
+                        //{searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})
+                  
             }
-            else{console.log("There")
-                if(isLoading)
-                {  console.log("Therec")
-                    //setSelectedCategories({})
-                    await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:{}, selectedBrands:{}, conditions:{}, orderBy:selectedOrderBy})
-                    setIsLoading(false)
-                }
-            }
+            else
+            {
+                await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
+            }  
+            setIsLoading(false)      
         }
-        getDatas()
-        
-    }, [isLoading, refreshComponent])
+useEffect( ()=>{ 
+        getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
+    console.log("ok")
+}, [])
 
 /*useEffect(() => {
         const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
@@ -107,7 +112,7 @@ useEffect( ()=>{
                             <Top />
                         </View>
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="SearchResults" isLoading={isLoading} filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={`Resultats de recherche "${searchText}"`}/>
+        <ProductsListWithFilters name="SearchResults" getDatas={getDatas} isLoading={isLoading} filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={`Resultats de recherche "${searchText}"`}/>
     </View>
                 </View>
         )

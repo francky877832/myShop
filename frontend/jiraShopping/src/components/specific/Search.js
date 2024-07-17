@@ -25,10 +25,11 @@ const loggedUserId = "66715deae5f65636347e7f9e"
 const Search = (props) => {
     const [searchText, setSearchText] = useState("")
     const [historique, setHistorique] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
     const searchBarRef = useRef(null)
     const scrollViewRef = useRef(null)
     const navigation = useNavigation()
-    const {refreshComponent, setRefreshComponent, resetAllFilters,resetAllFiltersWithoutFecthingDatas, isLoading, setIsLoading} = useContext(FilterContext)
+    const {resetAllFiltersWithoutFecthingDatas} = useContext(FilterContext)
     
     //const datas = []
 
@@ -48,8 +49,7 @@ const onChangeText = (val) =>{
         setSearchText(val)
     }
 
-const onSubmitEditing = async () =>{
-    resetAllFilters()
+const onSubmitEditing = () =>{
         let response = null;
         const search = {
             user : loggedUserId,
@@ -59,22 +59,24 @@ const onSubmitEditing = async () =>{
         //console.log(bool)
             try
             {
-                response = await fetch(`${server}/api/datas/search/history/update/${loggedUserId}`, {
-                    method: 'POST',
-                    body: JSON.stringify(search),
-                        headers: {
-                        'Content-Type': 'application/json',
-                },})
+                navigation.navigate("SearchResults", {searchText:searchText})
+                setTimeout(async() => {
+                    response = await fetch(`${server}/api/datas/search/history/update/${loggedUserId}`, {
+                        method: 'POST',
+                        body: JSON.stringify(search),
+                            headers: {
+                            'Content-Type': 'application/json',
+                    },})
 
-                if(!response.ok)
-                {
-                    const errorData = await response.json();
-                    throw new Error("Erreur ",`${response.status}: ${errorData.message}`)
-                }
+                    if(!response.ok)
+                    {
+                        const errorData = await response.json();
+                        throw new Error("Erreur ",`${response.status}: ${errorData.message}`)
+                    }
+                    Alert.alert("", "Historique ajoute avec success")
 
-
-              navigation.navigate("SearchResults", {searchText:searchText})
-                //Alert.alert("", "Historique ajoute avec success")
+                        setIsLoading(true)
+                    }, 0); 
 
             }catch(error)
             {
@@ -155,18 +157,20 @@ const removeAllUserHistorique = async (name) => {
                     const errorData = await response.json();
                     throw new Error("Erreur ",`${response.status}: ${errorData.message}`)
                 }
-                setRefreshComponent(!refreshComponent)
+                //setRefreshComponent(!refreshComponent)
                 //Alert.alert("", "Historique vidé avec success")
             }catch(error)
             {
                 //console.log(error)
-                Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+                //Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
             }
 }
 useEffect(()=>{
     resetAllFiltersWithoutFecthingDatas()
-},[])
+    //console.log("Search")
+}, [])
 useEffect(()=>{
+    console.log("fetchUserHistorique")
     const fetchData = async () => {
         
        if(isLoading)
@@ -179,6 +183,13 @@ useEffect(()=>{
       fetchData()
     
 }, [isLoading])
+
+const handlePress = async (item) => {
+    
+    // Naviguer immédiatement vers le nouvel écran
+    //await getSearchedTextWithFilters({searchText:item, selectedModalCategories:{}, selectedBrands:{}, conditions:{}, orderBy:selectedOrderBy})
+    navigation.navigate("SearchResults", {searchText:item})
+};
 
     return(
 <View style={[searchStyles.container,{flex:1}]}>
@@ -217,14 +228,14 @@ useEffect(()=>{
                            <FlatList
                                 data={historique}
                                 renderItem={ ({item}) => {  return (
-                                    <Pressable style={[ searchStyles.history,  ]} onPress={()=>{/*resetAllFiltersWithoutFecthingDatas();*/navigation.navigate("SearchResults", {searchText:item})}} >
+                                    <Pressable style={[ searchStyles.history,  ]} onPress={()=>{/*resetAllFiltersWithoutFecthingDatas();*/handlePress(item)}} >
                                         <Pressable style={{}} onPress={()=>{removeUserHistorique(item);}}>
                                             <Ionicons name="close" size={20} color={appColors.secondaryColor1} />
                                         </Pressable>
                                         <Text style={searchStyles.textHistory}>{item}</Text>
                                     </Pressable> 
                                 )} }
-                                keyExtractor={ (item) => { return Math.random().toString(); } }
+                                keyExtractor={ (item) => { return item.toString(); } }
                                 ItemSeparatorComponent ={ (item) => { return <View style={searchStyles.historySeparator}></View> }}
                                 horizontal={false}
                                 showsHorizontalScrollIndicator={false}

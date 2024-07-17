@@ -29,15 +29,18 @@ const Filters = (props) => {
     const [isNewOldFocused, setIsNewOldFocused] = useState(true)
     const [conditions, setConditions] = useState({})
 
+    //const [isLoading, setIsLoading] = useState(true)
+
     const {selectedCategories, selectedOrderBy, minPrice, maxPrice, setSelectedCategories, setSelectedOrderBy, refreshComponent,
         setRefreshComponent, setMinPrice, setMaxPrice, _handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters,
+        isLoading, setIsLoading,
     }  =  useContext(FilterContext)
-    const [selectedModalCategories, setSelectedModalCategories] = useState(selectedCategories)
         //console.log(selectedModalCategories)
-    
-    const { categories, brands, isLoading } = useContext(ProductItemContext)
+        const [selectedModalCategories, setSelectedModalCategories] = useState(selectedCategories)
+
+    const { categories, brands, /*isLoading, setIsLoading*/ } = useContext(ProductItemContext)
 //console.log(categories)
-    const { suggestion, searchText } = props
+    const { suggestion, searchText,  getDatas } = props
     const [showSuggestion, setShowSuggestion] = useState(suggestion)
 
 
@@ -196,7 +199,14 @@ const setOtherModalToFalse = useCallback((modal)=>{
             }
     })
 
-
+const handleOrderby = async (val)=>{
+        setSelectedOrderBy(val)
+        //console.log(selectedOrderBy)
+        await getDatas({searchText:searchText,orderBy:val,selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions});
+        //Pas besoin de getSearchedTextWithFilters par ce Filters est dans SearchResults et cela se fait auto.
+    //Il ya juste besoin de mettre a jour selectedOrderBy et de re-rendre le component avec un activityIndicator
+   
+}
     return (
         <View style={[filtersStyles.contentContainerStyle,{}]}>
 
@@ -245,7 +255,7 @@ const setOtherModalToFalse = useCallback((modal)=>{
                 </View>
 
                     <View style={[filtersStyles.filterFlatlist, filtersStyles.radioBox]}>
-                        <RadioButton.Group onValueChange={val => {getSearchedTextWithFilters({searchText:searchText,orderBy:val,selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions}); return val}} value={selectedOrderBy} style={[filtersStyles.radioGroup,]}>
+                        <RadioButton.Group onValueChange={val => {handleOrderby(val); return val}} value={selectedOrderBy} style={[filtersStyles.radioGroup,]}>
                             {
                                 orderByItems.map((item) => {
                                     return(
@@ -318,7 +328,7 @@ const setOtherModalToFalse = useCallback((modal)=>{
                     <View style={{height:20,}}></View>
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0}}>
                             <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setMaxPrice("");setMinPrice("");}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getDatas({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
                         </View>
                 </View>
             }
@@ -331,7 +341,7 @@ const setOtherModalToFalse = useCallback((modal)=>{
                     
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0}}>
                             <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setIsNewFocused(false);setIsOldFocused(false);setIsNewOldFocused(false);}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getDatas({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
                         </View>
                     </View>
         }
@@ -362,7 +372,7 @@ const setOtherModalToFalse = useCallback((modal)=>{
                             </View>
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:15}}>
                             <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setSelectedModalCategories({});}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions,selectedCategories:selectedCategories})}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getDatas({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions,selectedCategories:selectedCategories})}} />
                         </View>
                     </View>
         }
@@ -389,7 +399,7 @@ const setOtherModalToFalse = useCallback((modal)=>{
 
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:15}}>
                             <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setSelectedBrands({});}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getSearchedTextWithFilters({searchText:searchText||"",selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getDatas({searchText:searchText||"",selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
                         </View>
                     </View>
         }

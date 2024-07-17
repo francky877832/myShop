@@ -83,9 +83,9 @@ const FilterProvider = ({children}) => {
 
     const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions}) =>
     {
-        console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions})
-        setIsLoading(true)
-        setSelectedOrderBy(orderBy);
+        console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, selectedCategories})
+        //setIsLoading(true)
+        //setSelectedOrderBy(orderBy);
         //console.log(selectedCategories)
         selectedModalCategories = selectedModalCategories || {}
         let categories;
