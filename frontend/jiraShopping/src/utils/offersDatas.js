@@ -11,3 +11,27 @@ export const offersDatas = [
 		],
 	}
 ]
+
+export const notifications = [{
+	NEW_COMMENT : "",
+	NEW_ORDER : "",
+}]
+
+export const settings = [
+	{
+		name : "Parametres Du Compte",
+		component : "AccountSettings"
+	},
+	{
+		name : "Changer De Mot De Passe",
+		component : "PasswordChange"
+	},
+	{
+		name : "Mes Adresses",
+		component : "Address",
+	},
+	{
+		name : "A Propos De Nous",
+		component : "AboutUs"
+	},
+]

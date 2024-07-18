@@ -84,7 +84,7 @@ useEffect(()=>{
             }  
             setIsLoading(false)    
         }
-    
+  /*  
 useFocusEffect(
     useCallback(()=>{
         console.log(searchText)
@@ -94,12 +94,13 @@ useFocusEffect(
 
     }, [searchText])
 )
-/*
+*/
 useEffect(()=>{
-        console.log(searchText)
-        getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
+    if(!isLoading)
+        setIsLoading(true)
+    getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
 
-    }, [])*/
+    }, [searchText])
 
 /*useEffect(() => {
         const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
@@ -109,14 +110,16 @@ useEffect(()=>{
         })
         return beforeRemoveListener;
 }, [navigation]);*/
-
+const title = `Resultats de recherche "${searchText}"`
         return(
                 <View style={preferencesStyles.container}>
+                    {//(!!display && display == "category") &&
                         <View style={preferencesStyles.top}>
                             <Top />
                         </View>
+                    }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="SearchResults" getDatas={getDatas} isLoading={isLoading} filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={`Resultats de recherche "${searchText}"`}/>
+        <ProductsListWithFilters name="SearchResults" getDatas={getDatas} isLoading={isLoading} filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )

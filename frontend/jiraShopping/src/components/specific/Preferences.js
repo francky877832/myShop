@@ -57,8 +57,10 @@ useEffect(()=>{
 
 useEffect( () => {
     const fetchData = async () => {
+        //console.log("O")
         //setIsLoading(true);
         await getProducts()
+        //console.log("OK")
         setIsLoading(false);
       };
   
@@ -110,7 +112,7 @@ const renderTabBar = (props) => (
       //labelStyle={{ color: appColors.secondaryColor1 }} // Changez cette couleur pour le texte des onglets
       renderLabel={({ route, focused, color }) => {
         return (
-            <Text style={{ color: focused ? appColors.secondaryColor1 : appColors.gray, fontWeight: focused ? 'bold' : 'normal' }}>
+            <Text style={{ fontSize : 16, color: focused ? appColors.secondaryColor1 : appColors.gray, fontWeight: focused ? 'bold' : 'normal' }}>
                 {route.title}
             </Text>
         )

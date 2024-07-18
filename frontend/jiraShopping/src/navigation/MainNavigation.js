@@ -47,8 +47,8 @@ export default function MainNavigation() {
               <Stack.Navigator initialRouteName="UserLogin"  /*screenOptions={{
                       gestureEnabled: false,
                       cardOverlayEnabled: false,
-                      ...TransitionPresets.ModalPresentationIOS,
-                    }}*/  screenOptions={{ animation: Platform.OS === 'android' ? 'none' : 'default',  }}>
+                      ...TransitionPresets.ModalPresentationIOS, //screenOptions={{ animation: Platform.OS === 'android' ? 'default' : 'default',  }}
+                    }}*/  >
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
                 <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false,}} />
                 <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
@@ -62,7 +62,6 @@ export default function MainNavigation() {
                 <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="UserSignup" component={UserSignup}  options={{ title: <HeaderNavigation title="Sign Up"/>, headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="PhoneAuth" component={PhoneAuth}  options={{ title: <HeaderNavigation title="PhoneAuth"/>, headerShown : true, tabBarVisible: false, }} />
-
               </Stack.Navigator>
           </FilterProvider>
       </ProductItemProvider>

@@ -1,12 +1,17 @@
 import { StyleSheet } from "react-native";
-import { appColors, screenHeight } from "./commonStyles";
+import { appColors, customText, screenHeight } from "./commonStyles";
 import { appFont } from "./commonStyles";
 
 export const categoriesStyles = StyleSheet.create({
     container: 
     {
       flex: 1,
+      backgroundColor : appColors.white,
       
+    },
+    categoriesContainer :
+    {
+      paddingBottom : 20
     },
     categoryContainer : 
     {
@@ -35,6 +40,7 @@ export const categoriesStyles = StyleSheet.create({
       //position : "absolute",
       //backgroundColor:"blue",
       zIndex : 100,
+
     },
     pressableSubCat :
     {
@@ -63,6 +69,18 @@ export const categoriesStyles = StyleSheet.create({
        //borderWidth : 1,
        //borderColor : appColors.secondaryColor3
     },
+
+    text :
+    {
+      ...customText.text,
+    },
+    fullCat :
+    {
+      backgroundColor : appColors.secondaryColor1,
+      padding : 10,
+      borderRadius : 20,
+    },
+
 
 
 //Marque

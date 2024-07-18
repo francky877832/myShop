@@ -13,6 +13,7 @@ const userSchema = new Schema({
     address: {
         street: { type: String },
         city: { type: String },
+        region: { type: String },
         country: { type: String }
     },
     phone: { type: String },
@@ -25,6 +26,7 @@ const userSchema = new Schema({
     actif : { type: Number, enum: [0, 1], default : 0 },
     star : { type: Number, default : 0 },
     code : { type: String },
+    slogan : { type: String },
 
 
 

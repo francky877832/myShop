@@ -93,9 +93,9 @@ const Categories = (props) => {
         return(
             <View style={{flex:1,}}>
                 <View pointerEvents='auto' style={[categoriesStyles.categoryContainer,{flex:1,}]}>
-                    <Pressable style={[categoriesStyles.pressableCat]} onPress={()=>{updateCategories(item.name); }}>
-                        <Icon name={item.icon.split("/")[1]} type={item.icon.split("/")[0]} color={selectedCategories[item.name]  ? appColors.secondaryColor1 : appColors.secondaryColor4} />
-                        <Text style={[customText.text, {color:selectedCategories[item.name]  ? appColors.secondaryColor1 : appColors.secondaryColor4} ]}>{item.name}</Text>
+                    <Pressable style={[categoriesStyles.pressableCat, selectedCategories[item.name]  ? {backgroundColor:appColors.lightOrange} : false ]} onPress={()=>{updateCategories(item.name); }}>
+                        <Icon name={item.icon.split("/")[1]} type={item.icon.split("/")[0]} color={selectedCategories[item.name]  ? appColors.secondaryColor1 : appColors.black} />
+                        <Text style={[categoriesStyles.text, selectedCategories[item.name]  ? {color:appColors.secondaryColor1,fontWeight:"bold",} : false ]}>{item.name}</Text>
                     </Pressable>
                     
                 </View>
@@ -154,7 +154,7 @@ const Categories = (props) => {
                                     return (
                                         <View  key={subCat._id} >
                                             <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateCategories(item.name, subCat.name); navigation.navigate(goBackTo, {searchText:" ", display:"category",});}}>
-                                                <Text>{subCat.name}</Text>
+                                                <Text style={[categoriesStyles.subCatText]}>{subCat.name}</Text>
                                             </Pressable>
                                         </View>
                                     )
@@ -169,10 +169,10 @@ const Categories = (props) => {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={[categoriesStyles.flatlist,{flex:1,}]}
                     ListFooterComponent={ (item) => { return (
-                            <View style={{height:20,top:10, alignSelf:"center"}}>
+                            <View style={{height:50,top:10, alignSelf:"center"}}>
                                  <Text>{/* searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***` */}</Text>
-                                <Pressable onPress={()=>{updateCategories(selectedCategories.name, "complete_category"); navigation.navigate(goBackTo, {searchText:" ", display:"category"});}}>
-                                    <Text style={[{...customText.text, color:appColors.secondaryColor1, textDecorationLine:"underline", fontSize:16,}]}>Afficher La Categorie Complete{">>"} </Text>
+                                <Pressable onPress={()=>{updateCategories(selectedCategories.name, "complete_category"); navigation.navigate(goBackTo, {searchText:" ", display:"category"});}} style={[categoriesStyles.fullCat]}>
+                                    <Text style={[categoriesStyles.text,{color:appColors.white, textDecorationLine:"none", fontSize:16,}]}>Afficher La Categorie {">>"} </Text>
                                 </Pressable>
                             </View>
                         )}
@@ -193,7 +193,7 @@ const Categories = (props) => {
                         renderItem={ ({item}) => { return(
                                 <View style={{flex:1}}>
                                     <Pressable style={[categoriesStyles.pressableSubCat]} onPress={()=>{setSelectedBrand(item.name);navigation.goBack();}}>
-                                        <Text style={[addProductStyles.normalText,]}>{item.name}</Text>
+                                        <Text style={[categoriesStyles.text]}>{item.name}</Text>
                                     </Pressable>
                                 </View>
                                 )

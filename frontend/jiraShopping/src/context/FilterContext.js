@@ -192,7 +192,7 @@ const FilterProvider = ({children}) => {
     
 
     const resetAllFiltersWithoutFecthingDatas = useCallback(() => {
-        setIsLoading(true)
+        //setIsLoading(true)
         setSelectedCategories({})
         //setSelectedBrands([])
         setSelectedOrderBy("")

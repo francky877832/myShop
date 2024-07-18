@@ -36,11 +36,11 @@ const Filters = (props) => {
         isLoading, setIsLoading,
     }  =  useContext(FilterContext)
         //console.log(selectedModalCategories)
-        const [selectedModalCategories, setSelectedModalCategories] = useState(selectedCategories)
+        const [selectedModalCategories, setSelectedModalCategories] = useState({})
 
     const { categories, brands, /*isLoading, setIsLoading*/ } = useContext(ProductItemContext)
 //console.log(categories)
-    const { suggestion, searchText,  getDatas } = props
+    const { suggestion, searchText,  getDatas, display } = props
     const [showSuggestion, setShowSuggestion] = useState(suggestion)
 
 
@@ -208,8 +208,18 @@ const handleOrderby = async (val)=>{
    
 }
     return (
+    
         <View style={[filtersStyles.contentContainerStyle,{}]}>
-
+               <View style={[{position:"absolute",zIndex:99,left:0,right:0,top:-30}]}>
+                    <Text>
+                        {
+                            display=="category" 
+                            ?
+                            !selectedCategories.subCategories ? selectedCategories.name:selectedCategories.name+"/"+selectedCategories.subCategories
+                            :false
+                        }
+                    </Text>
+                </View>
                 {suggestion && !showSuggestion &&
                             <Pressable onPress={()=>{setShowSuggestion(!showSuggestion)}} style={{backgroundColor:appColors.white, paddingLeft:5,position:"relative",flexDirection:"row"}}>
                                 <Icon name='bulb' type='ionicon' size={18} color={appColors.green} />

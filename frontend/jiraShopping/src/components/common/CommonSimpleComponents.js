@@ -90,7 +90,7 @@ exports.CustomActivityIndicator = (props) => {
 
     return (
         <View style={[commonSimpleComponentsStyles.activityIndicator.container,{}]}>
-                <ActivityIndicator style={[commonSimpleComponentsStyles.activityIndicator.activityIndicator,{}]} />
+                <ActivityIndicator style={[commonSimpleComponentsStyles.activityIndicator.activityIndicator,{}]} size="large" color={appColors.secondaryColor1} />
         </View>
     )
 }
