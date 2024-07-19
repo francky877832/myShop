@@ -156,18 +156,16 @@ const addComment = async (item) => {
                     underlineColorAndroid='transparent'
                     inputContainerStyle={{ borderBottomWidth:isFocused?0:1, }}
                     ref={inputRef}
-                    rightIcon={
-                       {}
-                    }
-                    value={inputValue}
-                />
-                { isLoading 
+                    rightIcon={ isLoading 
                         ?
                             <ActivityIndicator color={appColors.secondaryColor1} /> 
                         :
                         <Pressable onPress={() => {setIsLoading(true);addComment(route.params.product);}} style={[commentsStyles.sendButton, {}]}>
                             <Icon name='send-sharp' type='ionicon' size={40} color={appColors.secondaryColor1} />
                         </Pressable>}
+                    value={inputValue}
+                />
+                
         </View>
 </View>
     )

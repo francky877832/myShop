@@ -171,6 +171,7 @@ export const productDetailsStyles = StyleSheet.create({
         backgroundColor : appColors.lightOrange,
         paddingVertical : 10,
         paddingHorizontal : 5,
+        width : screenWidth,
     },  
 
   

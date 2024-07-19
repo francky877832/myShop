@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 import BadgeIcon from './BadgeIcon';
 import badgeIconStyles from '../../styles/badgeIconStyles';
 
-import { appColors,customText} from '../../styles/commonStyles';
+import { appColors,customText, screenWidth} from '../../styles/commonStyles';
 import { sinceDate } from '../../utils/commonAppFonctions';
 
 const SellerBrand = (props) => {
@@ -18,12 +18,14 @@ const SellerBrand = (props) => {
                 </View>
                                 
                 <View style={[sellerBrandStyles.sellerBrandName]}>
-                    <View style={[{flexDirection:"row",justifyContent:"space-between"}]}>
-                        <Text style={[customText.text, {fontWeight:"bold",}]}>@{username}</Text>
+                    <View style={[{flexDirection:"column",justifyContent:"space-between"}]}>
+                        <Text numberOfLines={2} style={[customText.text, {fontWeight:"bold",}]}>@{username}</Text>
                         { pub &&
-                            <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center",alignSelf:"flex-end",left:10,top:-3}]}>
+                            <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center",alignSelf:"flex-end",left:20,top:-3}]}>
                                 <Icon name="ellipse" type='ionicon' size={10} color={appColors.green}  styles={{}} />
-                                    <Text style={[customText.text, {color:appColors.secondaryColor5,fontSize:11,left:5,}]}>En ligne il y'a {sinceDate(onlineDate)[0] + " " + sinceDate(onlineDate)[1]}</Text>
+                                    <View style={{alignItems:"flex-end"}}>
+                                        <Text numberOfLines={2}  style={[customText.text, {color:appColors.secondaryColor5,fontSize:11,left:5,}]}>En ligne il y'a {sinceDate(onlineDate)[0] + " " + sinceDate(onlineDate)[1]}</Text>
+                                    </View>
                             </View>
                         }
                     </View>
@@ -40,8 +42,9 @@ const sellerBrandStyles = StyleSheet.create({
     sellerBrand :
     {
         flexDirection : "row",
-        width : "70%",
+        width : screenWidth,//"70%",
         left : 10,
+        //paddingHorizontal : 50,
     },
     sellerBrandImageContainer :
     {
