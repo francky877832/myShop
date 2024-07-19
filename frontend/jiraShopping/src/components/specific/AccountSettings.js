@@ -1,24 +1,31 @@
-import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Pressable, Image, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Alert, Pressable, Image, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Input, Icon } from 'react-native-elements';
 
+import PhoneAuth from './PhoneAuth';
 
 import { appColors, customText, appFont, screenHeight } from '../../styles/commonStyles';
-import BadgeIcon from '../common/BadgeIcon';
 import {CustomButton} from '../common/CommonSimpleComponents'
-import { formatMoney } from '../../utils/commonAppFonctions';
-import { offersDatas } from '../../utils/offersDatas';
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
-import badgeIconStyles from '../../styles/badgeIconStyles';
+
+import { UserContext } from '../../context/UserContext';
+
+import { requestPermissions, pickImages, takePhoto, resizeImages } from '../../utils/utilsFunctions'
+import { useNavigation } from '@react-navigation/native';
+
+import auth from '@react-native-firebase/auth';
+
+
 //<Image source={{uri: item.images[0]}}  style={[]} />
 const loggedUser = "Francky"
 const   AccountSettings = (props) => {
 
-    const [valueName, setValueName] = useState("")
-    const [isNameFocused, setIsNameFocused] = useState(false)
 
+    const navigation = useNavigation()
+
+    const [allowBack, setAllowBack] = useState(false);
     const [username, setUsername] = useState("")
     const [tel, setTel] = useState("")
     const [email, setEmail] = useState("")
@@ -29,10 +36,72 @@ const   AccountSettings = (props) => {
     const [isEmailFocused, setIsEmailFocused] = useState(false)
     const [isSloganFocused, setIsSloganFocused] = useState(false)
 
+    const {user, setUser} = useContext(UserContext)
+    //console.log(user)
+    const [pp, setPp] = useState([user.image])
+    const [cameraOrGalery, setCameraOrGalery] = useState(false)
+
+    const MAX_IMAGES = 1, MIN_IMAGES = 1
+
+
+   //GoBackPermission
+   const onBackPress = useCallback((e) => {
+    if (allowBack) {
+        return;
+    }
+
+    if (e) {
+      e.preventDefault(); // Empêcher le comportement par défaut de la navigation
+    }
+
+    Alert.alert(
+      "Attention!",
+      "Abandoné les modifications ?",
+      [
+        { text: "Non", onPress: () => null, style: "cancel" },
+        { text: "Oui", onPress: () =>{
+                setAllowBack(true);
+                //navigation.goBack();
+                navigation.dispatch(e.data.action);
+            }
+         }
+      ]
+    );
+  }, [allowBack, navigation]);
+
+
+useEffect(()=>{
+//Appel de useCallBack
+   // Ajouter l'écouteur pour l'événement de retour
+const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
+return unsubscribe;
+}, [navigation, onBackPress])
+
+    const pickUpImages = async () =>{
+        
+        const img = await pickImages(MAX_IMAGES, MIN_IMAGES, [])
+    //console.log(img)
+        setPp((prevImages)=>{
+                return [
+                    img[0].uri,
+                ]
+            }
+        )
+        setCameraOrGalery(false)  
+    }
+    
+           
+    //
+    const takeUpPhoto = async () => {
+        const img = await takePhoto(MAX_IMAGES, MIN_IMAGES, pp)
+        setPp((prevImages) => [img.uri]);
+        setCameraOrGalery(false)
+    }
 
     const submitProduct = ()=>{
 
     }
+    //console.log(pp)
     return(
 <View style={[accountSettingsStyles.container]}>
     <KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
@@ -42,9 +111,9 @@ const   AccountSettings = (props) => {
 
             <View style={[accountSettingsStyles.pp]}>
                 <Pressable>
-                    <Image source={require('../../assets/images/product5.png')}  style={[accountSettingsStyles.imgeProfil]} />
+                <Image source={{uri: pp[0] }} style={[accountSettingsStyles.imgeProfil]} />
                 </Pressable>
-                <Pressable style={[{left:20,marginTop:50,}]}>
+                <Pressable style={[{left:20,marginTop:50,}]} onPress={()=>{setCameraOrGalery(!cameraOrGalery)}}>
                     <Text style={[accountSettingsStyles.text,{textAlignVertical:"bottom",textDecorationLine:"underline",color:appColors.secondaryColor1,}]}>Mettre a jour</Text>
                 </Pressable>
             </View>
@@ -66,34 +135,22 @@ const   AccountSettings = (props) => {
                         />
                 </View>
 
-                <View style={[accountSettingsStyles.inputBox]}>
-                    <View style={[accountSettingsStyles.VerifierBox]}>
-                        <Text style={[accountSettingsStyles.text,]}>Numero De Téléphone</Text>
-                        <Pressable style={[accountSettingsStyles.verifier,{}]}>
-                            <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Verifier</Text>
-                        </Pressable>
-                    </View>
+                
                     
-                        <Input placeholder="EX : Samsung Galaxy Z-Fold" value={tel} onChangeText={(name)=>{setTel(name)}}
-                            inputMode='text'
-                            multiline={false}
-                            maxLength={100}
-                            placeholderTextColor={appColors.secondaryColor3}
-                            inputStyle = {[searchBarStyles.inputText, {color:appColors.gray,} ]}
-                            onFocus={() => setIsTelFocused(true)}
-                            onBlur={() => setIsTelFocused(false)}
-                            underlineColorAndroid='transparent'
-                            containerStyle={ []}
-                            inputContainerStyle = {[searchBarStyles.inputContainer, isTelFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
-                        />
-                </View>
+                    <PhoneAuth user={user} setUser={setUser} tel={tel} setTel={setTel} isTelFocused={isTelFocused} setIsTelFocused={setIsTelFocused}  
+
+                        accountSettingsStyles={accountSettingsStyles}
+                    />
+    
 
                 <View style={[accountSettingsStyles.inputBox]}>
                         <View style={[accountSettingsStyles.VerifierBox]}>
                             <Text style={[accountSettingsStyles.text,]}>Email</Text>
-                            <Pressable style={[accountSettingsStyles.verifier, {}]}>
-                                <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Verifier</Text>
-                            </Pressable>
+                            {!user.isEmailVerified &&
+                                <Pressable style={[accountSettingsStyles.verifier, {}]}>
+                                    <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Verifier</Text>
+                                </Pressable>
+                            }
                         </View>
 
                         <Input placeholder="EX : Samsung Galaxy Z-Fold" value={email} onChangeText={(name)=>{setEmail(name)}}
@@ -133,7 +190,20 @@ const   AccountSettings = (props) => {
             </View>
         </ScrollView>
     </TouchableWithoutFeedback>
-    </KeyboardAwareScrollView>          
+    </KeyboardAwareScrollView> 
+
+    {cameraOrGalery &&
+            <View style={[addProductStyles.bottomPicker]}>
+                <Pressable onPress={pickUpImages}>
+                    <Icon name="images-outline" type="ionicon" size={24} color={appColors.secondaryColor1} />
+                    <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Photos</Text>
+                </Pressable>
+                <Pressable onPress={takeUpPhoto}>
+                    <Icon name="camera-outline" type="ionicon" size={24} color={appColors.secondaryColor1} />
+                    <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Camera</Text>
+                </Pressable>
+            </View>
+        }         
 </View>
     )
 }

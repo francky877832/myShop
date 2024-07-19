@@ -7,8 +7,6 @@ import { commentsStyles } from '../../styles/commentsStyles';
 import { appColors, customText, appFont } from '../../styles/commonStyles';
 import BadgeIcon from '../common/BadgeIcon';
 
-import { formatMoney } from '../../utils/commonAppFonctions';
-import { offersDatas } from '../../utils/offersDatas';
 import { accountStyles } from '../../styles/accountStyles';
 import { settings } from '../../utils/offersDatas';
 import { topStyles } from '../../styles/topStyles';
@@ -71,10 +69,12 @@ const   Account = (props) => {
                 <FlatList
                             data={settings}
                             renderItem={ ({item}) => { return(
-                                <Pressable style={[accountStyles.settingsElement]} onPress={()=>{navigation.navigate(`${item.component}`)}}> 
-                                    <Text style={[accountStyles.text,{fontSize:18,}]}>{item.name}</Text>
-                                    <Icon type="font-awesome" name="angle-right" size={30} color={appColors.orange} />
-                                </Pressable>
+                                <Pressable style={[accountStyles.settingsElement, !item.available?accountStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`)}} disabled={!item.available}> 
+                                    <Text style={[accountStyles.text,{fontSize:18,},!item.available?accountStyles.unavailable:false]}>{item.name}</Text>
+                                    { item.available &&
+                                        <Icon type="font-awesome" name="angle-right" size={30} color={appColors.orange} />
+                                    }
+                                    </Pressable>
                                 )
                              } }
                             keyExtractor={ (item) => { return item.name.toString(); } }

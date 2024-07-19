@@ -68,5 +68,10 @@ export const accountStyles = StyleSheet.create({
         height : 60,
         borderBottomWidth : 1,
         borderColor : appColors.lightWhite,
-    }
+    },
+    unavailable :
+    {
+        backgroundColor : appColors.s,
+        color : appColors.gray,
+    } ,
 })

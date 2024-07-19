@@ -21,17 +21,26 @@ import { formatMoney } from '../../utils/commonAppFonctions';
 import { categoriesStyles } from '../../styles/categoriesStyles';
 
 import { ProductItemContext } from '../../context/ProductItemContext';
+import { FilterContext
 
+ } from '../../context/FilterContext';
 import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
 import { server } from '../../remote/server';
 import { ScreenWidth } from 'react-native-elements/dist/helpers';
+
+
+import { requestPermissions, pickImages, takePhoto, resizeImages } from '../../utils/utilsFunctions';
+
+
 const loggedUser = "66731fcb569b492d3ef429ba"
 const AddProduct = (props) => {
     const IMG_MAX_HEIGHT = screenHeight/2
     const IMG_MAX_WIDTH = screenWidth
     const navigation = useNavigation();
     const [allowBack, setAllowBack] = useState(false);
-    const {selectedCategories, updateSelectedCategory, setSelectedBrand, selectedBrand,selectedColor, setSelectedColor} = useContext(ProductItemContext)
+    const {selectedBrand,selectedColor, setSelectedColor} = useContext(ProductItemContext)
+    const { selectedCategories } = useContext(FilterContext)
+
 
     const [valueName, setValueName] = useState("")
     const [valueDesc, setValueDesc] = useState("")
@@ -90,91 +99,28 @@ useEffect(()=>{
     return unsubscribe;
 }, [navigation, onBackPress])
 
-
-//Demande de permission
-const requestPermissions = async () => {
-    const { status: galleryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (galleryStatus !== 'granted') {
-    Alert.alert('Permission to access gallery is required!');
-    return false;
-    }
-    
-    const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
-    if (cameraStatus !== 'granted') {
-    Alert.alert('Permission to access camera is required!');
-    return false;
-    }
-    
-    return true;
-};
-
-const pickImages = async () => {
-        const hasPermissions = await requestPermissions();
-        if (!hasPermissions) return;
-
-        const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsMultipleSelection: true,
-        base64: false,
-        orderedSelection : true,
-        selectionLimit : MAX_IMAGES,
-        quality: 1,
-        });
-
-        if (!result.canceled) {
-            if (images.length >= MAX_IMAGES) { //result.assets.length < MIN_IMAGES || --- A appliquer lors de la validation
-                Alert.alert(`Vous pouvez selectionner entre ${MIN_IMAGES}  et ${MAX_IMAGES} images.`);
-                return;
-            }
-        const newImages = result.assets.slice(0, MAX_IMAGES - images.length);
-            setImages((prevImages) => [...prevImages, ...newImages]);
-            setCameraOrGalery(false)
+const pickUpImages = async () =>{
+    const img = await pickImages(MAX_IMAGES, MIN_IMAGES, images)
+//console.log(img)
+    setImages((prevImages)=>{
+            return [
+                ...prevImages,
+                ...img,
+            ]
         }
-};
+    )
+    setCameraOrGalery(false)  
+}
+
+       
 //
-const takePhoto = async () => {
-        const hasPermissions = await requestPermissions();
-        if (!hasPermissions) return;
+const takeUpPhoto = async () => {
+    const img = await takePhoto(MAX_IMAGES, MIN_IMAGES, images)
+    setImages((prevImages) => [...prevImages, img]);
+    setCameraOrGalery(false)
+}
 
-        const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        base64: false,
-        quality: 1,
-        });
 
-        if (images.length >= MAX_IMAGES) { //result.assets.length < MIN_IMAGES || --- A appliquer lors de la validation
-            Alert.alert(`Vous pouvez selectionner entre ${MIN_IMAGES}  et ${MAX_IMAGES} images.`);
-            return;
-        } 
-        if (!result.canceled) {
-            //setImages((prevImages) => [...prevImages, result]);
-            //console.log(result);
-            setImages((prevImages) => [...prevImages, { uri: result.assets[0].uri }]);
-            setCameraOrGalery(false)
-        }
-};
-
-const resizeImages = async (images) => {
-    return await Promise.all(images.map(async (selectedImage) => {
-      if (selectedImage.width > IMG_MAX_WIDTH || selectedImage.height > IMG_MAX_HEIGHT) {
-        const resizedImage = await ImageManipulator.manipulateAsync(
-          selectedImage.uri,
-          [
-            {
-              resize: {
-                width: Math.min(selectedImage.width, IMG_MAX_WIDTH),
-                height: Math.min(selectedImage.height, IMG_MAX_HEIGHT/2),
-              },
-            },
-          ],
-          { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
-        );
-        return {...selectedImage, width:resizedImage.width, height:resizedImage.height};
-      } else {
-        return selectedImage
-      }
-    }));
-  };
 
 const deleteSelectedImage = (uri) => {
     for(let i in images)
@@ -194,7 +140,7 @@ const deleteSelectedImage = (uri) => {
 const submitProduct = async () => {
     try {
         //console.log(images)
-        const images_ = await resizeImages(images)
+        const images_ = await resizeImages(images,IMG_MAX_HEIGHT,IMG_MAX_WIDTH)
         console.log(images_)
         
         let formData = new FormData()
@@ -494,11 +440,11 @@ const submitProduct = async () => {
         
         {cameraOrGalery &&
             <View style={[addProductStyles.bottomPicker]}>
-                <Pressable onPress={pickImages}>
+                <Pressable onPress={pickUpImages}>
                     <Icon name="images-outline" type="ionicon" size={24} color={appColors.secondaryColor1} />
                     <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Photos</Text>
                 </Pressable>
-                <Pressable onPress={takePhoto}>
+                <Pressable onPress={takeUpPhoto}>
                     <Icon name="camera-outline" type="ionicon" size={24} color={appColors.secondaryColor1} />
                     <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Camera</Text>
                 </Pressable>

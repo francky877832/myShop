@@ -17,6 +17,8 @@ const userSchema = new Schema({
         country: { type: String }
     },
     phone: { type: String },
+    isPhoneVerified : { type: Number, enum: [0, 1], default : 0 },
+    isEmailVerified : { type: Number, enum: [0, 1], default : 0 },
     image : { type: String },
     ventes : { type: Number, default : 0 },
     follower : { type: Number, default : 0 },

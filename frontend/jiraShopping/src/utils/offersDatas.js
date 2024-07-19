@@ -20,18 +20,27 @@ export const notifications = [{
 export const settings = [
 	{
 		name : "Parametres Du Compte",
-		component : "AccountSettings"
+		component : "AccountSettings",
+		available : true,
 	},
 	{
 		name : "Changer De Mot De Passe",
-		component : "PasswordChange"
+		component : "PasswordChange",
+		available : true,
 	},
 	{
 		name : "Mes Adresses",
 		component : "Address",
+		available : true,
 	},
 	{
 		name : "A Propos De Nous",
-		component : "AboutUs"
+		component : "AboutUs",
+		available : true,
+	},
+	{
+		name : "Devenir Une Boutique Pro",
+		component : "openShop",
+		available : false,
 	},
 ]
