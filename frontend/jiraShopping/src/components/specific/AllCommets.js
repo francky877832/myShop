@@ -1,16 +1,21 @@
-import React, { useState, forwardRef, useRef, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, Platform, KeyboardAvoidingView, Alert, InteractionManager  } from 'react-native';
+import { API_BACKEND } from '@env';
+
+import React, { useState, forwardRef, useRef, useEffect, useCallback, useContext } from 'react';
+import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, Platform, KeyboardAvoidingView, Alert, InteractionManager  } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 import Comments from './Comments';
+import { CustomActivityIndicator } from "../common/CommonSimpleComponents";
+
 import { commentsStyles } from '../../styles/commentsStyles';
 import { appColors, screenHeight } from '../../styles/commonStyles';
 
 import { server } from '../../remote/server';
 import { reshapeComments, convertWordsToNumbers, containsEmail } from '../../utils/commonAppFonctions';
+import { ProductItemContext } from '../../context/ProductItemContext';
 
 
 const loggedUserId = "66731fcb569b492d3ef429ba"
@@ -20,14 +25,18 @@ const AllCommets = (props) =>
 {
     const navigation = useNavigation()
     const route = useRoute()
-    const product = route.params.product
-    const [comments_, setComments_] = useState(route.params.comments)
-    const setIsLoading = route.params.setIsLoading
+    const { product } = route.params
+    const { comments, setComments } = useContext(ProductItemContext)
+    const [comments_, setComments_] = useState(comments)
+    //const setIsLoading = route.params.setIsLoading
     const [isFocused, setIsFocused] = useState(false)
     const [isResponseTo, setIsResponseTo] = useState(product._id)
     const [inputValue, setInputValue] = useState("")
     const [onNewComment, setOnNewComment] = useState(false)
     const [refreshComponent, setRefreshComponent] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+
+
 
     const inputRef = useRef(null)
     
@@ -42,9 +51,6 @@ useEffect(()=>{
 
 }, [])
 
-useEffect(()=>{
-    //console.log("**********")
-})
 
 useEffect(()=>{
     //Appel de useCallBack
@@ -54,7 +60,8 @@ useEffect(()=>{
             if (e) {
               e.preventDefault(); // Empêcher le comportement par défaut de la navigation
             }
-            setOnNewComment(true)
+            //setOnNewComment(true)
+            //setIsLoading_(true)
             navigation.dispatch(e.data.action);
         }
     });
@@ -70,16 +77,16 @@ const updateComments_ = (comment)=>{
 }
 //username
 const addComment = async (item) => {
+    
     const checkNumber =  convertWordsToNumbers(inputValue)
     //console.log(checkNumber)
     if(containsEmail(inputValue) || checkNumber==false)
     {
         Alert.alert("Erreur!!!","Votre commentaire viole les regles de la commnauté. Evitez de partager les contacts : numéro de téléphone, email, profil reseau sauciaux.\
                     Si vous pensez que ceci est une erreur, veillez contacter le service client.")
-                return;
-    }
- 
-    
+            setIsLoading(false)
+                    return;
+    }  
 
     const comment = {
         user: loggedUserId,
@@ -88,10 +95,12 @@ const addComment = async (item) => {
         text : inputValue,
         isResponseTo : isResponseTo,
     }
+ 
+
     //console.log(comment)
         try{
             //console.log("Ok")
-            const response = await fetch(`${server}/api/datas/comments/add/${item._id}`, {
+            const response = await fetch(`${API_BACKEND}/api/datas/comments/add/${item._id}`, {
                 method: 'POST',
                 body: JSON.stringify(comment),
                 headers: {
@@ -102,11 +111,14 @@ const addComment = async (item) => {
                 throw new Error('Erreur lors de la requête'+(await response.text()));
             }
 
-            Alert.alert("Comment ajouté avec success.")
+            //Alert.alert("Comment ajouté avec success.")
             //setIsLoading(true)
-            setOnNewComment(true)
+            //updateComments_(comment)
+            setComments([comment,...comments_])
+            setIsLoading(false)
         }catch(error){
             Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+            setIsLoading(false)
         }
 
 }
@@ -130,7 +142,7 @@ const addComment = async (item) => {
     return(
 <View style={{ flex: 1 }}>
             <ScrollView contentContainerStyle={[allCommetsStyles.container,{}]} >
-                <Comments setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  onNewComment={onNewComment} setOnNewComment={setOnNewComment} all={true} allComments={comments_} product={route.params.product}/>
+                <Comments setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  onNewComment={onNewComment} setOnNewComment={setOnNewComment} all={true} comments={comments_} product={product}/>
             </ScrollView>
         
         <View style={[allCommetsStyles.inputContainer]}>
@@ -144,13 +156,18 @@ const addComment = async (item) => {
                     underlineColorAndroid='transparent'
                     inputContainerStyle={{ borderBottomWidth:isFocused?0:1, }}
                     ref={inputRef}
-                    rightIcon={ 
-                        <Pressable onPress={() => {addComment(route.params.product);setOnNewComment(!onNewComment)}} style={[commentsStyles.sendButton, {}]}>
-                            <Icon name='send-sharp' type='ionicon' size={40} color={appColors.secondaryColor1} />
-                        </Pressable>
+                    rightIcon={
+                       {}
                     }
                     value={inputValue}
                 />
+                { isLoading 
+                        ?
+                            <ActivityIndicator color={appColors.secondaryColor1} /> 
+                        :
+                        <Pressable onPress={() => {setIsLoading(true);addComment(route.params.product);}} style={[commentsStyles.sendButton, {}]}>
+                            <Icon name='send-sharp' type='ionicon' size={40} color={appColors.secondaryColor1} />
+                        </Pressable>}
         </View>
 </View>
     )

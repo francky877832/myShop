@@ -1,3 +1,5 @@
+import { API_BACKEND } from '@env';
+
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
 import { View, Text, Animated, Pressable, PanResponder } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -116,7 +118,7 @@ const ProfilShop = (props) => {
     const getProducts = async ()=> {
         try
         {
-            const response = await fetch(`${server}/api/datas/products/get/user/${loggedUserId}`,{
+            const response = await fetch(`${API_BACKEND}/api/datas/products/get/user/${loggedUserId}`,{
                 method: 'GET',
                 headers: {
                     'Content-Type': 'Application/json',

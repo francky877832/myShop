@@ -1,3 +1,5 @@
+import { API_BACKEND } from '@env';
+
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
 import { View, Text, Animated, Pressable, ScrollView, FlatList, Image, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -178,7 +180,7 @@ const submitProduct = async () => {
         });
 
 
-            const response = await fetch(`${server}/api/datas/products/add`,{
+            const response = await fetch(`${API_BACKEND}/api/datas/products/add`,{
             method: 'POST',
             body: formData,
             headers: {

@@ -1,0 +1,39 @@
+const mongoose = require('../../shared/db').mongoose;
+const Schema = mongoose.Schema;
+const uniqueValidator = require('mongoose-unique-validator');
+
+const appName = "TheStyle"
+const userSchema = new Schema({
+    name: { type: String },
+    surname: { type: String },
+    username: { type: String, required: true, unique: true, default : () => { return `${appName}${(Date.now()).toString().split('').reverse().join('').substring(0,4)}` } },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: { type: String, enum: ['customer', 'seller', 'admin'], default: 'seller' },
+    address: {
+        street: { type: String },
+        city: { type: String },
+        region: { type: String },
+        country: { type: String }
+    },
+    phone: { type: String },
+    image : { type: String },
+    ventes : { type: Number, default : 0 },
+    follower : { type: Number, default : 0 },
+    following : { type: Number, default : 0 },
+    favourites : { type: Number, default : 0 },
+    online : { type: Number, enum: [0, 1], default : 0 },
+    actif : { type: Number, enum: [0, 1], default : 0 },
+    star : { type: Number, default : 0 },
+    code : { type: String },
+    slogan : { type: String },
+
+
+
+    createdAt : { type : Date, default : Date.now },
+    updatedAt : { type : Date, default : Date.now }
+});
+
+userSchema.plugin(uniqueValidator);
+
+module.exports = mongoose.model('User', userSchema);

@@ -81,7 +81,6 @@ useEffect(() => {
 {*/
     return(
 <KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
-
         <View style={[userLoginStyles.container]}>
             <LinearGradient
                 colors={['#f27a1a', '#ff8a2a', '#ba5c11', '#551b01']} // Ajoutez autant de couleurs que nécessaire

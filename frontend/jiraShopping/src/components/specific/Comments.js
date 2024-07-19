@@ -1,4 +1,5 @@
-import React, { useState, forwardRef, useRef, useEffect, useCallback, useMemo } from 'react';
+
+import React, { useState, forwardRef, useRef, useEffect, useCallback, useMemo, useContext } from 'react';
 import { View, Text, Pressable, FlatList, ScrollView, TextInput, Alert} from 'react-native';
 import { Input } from 'react-native-elements';
 import {CustomActivityIndicator} from '../common/CommonSimpleComponents'
@@ -13,16 +14,17 @@ import { datas } from '../../utils/sampleDatas';
 
 import { server } from '../../remote/server';
 
+import { ProductItemContext } from '../../context/ProductItemContext';
 
 const loggedUserId = "66731fcb569b492d3ef429ba"
 const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const Comments = (props) =>
 {
-    const { all, navigation, product, allComments, onNewComment, setOnNewComment, setters} = props
+    const { all, navigation, product, setters, setIsLoading} = props
     const {inputValue,setInputValue, setIsResponseTo} = setters 
-    const [isLoading, setIsLoading]  = useState(true)
     
+    const { comments, } = useContext(ProductItemContext)
 
     //console.log("allComments")
     //console.log(allComments)
@@ -31,61 +33,17 @@ const Comments = (props) =>
     //const [inputValue, setInputValue] = useState("")
 //    const [isFocused, setIsFocused] = useState(false)
 //    const [isAll, setIsAll] = useState(all)
-    const [comments, setComments] = useState(allComments?.length>0?allComments:[])
-    const [numComments, setNumComments] = useState(0)
-        const initialNumberOfComments = 2
-        let data = [...comments] ; data = !all ? data.slice(0, initialNumberOfComments+1) : comments
-        const comments_ = {comments : [...data], count:2, total : 3} //format de retourn cote server Express
-        //let  reshapedComments = reshapeComments(comments_.comments)
-
+   
         //console.log(reshapedComments)
 
 
-const fetchProductComments = async () =>{
-    try{
-//console.log("Ok")
-        const response = await fetch(`${server}/api/datas/comments/get/${product._id}`);            
-        const datas = await response.json()
-        //console.log(datas)
-        if (!response.ok) {
-            throw new Error('Erreur lors de la requête');
-        }
-        //console.log(datasdatas[0].products)
-        //console.log(datas)
-        const cm = reshapeComments(all?datas:datas.slice(0,2))
-        setNumComments(datas.length)
-        /*console.log("cm.length")
-        console.log(cm.length)
-        console.log(comments.length)
-        if(cm.length != comments.length)
-        {
-            setIsLoading(true)
-        }*/
-        setComments(cm)
-        //Alert.alert("Commentaire recuperes avec success")
-    }catch(error){
-        Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
-    }
-}
 
+
+/*
 useEffect(()=>{
     onNewComment ? setIsLoading(true) : setIsLoading(false)
-})
-useEffect(()=>{
-   // all ? false : 
-  //console.log("o")
-   const fetchData = async () => {
-    //setIsLoading(true);
-    await fetchProductComments()
-    setIsLoading(false);
-  };
+})*/
 
-  if (isLoading) {
-    fetchData();
-  }
-  if(typeof setOnNewComment == 'function')
-        setOnNewComment(false)
-}, [isLoading])
 
     const Comment = (props) => {
         const { comment, styles, all, } = props
@@ -96,9 +54,7 @@ useEffect(()=>{
             showSubComment.current = val;
             forceUpdate({}); // Forcer un re-render
           };
-useEffect(()=>{
 
-}, [])
 
         return (
                     <View style={[styles.commentContainer,]} >
@@ -111,9 +67,11 @@ useEffect(()=>{
                             </Pressable>
                         </View>
 
-                        <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>Ecrit il y'a {sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }</Text></View>
+                        <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>{isNaN(sinceDate(comment.createdAt)[0]) || (sinceDate(comment.createdAt)[0]==0) && 
+                                                                                                                                                                                                    (sinceDate(comment.createdAt)[1]=="seconde")
+                                                                                                                                                                      ? "A l'instant" :"Ecrit il y'a " + sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }</Text></View>
                         {
-                            comment.subComment && comment.subComment.length > 0 && all
+                            comment?.subComment && comment.subComment?.length > 0 && all
                             ?
                                     <Pressable onPress={()=>{setShowSubComment(!showSubComment.current)}} style={{alignSelf:"flex-end",}}>
                                         { showSubComment.current ?
@@ -170,7 +128,7 @@ useEffect(()=>{
         
                     <Pressable onPress={()=>{navigation.navigate("AllComments",{comments:comments,product:product})}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
                             <Text style={[customText.text,{color:appColors.green,}]}>Tout Afficher</Text>
-                            <Text style={[customText.text,{color:appColors.black,}]}>({numComments})</Text>
+                            <Text style={[customText.text,{color:appColors.black,}]}>({comments.length})</Text>
                     </Pressable>
             </View>
         }
@@ -187,7 +145,7 @@ useEffect(()=>{
                     contentContainerStyle={[commentsStyles.flatlistContainer, !all?commentsStyles.flatlistContainerNotAll:false]}
                 />*/
 
-                comments?.map((item)=>{
+                (all ? comments : comments?.slice(0,2))?.map((item)=>{
                     //console.log("   ITEM")
                     //console.log(item)
                     return(
@@ -220,9 +178,7 @@ useEffect(()=>{
                 </Pressable>
             </View>
         }
-                    {isLoading && 
-                        <CustomActivityIndicator styles={{}} /> 
-                    }
+                    
         </View>
     )
 }

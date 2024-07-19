@@ -27,7 +27,7 @@ const Test = ()=>{
 const HomeNavigation = () => {
  
   return (
-    <Tab.Navigator initialRouteName='Account'
+    <Tab.Navigator initialRouteName='Home'
         screenOptions={({ route }) => ({
           lazy : true,
           headerShown : false,

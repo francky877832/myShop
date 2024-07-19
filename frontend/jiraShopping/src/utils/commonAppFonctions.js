@@ -21,19 +21,19 @@ exports.sinceDate = (_date) => {
 
     
     if(years != 0)
-        return [years, years==1 ? "an" : "ans"]
+        return [isNaN(years)?0:years, years==1 ? "an" : "ans"]
     else if(months != 0)
-        return [months, "mois"]
+        return [isNaN(months)?0:months, "mois"]
     else if(weeks != 0)
-        return [weeks, weeks==1 ? "semaine" : "semaines"]
+        return [isNaN(weeks)?0:weeks, weeks==1 ? "semaine" : "semaines"]
     else if(days != 0)
-        return [days, days==1 ? "jour" : "jours"]
+        return [isNaN(days)?0:days, days==1 ? "jour" : "jours"]
     else if(hours != 0)
-        return [hours, hours==1 ? "heure" : "heures"]
+        return [isNaN(hours)?0:hours, hours==1 ? "heure" : "heures"]
     else if(minutes != 0)
-        return [minutes, minutes==1 ? "minute" : "minutes"]
+        return [isNaN(minutes)?0:minutes, minutes==1 ? "minute" : "minutes"]
     else
-        return [seconds, seconds==1 ? "seconde" : "secondes"]
+        return [isNaN(seconds)?0:seconds, (seconds==1 || seconds==0) ? "seconde" : "secondes"]
 
 }
 

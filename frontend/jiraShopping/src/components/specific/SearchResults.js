@@ -1,3 +1,5 @@
+import { API_BACKEND } from '@env';
+
 import React, { useState, useEffect, useRef, useContext, useCallback,  } from 'react';
 import { View, Text, Pressable, Alert} from 'react-native';
 
@@ -50,7 +52,7 @@ const SearchResults = (props) => {
         //console.log(serialize(category))
             try{
                 //console.log(user)
-                            const response = await fetch(`${server}/api/datas/products/categories?${serialize(category)}`, {
+                            const response = await fetch(`${API_BACKEND}/api/datas/products/categories?${serialize(category)}`, {
                                 headers: {
                                 'Content-Type': 'application/json',
                                 'Authorization': `Bearer ${user.token}`,

@@ -1,12 +1,14 @@
-import React, { useState, useRef, useContext } from 'react';
+import { API_BACKEND } from '@env';
+
+import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView, Animated, PanResponder, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import nlp from 'compromise';
 
 import CarouselImage from '../common/CarouselImages';
-import { PrevButton, ShareButton, LikeButton, CustomButton } from "../common/CommonSimpleComponents";
+import { PrevButton, ShareButton, LikeButton, CustomButton, CustomActivityIndicator } from "../common/CommonSimpleComponents";
 import Comments from './Comments';
 import { productDetailsStyles } from '../../styles/productDetailsStyles';
 import { appColors, customText } from '../../styles/commonStyles';
@@ -16,10 +18,10 @@ import BadgeIcon from '../common/BadgeIcon';
 import ProductsList from '../common/ProductsList';
 import SellerBrand from '../common/SellerBrand';
 import { screenHeight, screenWidth } from '../../styles/commentsStyles';
-import { capitalizeFirstLetter, convertWordsToNumbers } from '../../utils/commonAppFonctions';
+import { capitalizeFirstLetter, convertWordsToNumbers, containsEmail, reshapeComments,  } from '../../utils/commonAppFonctions';
 import { FavouritesContext } from '../../context/FavouritesContext';
 import { BasketContext } from '../../context/BasketContext';
-
+import { ProductItemContext } from '../../context/ProductItemContext';
 
 const loggedUserId = "66731fcb569b492d3ef429ba"
 const loggedUser = "Francky"
@@ -39,6 +41,7 @@ const ProductDetails = (props) => {
     const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
     const [onNewComment, setOnNewComment] = useState(false)
 
+
    
     const minHeight = 0;
     const maxHeight = screenHeight / 2;
@@ -54,8 +57,19 @@ const ProductDetails = (props) => {
         extrapolate: 'clamp',
     });
 
-
     const scrollViewRef = useRef(null);
+
+
+
+    const { comments, setComments } = useContext(ProductItemContext)
+    const [numComments, setNumComments] = useState(0)
+    const [isLoading, setIsLoading] = useState(true)
+        const initialNumberOfComments = 2
+        //let data_ = [...comments] ; data_ = !all ? data_.slice(0, initialNumberOfComments+1) : comments
+        //const comments_ = {comments : [...data_], count:2, total : 3} //format de retourn cote server Express
+        //let  reshapedComments = reshapeComments(comments_.comments)
+
+
 /* //Bloquer le scroll au debut onScroll={handleScroll}
     const handleScroll = (event) => {
       const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
@@ -137,7 +151,51 @@ const ProductDetails = (props) => {
    /*
     {...panResponder.panHandlers}
    */ 
- 
+
+    const fetchProductComments = async () =>{
+        try{
+    //console.log("Ok")
+            const response = await fetch(`${API_BACKEND}/api/datas/comments/get/${data._id}`);            
+            const datas = await response.json()
+            //console.log(datas)
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+            //console.log(datasdatas[0].products)
+            //console.log(datas)
+            const cm = reshapeComments(datas)
+            setNumComments(datas.length)
+            /*console.log("cm.length")
+            console.log(cm.length)
+            console.log(comments.length)
+            if(cm.length != comments.length)
+            {
+                setIsLoading(true)
+            }*/
+            setComments(cm)
+            //Alert.alert("Commentaire recuperes avec success")
+        }catch(error){
+            Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+        }
+    }
+
+    useFocusEffect(useCallback(()=>{
+
+        // all ? false : 
+       //console.log("o")
+        const fetchData = async () => {
+         //setIsLoading(true);
+         await fetchProductComments()
+         setIsLoading(false);
+       };
+     
+       if (isLoading) {
+         fetchData();
+       }
+       if(typeof setOnNewComment == 'function')
+             setOnNewComment(false)
+     }, [isLoading]))
+
 
     return (
 
@@ -231,8 +289,15 @@ const ProductDetails = (props) => {
                     <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{loggedUserId!=visitorUserId ? navigation.navigate("Shop", {username:data.seller}) : false }}>
                         <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={data.seller}/>
                     </Pressable>
-                    <View style={{height:20}}></View>
-                    <Comments setters={{onNewComment:onNewComment}} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
+                <View style={{height:20}}></View>
+                
+                        <View>
+                            <Comments all={false} setIsLoading={setIsLoading} setters={{onNewComment:onNewComment}} comments={comments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
+                            {isLoading &&
+                                <CustomActivityIndicator styles={{}} /> 
+                            }
+                        </View>
+
                 </View>
 
                 <View style={[productDetailsStyles.similarContainer]}>

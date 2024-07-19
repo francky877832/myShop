@@ -11,6 +11,7 @@ const ProductItemProvider = ({children}) => {
     const [selectedBrand, setSelectedBrand] = useState("")
     const [selectedColor, setSelectedColor] = useState("")
     const {user} = useContext(UserContext)
+    const [comments, setComments] = useState([])
 
     const [ categorie, setCategories ] = useState([])
     const [ brands, setBrands ] = useState([])
@@ -76,8 +77,8 @@ useEffect(() => {
 
 
 
-    const productItemStateVars = {selectedBrand, selectedColor, categories, brands, isLoading}
-    const productItemStateSetters = {setSelectedBrand, setSelectedColor, setIsLoading}
+    const productItemStateVars = {comments, selectedBrand, selectedColor, categories, brands, isLoading}
+    const productItemStateSetters = {setComments, setSelectedBrand, setSelectedColor, setIsLoading}
     const utilsFunctions = {}
     return (
         <ProductItemContext.Provider value={{...productItemStateVars, ...productItemStateSetters, ...utilsFunctions}}>

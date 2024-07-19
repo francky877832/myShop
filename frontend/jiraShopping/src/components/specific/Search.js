@@ -1,3 +1,5 @@
+import { API_BACKEND } from '@env';
+
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, SafeAreaView, TextInput, FlatList, Pressable, TouchableHighlight, ScrollView, Modal, Alert, RefreshControlComponent } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -61,7 +63,7 @@ const onSubmitEditing = () =>{
             {
                 navigation.navigate("SearchResults", {searchText:searchText})
                 setTimeout(async() => {
-                    response = await fetch(`${server}/api/datas/search/history/update/${loggedUserId}`, {
+                    response = await fetch(`${API_BACKEND}/api/datas/search/history/update/${loggedUserId}`, {
                         method: 'POST',
                         body: JSON.stringify(search),
                             headers: {
@@ -88,7 +90,7 @@ const onSubmitEditing = () =>{
 const fetchUserHistorique = async () =>{
     try{
 //console.log("Ok")
-        const response = await fetch(`${server}/api/datas/search/history/get/${loggedUserId}`);            
+        const response = await fetch(`${API_BACKEND}/api/datas/search/history/get/${loggedUserId}`);            
         const datas = await response.json()
         //console.log(datas)
         if (!response.ok) {
@@ -113,7 +115,7 @@ const removeUserHistorique = async (name) => {
         //console.log(bool)
             try
             {
-                response = await fetch(`${server}/api/datas/search/history/remove/${loggedUserId}`, {
+                response = await fetch(`${API_BACKEND}/api/datas/search/history/remove/${loggedUserId}`, {
                     method: 'PUT',
                     body: JSON.stringify(search),
                         headers: {
@@ -145,7 +147,7 @@ const removeAllUserHistorique = async (name) => {
         //console.log(bool)
             try
             {
-                response = await fetch(`${server}/api/datas/search/history/removeAll/${loggedUserId}`, {
+                response = await fetch(`${API_BACKEND}/api/datas/search/history/removeAll/${loggedUserId}`, {
                     method: 'PUT',
                     body: JSON.stringify(search),
                         headers: {

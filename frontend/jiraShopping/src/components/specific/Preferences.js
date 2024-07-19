@@ -1,3 +1,4 @@
+import { API_BACKEND } from '@env';
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, Animated, Easing, Alert, Dimensions, ActivityIndicator} from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
@@ -38,7 +39,7 @@ const Preferences = (props) => {
     const getProducts = async ()=> {
         try
         {
-            const response = await fetch(`${server}/api/datas/products/get`,{
+            const response = await fetch(`${API_BACKEND}/api/datas/products/get`,{
                 method: 'GET',
                 headers: {
                     'Content-Type': 'Application/json',
