@@ -67,8 +67,8 @@ useEffect(()=>{
                             </Pressable>
                         </View>
 
-                        <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>{isNaN(sinceDate(comment.createdAt)[0]) || (sinceDate(comment.createdAt)[0]==0) && 
-                                                                                                                                                                                                    (sinceDate(comment.createdAt)[1]=="seconde")
+                        <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>{isNaN(sinceDate(comment.createdAt)[0]) || (sinceDate(comment.createdAt)[0]==0 && 
+                                                                                                                                                                                                    (sinceDate(comment.createdAt)[1]=="secondes" || sinceDate(comment.createdAt)[1]=="ans"))
                                                                                                                                                                       ? "A l'instant" :"Ecrit il y'a " + sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }</Text></View>
                         {
                             comment?.subComment && comment.subComment?.length > 0 && all
