@@ -72,7 +72,7 @@ exports.reshapeComments = (datas) => {
                 }
             }
         }
-        console.log(i)     
+       // console.log(i)     
     }
     for(let j in comments)
         if(comments[j] != undefined)

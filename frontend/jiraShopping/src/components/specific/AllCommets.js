@@ -1,7 +1,7 @@
-import React, { useState, forwardRef, useRef, useEffect } from 'react';
+import React, { useState, forwardRef, useRef, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, Platform, KeyboardAvoidingView, Alert, InteractionManager  } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
@@ -18,13 +18,16 @@ const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const AllCommets = (props) =>
 {
-    const { navigation } = props
+    const navigation = useNavigation()
     const route = useRoute()
     const product = route.params.product
+    const [comments_, setComments_] = useState(route.params.comments)
+    const setIsLoading = route.params.setIsLoading
     const [isFocused, setIsFocused] = useState(false)
     const [isResponseTo, setIsResponseTo] = useState(product._id)
     const [inputValue, setInputValue] = useState("")
     const [onNewComment, setOnNewComment] = useState(false)
+    const [refreshComponent, setRefreshComponent] = useState(false)
 
     const inputRef = useRef(null)
     
@@ -39,7 +42,32 @@ useEffect(()=>{
 
 }, [])
 
+useEffect(()=>{
+    //console.log("**********")
+})
 
+useEffect(()=>{
+    //Appel de useCallBack
+       // Ajouter l'écouteur pour l'événement de retour
+    const unsubscribe = navigation.addListener('beforeRemove', ()=>{
+        (e) => {
+            if (e) {
+              e.preventDefault(); // Empêcher le comportement par défaut de la navigation
+            }
+            setOnNewComment(true)
+            navigation.dispatch(e.data.action);
+        }
+    });
+    return unsubscribe;
+}, [navigation])
+
+
+const updateComments_ = (comment)=>{
+    //console.log("okcOMMENT")
+    setComments_((prevComments)=>{
+        return [comment, ...prevComments]
+    })
+}
 //username
 const addComment = async (item) => {
     const checkNumber =  convertWordsToNumbers(inputValue)
@@ -60,7 +88,7 @@ const addComment = async (item) => {
         text : inputValue,
         isResponseTo : isResponseTo,
     }
-    
+    //console.log(comment)
         try{
             //console.log("Ok")
             const response = await fetch(`${server}/api/datas/comments/add/${item._id}`, {
@@ -71,32 +99,40 @@ const addComment = async (item) => {
                 },})
                         //console.log(datas)
             if (!response.ok) {
-                throw new Error('Erreur lors de la requête');
+                throw new Error('Erreur lors de la requête'+(await response.text()));
             }
 
             Alert.alert("Comment ajouté avec success.")
-                        
+            //setIsLoading(true)
+            setOnNewComment(true)
         }catch(error){
             Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
         }
 
 }
 
+/*
+  <KeyboardAwareScrollView style={[allCommetsStyles.container,{}]}  
+            //resetScrollToCoords={{ x: 0, y: 0 }} 
+            contentContainerStyle={{flexGrow:1}} 
+            scrollEnabled={true}
+            //extraScrollHeight={0}
+            //keyboardShouldPersistTaps="always"
+            enableOnAndroid={true}
+        >
 
+
+</KeyboardAwareScrollView>
+
+
+*/
 
     return(
 <View style={{ flex: 1 }}>
-        <KeyboardAwareScrollView style={[allCommetsStyles.container,{}]}  
-            resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} 
-            scrollEnabled={true}
-            extraScrollHeight={20}
-            keyboardShouldPersistTaps="handled"
-            enableOnAndroid={true}
-        >
-                <ScrollView contentContainerStyle={[{  }]} >
-                    <Comments setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}} onNewComment={onNewComment} all={true} allComments={route.params.comments} product={route.params.product}/>
-                </ScrollView>
-        </KeyboardAwareScrollView>
+            <ScrollView contentContainerStyle={[allCommetsStyles.container,{}]} >
+                <Comments setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  onNewComment={onNewComment} setOnNewComment={setOnNewComment} all={true} allComments={comments_} product={route.params.product}/>
+            </ScrollView>
+        
         <View style={[allCommetsStyles.inputContainer]}>
             <Input placeholder="Posez une question" onChangeText={(text)=>{setInputValue(text)}}
                     multiline={true}
@@ -126,9 +162,9 @@ export default AllCommets
 const allCommetsStyles = StyleSheet.create({
     container :
     {
-        flex:1,
+        //flex:1,
         backgroundColor : appColors.white,
-        //height:screenHeight-100,
+        minHeight:screenHeight,
     },
     inputContainer :
     {

@@ -232,7 +232,7 @@ const ProductDetails = (props) => {
                         <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={data.seller}/>
                     </Pressable>
                     <View style={{height:20}}></View>
-                    <Comments setters={{onNewComment:onNewComment}} navigation={navigation} product={data} />
+                    <Comments setters={{onNewComment:onNewComment}} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
                 </View>
 
                 <View style={[productDetailsStyles.similarContainer]}>
