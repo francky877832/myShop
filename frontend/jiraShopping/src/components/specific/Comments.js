@@ -21,7 +21,7 @@ const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const Comments = (props) =>
 {
-    const { all, navigation, product, setters, setIsLoading} = props
+    const { all, navigation, product, setters, isLoading, setIsLoading} = props
     const {inputValue,setInputValue, setIsResponseTo} = setters 
     
     const { comments, } = useContext(ProductItemContext)

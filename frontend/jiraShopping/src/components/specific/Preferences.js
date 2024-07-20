@@ -77,7 +77,7 @@ useEffect( () => {
 const ProductsListWithFilters_ = () => {
     return (
         <View style={{flex:1,}}>
-            <ProductsListWithFilters name="Preference" filters={false} datas={products} horizontal={false} styles={preferencesStyles} title="...Choisis Pour Vous" />
+            <ProductsListWithFilters name="Preference" filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
             {isLoading && 
                 <CustomActivityIndicator styles={{}} /> 
             }

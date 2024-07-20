@@ -153,7 +153,7 @@ const Categories = (props) => {
                                 item.subCategories.map((subCat, index) => {
                                     return (
                                         <View  key={subCat._id} >
-                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateCategories(item.name, subCat.name); navigation.navigate(goBackTo, {searchText:" ", display:"category",});}}>
+                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateCategories(item.name, subCat.name); navigation.navigate(goBackTo, {searchText:"", display:"category",});}}>
                                                 <Text style={[categoriesStyles.subCatText]}>{subCat.name}</Text>
                                             </Pressable>
                                         </View>
@@ -171,7 +171,7 @@ const Categories = (props) => {
                     ListFooterComponent={ (item) => { return (
                             <View style={{height:50,top:10, alignSelf:"center"}}>
                                  <Text>{/* searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***` */}</Text>
-                                <Pressable onPress={()=>{updateCategories(selectedCategories.name, "complete_category"); navigation.navigate(goBackTo, {searchText:" ", display:"category"});}} style={[categoriesStyles.fullCat]}>
+                                <Pressable onPress={()=>{updateCategories(selectedCategories.name, "complete_category"); navigation.navigate(goBackTo, {searchText:"", display:"category"});}} style={[categoriesStyles.fullCat]}>
                                     <Text style={[categoriesStyles.text,{color:appColors.white, textDecorationLine:"none", fontSize:16,}]}>Afficher La Categorie {">>"} </Text>
                                 </Pressable>
                             </View>

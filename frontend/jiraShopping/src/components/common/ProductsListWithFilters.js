@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 
 //custom component
 import ProductsList from './ProductsList';
@@ -7,16 +7,36 @@ import Filters from './Filters';
 import { preferencesStyles } from '../../styles/preferencesStyles';
 import { customText, appColors, appFont } from '../../styles/commonStyles';
 
+import { FilterContext } from '../../context/FilterContext';
+
 const ProductsListWithFilters = React.forwardRef((props, ref) => {
     const { datas, horizontal, title, onEndReached, filters, name, searchText, isLoading, getDatas, display} = props;
-   
+    const {selectedCategories} = useContext(FilterContext)
+
     return(
             <View style={[productsListWithFiltersStyles.container]}>
-                {title &&
+                {/*
+                title && !!searchText && display!="category" &&
                     <View style={[productsListWithFiltersStyles.title,{paddingVertical:10,}]}>
                         <Text style={[productsListWithFiltersStyles.titleText,{fontSize:16}]} numberOfLines={2}>{title}</Text>
                     </View>
+                    */
                 }
+                
+                            {
+                                display=="category" && Object.keys(selectedCategories).length>0
+                                ?
+                                    <View style={[productsListWithFiltersStyles.title,{paddingVertical:10,}]}>
+                                        <Text style={[productsListWithFiltersStyles.titleText,{fontSize:16}]} >
+                                                {!selectedCategories.subCategories ? selectedCategories.name:selectedCategories.name+"/"+selectedCategories.subCategories}
+                                        </Text>
+                                    </View>
+                                :
+                                <View style={[productsListWithFiltersStyles.title,{paddingVertical:10,}]}>
+                                    <Text style={[productsListWithFiltersStyles.titleText,{fontSize:16}]} numberOfLines={2}>{title}</Text>
+                                </View>
+                            }
+                               
 
                 <View style={{flex:1,flexDirection:"column",}}>
                     {filters &&

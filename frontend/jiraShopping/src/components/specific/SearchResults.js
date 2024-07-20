@@ -36,6 +36,8 @@ const SearchResults = (props) => {
        products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
         isLoading, setIsLoading , selectedCategories , setSelectedCategories 
     } = useContext(FilterContext)
+
+    
     //console.log(selectedCategories)
         //const {selectedCategory,  } = useContext(ProductItemContext)
         const {user} = useContext(UserContext)
@@ -66,6 +68,7 @@ const SearchResults = (props) => {
         }
 useEffect(()=>{
     console.log(searchText)
+    cat_reminder = selectedCategories
 },[])
         async function getDatas({searchText, selectedModalCategories, selectedBrands, conditions, orderBy})
         {
@@ -104,14 +107,15 @@ useEffect(()=>{
 
     }, [searchText])
 
-/*useEffect(() => {
+useEffect(() => {
+    const cat_reminder = selectedCategories
         const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
             e.preventDefault();
-            //resetAllFiltersWithoutFecthingDatas()
+            setSelectedCategories(cat_reminder)
             navigation.dispatch(e.data.action)
         })
         return beforeRemoveListener;
-}, [navigation]);*/
+}, [navigation]);
 const title = `Resultats de recherche "${searchText}"`
         return(
                 <View style={preferencesStyles.container}>

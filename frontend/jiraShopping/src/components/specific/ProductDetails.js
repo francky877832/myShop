@@ -292,7 +292,7 @@ const ProductDetails = (props) => {
                 <View style={{height:20}}></View>
                 
                         <View>
-                            <Comments all={false} setIsLoading={setIsLoading} setters={{onNewComment:onNewComment}} comments={comments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
+                            <Comments all={false} isLoading={isLoading} setIsLoading={setIsLoading} setters={{onNewComment:onNewComment}} comments={comments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
                             {isLoading &&
                                 <CustomActivityIndicator styles={{}} /> 
                             }

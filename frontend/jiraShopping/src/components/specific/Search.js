@@ -28,6 +28,7 @@ const Search = (props) => {
     const [searchText, setSearchText] = useState("")
     const [historique, setHistorique] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    const [refreshComponent, setRefreshComponent] = useState(true)
     const searchBarRef = useRef(null)
     const scrollViewRef = useRef(null)
     const navigation = useNavigation()
@@ -75,7 +76,7 @@ const onSubmitEditing = () =>{
                         const errorData = await response.json();
                         throw new Error("Erreur ",`${response.status}: ${errorData.message}`)
                     }
-                    Alert.alert("", "Historique ajoute avec success")
+                    //Alert.alert("", "Historique ajoute avec success")
 
                         setIsLoading(true)
                     }, 0); 
@@ -130,6 +131,7 @@ const removeUserHistorique = async (name) => {
               
                 //Alert.alert("", "Historique ajoute avec success")
                 //setRefreshComponent(!refreshComponent)
+                setIsLoading(true)
             }catch(error)
             {
                 console.log(error)
@@ -160,6 +162,7 @@ const removeAllUserHistorique = async (name) => {
                     throw new Error("Erreur ",`${response.status}: ${errorData.message}`)
                 }
                 //setRefreshComponent(!refreshComponent)
+                setIsLoading(true)
                 //Alert.alert("", "Historique vidé avec success")
             }catch(error)
             {
@@ -184,7 +187,7 @@ useEffect(()=>{
 
       fetchData()
     
-}, [isLoading])
+}, [isLoading, refreshComponent])
 
 const handlePress = async (item) => {
 
