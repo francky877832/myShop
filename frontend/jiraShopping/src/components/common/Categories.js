@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
-import { View, Text, Animated, Pressable, ScrollView, FlatList, Image, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import { View, Text, Animated, StyleSheet, Pressable, ScrollView, FlatList, Image, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 
@@ -7,7 +7,7 @@ import { Input } from 'react-native-elements';
 
 
 
-import { appColors, customText } from '../../styles/commonStyles';
+import { appColors, customText, screenHeight } from '../../styles/commonStyles';
 import { categoriesStyles } from '../../styles/categoriesStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
 import { CustomButton, CustomActivityIndicator } from "./CommonSimpleComponents"
@@ -143,6 +143,29 @@ const Categories = (props) => {
 })
 
 
+
+const [isAtTop, setIsAtTop] = useState(true);
+const [isAtBottom, setIsAtBottom] = useState(false);
+
+const handleScroll = (event) => {
+    //Alert.alert("a")
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const isAtBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - 1;
+    const isAtTop = contentOffset.y <= 20;
+    if(isAtBottom)
+    {
+       setIsAtBottom(true); 
+    }
+    else
+    {
+        setIsAtBottom(false); 
+    }
+    console.log(isAtBottom)
+    //setIsAtTop(isAtTop);
+  };
+
+
+
     return(
         <View style={[categoriesStyles.container]}>
 
@@ -162,8 +185,12 @@ const Categories = (props) => {
                             ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={[categoriesStyles.flatlist,]}
+                            onScroll={handleScroll}
+                            scrollEventThrottle={16}
                         />
-                    
+                            <View style={styles.scrollIndicator}>
+                                <Icon name={isAtBottom ? "chevron-up" : "chevron-down"}  type="ionicon" size={30} color={appColors.secondaryColor4} />
+                            </View>
                 </View>
             <View style={[categoriesStyles.subCategoryContainer, {flex:1}]}>
             <FlatList
@@ -278,5 +305,22 @@ const Categories = (props) => {
     )
 }
 
+
+const styles = StyleSheet.create({
+    scrollIndicator: 
+    {
+        zIndex : 100,
+        alignItems: 'center',
+        paddingVertical: 20,
+        //borderTopWidth: 1,
+        //borderTopColor: appColors.black,
+        position : "absolute",
+        top : -20,
+        //bottom : 0,
+        left : 70,
+        right : 0,
+        //backgroundColor:"red",
+      },
+})
 export default Categories
     

@@ -43,7 +43,7 @@ const   Account = (props) => {
                     </View>
 
                     <View style={[accountStyles.achatsVentesView]}>
-                        <Pressable style={[accountStyles.AchatIcon]}>
+                        <Pressable style={[accountStyles.AchatIcon]} onPress={()=>(navigation.navigate("Shop"))}>
                             <Icon type="ionicon" name="bag-handle" size={50} color={appColors.orange} />
                         </Pressable>
                         <View style={{height:5,}}></View>
