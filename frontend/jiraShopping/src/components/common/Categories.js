@@ -28,10 +28,31 @@ const Categories = (props) => {
     const goBackTo = params?.datas?.goBackTo || props.goBackTo
 //console.log(page)
     const {setSelectedBrand, selectedColor, setSelectedColor, categories, brands, isLoading} = useContext(ProductItemContext)
-    const { selectedCategories, updateCategories } = useContext(FilterContext)
+    const { selectedCategories, updateCategories, setSelectedCategories } = useContext(FilterContext)
     //const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
 
     const navigation = useNavigation()
+    const [selectedCategories_, setSelectedCategories_] = useState({"Vetements": true, "name": "Vetements"})
+
+        const updateCategories_ = useCallback((id, path) => {
+            setSelectedCategories_((prevSelectedCategory) => {
+                if(path==undefined)
+                {        //console.log(id)
+                    if(prevSelectedCategory["name"] == id)
+                        return {[id] : prevSelectedCategory[id], name:id,}
+                    return {[id] : !prevSelectedCategory[id], name:id,}
+                    
+                }
+                else if(path=="complete_category")
+                {
+                    return {[id] : true, name:id,}
+                }
+                else
+                { //console.log(path)
+                    return {[id] : true, name:id, subCategories:path}
+                }
+            })
+        })
     
    
     /*const updateCategories = useCallback((id, path) => {
@@ -83,7 +104,8 @@ const Categories = (props) => {
 
 
     const Category = React.memo((props) => {
-        const { item, selectedCategories, updateCategories,} = props
+        const { item, selectedCategories_, updateCategories_,} = props
+        
         //console.log(item.subCategories)
         //console.log(selectedCategories)
         /*useEffect(()=>{
@@ -92,10 +114,10 @@ const Categories = (props) => {
         //console.log(selectedCategories)
         return(
             <View style={{flex:1,}}>
-                <View pointerEvents='auto' style={[categoriesStyles.categoryContainer,{flex:1,}]}>
-                    <Pressable style={[categoriesStyles.pressableCat, selectedCategories[item.name]  ? {backgroundColor:appColors.lightOrange} : false ]} onPress={()=>{updateCategories(item.name); }}>
-                        <Icon name={item.icon.split("/")[1]} type={item.icon.split("/")[0]} color={selectedCategories[item.name]  ? appColors.secondaryColor1 : appColors.black} />
-                        <Text style={[categoriesStyles.text, selectedCategories[item.name]  ? {color:appColors.secondaryColor1,fontWeight:"bold",} : false ]}>{item.name}</Text>
+                <View style={[categoriesStyles.categoryContainer,{flex:1,}]}>
+                    <Pressable style={[categoriesStyles.pressableCat, selectedCategories_[item.name]  ? {backgroundColor:appColors.lightOrange} : false ]} onPress={()=>{updateCategories_(item.name); }}>
+                        <Icon name={item.icon.split("/")[1]} type={item.icon.split("/")[0]} color={selectedCategories_[item.name]  ? appColors.secondaryColor1 : appColors.black} />
+                        <Text style={[categoriesStyles.text, selectedCategories_[item.name]  ? {color:appColors.secondaryColor1,fontWeight:"bold",} : false ]}>{item.name}</Text>
                     </Pressable>
                     
                 </View>
@@ -133,7 +155,7 @@ const Categories = (props) => {
                     <FlatList
                             data={categories}
                             nestedScrollEnabled={true}
-                            renderItem={ ({item}) => { return <Category item={item} selectedCategories={selectedCategories} updateCategories={updateCategories} /> } }
+                            renderItem={ ({item}) => { return <Category item={item} selectedCategories_={selectedCategories_} updateCategories_={updateCategories_} /> } }
                             keyExtractor={ (item) => { return item._id.toString(); } }
                             horizontal={false}
                             numColumns={ 1 }
@@ -148,12 +170,12 @@ const Categories = (props) => {
                     data={categories}
                     nestedScrollEnabled={true}
                     renderItem={ ({item}) => { return (
-                        <View pointerEvents='auto'>
-                            {  selectedCategories[item.name] &&
+                        <View>
+                            {  selectedCategories_[item.name] &&
                                 item.subCategories.map((subCat, index) => {
                                     return (
                                         <View  key={subCat._id} >
-                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{updateCategories(item.name, subCat.name); navigation.navigate(goBackTo, {searchText:"", display:"category",});}}>
+                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{setSelectedCategories(selectedCategories_);updateCategories(item.name, subCat.name); navigation.navigate(goBackTo, {searchText:"", display:"category",});}}>
                                                 <Text style={[categoriesStyles.subCatText]}>{subCat.name}</Text>
                                             </Pressable>
                                         </View>
@@ -171,7 +193,7 @@ const Categories = (props) => {
                     ListFooterComponent={ (item) => { return (
                             <View style={{height:50,top:10, alignSelf:"center"}}>
                                  <Text>{/* searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***` */}</Text>
-                                <Pressable onPress={()=>{updateCategories(selectedCategories.name, "complete_category"); navigation.navigate(goBackTo, {searchText:"", display:"category"});}} style={[categoriesStyles.fullCat]}>
+                                <Pressable onPress={()=>{setSelectedCategories(selectedCategories_);updateCategories(selectedCategories.name, "complete_category"); navigation.navigate(goBackTo, {searchText:"", display:"category"});}} style={[categoriesStyles.fullCat]}>
                                     <Text style={[categoriesStyles.text,{color:appColors.white, textDecorationLine:"none", fontSize:16,}]}>Afficher La Categorie {">>"} </Text>
                                 </Pressable>
                             </View>

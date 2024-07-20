@@ -11,7 +11,8 @@ export const categoriesStyles = StyleSheet.create({
     },
     categoriesContainer :
     {
-      paddingBottom : 20
+      //paddingBottom : 20,
+      height : screenHeight-180,
     },
     categoryContainer : 
     {
