@@ -16,6 +16,7 @@ import { requestPermissions, pickImages, takePhoto, resizeImages } from '../../u
 import { useNavigation } from '@react-navigation/native';
 
 import auth from '@react-native-firebase/auth';
+//import firestore from '@react-native-firebase/firestore';
 
 
 //<Image source={{uri: item.images[0]}}  style={[]} />
@@ -94,7 +95,23 @@ return unsubscribe;
         )
         setCameraOrGalery(false)  
     }
-    
+
+    const signInWithEmailAndPassword = useCallback(async (email, password)=>{
+        return await auth().signInWithEmailAndPassword(email, password);
+    },[])
+    useEffect(()=>{
+        const email = "francky877832@gmail.com"
+        const password = "0000000"
+        async function singIn(){
+            const userCredential = await signInWithEmailAndPassword(email, password)
+            if (userCredential.user.emailVerified && !isEmailVerified)
+            {
+                setUser({...user, isEmailVerified:1})
+                //MONGODB
+            }
+        }
+        singIn() 
+    }, [isEmailLoading])
            
     //
     const takeUpPhoto = async () => {
@@ -103,6 +120,22 @@ return unsubscribe;
         setCameraOrGalery(false)
     }
 
+    const verifyEmail = async (email, password)=> {
+        setIsEmailLoading(true)
+            try 
+            {
+                const userCredential = await signInWithEmailAndPassword(email, password)
+                if (!userCredential.user.emailVerified)
+                {
+                    await userCredential.user.sendEmailVerification();
+                    Alert.alert("", 'Vérification par email envoyée ! Vérifiez votre boîte de réception.');
+                }
+                setIsEmailLoading(false)
+            } catch (error) {
+                setIsEmailLoading(false)
+                Alert.alert("Error : ", error.message);
+            }
+    }
     //console.log(pp)
 const updateProfil = async () => {
     setIsPostLoading(true)
@@ -153,7 +186,7 @@ const updateProfil = async () => {
                         <View style={[accountSettingsStyles.VerifierBox]}>
                             <Text style={[accountSettingsStyles.text,]}>Email</Text>
                             {!user.isEmailVerified ?
-                                <Pressable style={[accountSettingsStyles.verifier, {}]}>
+                                <Pressable style={[accountSettingsStyles.verifier, {}]} onPress={()=>{verifyEmail("francky877832@gmail.com","0000000")}}>
                                     { !isEmailLoading ?
                                         <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Verifier</Text>
                                         :

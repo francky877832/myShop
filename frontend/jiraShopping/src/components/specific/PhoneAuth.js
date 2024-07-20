@@ -43,6 +43,9 @@ export default function PhoneAuth(props) {
       const userCredential = await confirm.confirm(code);
       //const user = userCredential.user;
       setUser({...user, isPhoneVerified:1})
+      
+      //MONGODB
+
       setShowCodeInput(false)
       Alert.alert('Valid code')
       /*const userDocument = await firestore()

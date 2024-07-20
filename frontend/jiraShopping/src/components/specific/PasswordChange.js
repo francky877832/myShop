@@ -10,6 +10,10 @@ import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
 import { useNavigation } from '@react-navigation/native';
 
+
+import auth from '@react-native-firebase/auth';
+//import firestore from '@react-native-firebase/firestore';
+
 const loggedUser = "Francky"
 
 const   PasswordChange = (props) => {
@@ -59,8 +63,32 @@ const   PasswordChange = (props) => {
         return unsubscribe;
     }, [navigation])
 
-    const updatePassword = async () => {
+
+    const signInWithEmailAndPassword = useCallback(async (email, password)=>{
+        return await auth().signInWithEmailAndPassword(email, password);
+    },[])
+
+    const updatePassword = async (newPassword) => {
         setIsPostLoading(true)
+        const email = "francky877832@gmail.com"
+        const password = "0000000"  
+        try {
+            
+            const userCredential = await signInWithEmailAndPassword(email, password)
+            if (userCredential.user) 
+            {
+                await userCredential.user.updatePassword(newPassword);
+                //MONGODB
+                Alert.alert('Mot de passe mis à jour avec succès.');
+            } else {
+                Alert.alert('Aucun utilisateur connecté.');
+            }
+            setIsPostLoading(false)
+        } catch (error) 
+        {
+            Alert.alert(error.message);
+            setIsPostLoading(false)
+        }
 
     }
     return(
@@ -145,7 +173,7 @@ const   PasswordChange = (props) => {
 
             <View style={[addProductStyles.addProductSubmitView,{}]}>
                 { !isPostLoading ?
-                        <CustomButton text="Changer De Mot De Passe" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={updatePassword} />
+                        <CustomButton text="Changer De Mot De Passe" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={()=>{updatePassword("00000000")}} />
                         :
                         <ActivityIndicator color={appColors.secondaryColor1} size="large" />
                 }
