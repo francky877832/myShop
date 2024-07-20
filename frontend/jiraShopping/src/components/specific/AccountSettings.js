@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Alert, Pressable, Image, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Alert, Pressable, Image, Keyboard, TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Input, Icon } from 'react-native-elements';
 
 import PhoneAuth from './PhoneAuth';
 
-import { appColors, customText, appFont, screenHeight } from '../../styles/commonStyles';
+import { appColors, customText, appFont, screenHeight, screenWidth } from '../../styles/commonStyles';
 import {CustomButton} from '../common/CommonSimpleComponents'
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
@@ -35,13 +35,18 @@ const   AccountSettings = (props) => {
     const [isTelFocused, setIsTelFocused] = useState(false)
     const [isEmailFocused, setIsEmailFocused] = useState(false)
     const [isSloganFocused, setIsSloganFocused] = useState(false)
+    const [isEmailLoading, setIsEmailLoading] = useState(false)
 
     const {user, setUser} = useContext(UserContext)
     //console.log(user)
     const [pp, setPp] = useState([user.image])
     const [cameraOrGalery, setCameraOrGalery] = useState(false)
+    const [isPostLoading, setIsPostLoading] = useState(false)
+
 
     const MAX_IMAGES = 1, MIN_IMAGES = 1
+    const IMG_MAX_HEIGHT = screenHeight/2
+    const IMG_MAX_WIDTH = screenWidth
 
 
    //GoBackPermission
@@ -98,10 +103,11 @@ return unsubscribe;
         setCameraOrGalery(false)
     }
 
-    const submitProduct = ()=>{
-
-    }
     //console.log(pp)
+const updateProfil = async () => {
+    setIsPostLoading(true)
+    const pp_ = await resizeImages(pp,IMG_MAX_HEIGHT,IMG_MAX_WIDTH)
+}
     return(
 <View style={[accountSettingsStyles.container]}>
     <KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
@@ -146,14 +152,22 @@ return unsubscribe;
                 <View style={[accountSettingsStyles.inputBox]}>
                         <View style={[accountSettingsStyles.VerifierBox]}>
                             <Text style={[accountSettingsStyles.text,]}>Email</Text>
-                            {!user.isEmailVerified &&
+                            {!user.isEmailVerified ?
                                 <Pressable style={[accountSettingsStyles.verifier, {}]}>
-                                    <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Verifier</Text>
+                                    { !isEmailLoading ?
+                                        <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Verifier</Text>
+                                        :
+                                        <ActivityIndicator color={appColors.white} size="small" />
+                                    }
                                 </Pressable>
+                                :
+                                <View>
+                                    <Icon type="ionicon" name="checkmark-circle" color={appColors.green} />
+                                </View>
                             }
                         </View>
 
-                        <Input placeholder="EX : Samsung Galaxy Z-Fold" value={email} onChangeText={(name)=>{setEmail(name)}}
+                        <Input placeholder="EX : thestyle@gmail.com" value={email} onChangeText={(name)=>{setEmail(name)}}
                             inputMode='text'
                             multiline={false}
                             maxLength={100}
@@ -169,7 +183,7 @@ return unsubscribe;
 
                 <View style={[accountSettingsStyles.inputBox]}>
                     <Text style={[accountSettingsStyles.text,]}>Slogan De Votre Boutique</Text>
-                        <Input placeholder="EX : Samsung Galaxy Z-Fold" value={slogan} onChangeText={(name)=>{setSlogan(name)}}
+                        <Input placeholder="EX : TheStyle, votre marque." value={slogan} onChangeText={(name)=>{setSlogan(name)}}
                             inputMode='text'
                             multiline={false}
                             maxLength={100}
@@ -186,7 +200,11 @@ return unsubscribe;
 
 
             <View style={[addProductStyles.addProductSubmitView,{}]}>
-                <CustomButton text="Enregistrer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={submitProduct} />
+                { !isPostLoading ?
+                        <CustomButton text="Enregistrer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={updateProfil} />
+                        :
+                        <ActivityIndicator color={appColors.secondaryColor1} size="large" />
+                }
             </View>
         </ScrollView>
     </TouchableWithoutFeedback>

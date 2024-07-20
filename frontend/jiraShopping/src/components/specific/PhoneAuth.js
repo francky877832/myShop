@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Alert, Button, TextInput, Pressable } from 'react-native';
-import { Input } from 'react-native-elements';
+import { StyleSheet, Text, View, Alert, Button, TextInput, Pressable, ActivityIndicator } from 'react-native';
+import { Icon, Input } from 'react-native-elements';
 
 import auth from '@react-native-firebase/auth';
 //import firestore from '@react-native-firebase/firestore';
@@ -17,22 +17,28 @@ export default function PhoneAuth(props) {
   const [isCodeFocused, setIsCodeFocused] = useState(true)
   const [confirm, setConfirm] = useState(null);
   const [showCodeInput, setShowCodeInput] = useState(false)
+  const [isTelLoading, setIsTelLoading] = useState(false)
+  const [isCodeLoading, setIsCodeLoading] = useState(false)
 
   const {tel, setTel, setIsTelFocused, isTelFocused, accountSettingsStyles, user, setUser
    } = props  
 
   const signInWithPhoneNumber = async () => {
+    setIsTelLoading(true)
     try {
       const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
       setConfirm(confirmation);
       setShowCodeInput(true)
+      setIsTelLoading(false)
     } catch (error) {
       Alert.alert("Erreur","Une erreur inconnue est survenue. Rééssayez plus tard.")
       console.log("Error: ", error);
+      setIsTelLoading(false)
     }
   };
 
   const confirmCode = async () => {
+    setIsCodeLoading(true)
     try {
       const userCredential = await confirm.confirm(code);
       //const user = userCredential.user;
@@ -48,10 +54,12 @@ export default function PhoneAuth(props) {
       } else {
         Alert.alert("New user");
       }*/
+        setIsCodeLoading(false)
     } catch (error) {
-      Alert.alert("Erreur","Une erreur inconnue est survenue. Rééssayez plus tard.")
+      Alert.alert("Erreur","Une erreur inconnue est survenue : code incorrect")
 
       console.log("Invalid code");
+      setIsCodeLoading(false)
     }
   };
 
@@ -61,10 +69,18 @@ export default function PhoneAuth(props) {
       <View style={[accountSettingsStyles.inputBox]}>
         <View style={[accountSettingsStyles.VerifierBox]}>
                         <Text style={[accountSettingsStyles.text,]}>Numero De Téléphone</Text>
-                        {!user.isPhoneVerified &&
+                        {!user.isPhoneVerified ?
                             <Pressable onPress={signInWithPhoneNumber} style={[accountSettingsStyles.verifier,{}]}>
-                                <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Verifier</Text>
+                              { !isTelLoading ?
+                                    <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Verifier</Text>
+                                  :
+                                        <ActivityIndicator color={appColors.white} size="small" />
+                                }
                             </Pressable>
+                            :
+                            <View>
+                                <Icon type="ionicon" name="checkmark-circle" color={appColors.green} />
+                            </View>
                         }
                     </View>
 
@@ -96,7 +112,11 @@ export default function PhoneAuth(props) {
                             inputContainerStyle = {[searchBarStyles.inputContainer, isCodeFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
                         />
           <Pressable style={[phoneAuthStyle.confirmCode]} onPress={confirmCode}>
-                <Text style={[{color:appColors.white}]}>Verify Code</Text>        
+              { !isCodeLoading ?
+                    <Text style={[{color:appColors.white}]}>Verify Code</Text>        
+                    :
+                    <ActivityIndicator color={appColors.white} size="small" />
+              }
           </Pressable>
             
           <View style={{height:20}}></View>

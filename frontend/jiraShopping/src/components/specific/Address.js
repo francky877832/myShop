@@ -1,5 +1,5 @@
-import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Pressable, ActivityIndicator, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Pressable, ActivityIndicator, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -9,6 +9,7 @@ import {CustomButton} from '../common/CommonSimpleComponents'
 import { appColors, customText, appFont } from '../../styles/commonStyles';
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
+import { useNavigation } from '@react-navigation/native';
 
 
 const GEO_NAMES_USERNAME = 'francky877832';
@@ -18,6 +19,7 @@ const loggedUser = "Francky"
 const   CityPicker = (props) => {
     const [cities, setCities] = useState([]);
     const [loading, setLoading] = useState(true);
+
     const {selectedCity, setSelectedCity} = props
     //console.log("cityNames")
     useEffect(() => {
@@ -62,7 +64,8 @@ const   CityPicker = (props) => {
 
 const   Address = (props) => {
     
-
+    const navigation = useNavigation()
+    const [allowBack, setAllowBack] = useState(false);
     const [addressTitle, setAdressTitle] = useState("")
     const [completeName, setCompleteName] = useState("")
     const [tel, setTel] = useState("")
@@ -76,8 +79,43 @@ const   Address = (props) => {
     const [isQuaterFocused, setIsQuaterFocused] = useState(false);
     const [isCompleteAddressFocused, setIsCompleteAddressFocused] = useState(false)
 
+    const [isPostLoading, setIsPostLoading] = useState(false)
 
-    const submitAddress = ()=>{
+
+
+// Ajouter l'écouteur pour l'événement de retour
+const onBackPress = useCallback((e) => {
+    if (allowBack) {
+        return;
+    }
+
+    if (e) {
+      e.preventDefault(); // Empêcher le comportement par défaut de la navigation
+    }
+
+    Alert.alert(
+      "Attention!",
+      "Abandoné les modifications ?",
+      [
+        { text: "Non", onPress: () => null, style: "cancel" },
+        { text: "Oui", onPress: () =>{
+                setAllowBack(true);
+                //navigation.goBack();
+                navigation.dispatch(e.data.action);
+            }
+         }
+      ]
+    );
+  }, [allowBack, navigation]);
+
+useEffect(()=>{
+    const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
+    return unsubscribe;
+}, [navigation])
+
+
+    const updateAddress = ()=>{
+        setIsPostLoading(true)
 
     }
 
@@ -175,7 +213,11 @@ const   Address = (props) => {
             <View style={[{height:20}]}></View>
 
             <View style={[addProductStyles.addProductSubmitView,{}]}>
-                <CustomButton text="Enregistrer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={submitAddress} />
+                { !isPostLoading ?
+                        <CustomButton text="Enregistrer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={updateAddress} />
+                        :
+                        <ActivityIndicator color={appColors.secondaryColor1} size="large" />
+                }
             </View>
         </ScrollView>
     </TouchableWithoutFeedback>

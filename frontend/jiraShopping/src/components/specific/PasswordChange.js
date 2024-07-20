@@ -1,5 +1,5 @@
-import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Pressable} from 'react-native';
+import React, { useState, useEffect, createContext, useContext, useRef, useCallback} from 'react';
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Pressable, ActivityIndicator, Alert} from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 
 
@@ -8,10 +8,14 @@ import {CustomButton} from '../common/CommonSimpleComponents'
 
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
+import { useNavigation } from '@react-navigation/native';
 
 const loggedUser = "Francky"
 
 const   PasswordChange = (props) => {
+    const navigation = useNavigation()
+    const [allowBack, setAllowBack] = useState(false);
+
     const [oldPassword, setOldPassword] = useState("")
     const [newPassword1, setNewPassword1] = useState("")
     const [newPassword2, setNewPassword2] = useState("")
@@ -25,8 +29,38 @@ const   PasswordChange = (props) => {
     const [isNewPasswordShowed1, setIsNewPasswordShowed1] = useState(false)
     const [isNewPasswordShowed2, setIsNewPasswordShowed2] = useState(false)
 
+    const [isPostLoading, setIsPostLoading] = useState(false)
+
+    const onBackPress = useCallback((e) => {
+        if (allowBack) {
+            return;
+        }
     
-    const submitInfos = () => {
+        if (e) {
+          e.preventDefault(); // Empêcher le comportement par défaut de la navigation
+        }
+    
+        Alert.alert(
+          "Attention!",
+          "Abandoné les modifications ?",
+          [
+            { text: "Non", onPress: () => null, style: "cancel" },
+            { text: "Oui", onPress: () =>{
+                    setAllowBack(true);
+                    //navigation.goBack();
+                    navigation.dispatch(e.data.action);
+                }
+             }
+          ]
+        );
+      }, [allowBack, navigation]);
+    useEffect(()=>{
+        const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
+        return unsubscribe;
+    }, [navigation])
+
+    const updatePassword = async () => {
+        setIsPostLoading(true)
 
     }
     return(
@@ -110,7 +144,11 @@ const   PasswordChange = (props) => {
                 </View>
 
             <View style={[addProductStyles.addProductSubmitView,{}]}>
-                <CustomButton text="Changer De Mot De Passe" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={submitInfos} />
+                { !isPostLoading ?
+                        <CustomButton text="Changer De Mot De Passe" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={updatePassword} />
+                        :
+                        <ActivityIndicator color={appColors.secondaryColor1} size="large" />
+                }
             </View>
         </View>
     )
