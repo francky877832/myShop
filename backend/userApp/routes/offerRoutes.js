@@ -9,7 +9,7 @@ const offerCtrl = require('../controllers/offerController');
 router.get('/offer/get', offerCtrl.getOffersProduct);
     //Ces deux id sont difference
 router.post('/offer/update', offerCtrl.updateOfferProduct); //pour ajouter un prix
-router.post('/offer/response', offerCtrl.respondOfferProduct);
+router.put('/offer/response', offerCtrl.respondOfferProduct);
 router.put('/offer/remove/price/:id', offerCtrl.removeOfferPriceProduct); //pour supprimer un prix
 
 

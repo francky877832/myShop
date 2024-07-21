@@ -14,7 +14,7 @@ export const offersStyles = StyleSheet.create({
     bottom : 
     {
         position : "absolute",
-        bottom : StatusBar.currentHeight,
+        bottom : 0,
         left : 0,
         right : 0,
         paddingVertical : 20,
@@ -41,6 +41,7 @@ export const offersStyles = StyleSheet.create({
     {
         //flex : 1,
         padding: 20,
+        paddingBottom : 130,
         backgroundColor : appColors.lightWhite,
     },
     offer :

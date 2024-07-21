@@ -3,10 +3,20 @@ const mongoose = require('../../shared/db').mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.respondOfferProduct = (req, res, next) => {
+    console.log(req.body)
+    const offer = req.body
     Offer.find({ seller : offer.seller, buyer : offer.buyer, product : offer.product})
     .then( (offers) => {
-        console.log(offers)
-        res.status(200).json(offers);
+        //console.log(offers)
+        offers[0].offers.at(-1).hasGotResponse = offer.hasGotResponse
+        Offer.updateOne({ seller : offer.seller, buyer : offer.buyer, product : offer.product}, {offers:offers[0].offers})
+        .then(() => {
+            console.log("p")
+            res.status(200).json({message : "Reponse mise a jour pour l'offre."});
+        }).catch( (error) => {
+            console.log(error)
+            res.status(400).json({ error: error, message : "Erreur lors de la mise a jour pour l'offre. " });
+        });
     })
     .catch( (error) => {
         console.log(error)
@@ -30,41 +40,44 @@ exports.getOffersProduct = (req, res, next) => {
 };
 
 addOfferProduct = (req, res, next) => {
-    //console.log("ggg")
-    //console.log(req.body)
+   
+   // console.log(req.body)
     const offer = new Offer({
-        _id : new ObjectId(),
+        _id : new ObjectId().toHexString(),
         seller : req.body.seller,
         buyer : req.body.buyer,
         product : req.body.product,
         realPrice : req.body.realPrice,
-        offers : [...req.body.offers],
+        offers : new Array(req.body.offers),
         //hasGotResponse : req.body.hasGotResponse
     })
+    //console.log("ggg")
     offer.save()
     .then( () => {
+        //console.log("good")
         res.status(200).json({ message: "Offre ajoute avec succes pour ce produit" });
     })
     .catch( (error) => {
-        console.log(error)
+        //console.log(error)
         res.status(400).json({ error: error });
     });
 };
 
 exports.updateOfferProduct = (req, res, next) => {
-    //console.log(req.body)
+    console.log(req.body)
     Offer.find({ seller : req.body.seller, buyer : req.body.buyer,  product : req.body.product})
     .then( (offer) => {
         if(offer.length > 0)
         {
             //console.log("error")
-            offer[0].offers.push({_id : new ObjectId(), ...req.body.offers})
-            console.log(offer[0].offers)
+            offer[0].offers.push({_id : new ObjectId().toHexString(), ...req.body.offers})
+            //console.log(offer[0].offers)
             Offer.updateOne({ seller : req.body.seller, buyer : req.body.buyer,  product : req.body.product}, {offers : offer[0].offers})
             .then( () => {
                     res.status(200).json({ message: "Nouvelle offre placee avec succes pour ce produit et ces deux users.", offers : offer[0].offers});
                 })
             .catch( (error) => {
+                    console.log(error)
                     res.status(400).json({ error: error });
                 });
         }
@@ -75,7 +88,7 @@ exports.updateOfferProduct = (req, res, next) => {
         }
     })
     .catch( (error) => {
-        //console.log(error)
+        console.log(error)
         res.status(400).json({ error: error, message : "Cette offre nexiste pas entre ces deux users." });
     });
 };
@@ -84,7 +97,7 @@ exports.removeOfferPriceProduct = (req, res, next) => {
 
     Offer.find({ _id : req.params.id })
     .then( (offer) => {
-        console.log(offer[0].offers)
+        //console.log(offer[0].offers)
         for(let i in offer[0].offers)
         {
             if(offer[0].offers[i] != null)

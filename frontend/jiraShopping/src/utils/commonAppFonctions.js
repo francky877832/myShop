@@ -82,6 +82,7 @@ exports.reshapeComments = (datas) => {
 
 
 exports.formatMoney = (m) => {
+    m = m || ""
     let money = [];
     let money_separator = '.'
     let m_tmp = m.toString().split('')

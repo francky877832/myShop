@@ -70,11 +70,13 @@ const CarouselImage = (props) =>
 const paginationStyles = StyleSheet.create({
   paginationBox :
   {
-    width:"100%",
+    width:50,
+    borderRadius : 225,
     alignItems:"center", 
-    //paddingRight:20,
     backgroundColor : appColors.clearBlack,
     top: 20,
+    alignSelf : "flex-end",
+    right : 20
   },
   paginationText: 
   {

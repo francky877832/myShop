@@ -11,6 +11,7 @@ export const offersDatas = [
 		],
 	}
 ]
+export const defaultOffer = {offers:[{_id:"1",hasGotResponse:0}]}
 
 export const notifications = [{
 	NEW_COMMENT : "",
