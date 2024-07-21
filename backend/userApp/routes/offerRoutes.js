@@ -5,10 +5,11 @@ const offerCtrl = require('../controllers/offerController');
 
 
 //Offer routes
-router.post('/offer/add', offerCtrl.addOfferProduct);
+//router.post('/offer/add', offerCtrl.addOfferProduct);
 router.get('/offer/get', offerCtrl.getOffersProduct);
     //Ces deux id sont difference
-router.put('/offer/update/:id', offerCtrl.updateOfferProduct); //pour ajouter un prix
+router.post('/offer/update', offerCtrl.updateOfferProduct); //pour ajouter un prix
+router.post('/offer/response', offerCtrl.respondOfferProduct);
 router.put('/offer/remove/price/:id', offerCtrl.removeOfferPriceProduct); //pour supprimer un prix
 
 

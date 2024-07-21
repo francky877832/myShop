@@ -3,17 +3,13 @@ const Schema = mongoose.Schema
 
 // hasGotResponse 0.refuse 1.valide 2.en attente
 const offerSchema = new Schema({
-    seller: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    buyer: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    seller: { type: Schema.Types.String, required: true },
+    buyer: { type: Schema.Types.String, required: true },
 
     product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
     realPrice: { type: Number, required: true },
-    offers : [{
-                _id: { type: Schema.Types.ObjectId, default: function() {return new mongoose.Types.ObjectId();}},
-                offerPrice: { type: Number, required : true },
-                from: { type: String, enum: [this.seller, this.buyer], required: true },
-            }],
-    hasGotResponse : { type: Number, enum : [0, 1, 2], default : 2, required : true },
+    offers : {type : Schema.Types.Array},
+    //hasGotResponse : { type: Number, enum : [0, 1, 2], default : 2, required : true },
 
     validity : {type : Date, default : Date.now() + 3600*24*1000 },
     createdAt : { type : Date, default : Date.now },

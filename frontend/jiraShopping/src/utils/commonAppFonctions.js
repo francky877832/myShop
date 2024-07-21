@@ -299,6 +299,14 @@ exports.getSearchedProducts = async (filters, products) => {
         return filteredResult
 }
 
+export const checkOfferPrice = (realPrice, offerPrice)=>
+{
+    if(offerPrice < (realPrice*50/100) || offerPrice >= realPrice)
+    {
+        return "price-boundries-off"
+    }
+}
+
 
 
 

@@ -160,7 +160,7 @@ const handleScroll = (event) => {
     {
         setIsAtBottom(false); 
     }
-    console.log(isAtBottom)
+    //console.log(isAtBottom)
     //setIsAtTop(isAtTop);
   };
 

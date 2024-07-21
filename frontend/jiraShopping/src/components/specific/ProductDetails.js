@@ -324,8 +324,13 @@ const ProductDetails = (props) => {
                 </View>
 
                 <View style={[productDetailsStyles.panier, ]}>
-                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{isBasketPresent(data)[0]?navigation.navigate("Basket"):addBasket(data); } }>
-                            <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{isBasketPresent(data)[0]? "Aller Au Panier":"Ajouter Au Panier"}</Text>
+                       {/* 
+                            <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{isBasketPresent(data)[0]?navigation.navigate("Basket"):addBasket(data); } }>
+                                <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{isBasketPresent(data)[0]? "Aller Au Panier":"Ajouter Au Panier"}</Text>
+                            </Pressable>    
+                        */}
+                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data}) } }>
+                            <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{"Proposer"}</Text>
                         </Pressable>
                 </View>
                 <View style={[productDetailsStyles.acheter]}>

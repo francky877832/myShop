@@ -61,13 +61,15 @@ const UserProvider = ({children}) => {
             if(response.ok)
             {
                 const loggedUser = await response.json()
+                const token = loggedUser.token
+                const user = loggedUser.user
                 //Mis a jour de async storage
-                await SecureStore.setItemAsync('authToken', loggedUser.token);
-                await SecureStore.setItemAsync('user', JSON.stringify({email:loggedUser.email, username:loggedUser.username,password:loggedUser.password}));
-                console.log(loggedUser)
+                await SecureStore.setItemAsync('authToken', token);
+                await SecureStore.setItemAsync('user', JSON.stringify({email:user.email, username:user.username,password:user.password}));
+                //console.log(loggedUser.user.email)
                 
                 //Mis a jour du contexte User
-                setUser(loggedUser)
+                setUser(user)
                 setIsAuthenticated(true);
 
             }
