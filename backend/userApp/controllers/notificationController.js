@@ -1,14 +1,16 @@
 const Notification = require('../models/notificationModel');
-
+const mongoose = require('../../shared/db').mongoose;
+const ObjectId = mongoose.Types.ObjectId;
 
 const addUserNotification = (req, res, next) => {
     const notification = new Notification({
         user : req.body.user,
         notifications : [{
+            _id : new ObjectId().toHexString(),
             source : req.body.source,
             type : req.body.type,
             message : req.body.message,
-            link : req.body.link,
+            action : req.body.action,
             read : req.body.read
         }]
     })
@@ -23,13 +25,16 @@ const addUserNotification = (req, res, next) => {
 
 
 exports.updateUserNotifications = (req, res, next) => {
-    const notificaiton = [{
+   
+    const notificaiton = {
+        _id : new ObjectId().toHexString(),
         source : req.body.source,
         type : req.body.type,
         message : req.body.message,
-        link : req.body.link,
+        action : req.body.action,
         read : req.body.read
-    }]
+    }
+    //console.log(notificaiton)
 
     Notification.find({ user : req.body.user })
     .then( (notificaitons) => {
@@ -86,11 +91,14 @@ exports.updateUserNotificationRead = (req, res, next) => {
 
 
 exports.getUserNotifications = (req, res, next) => {
-    Notification.find({ user : req.body.user })
+
+    Notification.find({ user : req.params.user })
     .then( (notificaitons) => {
+        console.log(notificaitons)
         res.status(200).json(notificaitons);
     })
     .catch( (error) => {
+        console.log(error)
         res.status(400).json({ error: error });
     });
 };

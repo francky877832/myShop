@@ -57,9 +57,7 @@ useEffect(()=>{
 }, [])
 
 useEffect( () => {
-    const fetchData = async () => {
-        //console.log("O")
-        //setIsLoading(true);
+    const fetchData = async () => {;
         await getProducts()
         //console.log("OK")
         setIsLoading(false);

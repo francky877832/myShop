@@ -49,8 +49,8 @@ export const notifications =
 	{
 		USER : {
 			ON_REGISTERED : { 
-				message : "",
-				action : "",
+				message : "Bienvenue sur l'appli",
+				action : "AllComments",
 			},
 		},
 
@@ -133,5 +133,4 @@ export const notifications =
 			},
 		},
 	}
-
 }

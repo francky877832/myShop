@@ -44,7 +44,7 @@ export default function MainNavigation() {
     <ProductItemProvider>
         
           <FilterProvider>
-              <Stack.Navigator initialRouteName="UserLogin"  /*screenOptions={{
+              <Stack.Navigator initialRouteName="Notifications"  /*screenOptions={{
                       gestureEnabled: false,
                       cardOverlayEnabled: false, // presentation: 'modal',  
                       ...TransitionPresets.ModalPresentationIOS, //screenOptions={{ animation: Platform.OS === 'android' ? 'default' : 'default',  }}
