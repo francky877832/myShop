@@ -160,7 +160,8 @@ const Offers = (props) => {
     const upBoundry = parseInt(realPrice)
 //console.log(downBoundry)
     const { user } = useContext(UserContext)
-
+//console.log(user._id)
+//console.log(product.seller)
 const checkPrice = (price) => {
     //console.log(price.split('.').join(''))
     let price_ = parseInt(price.split('.').join(''))
@@ -185,10 +186,10 @@ const addOffer = async ()=>{
     setIsPriceLoading(true)
     //console.log(product)
         let price = parseInt(inputValue.split('.').join(''))
-        console.log(price)
+        //console.log(price)
 
         price = isNaN(price)?0:price
-        console.log(price)
+        //console.log(price)
         
         const offer = {
             seller : product.sellerName || product.seller, //A supprime
@@ -218,12 +219,12 @@ const addOffer = async ()=>{
             Alert.alert("Offre ajouté avec succes")
             setIsPriceLoading(false)
             setIsLoading(true)
-    }catch(error){
-        console.log(error)
-        Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
-        setIsPriceLoading(false)
+        }catch(error){
+            console.log(error)
+            Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+            setIsPriceLoading(false)
+        }
     }
-}
 
 const fetchUserOffers = async()=>{
     //console.log("Callback")
@@ -380,12 +381,12 @@ useEffect(()=>{
                                                 <Icon name='checkmark-circle' type='ionicon' size={24} color={appColors.green} />
                                                 <Text style={[customText.text,]}>Accepté</Text>
                                             </Pressable>
-
+                                        { user._id != product.seller &&
                                             <Pressable onPress={()=>{}} style={[offersStyles.offersBottomConfirmationButtom,{}]}>
                                                 <Icon name='cart-outline' type='ionicon' size={24} color={appColors.green} />
                                                 <Text style={[customText.text,]}>Acheter</Text>
                                             </Pressable>
-
+                                        }
                                         </View>
                                     :
                                         <View style={[offersStyles.inputContainer, offersStyles.offersBottomWaiting,{}]}>
