@@ -59,7 +59,7 @@ useEffect(()=>{
         return (
                     <View style={[styles.commentContainer,]} >
                         <View style={{flexDirection:"row", alignItems:"center"}}>
-                            <Pressable style={[styles.comment, ]} onPress={()=>{console.log(comment._id)}}>
+                            <Pressable style={[styles.comment, ]} onPress={()=>{ }}>
                                 <Text style={[commentsStyles.commentText]} >{comment.text}</Text>
                             </Pressable>
                             <Pressable  onPress={()=>{setIsResponseTo(comment._id);setInputValue("@"+comment.username+" " +inputValue);}}>
@@ -88,9 +88,9 @@ useEffect(()=>{
                         showSubComment.current &&
                             (comment.subComment && comment.subComment.length > 0
                                 ?
-                                comment.subComment.map((item)=>{
+                                comment.subComment.map((item, key)=>{
                                     return (
-                                        <View style={[{flex:0}]}  key={item._id.toString()}>
+                                        <View style={[{flex:0}]}  key={key}>
                                             <View style={{flexDirection:"row-reverse",alignItems:"center"}}>
                                                 <Pressable onPress={()=>{console.log(comment._id)}} style={[styles.comment, styles.subComment]} >
                                                     <Text style={[commentsStyles.commentText]} >{item.text}</Text>
@@ -145,11 +145,11 @@ useEffect(()=>{
                     contentContainerStyle={[commentsStyles.flatlistContainer, !all?commentsStyles.flatlistContainerNotAll:false]}
                 />*/
 
-                (all ? comments : comments?.slice(0,2))?.map((item)=>{
+                (all ? comments : comments?.slice(0,2))?.map((item, key)=>{
                     //console.log("   ITEM")
                     //console.log(item)
                     return(
-                        <View style={{}} key={item?._id}>
+                        <View style={{}} key={key}>
                             <Comment all={all} comment={item} styles={ {comment : {...commentsStyles.comment}, subComment : {...commentsStyles.subComment}}} />
                             <View style={{width:5,}}></View>
                         </View>

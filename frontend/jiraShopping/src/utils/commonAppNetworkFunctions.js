@@ -7,7 +7,7 @@ exports.sendNotificaitons = async ({username, source, model, type}) => {
     const notif = notifications[model]
     const message = notif[type].message
     const action = notif[type].action
-console.log(notif)
+//console.log(notif)
     const notification = {
         user : username,
         source : source,
@@ -42,18 +42,43 @@ console.log(notif)
 
 exports.getNotifications = async (username) => {
     try{
-        //console.log("Ok")
-            const response = await fetch(`${API_BACKEND}/api/datas/notifications/get/${username}`);            
-            const datas = await response.json()
-                    //console.log(datas)
-            if (!response.ok) {
-                throw new Error('Erreur lors de la requête');
-            }
+        
+        const response = await fetch(`${API_BACKEND}/api/datas/notifications/get/${username}`);            
+        const datas = await response.json()
                 //console.log(datas)
-            return datas[0]?.notifications
+        if (!response.ok) {
+            throw new Error('Erreur lors de la requête');
+        }
+            //console.log(datas)
+        return datas[0]?.notifications
     }catch(error){
+        console.log(error)
         Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
         return []
+    }
+}
+
+exports.updateNotificationsRead = async ({username, id}) => {
+    //console.log(id)
+    try{
+        
+        const response = await fetch(`${API_BACKEND}/api/datas/notifications/read/${username}/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify({}),
+            headers: {
+                'Content-Type': 'application/json',
+        },})          
+        //const datas = await response.json()
+                //console.log(datas)
+        if (!response.ok) {
+            throw new Error('Erreur lors de la requête');
+        }
+            //console.log(datas)
+            return true
+    }catch(error){
+        console.log(error)
+        Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+        return false
     }
 }
 

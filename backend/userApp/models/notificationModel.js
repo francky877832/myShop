@@ -12,6 +12,7 @@ const notificatonSchema = new Schema({
             type : { type : String, enum: ['normal', 'campagne', 'suggestion', 'modal', 'offer', 'order'], default : "normal", required : true },
             message : { type : String, required : true },
             action : { type : String, required : true },
+            datas : { type : Schema.Types.Object, required : false, default:{} },
             read : { type : Number, enum: [0, 1], default : 0, required : true },
             createdAt : { type : Date, default : Date.now },
             updatedAt : { type : Date, default : Date.now },

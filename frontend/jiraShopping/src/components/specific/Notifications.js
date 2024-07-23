@@ -13,23 +13,22 @@ import { datas } from '../../utils/sampleDatas';
 import { appColors, customText } from '../../styles/commonStyles';
 
 //
-import { sendNotificaitons, getNotifications } from '../../utils/commonAppNetworkFunctions'
+import { sendNotificaitons, getNotifications, updateNotificationsRead } from '../../utils/commonAppNetworkFunctions'
 import { sinceDate } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
+import { useNavigation } from '@react-navigation/native';
 
 const initialLayout = { width: Dimensions.get('window').width };
 
 
 
 const RenderNotificationItem = (props) =>{
-    const {item} = props
-    const openNotif = () => {
+    const {item, openNotif} = props
 
-    }
     return(
         <View style={[notificationsStyles.item, item.read ? notificationsStyles.itemRead : false]}>
-            <Pressable onPress={()=>{openNotif()}} style={[notificationsStyles.pressable,{}]}>
+            <Pressable onPress={()=>{openNotif(user.username, item._id, item.action)}} style={[notificationsStyles.pressable,{}]}>
                 <View style={[notificationsStyles.icon,{}]}>
                   <Icon type='material-icon' name='ring-volume' size={30} color={appColors.red} />
                 </View>
@@ -49,9 +48,10 @@ const RenderNotificationItem = (props) =>{
 
 const AllNotifications = () => {
 
-  const { user } = createContext(UserContext)
+  const { user } = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(true)
   const [notificaitons, setNotifications] = useState([])
+  const navigation = useNavigation()
 
 const sendNotif = async (username, source, model, type) => {
     const response = await sendNotificaitons({username:username, source:source, model:model, type:type})
@@ -65,7 +65,20 @@ const sendNotif = async (username, source, model, type) => {
     }
 }
 
+/*const updateNotif = async (username, id) => {
+  const response = await updateNotificationsRead({username:username, id:id})
+  if(response)
+  {
+      Alert.alert('UpdateNotif','Notification lu avec succes.')
+  }
+  else
+  {
+    Alert.alert('UpdateNotif','Verifier votre connexion Internet.')
+  }
+}*/
+
 const getNotif = async (username) => {
+  //console.log("GETNOTIF");
   try{
     const response = await getNotifications(username)
     //console.log(response)
@@ -78,22 +91,34 @@ const getNotif = async (username) => {
 useEffect(() => {
   const fetchData = async () => {  
       //console.log("isLoading")
-      await getNotif("Francky877832")
+      await getNotif(user.username)
       setIsLoading(false)
     };
     
     if (isLoading) {
-      fetchData()
+      fetchData();
   }
   
   
 }, [isLoading]);
 
+const openNotif = async (username, id, action) => {
+  const response = await updateNotificationsRead({username:username, id:id})
+  if(response)
+  {
+    navigation.navigate(action)
+  }
+  else
+  {
+    Alert.alert('Erreur', 'Verifier votre connexion internet.')
+  }
+}
+
     return(
         <View style={[notificationsStyles.sceneContainers]}>
             <FlatList
                     data={notificaitons}
-                    renderItem={ ({item}) => { return(<RenderNotificationItem item={item} />)} }
+                    renderItem={ ({item}) => { return(<RenderNotificationItem item={item} openNotif={openNotif} />)} }
                     keyExtractor={ (item) => { return item._id.toString(); } }
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     contentContainerStyle={[notificationsStyles.flatlist]}
@@ -101,7 +126,7 @@ useEffect(() => {
                     onEndReachedThreshold={0.5}
             />
 
-            <Pressable onPress={async()=>{sendNotif('Francky877832', 'app', 'USER', 'ON_REGISTERED')}} style={{backgroundColor:appColors.secondaryColor1,color:appColors.white,alignItems:"center",paddingVertical:20,}}>
+            <Pressable onPress={async()=>{sendNotif(user.username, 'app', 'USER', 'ON_REGISTERED')}} style={{backgroundColor:appColors.secondaryColor1,color:appColors.white,alignItems:"center",paddingVertical:20,}}>
               <Text style={{color:appColors.white,}}>Send Notifications</Text>
             </Pressable>
         </View>

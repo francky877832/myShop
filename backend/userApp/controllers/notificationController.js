@@ -62,36 +62,40 @@ exports.updateUserNotifications = (req, res, next) => {
 
 
 exports.updateUserNotificationRead = (req, res, next) => {
-
+    console.log(req.params)
     Notification.find({ user : req.params.user })
     .then( (notifications) => {
         if(notifications.length > 0)
         {
+           
             notifications[0].notifications.forEach((val, i, arr)=> {
-                if(item._id==req.params.id)
+                if(val._id==req.params.id)
                     arr[i].read=1
             })
+           
             Notification.updateOne({ user : req.params.user }, ({ notifications :  notifications[0].notifications}))
             .then( () => {
                 res.status(200).json({ message : "Notification Ajoutée." });
             })
             .catch( (error) => {
+                console(error)
                 res.status(400).json({ error: error });
             });
         }
         else
-        {
+        { //console.log("OK")
             res.status(400).json({ error: "not-notif-found-for-this-user" });
         }
     })
     .catch( (error) => {
+        console.log(error)
         res.status(400).json({ error: error });
     });  
 };
 
 
 exports.getUserNotifications = (req, res, next) => {
-
+    console.log("req.params.user")
     Notification.find({ user : req.params.user })
     .then( (notificaitons) => {
         console.log(notificaitons)

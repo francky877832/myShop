@@ -196,7 +196,14 @@ const ProductDetails = (props) => {
              setOnNewComment(false)
      }, [isLoading]))
 
-
+//WHEN COMMING FOR NOTIFICATIONS
+    /*const scrollViewRef = useRef(null);
+    const scrollToPosition = () => {
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: 200, animated: true });
+        }
+    };*/
+     
     return (
 
   <View style={productDetailsStyles.container}>
