@@ -42,7 +42,6 @@ export default function MainNavigation() {
   <BasketProvider>
   <NavigationContainer> 
     <ProductItemProvider>
-        
           <FilterProvider>
               <Stack.Navigator initialRouteName="UserLogin"  /*screenOptions={{
                       gestureEnabled: false,
