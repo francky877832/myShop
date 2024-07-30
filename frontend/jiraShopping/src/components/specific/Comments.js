@@ -21,7 +21,7 @@ const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const Comments = (props) =>
 {
-    const { all, navigation, product, setters, isLoading, setIsLoading} = props
+    const { all, navigation, product, setters, isLoading, setIsLoading, pass} = props
     const {inputValue,setInputValue, setIsResponseTo} = setters 
     
     const { comments, } = useContext(ProductItemContext)
@@ -39,10 +39,10 @@ const Comments = (props) =>
 
 
 
-/*
 useEffect(()=>{
-    onNewComment ? setIsLoading(true) : setIsLoading(false)
-})*/
+    if(pass)
+        navigation.navigate("AllComments",{comments:comments,product:product,inputFocused:false})
+})
 
 
     const Comment = (props) => {

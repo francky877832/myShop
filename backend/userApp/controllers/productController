@@ -108,8 +108,11 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getProduct  = (req, res, next) => {
+  
   Product.findOne({ _id : req.params.id })
   .then( (product) => { 
+    //console.log("*******Ok********")
+    //console.log(product)
       res.status(200).json(product);
    })
   .catch( (error) => { 

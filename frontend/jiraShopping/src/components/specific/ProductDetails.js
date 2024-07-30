@@ -33,6 +33,7 @@ const ProductDetails = (props) => {
     const route = useRoute()
 //console.log(route.params.productDetails) length
     const data = route.params.productDetails;
+    const pass = route.params.pass;
     data.color = "blue";
     const numChars = 150;
     
@@ -299,7 +300,7 @@ const ProductDetails = (props) => {
                 <View style={{height:20}}></View>
                 
                         <View>
-                            <Comments all={false} isLoading={isLoading} setIsLoading={setIsLoading} setters={{onNewComment:onNewComment}} comments={comments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
+                            <Comments all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{onNewComment:onNewComment}} comments={comments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
                             {isLoading &&
                                 <CustomActivityIndicator styles={{}} /> 
                             }

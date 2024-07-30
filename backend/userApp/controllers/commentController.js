@@ -51,7 +51,7 @@ exports.getProductComments = (req, res, next) => {
     Comment.find({product : req.params.id})
     .sort({createdAt : -1})
     .then( (products) => {
-        //console.log("SUCCESS GET COMMENT")
+        console.log(products)
         res.status(200).json(products);
     })
     .catch( (error) => {

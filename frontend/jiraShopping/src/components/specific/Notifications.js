@@ -13,7 +13,7 @@ import { datas } from '../../utils/sampleDatas';
 import { appColors, customText } from '../../styles/commonStyles';
 
 //
-import { sendNotificaitons, getNotifications, updateNotificationsRead } from '../../utils/commonAppNetworkFunctions'
+import { sendNotificaitons, getNotifications, updateNotificationsRead, getProductFromNotifications } from '../../utils/commonAppNetworkFunctions'
 import { sinceDate } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
@@ -24,11 +24,11 @@ const initialLayout = { width: Dimensions.get('window').width };
 
 
 const RenderNotificationItem = (props) =>{
-    const {item, openNotif} = props
+    const {item, openNotif, user} = props
 
     return(
         <View style={[notificationsStyles.item, item.read ? notificationsStyles.itemRead : false]}>
-            <Pressable onPress={()=>{openNotif(user.username, item._id, item.action)}} style={[notificationsStyles.pressable,{}]}>
+            <Pressable onPress={()=>{openNotif(user.username, item)}} style={[notificationsStyles.pressable,{}]}>
                 <View style={[notificationsStyles.icon,{}]}>
                   <Icon type='material-icon' name='ring-volume' size={30} color={appColors.red} />
                 </View>
@@ -102,15 +102,24 @@ useEffect(() => {
   
 }, [isLoading]);
 
-const openNotif = async (username, id, action) => {
-  const response = await updateNotificationsRead({username:username, id:id})
-  if(response)
+const openNotif = async (username, item) => {
+  try
   {
-    navigation.navigate(action)
+    const response = await updateNotificationsRead({username:username, id:item._id})
+    //console.log(item)
+    if(item.type == 'product')
+    {
+      const data = await getProductFromNotifications(item.datas)
+      console.log("data")
+      console.log(data)
+      //{comments:comments,product:product,inputFocused:true}
+      navigation.navigate(item.action, {productDetails:data,pass:true})
+    }
   }
-  else
+  catch(error)
   {
     Alert.alert('Erreur', 'Verifier votre connexion internet.')
+    console.log(error)
   }
 }
 
@@ -118,7 +127,7 @@ const openNotif = async (username, id, action) => {
         <View style={[notificationsStyles.sceneContainers]}>
             <FlatList
                     data={notificaitons}
-                    renderItem={ ({item}) => { return(<RenderNotificationItem item={item} openNotif={openNotif} />)} }
+                    renderItem={ ({item}) => { return(<RenderNotificationItem item={item} openNotif={openNotif} user={user} />)} }
                     keyExtractor={ (item) => { return item._id.toString(); } }
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     contentContainerStyle={[notificationsStyles.flatlist]}

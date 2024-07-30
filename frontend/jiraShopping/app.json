@@ -17,6 +17,7 @@
         "NSCameraUsageDescription": "This app needs access to your camera to take photos.",
         "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to select photos."
       },
+      "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.jira877832.jiraShopping"
     },
     "android": {
@@ -47,9 +48,18 @@
       "url": "https://u.expo.dev/441d6134-6168-400a-a5d5-69821456096d"
     },
     "plugins": [
+      "expo-dev-client",
       "expo-secure-store",
       "@react-native-firebase/app",
-      "@react-native-firebase/auth"
+      "@react-native-firebase/auth",
+      [
+        "expo-build-properties",
+         {
+          "ios": {
+             "useFrameworks": "static"
+           }
+         }
+       ]
     ]
   }
 }

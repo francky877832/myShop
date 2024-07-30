@@ -3,7 +3,8 @@ import { API_BACKEND } from '@env';
 import {Alert} from 'react-native';
 import { notifications } from './offersDatas';
 
-exports.sendNotificaitons = async ({username, source, model, type}) => {
+
+exports.sendNotificaitons = async ({username, source, model, type, data}) => {
     const notif = notifications[model]
     const message = notif[type].message
     const action = notif[type].action
@@ -14,7 +15,8 @@ exports.sendNotificaitons = async ({username, source, model, type}) => {
         type : 'normal',
         message : message,
         action : action,
-        read : 0
+        read : 0,
+        datas : data
     }
     
         //console.log(comment)
@@ -79,6 +81,24 @@ exports.updateNotificationsRead = async ({username, id}) => {
         console.log(error)
         Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
         return false
+    }
+}
+
+exports.getProductFromNotifications = async (id) => {
+    try{
+        
+        const response = await fetch(`${API_BACKEND}/api/datas/products/get/${id}`);            
+        const data = await response.json()
+       
+        if (!response.ok) {
+            throw new Error('Erreur lors de la requête');
+        }
+         //console.log(data)
+        return data
+    }catch(error){
+        //console.log(error)
+        Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+        return {}
     }
 }
 

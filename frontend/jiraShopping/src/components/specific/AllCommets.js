@@ -35,6 +35,7 @@ const AllCommets = (props) =>
     const [onNewComment, setOnNewComment] = useState(false)
     const [refreshComponent, setRefreshComponent] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const scrollViewRef = useRef(null);
 
 
 
@@ -77,7 +78,7 @@ const updateComments_ = (comment)=>{
 }
 //username
 const addComment = async (item) => {
-    
+    setIsLoading(true);
     const checkNumber =  convertWordsToNumbers(inputValue)
     //console.log(checkNumber)
     if(containsEmail(inputValue) || checkNumber==false)
@@ -96,7 +97,7 @@ const addComment = async (item) => {
         isResponseTo : isResponseTo,
     }
  
-
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
     //console.log(comment)
         try{
             //console.log("Ok")
@@ -113,9 +114,10 @@ const addComment = async (item) => {
 
             //Alert.alert("Comment ajouté avec success.")
             //setIsLoading(true)
-            //updateComments_(comment)
+            updateComments_(comment)
             setComments([comment,...comments_])
             setIsLoading(false)
+
         }catch(error){
             Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
             setIsLoading(false)
@@ -141,7 +143,7 @@ const addComment = async (item) => {
 
     return(
 <View style={{ flex: 1 }}>
-            <ScrollView contentContainerStyle={[allCommetsStyles.container,{}]} >
+            <ScrollView ref={scrollViewRef} contentContainerStyle={[allCommetsStyles.container,{}]} >
                 <Comments setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  onNewComment={onNewComment} setOnNewComment={setOnNewComment} all={true} comments={comments_} product={product}/>
             </ScrollView>
         
@@ -157,16 +159,20 @@ const addComment = async (item) => {
                     inputContainerStyle={{ borderBottomWidth:isFocused?0:1, }}
                     ref={inputRef}
                     rightIcon={ isLoading 
-                        ?
-                            <ActivityIndicator color={appColors.secondaryColor1} /> 
-                        :
-                        <Pressable onPress={() => {setIsLoading(true);addComment(route.params.product);}} style={[commentsStyles.sendButton, {}]}>
-                            <Icon name='send-sharp' type='ionicon' size={40} color={appColors.secondaryColor1} />
-                        </Pressable>}
+                            ?
+                                <ActivityIndicator color={appColors.secondaryColor1} /> 
+                            :
+                                <Pressable onPress={() => {addComment(route.params.product);}} style={[commentsStyles.sendButton, {}]}>
+                                    <Icon name='send-sharp' type='ionicon' size={40} color={appColors.secondaryColor1} />
+                                </Pressable>
+                        }
                     value={inputValue}
                 />
                 
         </View>
+                        { isLoading &&
+                            <ActivityIndicator color={appColors.secondaryColor1} /> 
+                        }
 </View>
     )
 }

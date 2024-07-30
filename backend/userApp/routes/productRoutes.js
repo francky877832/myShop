@@ -14,7 +14,7 @@ router.get('/get/user/:user', prodCtrl.getProductsUser);
 router.get('/search', prodCtrl.getSearchedProducts);
 router.get('/likes/get/:id', prodCtrl.getProductNumLikes);
 router.get('/categories', prodCtrl.getProductsFromCategories);
-router.get('/:id', prodCtrl.getProduct);
+router.get('/get/:id', prodCtrl.getProduct);
 
 router.post('/add', multer.array('images', 6), prodCtrl.addProductUser);
 router.put('/update/:id', multer.array('images', 6), prodCtrl.updateProduct);
