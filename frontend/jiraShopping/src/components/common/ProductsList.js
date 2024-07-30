@@ -15,7 +15,7 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 import { server } from '../../remote/server';
 
 const ProductsList = React.forwardRef((props, ref) => {
-    const { datas, horizontal, styles, onEndReached, name, isLoading} = props;
+    const { datas, horizontal, styles, onEndReached, name, isLoading, replace} = props;
     //console.log(datas[0].product)
     useEffect(()=>{
 
@@ -27,7 +27,7 @@ const ProductsList = React.forwardRef((props, ref) => {
                     <FlatList
                         data={datas}
                         nestedScrollEnabled={true}
-                        renderItem={ ({item}) => { return <Product name={name} item={item} styles={productsListStyles.listItem} horizontal={horizontal}/> } }
+                        renderItem={ ({item}) => { return <Product name={name} item={item} replace={replace} styles={productsListStyles.listItem} horizontal={horizontal}/> } }
                         keyExtractor={ (item) => { return item._id.toString(); } }
                         horizontal={horizontal}
                         numColumns={ horizontal ? 1 : numProduct }

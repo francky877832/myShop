@@ -313,7 +313,7 @@ const ProductDetails = (props) => {
                     </View>
 
                     <View>
-                        <ProductsList datas={favourites} horizontal={true} styles={{}} />
+                        <ProductsList datas={favourites} horizontal={true} replace={true} styles={{}} />
                     </View>
                 </View>
 

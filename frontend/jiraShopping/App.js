@@ -17,6 +17,7 @@ export default function App() {
           <View>
             <Text>Ok</Text>
           </View>
+          <MainNavigation/>
         </SafeAreaView>
       </SafeAreaProvider>
       

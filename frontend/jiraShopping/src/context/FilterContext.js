@@ -203,17 +203,23 @@ const FilterProvider = ({children}) => {
         //console.log("resetAllFiltersWithoutFecthingDatas")
     })
 
-    const resetAllFilters = useCallback((searchText) => {
+    const resetAllFilters = useCallback(() => {
         setIsLoading(true)
-        setSelectedCategories({})
+        //setSelectedCategories({})
         //setSelectedBrands([])
         setSelectedOrderBy("")
         setMinPrice("")
         setMaxPrice("")
+        setIsNewFocused(true)
+        setIsNewOldFocused(true)
+        setIsNewOldFocused(true)
         //setRefreshComponent(!refreshComponent)
         
         //getSearchedTextWithFilters({searchText:searchText})
     })
+
+
+    
 
 
 

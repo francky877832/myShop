@@ -67,7 +67,7 @@ const SearchResults = (props) => {
                         }
         }
 useEffect(()=>{
-    console.log(searchText)
+    //console.log(searchText)
     cat_reminder = selectedCategories
 },[])
         async function getDatas({searchText, selectedModalCategories, selectedBrands, conditions, orderBy})
@@ -101,6 +101,7 @@ useFocusEffect(
 )
 */
 useEffect(()=>{
+    console.log(selectedCategories);
     if(!isLoading)
         setIsLoading(true)
     getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
@@ -119,7 +120,7 @@ useEffect(() => {
 const title = `Resultats de recherche "${searchText}"`
         return(
                 <View style={preferencesStyles.container}>
-                    {//(!!display && display == "category") &&
+                    {//!(!!display && display == "category") &&
                         <View style={preferencesStyles.top}>
                             <Top />
                         </View>

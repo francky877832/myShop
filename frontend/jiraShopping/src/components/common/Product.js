@@ -18,7 +18,7 @@ const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
 const username = "Franck"
 const Product = (props) => { 
-    const { item, horizontal, } = props;
+    const { item, horizontal, replace } = props;
     const navigation = useNavigation()
     //console.log(item)
    
@@ -44,7 +44,7 @@ const Product = (props) => {
 
                         </View>
                     
-                <Pressable style={ productStyles.pressable } onPress = { ()=>{navigation.navigate("ProductDetails", {productDetails:item})} } >
+                <Pressable style={ productStyles.pressable } onPress = { ()=>{replace ? navigation.replace("ProductDetails", {productDetails:item,}) : navigation.navigate("ProductDetails", {productDetails:item,});} } >
                     <Image source={{uri: item.images[0]}}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
                     <View style={ productStyles.text }>
                         <View style={{ flexDirection:"column", justifyContent:"flex-start", }}>

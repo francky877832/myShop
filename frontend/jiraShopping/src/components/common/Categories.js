@@ -28,7 +28,7 @@ const Categories = (props) => {
     const goBackTo = params?.datas?.goBackTo || props.goBackTo
 //console.log(page)
     const {setSelectedBrand, selectedColor, setSelectedColor, categories, brands, isLoading} = useContext(ProductItemContext)
-    const { selectedCategories, updateCategories, setSelectedCategories } = useContext(FilterContext)
+    const { selectedCategories, updateCategories, setSelectedCategories, resetAllFilters} = useContext(FilterContext)
     //const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
 
     const navigation = useNavigation()
@@ -146,6 +146,7 @@ const Categories = (props) => {
 
 const [isAtTop, setIsAtTop] = useState(true);
 const [isAtBottom, setIsAtBottom] = useState(false);
+const [reloadTo, setReloadTo] = useState(false)
 
 const handleScroll = (event) => {
     //Alert.alert("a")
@@ -164,7 +165,12 @@ const handleScroll = (event) => {
     //setIsAtTop(isAtTop);
   };
 
-
+  
+useEffect(()=>{
+    //console.log("OK")
+    if(reloadTo)
+        navigation.navigate(goBackTo, {searchText:"", display:"category"});
+}, [reloadTo])
 
     return(
         <View style={[categoriesStyles.container]}>
@@ -188,7 +194,7 @@ const handleScroll = (event) => {
                             onScroll={handleScroll}
                             scrollEventThrottle={16}
                         />
-                            <View style={styles.scrollIndicator}>
+                            <View style={[styles.scrollIndicator]}>
                                 <Icon name={isAtBottom ? "chevron-up" : "chevron-down"}  type="ionicon" size={30} color={appColors.secondaryColor4} />
                             </View>
                 </View>
@@ -202,7 +208,7 @@ const handleScroll = (event) => {
                                 item.subCategories.map((subCat, index) => {
                                     return (
                                         <View  key={subCat._id} >
-                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{setSelectedCategories(selectedCategories_);updateCategories(item.name, subCat.name); navigation.navigate(goBackTo, {searchText:"", display:"category",});}}>
+                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{setSelectedCategories(selectedCategories_);updateCategories(item.name, subCat.name);navigation.navigate(goBackTo, {searchText:"", display:"category"});}}>
                                                 <Text style={[categoriesStyles.subCatText]}>{subCat.name}</Text>
                                             </Pressable>
                                         </View>
@@ -220,7 +226,7 @@ const handleScroll = (event) => {
                     ListFooterComponent={ (item) => { return (
                             <View style={{height:50,top:10, alignSelf:"center"}}>
                                  <Text>{/* searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***` */}</Text>
-                                <Pressable onPress={()=>{setSelectedCategories(selectedCategories_);updateCategories(selectedCategories.name, "complete_category"); navigation.navigate(goBackTo, {searchText:"", display:"category"});}} style={[categoriesStyles.fullCat]}>
+                                <Pressable onPress={()=>{setSelectedCategories(selectedCategories_);updateCategories(selectedCategories_.name, "complete_category");navigation.navigate(goBackTo, {searchText:"", display:"category"});}} style={[categoriesStyles.fullCat]}>
                                     <Text style={[categoriesStyles.text,{color:appColors.white, textDecorationLine:"none", fontSize:16,}]}>Afficher La Categorie {">>"} </Text>
                                 </Pressable>
                             </View>
