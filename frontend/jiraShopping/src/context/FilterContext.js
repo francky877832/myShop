@@ -131,6 +131,7 @@ const FilterProvider = ({children}) => {
             },
         }
         let order_by = {};
+        //console.log(orderBy)
         switch(orderBy?.toLowerCase())
         {
             case "prix asc" :
@@ -189,7 +190,9 @@ const FilterProvider = ({children}) => {
       }
     })
 
-    
+    useEffect(()=>{
+
+    }, [selectedOrderBy])
 
     const resetAllFiltersWithoutFecthingDatas = useCallback(() => {
         //setIsLoading(true)

@@ -14,6 +14,7 @@ import AccountNavigation from './AccountNavigation';
 
 
 import badgeIconStyles from '../styles/badgeIconStyles';
+import { appColors } from '../styles/commonStyles';
 
 //Contexte
 import { screenHeight } from '../styles/commonStyles';
@@ -31,8 +32,8 @@ const HomeNavigation = () => {
         screenOptions={({ route }) => ({
           lazy : true,
           headerShown : false,
-          tabBarActiveTintColor: "blue",
-          tabBarInactiveTintColor: "gray",
+          tabBarActiveTintColor: appColors.secondaryColor1,
+          tabBarInactiveTintColor: appColors.clearBlack,
           tabBarStyle: [{"display": route.name == "Home" ? 'flex' : 'flex', bottom : 0}, null],
 
 
@@ -45,18 +46,18 @@ const HomeNavigation = () => {
               badgeCount = 0;
             } else if (route.name === 'Favourites') {
               iconName = focused ? 'heart-sharp' : 'heart-outline';
-              badgeCount = 3;
+              badgeCount = 0;
             } else if (route.name === 'Shop') {
               iconName = focused ? 'bag-handle' : 'bag-handle-outline';
-              badgeCount = 3;
+              badgeCount = 0;
             } else if (route.name === 'Basket') {
               iconName = focused ? 'basket' : 'basket-outline';
-              badgeCount = 3;
+              badgeCount = 0;
             } else if (route.name === 'Account') {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
-              badgeCount = 3;
+              badgeCount = 0;
             }
-            return <BadgeIcon name={iconName} size={size} color={color} badgeCount={badgeCount} styles={badgeIconStyles} />;
+            return <BadgeIcon name={iconName} size={size} color={color} badgeCount={badgeCount} styles={badgeIconStyles} />
           },
         })}
         

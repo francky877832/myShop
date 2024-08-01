@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Dimensions, ActivityIndicator } from 'react-native';
 
 //custom component
 import Product from './Product';
@@ -11,12 +11,15 @@ import { numProduct } from '../../styles/productStyles';
 
 //Contexte
 import { FavouritesContext } from '../../context/FavouritesContext';
+import { ProductContext } from '../../context/ProductContext';
 
 import { server } from '../../remote/server';
+import { appColors } from '../../styles/commonStyles';
 
 const ProductsList = React.forwardRef((props, ref) => {
-    const { datas, horizontal, styles, onEndReached, name, isLoading, replace} = props;
+    const { datas, horizontal, styles, onEndReached, name, isLoading, replace, hasMore} = props;
     //console.log(datas[0].product)
+    
     useEffect(()=>{
 
     }, [])
@@ -36,10 +39,12 @@ const ProductsList = React.forwardRef((props, ref) => {
                         contentContainerStyle={[productsListStyles.flatlist, horizontal ? productsListStyles.flatlistHorizontal : false, styles.flatlist]}
                         ref={ref}
                         onEndReached={onEndReached}
-                        onEndReachedThreshold={0.75}
+                        onEndReachedThreshold={0.5}
+                        ListFooterComponent={isLoading ? <ActivityIndicator size="large" color={appColors.secondaryColor1} /> : null}
                     />
-                    {isLoading && 
+                    {/*isLoading && 
                         <CustomActivityIndicator styles={{}} /> 
+                        */
                     }
             </View>
     )

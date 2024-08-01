@@ -83,7 +83,7 @@ useEffect(()=>{
                         //{searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})    
             }
             else
-            {console.log("GETDATAS3")
+            {//console.log("GETDATAS3")
                 //setSelectedCategories({})
                 await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
             }  
@@ -101,7 +101,7 @@ useFocusEffect(
 )
 */
 useEffect(()=>{
-    console.log(selectedCategories);
+    //console.log(selectedCategories);
     if(!isLoading)
         setIsLoading(true)
     getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
@@ -122,7 +122,7 @@ const title = `Resultats de recherche "${searchText}"`
                 <View style={preferencesStyles.container}>
                     {//!(!!display && display == "category") &&
                         <View style={preferencesStyles.top}>
-                            <Top />
+                            <Top searchText={searchText} />
                         </View>
                     }
     <View style={[{flex:1,}]}>

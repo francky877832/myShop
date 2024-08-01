@@ -22,6 +22,7 @@ import ProductsListWithFilters from '../common/ProductsListWithFilters';
 import { server } from '../../remote/server';
 import { Button } from 'react-native-elements';
 import { UserContext } from '../../context/UserContext';
+import { ProductContext } from '../../context/ProductContext'
 import { useNavigation } from '@react-navigation/native';
 import { ProductItemContext } from '../../context/ProductItemContext';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
@@ -30,44 +31,29 @@ import {CustomActivityIndicator} from '../common/CommonSimpleComponents'
 const Preferences = (props) => {
     const navigation = useNavigation()
     const [isSearch, setIsSearch] = useState(false) 
-    const [products, setProducts]  = useState([])
-    const [isLoading, setIsLoading]  = useState(true)
+    //const [isLoading, setIsLoading]  = useState(true)
 
 
     const {user, loginUserWithEmailAndPassword, isAuthenticated, setIsAuthenticated } = useContext(UserContext)
-
-    const getProducts = async ()=> {
-        try
-        {
-            const response = await fetch(`${API_BACKEND}/api/datas/products/get`,{
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'Application/json',
-                     'Authorization': `Bearer ${user.token}`, //Vue protege
-                },});
-                const responseJson = await response.json();
-                setProducts(responseJson)
-        } catch (error) {
-        console.error(error);
-      }
-    }
+    const { getProducts , loadMoreData, products, isLoading, setIsLoading} = useContext(ProductContext)
 
 useEffect(()=>{
     //loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
 }, [])
 
 useEffect( () => {
+    console.log("****************")
     const fetchData = async () => {;
-        await getProducts()
+        await loadMoreData()
         //console.log("OK")
-        setIsLoading(false);
+        //setIsLoading(false);
       };
-  
-    if (isAuthenticated && isLoading) {
+  // if (isAuthenticated && isLoading) {
+    if (isAuthenticated) {
         fetchData()
     }
     
-  }, [isLoading, navigation]); //refreshComponent, isAuthenticated,
+  }, [/*isLoading,*/ /*navigation, loadMoreData*/]); //refreshComponent, isAuthenticated,
 
 //console.log(user)
 
@@ -75,9 +61,10 @@ useEffect( () => {
 const ProductsListWithFilters_ = () => {
     return (
         <View style={{flex:1,}}>
-            <ProductsListWithFilters name="Preference" filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
-            {isLoading && 
+            <ProductsListWithFilters name="Preference" onEndReached={loadMoreData} isLoading={isLoading} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
+            {/*isLoading && 
                 <CustomActivityIndicator styles={{}} /> 
+                */
             }
         </View>
     )

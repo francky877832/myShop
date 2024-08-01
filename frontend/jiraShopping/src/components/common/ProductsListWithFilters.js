@@ -23,7 +23,7 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
                     */
                 }
                 
-                            {
+                            {/*
                                 display=="category" && Object.keys(selectedCategories).length>0
                                 ?
                                     <View style={[productsListWithFiltersStyles.title,{paddingVertical:10,}]}>
@@ -36,6 +36,7 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
                                         <View style={[productsListWithFiltersStyles.title,{paddingVertical:10,}]}>
                                             <Text style={[productsListWithFiltersStyles.titleText,{fontSize:16}]} numberOfLines={2}>{title}</Text>
                                         </View>
+                            */
                             }
                                
 

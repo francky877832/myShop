@@ -28,6 +28,7 @@ import { FavouritesProvider } from '../context/FavouritesContext';
 import { ProductItemProvider } from '../context/ProductItemContext';
 import { BasketProvider } from '../context/BasketContext';
 import { UserProvider } from '../context/UserContext';
+import { ProductProvider } from '../context/ProductContext';
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,7 @@ export default function MainNavigation() {
   return ( 
 <SafeAreaView style={{ flex: 1 }}>
   <UserProvider>
+    <ProductProvider>
 <FavouritesProvider>
   <BasketProvider>
   <NavigationContainer> 
@@ -67,6 +69,7 @@ export default function MainNavigation() {
     </NavigationContainer>
     </BasketProvider>
       </FavouritesProvider>
+      </ProductProvider>
   </UserProvider>
   </SafeAreaView>
   );

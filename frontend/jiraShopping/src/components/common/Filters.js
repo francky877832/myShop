@@ -8,7 +8,7 @@ import { ConditionChoice, CustomButton, CustomActivityIndicator} from "../common
 import { Icon } from 'react-native-elements';
 
 import { appColors, appFont } from '../../styles/commonStyles';
-import { filtersStyles } from '../../styles/filtersStyles';
+import { filtersStyles, topHeight, subTopHeight, totalTopHeight } from '../../styles/filtersStyles';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
 import { customText, screenWidth } from '../../styles/commonStyles';
 import FilterItem from './FilterItem';
@@ -27,7 +27,7 @@ const Filters = (props) => {
     const [isNewFocused, setIsNewFocused] = useState(true)
     const [isOldFocused, setIsOldFocused] = useState(true)
     const [isNewOldFocused, setIsNewOldFocused] = useState(true)
-    const [conditions, setConditions] = useState({})
+    const [conditions, setConditions] = useState({"old":true, "new":true, "new used":true})
 
     //const [isLoading, setIsLoading] = useState(true)
 
@@ -155,14 +155,15 @@ const setOtherModalToFalse = useCallback((modal)=>{
             switch(filter)
             {
                 case "trier" : 
-                    setModalOrderByVisible(true)
-                    setOtherModalToFalse(filter)
+                    setModalOrderByVisible(!modalOrderByVisible)
+                    setModalFiltersVisible(false)
 
                     //activeFilterRef.current = [setModalOrderByVisible, "trier"];  
                     break;
                 case "filters" : 
-                    setModalFiltersVisible(true)
-                    setOtherModalToFalse(filter)
+                    setModalFiltersVisible(!modalFiltersVisible)
+                    setModalOrderByVisible(false)
+                    //!modalFiltersVisible && setOtherModalToFalse(filter)
                     //(["categories","price","etat"].includes(from)) ? setModalFiltersVisible(false) : setModalFiltersVisible(true)
                     //setter(false)
                     //activeFilterRef.current = [setModalFiltersVisible, "filter"];
@@ -172,6 +173,8 @@ const setOtherModalToFalse = useCallback((modal)=>{
                     //console.log("OK")
                     setModalCategoryVisible(!modalCategoryVisible)
                     setOtherModalToFalse(filter)
+                    setModalFiltersVisible(true)
+
 
                     //from!="filter" ? setter(false) : false
                     //activeFilterRef.current = [setModalCategoryVisible, "categories"];
@@ -179,6 +182,8 @@ const setOtherModalToFalse = useCallback((modal)=>{
                 case "price" : 
                     setModalPriceVisible(!modalPriceVisible);
                     setOtherModalToFalse(filter)
+                    setModalFiltersVisible(true)
+
 
                     //from!="filter" ? setter(false) : false
                     //activeFilterRef.current = [setModalPriceVisible, "price"]; 
@@ -186,6 +191,8 @@ const setOtherModalToFalse = useCallback((modal)=>{
                 case "condition" : 
                     setModalConditionVisible(!modalConditionVisible);
                     setOtherModalToFalse(filter)
+                    setModalFiltersVisible(true)
+
 
                     //from!="filter" ? setter(false) : false
                     //activeFilterRef.current = [setModalConditionVisible, "etat"]; 
@@ -193,6 +200,8 @@ const setOtherModalToFalse = useCallback((modal)=>{
                 case "marque" : 
                     setModalBrandVisible(!modalBrandVisible);
                     setOtherModalToFalse(filter)
+                    setModalFiltersVisible(true)
+
 
                     break;
                 default :  break;
@@ -207,9 +216,13 @@ const handleOrderby = async (val)=>{
     //Il ya juste besoin de mettre a jour selectedOrderBy et de re-rendre le component avec un activityIndicator
    
 }
+
+const validateFilters = () => {
+    getDatas({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions,orderBy:selectedOrderBy})
+}
     return (
     
-        <View style={[filtersStyles.contentContainerStyle,{}]}>
+        <View style={[filtersStyles.contentContainerStyle,{height : modalFiltersVisible?totalTopHeight:topHeight}]}>
                 {suggestion && !showSuggestion &&
                             <Pressable onPress={()=>{setShowSuggestion(!showSuggestion)}} style={{backgroundColor:appColors.white, paddingLeft:5,position:"relative",flexDirection:"row"}}>
                                 <Icon name='bulb' type='ionicon' size={18} color={appColors.green} />
@@ -218,8 +231,8 @@ const handleOrderby = async (val)=>{
                          }
 { //showSuggestion ||
         <View style={[filtersStyles.container]}>
-            <View style={[filtersStyles.topMostContainer,{}]}>
-                <View style={[filtersStyles.topContainer]}>
+            <View style={[filtersStyles.topMostContainer, {height : modalFiltersVisible?totalTopHeight:topHeight}]}>
+                <View style={[filtersStyles.topContainer,]}>
                         <Pressable style={[filtersStyles.trierFiltrer,  modalOrderByVisible ? filtersStyles.trierFiltrerFocused : false, ]} onPress={()=>{showFilters("trier")}}>
                             <Icon name='swap-vertical' type='ionicon' size={18} color={appColors.secondaryColor1} />
                                 <View style={{width:10}}></View>
@@ -231,7 +244,8 @@ const handleOrderby = async (val)=>{
                                 <Text style={[customText.text, modalFiltersVisible ? filtersStyles.modalVisibleText : false, ]}>Filtrer</Text>
                         </Pressable>    
                 </View>
-            {//modalFiltersVisible &&
+            {modalFiltersVisible &&
+            
                 <View style={[filtersStyles.filtres]}>
                         <FlatList data={filters} keyExtractor={(item)=>{ return item.name.toString();}} renderItem={({item}) => {return (
                             <Pressable style={[filtersStyles.pressableFilter, functionsCatalog[item.name.toLowerCase()][0] ? filtersStyles.pressableFilterFocused : false]} onPress={()=>{showFilters(item.name)}} >
@@ -269,7 +283,7 @@ const handleOrderby = async (val)=>{
                         </RadioButton.Group>
 
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0,width:"100%",}}>
-                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"100%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{resetAllFilters("")}} />
+                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"100%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{handleOrderby("")}} />
                         </View>
                         
                     </View>
@@ -281,7 +295,7 @@ const handleOrderby = async (val)=>{
 
 
 
-{/*modalFiltersVisible && */ (modalConditionVisible || modalCategoryVisible || modalPriceVisible || modalBrandVisible) && 
+{modalFiltersVisible &&  (modalConditionVisible || modalCategoryVisible || modalPriceVisible || modalBrandVisible) && 
 <View style={[filtersStyles.modal,{}]}>
             <View style={{width:"100%",}}>
                 { /*modalFiltersVisible &&*/ modalPriceVisible &&
@@ -328,11 +342,11 @@ const handleOrderby = async (val)=>{
                     <View style={{height:20,}}></View>
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0}}>
                             <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setMaxPrice("");setMinPrice("");}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getDatas({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{validateFilters()}} />
                         </View>
                 </View>
             }
-        { /*modalFiltersVisible &&*/ modalConditionVisible &&
+        { modalFiltersVisible && modalConditionVisible &&
                     <View style={filtersStyles.conditionContainer}>
                         <View style={{alignSelf : "center",}}>
                             <Text style={[customText.text,filtersStyles.label]}>Condition</Text>
@@ -340,15 +354,15 @@ const handleOrderby = async (val)=>{
                         <ConditionChoice styles={{}} updateConditions={updateConditions} conditions={conditions} />
                     
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0}}>
-                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setIsNewFocused(false);setIsOldFocused(false);setIsNewOldFocused(false);}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getDatas({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
+                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setConditions({})}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{validateFilters()}} />
                         </View>
                     </View>
         }
 
 
         {
-            /*modalFiltersVisible &&*/ modalCategoryVisible &&
+            modalFiltersVisible && modalCategoryVisible &&
                     <View style={[filtersStyles.categoryContainer, filtersStyles.cardItem]}>
                         <View style={{alignSelf : "center",}}>
                             <Text style={[customText.text, filtersStyles.label]}>Categories</Text>
@@ -371,14 +385,14 @@ const handleOrderby = async (val)=>{
                                 }
                             </View>
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:15}}>
-                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setSelectedModalCategories({});}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getDatas({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions,selectedCategories:selectedCategories})}} />
+                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setSelectedModalCategories({});setSelectedCategories({});}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{validateFilters()}} />
                         </View>
                     </View>
         }
 
 {
-            /*modalFiltersVisible &&*/ modalBrandVisible &&
+            modalFiltersVisible && modalBrandVisible &&
                     <View style={[filtersStyles.categoryContainer, filtersStyles.cardItem]}>
                         <View style={{alignSelf : "center",}}>
                             <Text style={[customText.text, filtersStyles.label]}>Marques</Text>
@@ -399,7 +413,7 @@ const handleOrderby = async (val)=>{
 
                         <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:15}}>
                             <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setSelectedBrands({});}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{getDatas({searchText:searchText||"",selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions})}} />
+                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>validateFilters()} />
                         </View>
                     </View>
         }

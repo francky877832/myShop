@@ -11,10 +11,11 @@ import { appColors, appFont } from '../../styles/commonStyles';
 
 const Top = (props) => {
     const navigation = useNavigation()
+    const {searchText} = props
     return(
         <View style={[topStyles.container, ]} >
             <Pressable  style={[topStyles.pressableBar, ]} pointerEvents='box-only' onPress={() => {navigation.navigate("Search");}}>
-                <SearchBar placeholder="Rechercher un produit" styles={topStyles} isPrev={false} />
+                <SearchBar placeholder={ searchText ? `${searchText} | resultats` : "Rechercher un produit" } styles={topStyles} isPrev={false} />
             </Pressable>
 
             <Pressable  style={[topStyles.notification, ]} onPress = { ()=>{ navigation.navigate("Notifications");} }>

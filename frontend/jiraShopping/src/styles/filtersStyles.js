@@ -3,12 +3,16 @@ import { appColors, appFont, screenWidth, customText, inputTextStyle} from "./co
 import { screenHeight } from "./commentsStyles";
 
 
+export const topHeight = 55
+export const subTopHeight = 55
+export const totalTopHeight = topHeight+subTopHeight
 
 export const filtersStyles = StyleSheet.create({
 
     contentContainerStyle :
     {
-        height : 40+55,
+       // minHeight : 40,
+        //height : 40+55,
     },
     container :
     {
@@ -19,6 +23,28 @@ export const filtersStyles = StyleSheet.create({
         //paddingTop : 5,
        ////paddingBottom : 10,
        //backgroundColor : appColors.red,
+    },
+
+    topContainer :
+    {
+        flexDirection:"row",
+        justifyContent:"space-around",
+        alignItems : "center",
+        //borderWidth : 1,
+        borderBottomWidth : 1,
+        borderBottomColor : appColors.secondaryColor3,
+        //borderTopWidth : 1,
+        //borderTopColor : appColors.lightWhite,
+        backgroundColor : appColors.white,
+        //height : 40,  
+        flex : 1, //40+55 for topMostContainer
+    },
+    topMostContainer :
+    {
+        height : totalTopHeight,
+        //flex : 1,
+       // borderWidth : 1,
+       //backgroundColor : "red",
     },
 
     modal :
@@ -34,7 +60,7 @@ export const filtersStyles = StyleSheet.create({
         position : "absolute", //sor du flow de contentContainerStyle puisque qu!il a un height fixe : 40+55 
         left : 0,
         right : 0,
-        top : 40+55,
+        top : totalTopHeight,
         borderWidth : 1,
         borderBottomColor : appColors.secondaryColor4,
         borderRadius: 5,
@@ -48,33 +74,13 @@ export const filtersStyles = StyleSheet.create({
         justifyContent : "center",
         alignItems : "center",
     },
-    topContainer :
-    {
-        flexDirection:"row",
-        justifyContent:"space-around",
-        alignItems : "center",
-        //borderWidth : 1,
-        //borderBottomWidth : 1,
-        //borderBottomColor : appColors.secondaryColor3,
-        //borderTopWidth : 1,
-        //borderTopColor : appColors.lightWhite,
-        backgroundColor : appColors.white,
-        //height : 40,  
-        flex : 1, //40+55 for topMostContainer
-    },
-    topMostContainer :
-    {
-        //height : 40+55,
-        flex : 1,
-       // borderWidth : 1,
-    },
       
     filtres :
     {
         justifyContent : "center",
         paddingHorizontal : 5,
-        borderTopWidth : 1,
-        borderTopColor : appColors.secondaryColor3,
+        //borderTopWidth : 1,
+        //borderTopColor : appColors.secondaryColor3,
         flex : 1,//40+55 for topMostContainer
         //height : 55, 
         backgroundColor : appColors.white,
@@ -91,7 +97,7 @@ export const filtersStyles = StyleSheet.create({
     orderByContainer :
     {
         width: screenWidth,
-        marginTop : 40+10,
+        marginTop : topHeight,
         alignItems : "flex-start",
         backgroundColor : appColors.white,
         position : "absolute",
