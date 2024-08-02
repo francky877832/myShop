@@ -34,7 +34,7 @@ const SearchResults = (props) => {
     const {
         selectedOrderBy,
        products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
-        isLoading, setIsLoading , selectedCategories , setSelectedCategories 
+        isLoading, setIsLoading , selectedCategories , setSelectedCategories, loadMoreDataWithFilters
     } = useContext(FilterContext)
 
     
@@ -73,19 +73,19 @@ useEffect(()=>{
         async function getDatas({searchText, selectedModalCategories, selectedBrands, conditions, orderBy})
         {
             //console.log("GETDATAS")
-            //console.log({searchText, selectedModalCategories, selectedBrands, conditions})
+            console.log({searchText, selectedModalCategories, selectedBrands, conditions, orderBy})
             if(!isLoading)
                 setIsLoading(true)
 
             if(!!display && display == "category")
             {//console.log("GETDATAS2")
-                await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
+                await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
                         //{searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})    
             }
             else
             {//console.log("GETDATAS3")
                 //setSelectedCategories({})
-                await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
+                await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
             }  
             setIsLoading(false)    
         }
@@ -102,8 +102,8 @@ useFocusEffect(
 */
 useEffect(()=>{
     //console.log(selectedCategories);
-    if(!isLoading)
-        setIsLoading(true)
+    //if(!isLoading)
+      //  setIsLoading(true)
     getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
 
     }, [searchText])
@@ -126,7 +126,7 @@ const title = `Resultats de recherche "${searchText}"`
                         </View>
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="SearchResults" getDatas={getDatas} isLoading={isLoading} filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters name="SearchResults" getDatas={getDatas} onEndReached={getDatas} isLoading={isLoading} filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )

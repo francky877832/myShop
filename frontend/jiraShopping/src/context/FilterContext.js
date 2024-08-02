@@ -21,6 +21,10 @@ const FilterProvider = ({children}) => {
     const [maxPrice, setMaxPrice] = useState("")
     const [products, setProducts] = useState([])
 
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [totalPages, setTotalPages] = useState(1)
+
     const [refreshComponent, setRefreshComponent] = useState(false)
     const {user} = useContext(UserContext)
 
@@ -81,7 +85,7 @@ const FilterProvider = ({children}) => {
 
     })*/
 
-    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions}) =>
+    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, page}) =>
     {
         console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, selectedCategories})
         //setIsLoading(true)
@@ -160,7 +164,10 @@ const FilterProvider = ({children}) => {
             default : break;
         }
      
+        //GESTION DE LA PAGE
+        filters["customFilters"]['page'] = page || 1
         //console.log(filters)
+        
         const queryString = serialize(filters)
        // console.log(queryString)
         try
@@ -177,7 +184,7 @@ const FilterProvider = ({children}) => {
                     throw new Error(`Erreur lors de la recherhce de produit${response.text()}`)
                 const responseJson = await response.json();
                 //console.log(responseJson)
-                setProducts(responseJson)
+               return responseJson
                 //setIsLoading(false)
                
                 //setSelectedCategories({"Vetements": true, "name": "Vetements"}) //OR NOT
@@ -186,9 +193,42 @@ const FilterProvider = ({children}) => {
         } catch (error) {
             setIsLoading(false)
             console.error(error.message);
+            return []
         
       }
     })
+
+    
+    const loadMoreDataWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, page}) =>
+    {
+        console.log("ook")
+        if (!hasMore) return;
+    
+        setIsLoading(true);
+        try {
+  
+          const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, page:page}); //A MODDIFIER
+          //console.log(newData)
+          if (newData.datas.length > 0) {
+            //setProducts(newData)
+           console.log("pk")
+            //updateProducts(newData.datas);
+            setProducts((prevProducts)=>[...prevProducts, ...newData.datas])
+            //if(page < totalPages)
+            setPage((prevPage) => prevPage + 1);
+            //setRefreshKey(prevKey => prevKey + 1);
+            console.log(page)
+          } else {
+            setHasMore(false); // Pas plus de données à charger
+          }
+        } catch (error) {
+          console.error('Erreur lors du chargement des données :', error);
+        } finally {
+          setIsLoading(false);
+        }
+      }) //[isLoading, hasMore, page]);
+
+
 
     useEffect(()=>{
 
@@ -228,7 +268,7 @@ const FilterProvider = ({children}) => {
 
     const filterStateVars = {refreshComponent, isLoading, selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, products}
     const filterStateSetters = {setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
-    const utilsFunctions = {_handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas }
+    const utilsFunctions = {_handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

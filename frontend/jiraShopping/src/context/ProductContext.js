@@ -88,8 +88,7 @@ const ProductProvider = ({children}) => {
           //if(page < totalPages)
           setPage((prevPage) => prevPage + 1);
           //setRefreshKey(prevKey => prevKey + 1);
-          console.log(page)
-
+          //console.log(page)
         } else {
           setHasMore(false); // Pas plus de données à charger
         }

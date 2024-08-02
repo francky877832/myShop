@@ -185,9 +185,28 @@ exports.getUserProductsFromCategory  = (req, res, next) => {
 //resultats de recherches, puis avec filtres
 exports.getSearchedProducts = async (req, res, next) => {
   //console.log("SERAHC PRODUCTS")
-  console.log(req.query)
+  //console.log(req.query)
   const { name, customFilters } = req.query;
+  console.log(customFilters)
+  const page = parseInt(customFilters['page']) || 1; // Page actuelle, par défaut 1
+  const limit = parseInt(customFilters['limit']) || 4; // Nombre d'éléments par page, par défaut 20
+  const skip = (page - 1) * limit;
+  //console.log(req.query.page)
   //console.log(customFilters)
+
+  /* Product.find().skip(skip).limit(limit).exec()
+    .then (async(products) => {
+    //console.log("ok");
+    const totalDatas = await Product.countDocuments().exec();
+    const totalPages = Math.ceil(totalDatas / limit);
+    //console.log("ooooo")
+      res.status(200).json({datas:products, page:page,totalPages:totalPages,totalDatas:totalDatas});
+  })
+  .catch ((error) => {
+    console.log(error)
+      res.status(400).json({ error: error+"go"});
+  });
+};*/
   let result = []
   try {
         let products = []
@@ -196,12 +215,16 @@ exports.getSearchedProducts = async (req, res, next) => {
           let filed = Object.keys(customFilters.orderBy)[0]
           let sortValue = {[filed]:parseInt(customFilters.orderBy[filed])}
           //console.log(sortValue)
-          products  = await Product.find().sort(sortValue);
+          products  = await Product.find().sort(sortValue)//.skip(skip).limit(limit).exec()
         }
         else
         {
-          products  = await Product.find().sort({updatedAt:-1})
+          products  = await Product.find().sort({updatedAt:-1})//.skip(skip).limit(limit).exec()
+          
         }
+      const totalDatas = await Product.countDocuments().exec();
+      const totalPages = Math.ceil(totalDatas / limit);
+//console.log(products.length)
      //Introduire un champ comme memoire mour le tri   
         products.forEach((product, index) => {
           product.sortIndex = index;
@@ -221,10 +244,12 @@ exports.getSearchedProducts = async (req, res, next) => {
       // Effectuer la recherche floue
       result = fuse.search(name).map(result => result.item);
     }
+
     //console.log(result)
     
     // Appliquer des filtres personnalisés si nécessaire
-    let filteredResult = result;
+    let filteredResult = result.slice(skip, limit);
+    //console.log(filteredResult)
     //console.log(customFilters.minPrice)
     if (customFilters.categories?.length > 0) {
       filteredResult = filteredResult.filter(product => {
@@ -258,7 +283,10 @@ exports.getSearchedProducts = async (req, res, next) => {
     }
       //comme FUSE JS ne conserve pas l'ordre, utiliser la memoire de tri
       filteredResult.sort((a, b) => a.sortIndex - b.sortIndex);
-    res.json(filteredResult);
+    //res.json(filteredResult);
+    console.log(filteredResult.length)
+    res.status(200).json({datas:filteredResult, page:page,totalPages:totalPages,totalDatas:totalDatas});
+
   } catch (err) {
     console.log(err)
     res.status(500).json({ error: err.message });
