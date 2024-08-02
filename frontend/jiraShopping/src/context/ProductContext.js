@@ -82,7 +82,7 @@ const ProductProvider = ({children}) => {
         //console.log(newData)
         if (newData.datas.length > 0) {
           //setProducts(newData)
-         console.log("pk")
+          console.log("pk")
           //updateProducts(newData.datas);
           setProducts((prevProducts)=>[...prevProducts, ...newData.datas])
           //if(page < totalPages)
@@ -97,7 +97,7 @@ const ProductProvider = ({children}) => {
       } finally {
         setIsLoading(false);
       }
-    },[isLoading, hasMore, page]) //[isLoading, hasMore, page]);
+    }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);
 
     const productStateVars = {products, isLoading, refreshKey}
     const productStateStters = {setIsLoading}

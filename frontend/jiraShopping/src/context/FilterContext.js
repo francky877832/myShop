@@ -8,11 +8,14 @@ const FilterProvider = ({children}) => {
     const [isLoading, setIsLoading]  = useState(true)
 
     const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
-    //const [selectedModalCategories, setSelectedModalCategories] = useState({})
 
-    //const [selectedBrands, setSelectedBrands] = useState({})
+    const [selectedModalCategoriesFromContext, setSelectedModalCategoriesFromContext] = useState({})
+    const [selectedBrandFromContext, setSelectedBrandFromContext] = useState({})
+     const [selectedOrderBy, setSelectedOrderBy] = useState("")
 
-    const [selectedOrderBy, setSelectedOrderBy] = useState("")
+    const [searchText, setSearchText] = useState("")
+
+   
 
     const [isNewFocused, setIsNewFocused] = useState(true)
     const [isOldFocused, setIsOldFocused] = useState(true)
@@ -183,8 +186,9 @@ const FilterProvider = ({children}) => {
                 if(!response.ok) 
                     throw new Error(`Erreur lors de la recherhce de produit${response.text()}`)
                 const responseJson = await response.json();
-                //console.log(responseJson)
+                //console.log(responseJson.datas)
                return responseJson
+               //setProducts(responseJson.datas)
                 //setIsLoading(false)
                
                 //setSelectedCategories({"Vetements": true, "name": "Vetements"}) //OR NOT
@@ -199,7 +203,7 @@ const FilterProvider = ({children}) => {
     })
 
     
-    const loadMoreDataWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, page}) =>
+    const loadMoreDataWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions}) =>
     {
         console.log("ook")
         if (!hasMore) return;
@@ -207,25 +211,26 @@ const FilterProvider = ({children}) => {
         setIsLoading(true);
         try {
   
-          const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, page:page}); //A MODDIFIER
-          //console.log(newData)
-          if (newData.datas.length > 0) {
-            //setProducts(newData)
-           console.log("pk")
-            //updateProducts(newData.datas);
-            setProducts((prevProducts)=>[...prevProducts, ...newData.datas])
-            //if(page < totalPages)
-            setPage((prevPage) => prevPage + 1);
-            //setRefreshKey(prevKey => prevKey + 1);
-            console.log(page)
-          } else {
-            setHasMore(false); // Pas plus de données à charger
-          }
-        } catch (error) {
-          console.error('Erreur lors du chargement des données :', error);
-        } finally {
-          setIsLoading(false);
-        }
+            const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, page:page}); //A MODDIFIER
+            //console.log(newData)
+            if (newData.datas.length > 0) {
+                //setProducts(newData)
+                console.log("pk")
+                //updateProducts(newData.datas);
+                setProducts((prevProducts)=>[...prevProducts, ...newData.datas])
+                //setProducts(newData.datas)
+                //if(page < totalPages)
+                setPage((prevPage) => prevPage + 1);
+                //setRefreshKey(prevKey => prevKey + 1);
+                console.log(page)
+            } else {
+                setHasMore(false); // Pas plus de données à charger
+            }
+            } catch (error) {
+            console.error('Erreur lors du chargement des données :', error);
+            } finally {
+            setIsLoading(false);
+            }
       }) //[isLoading, hasMore, page]);
 
 
@@ -266,8 +271,8 @@ const FilterProvider = ({children}) => {
 
 
 
-    const filterStateVars = {refreshComponent, isLoading, selectedCategories, selectedOrderBy, isNewFocused, isOldFocused, minPrice, maxPrice, products}
-    const filterStateSetters = {setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
+    const filterStateVars = {refreshComponent, isLoading, selectedCategories, selectedOrderBy, selectedBrandFromContext, selectedModalCategoriesFromContext, isNewFocused, isOldFocused, minPrice, maxPrice, products}
+    const filterStateSetters = {selectedModalCategoriesFromContext, setSelectedBrandFromContext, setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
     const utilsFunctions = {_handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>

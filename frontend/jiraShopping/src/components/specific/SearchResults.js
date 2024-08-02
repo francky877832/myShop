@@ -34,7 +34,8 @@ const SearchResults = (props) => {
     const {
         selectedOrderBy,
        products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
-        isLoading, setIsLoading , selectedCategories , setSelectedCategories, loadMoreDataWithFilters
+        isLoading, setIsLoading , selectedCategories , setSelectedCategories, loadMoreDataWithFilters, selectedModalCategoriesFromContext, 
+        selectedBrandFromContext, selectedConditionsFromContext
     } = useContext(FilterContext)
 
     
@@ -72,7 +73,7 @@ useEffect(()=>{
 },[])
         async function getDatas({searchText, selectedModalCategories, selectedBrands, conditions, orderBy})
         {
-            //console.log("GETDATAS")
+            console.log("GETDATAS")
             console.log({searchText, selectedModalCategories, selectedBrands, conditions, orderBy})
             if(!isLoading)
                 setIsLoading(true)
@@ -83,11 +84,15 @@ useEffect(()=>{
                         //{searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})    
             }
             else
-            {//console.log("GETDATAS3")
+            {console.log("GETDATAS3")
                 //setSelectedCategories({})
                 await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
             }  
             setIsLoading(false)    
+        }
+
+        async function loadMoreData_(){
+            await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:{}, selectedBrands:{}, conditions:{}, orderBy:selectedOrderBy})
         }
   /*  
 useFocusEffect(
@@ -102,8 +107,8 @@ useFocusEffect(
 */
 useEffect(()=>{
     //console.log(selectedCategories);
-    //if(!isLoading)
-      //  setIsLoading(true)
+    if(!isLoading)
+        setIsLoading(true)
     getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
 
     }, [searchText])
@@ -126,7 +131,7 @@ const title = `Resultats de recherche "${searchText}"`
                         </View>
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="SearchResults" getDatas={getDatas} onEndReached={getDatas} isLoading={isLoading} filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters name="SearchResults" getDatas={getDatas} onEndReached={loadMoreData_} isLoading={isLoading} filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )
