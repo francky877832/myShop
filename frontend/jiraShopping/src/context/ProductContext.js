@@ -1,5 +1,5 @@
 import { API_BACKEND } from '@env';
-import React, { useState, createContext, useContext, useEffect, useCallback } from "react";
+import React, { useState, createContext, useRef, useContext, useEffect, useCallback } from "react";
 import { Alert } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native';
@@ -16,11 +16,13 @@ const ProductProvider = ({children}) => {
     //const { getProducts , loadMoreData, products} = useContext(ProductContext)
 
     const [products, setProducts]  = useState([])
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [totalPages, setTotalPages] = useState(1)
     const {user} = useContext(UserContext)
+    const [refreshKey, setRefreshKey] = useState(0);
+
 
      const getProducts = async (page)=> {
       //console.log("responseJson")
@@ -41,10 +43,37 @@ const ProductProvider = ({children}) => {
       }
     }
 
+  const updateProducts = (newProducts) => {
+    setProducts((prevProducts)=>{
+        const uniqueNewProducts = newProducts.filter(
+          (nP) => !prevProducts.some((p) => p.id === nP.id)
+        );
+  
+        // Retourner la liste mise à jour avec les nouveaux produits
+        return [...prevProducts, ...uniqueNewProducts];
+    })
+  }
+
+  const isProductPresent = (item, products) => {
+    let i = 0, bool = false
+    const f = [...products]
+    while(i < f.length)
+    {
+        if(f[i]._id == item._id)
+        {
+            bool = true
+            break
+        }
+        i++
+    }
+    //console.log(i)
+    return bool
+}
+
   
     const loadMoreData = useCallback(async () => {
       console.log("ook")
-      if (!hasMore) return;
+      if (isLoading && !hasMore) return;
   
       setIsLoading(true);
       try {
@@ -53,10 +82,14 @@ const ProductProvider = ({children}) => {
         //console.log(newData)
         if (newData.datas.length > 0) {
           //setProducts(newData)
-          console.log("pk")
-          setProducts((prevData) => [...prevData, ...newData.datas]);
+         console.log("pk")
+          //updateProducts(newData.datas);
+          setProducts((prevProducts)=>[...prevProducts, ...newData.datas])
           //if(page < totalPages)
-            setPage((prevPage) => prevPage + 1);
+          setPage((prevPage) => prevPage + 1);
+          //setRefreshKey(prevKey => prevKey + 1);
+          console.log(page)
+
         } else {
           setHasMore(false); // Pas plus de données à charger
         }
@@ -65,9 +98,9 @@ const ProductProvider = ({children}) => {
       } finally {
         setIsLoading(false);
       }
-    }, [isLoading, hasMore, page]);
+    },[isLoading, hasMore, page]) //[isLoading, hasMore, page]);
 
-    const productStateVars = {products, isLoading}
+    const productStateVars = {products, isLoading, refreshKey}
     const productStateStters = {setIsLoading}
     const utilsFunctions = {getProducts, loadMoreData}
     return (

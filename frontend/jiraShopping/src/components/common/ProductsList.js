@@ -31,15 +31,15 @@ const ProductsList = React.forwardRef((props, ref) => {
                         data={datas}
                         nestedScrollEnabled={true}
                         renderItem={ ({item}) => { return <Product name={name} item={item} replace={replace} styles={productsListStyles.listItem} horizontal={horizontal}/> } }
-                        keyExtractor={ (item) => { return item._id.toString(); } }
+                        keyExtractor={ (item) => { return Math.random().toString(); } }
                         horizontal={horizontal}
                         numColumns={ horizontal ? 1 : numProduct }
                         ItemSeparatorComponent={ (item) => { return <View style={{width:5,}}></View> }}
                         showsHorizontalScrollIndicator={horizontal}
                         contentContainerStyle={[productsListStyles.flatlist, horizontal ? productsListStyles.flatlistHorizontal : false, styles.flatlist]}
                         ref={ref}
-                        onEndReached={onEndReached}
-                        onEndReachedThreshold={0.5}
+                        onEndReached={()=>{onEndReached()}}
+                        onEndReachedThreshold={0.3}
                         ListFooterComponent={isLoading ? <ActivityIndicator size="large" color={appColors.secondaryColor1} /> : null}
                     />
                     {/*isLoading && 
@@ -50,4 +50,4 @@ const ProductsList = React.forwardRef((props, ref) => {
     )
 })
 
-export default  ProductsList
+export default  React.memo(ProductsList)

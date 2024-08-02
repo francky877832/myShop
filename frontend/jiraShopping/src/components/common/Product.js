@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useMemo, useEffect, createContext, useContext, useCallback} from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, Image, Pressable, Alert} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -75,4 +75,4 @@ const Product = (props) => {
     )
 }
 
-export default Product
+export default React.memo(Product)

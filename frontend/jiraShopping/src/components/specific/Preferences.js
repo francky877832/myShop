@@ -28,6 +28,44 @@ import { ProductItemContext } from '../../context/ProductItemContext';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
 import {CustomActivityIndicator} from '../common/CommonSimpleComponents'
 
+
+const ProductsListWithFilters_ = React.memo(({onEndReached, isLoading, hasMore, products}) => {
+    useEffect(()=>{
+        console.log("ok")
+        console.log(products)
+    })
+    return (
+       
+    <View style={{flex:1,}}>
+        {products?.length > 0 ?
+            <ProductsListWithFilters name="Preference" onEndReached={onEndReached} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
+           
+        :null
+        }
+         {/*isLoading && 
+                <CustomActivityIndicator styles={{}} /> 
+                */
+            }
+    </View>
+       
+    )
+})
+const Categories_ = React.memo(() => {
+    return (
+            <Categories page="category" goBackTo="SearchResults" route={{}} />
+    )
+})
+
+
+const FirstRoute = React.memo(() => (
+    <View style={[styles.scene, { backgroundColor: '#ff4081' }]} />
+  ));
+  
+  const SecondRoute = React.memo(() => (
+    <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />
+  ));
+
+
 const Preferences = (props) => {
     const navigation = useNavigation()
     const [isSearch, setIsSearch] = useState(false) 
@@ -35,7 +73,7 @@ const Preferences = (props) => {
 
 
     const {user, loginUserWithEmailAndPassword, isAuthenticated, setIsAuthenticated } = useContext(UserContext)
-    const { getProducts , loadMoreData, products, isLoading, setIsLoading} = useContext(ProductContext)
+    const { getProducts , loadMoreData, products, isLoading, hasMore, setIsLoading, refreshKey} = useContext(ProductContext)
 
 useEffect(()=>{
     //loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
@@ -43,7 +81,7 @@ useEffect(()=>{
 
 useEffect( () => {
     console.log("****************")
-    const fetchData = async () => {;
+    const fetchData = async () => {
         await loadMoreData()
         //console.log("OK")
         //setIsLoading(false);
@@ -52,29 +90,16 @@ useEffect( () => {
     if (isAuthenticated) {
         fetchData()
     }
+    console.log("CLOSE***")
     
-  }, [/*isLoading,*/ /*navigation, loadMoreData*/]); //refreshComponent, isAuthenticated,
+  }, []); //refreshComponent, isAuthenticated,
 
 //console.log(user)
 
-
-const ProductsListWithFilters_ = () => {
-    return (
-        <View style={{flex:1,}}>
-            <ProductsListWithFilters name="Preference" onEndReached={loadMoreData} isLoading={isLoading} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
-            {/*isLoading && 
-                <CustomActivityIndicator styles={{}} /> 
-                */
-            }
-        </View>
-    )
-}
-const Categories_ = () => {
-    return (
-            <Categories page="category" goBackTo="SearchResults" route={{}} />
-    )
-}
-
+useEffect(()=>{
+    //console.log("RE-RENDER**")
+    //console.log(products)
+})
 
 const [index, setIndex] = useState(0);
 
@@ -83,11 +108,29 @@ const [routes] = useState([
     { key: 'categories', title: 'Categories' },
 ]);
 
-const renderScene = SceneMap({
-    products: ProductsListWithFilters_,
-    categories: Categories_,
 
-});
+/*
+const renderScene = (SceneMap({
+    products: FirstRoute,
+    categories: SecondRoute,
+  }))
+*/
+const renderScene = ({ route }) => {
+    switch (route.key) {
+        case 'products':
+          //return <ProductsListWithFilters_ onEndReached={loadMoreData} isLoading={isLoading} hasMore={hasMore} data={products} />;
+          return (
+            <View style={{flex:1,}}>
+                <ProductsListWithFilters name="Preference" onEndReached={loadMoreData} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
+        </View>
+          )
+        case 'categories':
+          return <Categories_ />;
+        default:
+          return null;
+      }
+};
+
 
 
 const renderTabBar = (props) => (
@@ -107,7 +150,7 @@ const renderTabBar = (props) => (
         setIndex(index);
       }}
     />
-  );
+  )
 
     return(
         <View style={preferencesStyles.container}>
@@ -120,7 +163,9 @@ const renderTabBar = (props) => (
                     :
                     
                     <View style={{flex:1}}>
-                        <TabView navigationState={{ index, routes }} renderScene={renderScene} onIndexChange={setIndex} initialLayout={initialLayout} renderTabBar={renderTabBar}/>
+                        <TabView  
+                        //key={refreshKey} 
+                        lazy renderLazyPlaceholder={() => <View><Text>Loading...</Text></View>} navigationState={{ index, routes }} renderScene={renderScene} onIndexChange={setIndex} initialLayout={initialLayout} renderTabBar={renderTabBar} />
                     </View>
                 }
 
@@ -131,4 +176,16 @@ const renderTabBar = (props) => (
 
 }
 
-export default  Preferences
+export default  React.memo(Preferences)
+
+const styles = StyleSheet.create({
+    container: {
+      marginTop: 20,
+    },
+    scene: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
+  

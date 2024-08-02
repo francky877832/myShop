@@ -51,7 +51,7 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
     )
 })
 
-export default  ProductsListWithFilters
+export default  React.memo(ProductsListWithFilters)
 
 const productsListWithFiltersStyles = StyleSheet.create({
     container : 
