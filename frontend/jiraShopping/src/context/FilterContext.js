@@ -259,9 +259,9 @@ const FilterProvider = ({children}) => {
         setSelectedOrderBy("")
         setMinPrice("")
         setMaxPrice("")
+
         setHasMore(true)
         setPage(1)
-
         setProducts([])
         
         //setRefreshComponent(!refreshComponent)
@@ -294,13 +294,21 @@ const FilterProvider = ({children}) => {
           setProducts([]);
       }
 
+      const searchCategory = async (selectedCategories_) => {
+        setIsLoading(false);
+        setHasMore(true);
+        setPage(1);
+        setProducts([]);
+        setSelectedCategories(selectedCategories_);
+    }
+
     
 
 
 
     const filterStateVars = {refreshComponent, filtersUpdated, isLoading, setHasMore, selectedCategories, selectedOrderBy, selectedBrandFromContext, selectedModalCategoriesFromContext, selectedConditionsFromContext, isNewFocused, isOldFocused, minPrice, maxPrice, products}
     const filterStateSetters = {setFiltersUpdated, setSelectedModalCategoriesFromContext, setSelectedBrandFromContext, setSelectedConditionsFromContext, setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
-    const utilsFunctions = {_handlePress, updateCategories, resetAllFilters, searchAgain, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
+    const utilsFunctions = {_handlePress, updateCategories, resetAllFilters, searchAgain, searchCategory, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

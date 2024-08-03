@@ -28,7 +28,9 @@ const Categories = (props) => {
     const goBackTo = params?.datas?.goBackTo || props.goBackTo
 //console.log(page)
     const {setSelectedBrand, selectedColor, setSelectedColor, categories, brands, isLoading} = useContext(ProductItemContext)
-    const { selectedCategories, updateCategories, setSelectedCategories, resetAllFilters} = useContext(FilterContext)
+    const { selectedCategories, updateCategories, setSelectedCategories, resetAllFilters,
+        searchCategory,
+    } = useContext(FilterContext)
     //const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
 
     const navigation = useNavigation()
@@ -172,6 +174,23 @@ useEffect(()=>{
         navigation.navigate(goBackTo, {searchText:"", display:"category"});
 }, [reloadTo])
 
+const getCategory = async (type, cat, subCat) => {
+    await searchCategory(selectedCategories_)
+    
+    switch(type)
+    {
+        case "category" :    
+            updateCategories(selectedCategories_.name, "complete_category");
+            break;
+        case "subCategory" :
+            updateCategories(cat, subCat)
+            break;
+        default : break;
+
+    }
+    navigation.navigate(goBackTo, {searchText:"", display:"category"});
+}
+
     return(
         <View style={[categoriesStyles.container]}>
 
@@ -208,7 +227,7 @@ useEffect(()=>{
                                 item.subCategories.map((subCat, index) => {
                                     return (
                                         <View  key={subCat._id} >
-                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{setSelectedCategories(selectedCategories_);updateCategories(item.name, subCat.name);navigation.navigate(goBackTo, {searchText:"", display:"category"});}}>
+                                            <Pressable style={[categoriesStyles.pressableSubCat,{height:100}]} onPress={()=>{getCategory("subCategory", item.name, subCat.name)}}>
                                                 <Text style={[categoriesStyles.subCatText]}>{subCat.name}</Text>
                                             </Pressable>
                                         </View>
@@ -226,7 +245,7 @@ useEffect(()=>{
                     ListFooterComponent={ (item) => { return (
                             <View style={{height:50,top:10, alignSelf:"center"}}>
                                  <Text>{/* searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***` */}</Text>
-                                <Pressable onPress={()=>{setSelectedCategories(selectedCategories_);updateCategories(selectedCategories_.name, "complete_category");navigation.navigate(goBackTo, {searchText:"", display:"category"});}} style={[categoriesStyles.fullCat]}>
+                                <Pressable onPress={()=>{getCategory("category")}} style={[categoriesStyles.fullCat]}>
                                     <Text style={[categoriesStyles.text,{color:appColors.white, textDecorationLine:"none", fontSize:16,}]}>Afficher La Categorie {">>"} </Text>
                                 </Pressable>
                             </View>

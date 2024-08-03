@@ -217,14 +217,15 @@ const handleOrderby = async (val)=>{
     //PEUT-ETRE FAIT EN LOCAL
         setSelectedOrderBy(val)
         //console.log(selectedOrderBy)
-        await getDatas({searchText:searchText,orderBy:val,selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions});
+        await searchAgain()
+        await loadMoreDataWithFilters({searchText:searchText,orderBy:val,selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions});
         //Pas besoin de getSearchedTextWithFilters par ce Filters est dans SearchResults et cela se fait auto.
     //Il ya juste besoin de mettre a jour selectedOrderBy et de re-rendre le component avec un activityIndicator
    
 }
 
 useEffect(()=>{
-    console.log(products)
+    //console.log(products)
     async function loadDatas()
     {
         if(filtersUpdated)
