@@ -5,12 +5,16 @@ import { server } from '../remote/server'
 import { UserContext } from './UserContext'
 const FilterContext = createContext()
 const FilterProvider = ({children}) => {
-    const [isLoading, setIsLoading]  = useState(true)
+    const [isLoading, setIsLoading]  = useState(false)
 
-    const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
+    const [selectedCategories, setSelectedCategories] = useState({})
 
     const [selectedModalCategoriesFromContext, setSelectedModalCategoriesFromContext] = useState({})
     const [selectedBrandFromContext, setSelectedBrandFromContext] = useState({})
+    const [selectedConditionsFromContext, setSelectedConditionsFromContext] = useState({})
+    const [filtersUpdated, setFiltersUpdated] = useState(false);
+
+
      const [selectedOrderBy, setSelectedOrderBy] = useState("")
 
     const [searchText, setSearchText] = useState("")
@@ -88,7 +92,7 @@ const FilterProvider = ({children}) => {
 
     })*/
 
-    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, page}) =>
+    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions}) =>
     {
         console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, selectedCategories})
         //setIsLoading(true)
@@ -96,7 +100,7 @@ const FilterProvider = ({children}) => {
         //console.log(selectedCategories)
         selectedModalCategories = selectedModalCategories || {}
         let categories;
-        if(Object.keys(selectedModalCategories).length>0)
+        if(Object.keys(selectedModalCategories).length>0 || searchText.trim().length>0)
         {
             
             categories = Object.keys(selectedModalCategories).filter((key)=>{ return selectedModalCategories[key]===true})
@@ -105,13 +109,20 @@ const FilterProvider = ({children}) => {
             setSelectedCategories({})
         }
         else
-        {
-            categories = Object.keys(selectedCategories).filter((key)=>{ return selectedCategories[key]===true})
-            if(!!selectedCategories.subCategories)
+        { 
+            if(Object.keys(selectedCategories).length<=0)
             {
-                /* En cas sous categroie, on neglige la categorie et on est plus specifique */
-                categories.pop()
-                categories.push(`${selectedCategories.name}/${selectedCategories.subCategories}`)
+                setSelectedCategories({"Vetements": true, "name": "Vetements"})
+            }    
+            else
+            {
+                categories = Object.keys(selectedCategories).filter((key)=>{ return selectedCategories[key]===true})
+                if(!!selectedCategories.subCategories)
+                {
+                    /* En cas sous categroie, on neglige la categorie et on est plus specifique */
+                    categories.pop()
+                    categories.push(`${selectedCategories.name}/${selectedCategories.subCategories}`)
+                }
             }
             selectedModalCategories={}
         }
@@ -168,7 +179,7 @@ const FilterProvider = ({children}) => {
         }
      
         //GESTION DE LA PAGE
-        filters["customFilters"]['page'] = page || 1
+        filters["customFilters"]['page'] = page
         //console.log(filters)
         
         const queryString = serialize(filters)
@@ -205,33 +216,35 @@ const FilterProvider = ({children}) => {
     
     const loadMoreDataWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions}) =>
     {
-        console.log("ook")
-        if (!hasMore) return;
+        console.log("*OK*")
+        console.log(hasMore)
+        if (isLoading || !hasMore) return;
     
         setIsLoading(true);
         try {
-  
-            const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, page:page}); //A MODDIFIER
+            console.log("page")
+            console.log(page)
+            const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy}); //A MODDIFIER
             //console.log(newData)
             if (newData.datas.length > 0) {
-                //setProducts(newData)
-                console.log("pk")
+                //setProducts(newData.datas)
+                console.log("gs")
                 //updateProducts(newData.datas);
                 setProducts((prevProducts)=>[...prevProducts, ...newData.datas])
                 //setProducts(newData.datas)
                 //if(page < totalPages)
                 setPage((prevPage) => prevPage + 1);
                 //setRefreshKey(prevKey => prevKey + 1);
-                console.log(page)
+                
             } else {
                 setHasMore(false); // Pas plus de données à charger
             }
             } catch (error) {
             console.error('Erreur lors du chargement des données :', error);
             } finally {
-            setIsLoading(false);
+                setIsLoading(false);
             }
-      }) //[isLoading, hasMore, page]);
+      }, [isLoading, hasMore, page]);
 
 
 
@@ -239,20 +252,24 @@ const FilterProvider = ({children}) => {
 
     }, [selectedOrderBy])
 
-    const resetAllFiltersWithoutFecthingDatas = useCallback(() => {
-        //setIsLoading(true)
+    const resetAllFiltersWithoutFecthingDatas = () => {
+        //setIsLoading(false)
         setSelectedCategories({})
         //setSelectedBrands([])
         setSelectedOrderBy("")
         setMinPrice("")
         setMaxPrice("")
+        setHasMore(true)
+        setPage(1)
+
+        setProducts([])
         
         //setRefreshComponent(!refreshComponent)
         //console.log("resetAllFiltersWithoutFecthingDatas")
-    })
+    }
 
     const resetAllFilters = useCallback(() => {
-        setIsLoading(true)
+        setIsLoading(false)
         //setSelectedCategories({})
         //setSelectedBrands([])
         setSelectedOrderBy("")
@@ -261,19 +278,29 @@ const FilterProvider = ({children}) => {
         setIsNewFocused(true)
         setIsNewOldFocused(true)
         setIsNewOldFocused(true)
+        setHasMore(true)
+        setPage(1)
+        setProducts([])
         //setRefreshComponent(!refreshComponent)
         
         //getSearchedTextWithFilters({searchText:searchText})
     })
 
+    const searchAgain = async () => {
+          setIsLoading(false);
+          setHasMore(true);
+          setFiltersUpdated(true);
+          setPage(1);
+          setProducts([]);
+      }
 
     
 
 
 
-    const filterStateVars = {refreshComponent, isLoading, selectedCategories, selectedOrderBy, selectedBrandFromContext, selectedModalCategoriesFromContext, isNewFocused, isOldFocused, minPrice, maxPrice, products}
-    const filterStateSetters = {selectedModalCategoriesFromContext, setSelectedBrandFromContext, setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
-    const utilsFunctions = {_handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
+    const filterStateVars = {refreshComponent, filtersUpdated, isLoading, setHasMore, selectedCategories, selectedOrderBy, selectedBrandFromContext, selectedModalCategoriesFromContext, selectedConditionsFromContext, isNewFocused, isOldFocused, minPrice, maxPrice, products}
+    const filterStateSetters = {setFiltersUpdated, setSelectedModalCategoriesFromContext, setSelectedBrandFromContext, setSelectedConditionsFromContext, setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
+    const utilsFunctions = {_handlePress, updateCategories, resetAllFilters, searchAgain, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

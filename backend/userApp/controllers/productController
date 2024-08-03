@@ -189,7 +189,7 @@ exports.getSearchedProducts = async (req, res, next) => {
   const { name, customFilters } = req.query;
   console.log(customFilters)
   const page = parseInt(customFilters['page']) || 1; // Page actuelle, par défaut 1
-  const limit = parseInt(customFilters['limit']) || 2; // Nombre d'éléments par page, par défaut 20
+  const limit = parseInt(customFilters['limit']) || 5; // Nombre d'éléments par page, par défaut 20
   const skip = (page - 1) * limit;
   //console.log(req.query.page)
   //console.log(customFilters)
@@ -284,9 +284,9 @@ exports.getSearchedProducts = async (req, res, next) => {
       //comme FUSE JS ne conserve pas l'ordre, utiliser la memoire de tri
       filteredResult.sort((a, b) => a.sortIndex - b.sortIndex);
     //res.json(filteredResult); 
-    //.slice(skip, limit)
-    console.log(filteredResult.length)
-    res.status(200).json({datas:filteredResult.slice(skip, limit), page:page,totalPages:totalPages,totalDatas:totalDatas});
+    //console.log(skip, skip+limit)
+    console.log(filteredResult.slice(skip, skip+limit).length)
+    res.status(200).json({datas:filteredResult.slice(skip, skip+limit), page:page,totalPages:totalPages,totalDatas:totalDatas});
 
   } catch (err) {
     console.log(err)

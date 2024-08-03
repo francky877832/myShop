@@ -121,7 +121,7 @@ const renderScene = ({ route }) => {
           //return <ProductsListWithFilters_ onEndReached={loadMoreData} isLoading={isLoading} hasMore={hasMore} data={products} />;
           return (
             <View style={{flex:1,}}>
-                <ProductsListWithFilters name="Preference" onEndReached={loadMoreData} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
+                <ProductsListWithFilters name="Preference" onEndReached={loadMoreData} onEndReachedThreshold={0.3} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
         </View>
           )
         case 'categories':

@@ -195,7 +195,9 @@ const handlePress = async (item) => {
     //await getSearchedTextWithFilters({searchText:item, selectedModalCategories:{}, selectedBrands:{}, conditions:{}, orderBy:selectedOrderBy})
     //setIsLoading(false)
     //resetAllFiltersWithoutFecthingDatas()
+   
     setSelectedCategories({})
+    resetAllFiltersWithoutFecthingDatas()
     navigation.navigate("SearchResults", {searchText:item})
     
 };

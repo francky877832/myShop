@@ -23,20 +23,25 @@ import { FilterContext } from '../../context/FilterContext';
 import { ProductItemContext } from '../../context/ProductItemContext';
 
 const Filters = (props) => {
-    const [selectedBrands, setSelectedBrands] = useState({})
-    const [isNewFocused, setIsNewFocused] = useState(true)
-    const [isOldFocused, setIsOldFocused] = useState(true)
-    const [isNewOldFocused, setIsNewOldFocused] = useState(true)
-    const [conditions, setConditions] = useState({"old":true, "new":true, "new used":true})
+    
 
     //const [isLoading, setIsLoading] = useState(true)
 
     const {selectedCategories, selectedOrderBy, minPrice, maxPrice, setSelectedCategories, setSelectedOrderBy, refreshComponent,
         setRefreshComponent, setMinPrice, setMaxPrice, _handlePress, updateCategories, resetAllFilters, getSearchedTextWithFilters,
-        isLoading, setIsLoading,
+        loadMoreDataWithFilters,
+        isLoading, setIsLoading, setHasMore,searchAgain, filtersUpdated, setFiltersUpdated,
+        setSelectedModalCategoriesFromContext, setSelectedBrandFromContext, setSelectedConditionsFromContext,
+        products,
     }  =  useContext(FilterContext)
         //console.log(selectedModalCategories)
-        const [selectedModalCategories, setSelectedModalCategories] = useState({})
+    
+    const [selectedBrands, setSelectedBrands] = useState({})
+    const [isNewFocused, setIsNewFocused] = useState(true)
+    const [isOldFocused, setIsOldFocused] = useState(true)
+    const [isNewOldFocused, setIsNewOldFocused] = useState(true)
+    const [conditions, setConditions] = useState({"old":true, "new":true, "new used":true})
+    const [selectedModalCategories, setSelectedModalCategories] = useState({})
 
     const { categories, brands, /*isLoading, setIsLoading*/ } = useContext(ProductItemContext)
 //console.log(categories)
@@ -209,6 +214,7 @@ const setOtherModalToFalse = useCallback((modal)=>{
     })
 
 const handleOrderby = async (val)=>{
+    //PEUT-ETRE FAIT EN LOCAL
         setSelectedOrderBy(val)
         //console.log(selectedOrderBy)
         await getDatas({searchText:searchText,orderBy:val,selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions});
@@ -217,8 +223,25 @@ const handleOrderby = async (val)=>{
    
 }
 
-const validateFilters = () => {
-    getDatas({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions,orderBy:selectedOrderBy})
+useEffect(()=>{
+    console.log(products)
+    async function loadDatas()
+    {
+        if(filtersUpdated)
+        {
+            await loadMoreDataWithFilters({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions,orderBy:selectedOrderBy})
+        }
+        setFiltersUpdated(false);
+    }
+
+    loadDatas()
+
+}, [filtersUpdated])
+const validateFilters = async () => {
+    await searchAgain()
+    setSelectedModalCategoriesFromContext(selectedModalCategories)
+    setSelectedBrandFromContext(selectedBrands)
+    setSelectedConditionsFromContext(conditions)
 }
     return (
     
