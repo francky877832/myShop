@@ -32,7 +32,7 @@ const Filters = (props) => {
         loadMoreDataWithFilters,
         isLoading, setIsLoading, setHasMore,searchAgain, filtersUpdated, setFiltersUpdated,
         setSelectedModalCategoriesFromContext, setSelectedBrandFromContext, setSelectedConditionsFromContext,
-        products,
+        products, searchAgainWithoutUpdate,
     }  =  useContext(FilterContext)
         //console.log(selectedModalCategories)
     
@@ -45,7 +45,7 @@ const Filters = (props) => {
 
     const { categories, brands, /*isLoading, setIsLoading*/ } = useContext(ProductItemContext)
 //console.log(categories)
-    const { suggestion, searchText,  getDatas, display } = props
+    const { suggestion, searchText,  getDatas, display, notDisplayFilters } = props
     const [showSuggestion, setShowSuggestion] = useState(suggestion)
 
 
@@ -217,8 +217,9 @@ const handleOrderby = async (val)=>{
     //PEUT-ETRE FAIT EN LOCAL
         setSelectedOrderBy(val)
         //console.log(selectedOrderBy)
-        await searchAgain()
-        await loadMoreDataWithFilters({searchText:searchText,orderBy:val,selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions});
+        //await searchAgain()
+        await searchAgainWithoutUpdate()
+        await loadMoreDataWithFilters({searchText:searchText||" ", orderBy:val,selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions});
         //Pas besoin de getSearchedTextWithFilters par ce Filters est dans SearchResults et cela se fait auto.
     //Il ya juste besoin de mettre a jour selectedOrderBy et de re-rendre le component avec un activityIndicator
    
@@ -271,11 +272,15 @@ const validateFilters = async () => {
             {modalFiltersVisible &&
             
                 <View style={[filtersStyles.filtres]}>
-                        <FlatList data={filters} keyExtractor={(item)=>{ return item.name.toString();}} renderItem={({item}) => {return (
-                            <Pressable style={[filtersStyles.pressableFilter, functionsCatalog[item.name.toLowerCase()][0] ? filtersStyles.pressableFilterFocused : false]} onPress={()=>{showFilters(item.name)}} >
-                                <Text style={[customText.text]}>{item.name}</Text>
-                            </Pressable>
-                            )}}
+                        <FlatList data={filters} keyExtractor={(item)=>{ return item.name.toString();}} renderItem={({item}) => {
+                            return (
+                                <Pressable style={[filtersStyles.pressableFilter, functionsCatalog[item.name.toLowerCase()][0] ? filtersStyles.pressableFilterFocused : false,
+                                notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersStyles.pressableFilterDisabled:null
+                                ]} onPress={()=>{showFilters(item.name)}} disabled={notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?true:false} >
+                                    <Text style={[customText.text, notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersStyles.pressableFilterTextDisabled:null]}>{notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?selectedCategories.name:item.name}</Text>
+                                </Pressable>
+                            )
+                    }}
                             ItemSeparatorComponent={(item) => {return <View style={{width:20,}}></View>}}
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}

@@ -171,12 +171,14 @@ const handleScroll = (event) => {
 useEffect(()=>{
     //console.log("OK")
     if(reloadTo)
-        navigation.navigate(goBackTo, {searchText:"", display:"category"});
+        navigation.navigate("CategoryResults", {searchText:"", display:"category"});
 }, [reloadTo])
 
 const getCategory = async (type, cat, subCat) => {
-    await searchCategory(selectedCategories_)
-    
+    await searchCategory(selectedCategories_) //important pour orderBy(val) 
+                                            //mais ici cest selectedCategories_ passe en parametre
+                                            //de navigate() qui sera utilisé puisque les setters sont asynchrones
+    //console.log(selectedCategories)
     switch(type)
     {
         case "category" :    
@@ -188,7 +190,7 @@ const getCategory = async (type, cat, subCat) => {
         default : break;
 
     }
-    navigation.navigate(goBackTo, {searchText:"", display:"category"});
+    navigation.navigate("CategoryResults", {category:selectedCategories_, searchText:"", display:"category"});
 }
 
     return(

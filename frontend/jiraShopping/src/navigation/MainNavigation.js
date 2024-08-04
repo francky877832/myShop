@@ -15,6 +15,7 @@ import AddProduct from '../components/specific/AddProduct';
 import Categories from '../components/common/Categories';
 import ProfilShop from '../components/specific/ProfileShop';
 import SearchResults from '../components/specific/SearchResults';
+import CategoryResults from '../components/specific/CategoryResults';
 import UserLogin from '../components/user/UserLogin';
 import UserSignup from '../components/user/UserSignup';
 import PhoneAuth from '../components/specific/PhoneAuth';
@@ -60,6 +61,7 @@ export default function MainNavigation() {
                 <Stack.Screen name="Categories" component={Categories}  options={{ title: 'Choisir Une Categorie', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Shop" component={ProfilShop}  options={{ title: 'Choisir Une Categorie', headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="SearchResults" component={SearchResults}  options={{ unmountOnBlur: true, title: 'Resultats De Recherche', headerShown : false, tabBarVisible: false, }} />
+                <Stack.Screen name="CategoryResults" component={CategoryResults}  options={{ unmountOnBlur: true, title: 'Categories', headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="UserSignup" component={UserSignup}  options={{ title: <HeaderNavigation title="Sign Up"/>, headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="PhoneAuth" component={PhoneAuth}  options={{ title: <HeaderNavigation title="PhoneAuth"/>, headerShown : true, tabBarVisible: false, }} />

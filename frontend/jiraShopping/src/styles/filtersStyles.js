@@ -294,6 +294,20 @@ export const filtersStyles = StyleSheet.create({
         borderColor : appColors.secondaryColor1,
         backgroundColor : appColors.lightOrange,
     },
+
+    pressableFilterDisabled:
+    {
+        borderWidth : 2,
+       // borderColor : appColors.secondaryColor1,
+        //backgroundColor : appColors.secondaryColor2,
+        borderColor : appColors.secondaryColor1,
+        backgroundColor : appColors.lightOrange,
+    },
+    pressableFilterTextDisabled:
+    {
+       //textDecorationLine : "line-through",
+       color : appColors.red,
+    },
 /*
     cardItem : 
     {

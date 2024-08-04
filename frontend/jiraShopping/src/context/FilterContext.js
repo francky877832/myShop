@@ -92,40 +92,42 @@ const FilterProvider = ({children}) => {
 
     })*/
 
-    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions}) =>
+    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory, selectedBrands, conditions}) =>
     {
-        console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, selectedCategories})
+        //console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, selectedCategories})
         //setIsLoading(true)
         //setSelectedOrderBy(orderBy);
-        //console.log(selectedCategories)
+        //selectedCategories
+        console.log(selectedCategory)
         selectedModalCategories = selectedModalCategories || {}
         let categories;
         if(Object.keys(selectedModalCategories).length>0 || searchText.trim().length>0)
         {
             
             categories = Object.keys(selectedModalCategories).filter((key)=>{ return selectedModalCategories[key]===true})
-            if(!!selectedCategories.subCategories)
+            if(!!selectedCategory.subCategories)
                 categories.push(`${categories.name}/${categories.subCategories}`)
             setSelectedCategories({})
         }
         else
-        { 
-            if(Object.keys(selectedCategories).length<=0)
+        { //console.log("GTA")
+            if(Object.keys(selectedCategory).length<=0)
             {
                 setSelectedCategories({"Vetements": true, "name": "Vetements"})
             }    
             else
             {
-                categories = Object.keys(selectedCategories).filter((key)=>{ return selectedCategories[key]===true})
-                if(!!selectedCategories.subCategories)
+                categories = Object.keys(selectedCategory).filter((key)=>{ return selectedCategory[key]===true})
+                if(!!selectedCategory.subCategories)
                 {
                     /* En cas sous categroie, on neglige la categorie et on est plus specifique */
                     categories.pop()
-                    categories.push(`${selectedCategories.name}/${selectedCategories.subCategories}`)
+                    categories.push(`${selectedCategory.name}/${selectedCategory.subCategories}`)
                 }
             }
             selectedModalCategories={}
         }
+        console.log("categories")
         console.log(categories)
         //console.log(categories)
         selectedBrands = selectedBrands || {}
@@ -214,9 +216,10 @@ const FilterProvider = ({children}) => {
     })
 
     
-    const loadMoreDataWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedBrands, conditions}) =>
+    const loadMoreDataWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory={}, selectedBrands, conditions}) =>
     {
-        console.log("*OK*")
+        //console.log("selectedCategory")
+        //console.log(selectedCategory)
         console.log(hasMore)
         if (isLoading || !hasMore) return;
     
@@ -224,7 +227,7 @@ const FilterProvider = ({children}) => {
         try {
             console.log("page")
             console.log(page)
-            const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy}); //A MODDIFIER
+            const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedCategory:selectedCategory, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy}); //A MODDIFIER
             //console.log(newData)
             if (newData.datas.length > 0) {
                 //setProducts(newData.datas)
@@ -292,7 +295,15 @@ const FilterProvider = ({children}) => {
           setFiltersUpdated(true);
           setPage(1);
           setProducts([]);
-      }
+    }
+
+    
+    const searchAgainWithoutUpdate = async () => {
+        setIsLoading(false);
+        setHasMore(true);
+        setPage(1);
+        setProducts([]);
+  }
 
       const searchCategory = async (selectedCategories_) => {
         setIsLoading(false);
@@ -308,7 +319,7 @@ const FilterProvider = ({children}) => {
 
     const filterStateVars = {refreshComponent, filtersUpdated, isLoading, setHasMore, selectedCategories, selectedOrderBy, selectedBrandFromContext, selectedModalCategoriesFromContext, selectedConditionsFromContext, isNewFocused, isOldFocused, minPrice, maxPrice, products}
     const filterStateSetters = {setFiltersUpdated, setSelectedModalCategoriesFromContext, setSelectedBrandFromContext, setSelectedConditionsFromContext, setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
-    const utilsFunctions = {_handlePress, updateCategories, resetAllFilters, searchAgain, searchCategory, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
+    const utilsFunctions = {_handlePress, searchAgainWithoutUpdate, updateCategories, resetAllFilters, searchAgain, searchCategory, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

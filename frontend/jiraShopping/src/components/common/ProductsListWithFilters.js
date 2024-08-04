@@ -10,7 +10,7 @@ import { customText, appColors, appFont } from '../../styles/commonStyles';
 import { FilterContext } from '../../context/FilterContext';
 
 const ProductsListWithFilters = React.forwardRef((props, ref) => {
-    const { datas, horizontal, title, onEndReached, onEndReachedThreshold, filters, name, searchText, isLoading, getDatas, display} = props;
+    const { datas, horizontal, title, onEndReached, onEndReachedThreshold, filters, notDisplayFilters, name, searchText, isLoading, getDatas, display} = props;
     const {selectedCategories} = useContext(FilterContext)
 
     return(
@@ -42,7 +42,7 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
 
                 <View style={{flex:1,flexDirection:"column",}}>
                     {filters &&
-                        <Filters  getDatas={getDatas} suggestion={false} searchText={searchText} display={display}/>
+                        <Filters  getDatas={getDatas} notDisplayFilters={notDisplayFilters} suggestion={false} searchText={searchText} display={display}/>
                     }
                     <ProductsList name={name} isLoading={isLoading} onEndReached={onEndReached} onEndReachedThreshold={onEndReachedThreshold} ref={ref} datas={datas} horizontal={false} styles={preferencesStyles} />
                 </View>
