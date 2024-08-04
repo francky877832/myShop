@@ -98,7 +98,7 @@ exports.removeProduct  = (req, res, next) => {
 
 exports.getProducts = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
-  const limit = parseInt(req.query.limit) || 8; // Nombre d'éléments par page, par défaut 20
+  const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 20
   const skip = (page - 1) * limit;
   console.log(req.query.page)
 

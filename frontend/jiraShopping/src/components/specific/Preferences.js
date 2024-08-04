@@ -75,6 +75,9 @@ const Preferences = (props) => {
     const {user, loginUserWithEmailAndPassword, isAuthenticated, setIsAuthenticated } = useContext(UserContext)
     const { getProducts , loadMoreData, products, isLoading, hasMore, setIsLoading, refreshKey} = useContext(ProductContext)
 
+    const loadMoreData_ = async () => {
+      await loadMoreData()
+    }
 useEffect(()=>{
     //loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
 }, [])
@@ -121,8 +124,8 @@ const renderScene = ({ route }) => {
           //return <ProductsListWithFilters_ onEndReached={loadMoreData} isLoading={isLoading} hasMore={hasMore} data={products} />;
           return (
             <View style={{flex:1,}}>
-                <ProductsListWithFilters name="Preference" onEndReached={loadMoreData} onEndReachedThreshold={0.3} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
-        </View>
+                <ProductsListWithFilters name="Preference" onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
+            </View>
           )
         case 'categories':
           return <Categories_ />;

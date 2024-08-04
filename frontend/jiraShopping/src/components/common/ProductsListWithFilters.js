@@ -42,9 +42,9 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
 
                 <View style={{flex:1,flexDirection:"column",}}>
                     {filters &&
-                        <Filters  getDatas={getDatas} notDisplayFilters={notDisplayFilters} suggestion={false} searchText={searchText} display={display}/>
+                        <Filters  getDatas={getDatas} notDisplayFilters={notDisplayFilters || {}} suggestion={false} searchText={searchText} display={display}/>
                     }
-                    <ProductsList name={name} isLoading={isLoading} onEndReached={onEndReached} onEndReachedThreshold={onEndReachedThreshold} ref={ref} datas={datas} horizontal={false} styles={preferencesStyles} />
+                        <ProductsList name={name} isLoading={isLoading} onEndReached={onEndReached} onEndReachedThreshold={onEndReachedThreshold} ref={ref} datas={datas} horizontal={false} styles={preferencesStyles} />
                 </View>
 
             </View>

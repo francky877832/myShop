@@ -47,7 +47,7 @@ const Filters = (props) => {
 //console.log(categories)
     const { suggestion, searchText,  getDatas, display, notDisplayFilters } = props
     const [showSuggestion, setShowSuggestion] = useState(suggestion)
-
+    
 
     const updateConditions = useCallback((name) =>
     {

@@ -24,7 +24,7 @@ const ProductProvider = ({children}) => {
     const [refreshKey, setRefreshKey] = useState(0);
 
 
-     const getProducts = async (page)=> {
+     const getProducts = async ()=> {
       //console.log("responseJson")
         try
         {
@@ -73,12 +73,12 @@ const ProductProvider = ({children}) => {
   
     const loadMoreData = useCallback(async () => {
       console.log("ook")
-      if (isLoading && !hasMore) return;
+      if (isLoading || !hasMore) return;
   
       setIsLoading(true);
       try {
 
-        const newData = await getProducts(page);
+        const newData = await getProducts();
         //console.log(newData)
         if (newData.datas.length > 0) {
           //setProducts(newData)
