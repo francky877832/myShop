@@ -18,11 +18,12 @@ const CommentsProvider = ({children}) => {
     //const { getProducts , loadMoreData, products} = useContext(ProductContext)
 
     const [comments, setComments] = useState([])
+    const [reshapedComments, setReshapedComments] = useState([])
 
     const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-    const [totalPages, setTotalPages] = useState(1)
+    const [totalComments, setTotalComments] = useState(1)
     const {user} = useContext(UserContext)
     const [refreshKey, setRefreshKey] = useState(0);
     const [filtersUpdated, setFiltersUpdated] = useState(false);
@@ -42,7 +43,9 @@ const CommentsProvider = ({children}) => {
             }
             //console.log(datasdatas[0].products)
             //console.log(comments_.datas)
-            const cm = reshapeComments(comments_.datas)
+            setTotalComments(comments_.totalDatas)
+            
+            //const cm = reshapeComments(comments_.datas)
             /*console.log("cm.length")
             console.log(cm.length)
             console.log(comments.length)
@@ -52,7 +55,7 @@ const CommentsProvider = ({children}) => {
             }*/
                 
             //console.log(cm)
-            return cm
+            return comments_.datas
             //Alert.alert("Commentaire recuperes avec success")
         }catch(error){
             //Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
@@ -75,7 +78,8 @@ const CommentsProvider = ({children}) => {
             //console.log(comments_)
             console.log("pk")
             //updateProducts(newData.datas);
-            setComments((prevProducts)=>[...prevProducts, ...comments_])
+            setComments((prevComments)=>[...prevComments, ...comments_])
+            setReshapedComments((prevComments)=>reshapeComments([...prevComments, ...comments_]))
             //console.log(comments_)
             //if(page < totalPages)
             setPage((prevPage) => prevPage + 1);
@@ -85,23 +89,33 @@ const CommentsProvider = ({children}) => {
             setHasMore(false); // Pas plus de données à charger
           }
         } catch (error) {
-          console.error('Erreur lors du chargement des commentaires :', error);
-        } finally {
-          setIsLoading(false);
+            console.error('Erreur lors du chargement des commentaires :', error);
+        }finally {
+            setIsLoading(false);
         }
       }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);    
 
-      const searchAgain = async () => {
+    const searchAgain = async () => {
         setIsLoading(false);
-        setHasMore(true);
-        setPage(1);
-        setComments([]);
-        setFiltersUpdated(true);
+        //setHasMore(true);
+
+        //setPage(1);
+        //setComments([]);
+        //setFiltersUpdated(true);
     }
 
-    const productStateVars = {isLoading, filtersUpdated, hasMore, page, refreshKey, comments}
+    const searchAgain_ = async () => {
+        setIsLoading(false);
+        //setHasMore(true);
+        
+        //setPage(1);
+        //setComments([]);
+        //setFiltersUpdated(true);
+    }
+
+    const productStateVars = {isLoading, filtersUpdated, hasMore, page, refreshKey, comments, reshapedComments, totalComments}
     const productStateStters = {setIsLoading, setComments}
-    const utilsFunctions = {fetchProductComments, loadMoreComments, searchAgain}
+    const utilsFunctions = {fetchProductComments, loadMoreComments, searchAgain, setReshapedComments}
     return (
         <CommentsContext.Provider value={{...productStateVars, ...productStateStters, ...utilsFunctions}}>
             {children}

@@ -99,6 +99,8 @@ const ProductProvider = ({children}) => {
       }
     }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);
 
+    
+
     const productStateVars = {products, isLoading, refreshKey}
     const productStateStters = {setIsLoading}
     const utilsFunctions = {getProducts, loadMoreData}

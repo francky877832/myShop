@@ -62,7 +62,7 @@ const ProductDetails = (props) => {
 
 
 
-    const { comments, setComments, loadMoreComments, page, hasMore, isLoading, filtersUpdated, searchAgain } = useContext(CommentsContext)
+    const { reshapedComments, setComments, loadMoreComments, page, hasMore, isLoading, filtersUpdated, searchAgain } = useContext(CommentsContext)
     function setIsLoading(){}
     //const [numComments, setNumComments] = useState(0)
     //const [isLoading, setIsLoading] = useState(true)
@@ -160,22 +160,22 @@ const ProductDetails = (props) => {
 
 
 
-    useEffect(()=>{ //or useFocusEffect
+    useFocusEffect(useCallback(()=>{ //or useFocusEffect(useCallback(,[]))
 
         // all ? false : 
-       //console.log("o")
+        //console.log("o")
         const fetchData = async () => {
-         //setIsLoading(true);
-         await loadMoreComments(data._id)
-         //setIsLoading(false);
-       };
+            //setIsLoading(true);
+            await loadMoreComments(data._id)
+            //setIsLoading(false);
+        };
      
-       //if (isLoading) {
-         fetchData();
-       //}
-       if(typeof setOnNewComment == 'function')
-             setOnNewComment(false)
-     }, [])
+        //if (isLoading) {
+        fetchData();
+        //}
+        if(typeof setOnNewComment == 'function')
+            setOnNewComment(false)
+     }, [/*filtersUpdated*/]))
 
 //WHEN COMMING FOR NOTIFICATIONS
     /*const scrollViewRef = useRef(null);
@@ -203,9 +203,10 @@ const ProductDetails = (props) => {
                     </View>
                 </View>
 
-                {/*<Animated.View style={[productDetailsStyles.carousselIamge, { height: animatedHeight }]}>
-                    <CarouselImage images={data.images} styles={{ }} />
-                </Animated.View>
+                {/*
+                    <Animated.View style={[productDetailsStyles.carousselIamge, { height: animatedHeight }]}>
+                        <CarouselImage images={data.images} styles={{ }} />
+                    </Animated.View>
                 */}
                 <View style={[productDetailsStyles.carousselIamge, {height:screenHeight/2,}]}>
                     <CarouselImage images={data.images} styles={{ }} />
@@ -280,7 +281,7 @@ const ProductDetails = (props) => {
                 <View style={{height:20}}></View>
                 
                         <View>
-                            <Comments page={page} loadMoreComments={loadMoreComments_} searchAgain={searchAgain} all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{onNewComment:onNewComment}} comments={comments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
+                            <Comments page={page} loadMoreComments={loadMoreComments_} searchAgain={searchAgain} all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{onNewComment:onNewComment}} reshapedComments={reshapedComments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
                             {isLoading &&
                                 <CustomActivityIndicator styles={{}} /> 
                             }

@@ -26,8 +26,8 @@ const AllCommets = (props) =>
     const navigation = useNavigation()
     const route = useRoute()
     const { product, inputFocused } = route.params
-    const { comments, setComments } = useContext(CommentsContext)
-    const [comments_, setComments_] = useState(comments)
+    const { reshapedComments, setReshapedComments, comments, setComments } = useContext(CommentsContext)
+    //const [comments_, setComments_] = useState(reshapedComments)
     //const setIsLoading = route.params.setIsLoading
     const [isFocused, setIsFocused] = useState(false)
     const [isResponseTo, setIsResponseTo] = useState(product._id)
@@ -45,14 +45,16 @@ useEffect(()=>{
     
     const task = InteractionManager.runAfterInteractions(() => {
         if (inputRef.current && route.params.inputFocused)
-            inputRef.current.focus()
+        {
+            //inputRef.current.focus()
+        }
     })
 
     return () => task.cancel();
 
 }, [])
 
-
+//if (inputRef.current) {inputRef.current.focus() }
 useEffect(()=>{
     //Appel de useCallBack
        // Ajouter l'écouteur pour l'événement de retour
@@ -72,7 +74,7 @@ useEffect(()=>{
 
 const updateComments_ = (comment)=>{
     //console.log("okcOMMENT")
-    setComments_((prevComments)=>{
+    setComments((prevComments)=>{
         return [comment, ...prevComments]
     })
 }
@@ -96,7 +98,9 @@ const addComment = async (item) => {
         text : inputValue,
         isResponseTo : isResponseTo,
     }
- 
+
+        
+
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
     //console.log(comment)
         try{
@@ -114,9 +118,9 @@ const addComment = async (item) => {
 
             //Alert.alert("Comment ajouté avec success.")
             //setIsLoading(true)
-            updateComments_(comment)
-            setComments([comment,...comments_])
-            setIsLoading(false)
+            setReshapedComments(reshapeComments([comment,...comments]))
+            setComments([comment, ...comments])
+            setIsLoading(false) //A VERIFIER
 
         }catch(error){
             Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
@@ -144,7 +148,7 @@ const addComment = async (item) => {
     return(
 <View style={{ flex: 1 }}>
             <ScrollView ref={scrollViewRef} contentContainerStyle={[allCommetsStyles.container,{}]} >
-                <Comments setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  onNewComment={onNewComment} setOnNewComment={setOnNewComment} all={true} comments={comments_} product={product}/>
+                <Comments scrollViewRef={scrollViewRef} inputRef={inputRef} setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  onNewComment={onNewComment} setOnNewComment={setOnNewComment} all={true} reshapedComments={reshapedComments} product={product}/>
             </ScrollView>
         
         <View style={[allCommetsStyles.inputContainer]}>

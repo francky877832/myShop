@@ -15,19 +15,23 @@ import { datas } from '../../utils/sampleDatas';
 import { server } from '../../remote/server';
 
 import { CommentsContext } from '../../context/CommentsContext';
+import { ActivityIndicator } from 'react-native-paper';
 
 const loggedUserId = "66731fcb569b492d3ef429ba"
 const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const Comments = (props) =>
 {
-    const { all, navigation, product, setters, isLoading, setIsLoading, pass, page} = props
+    const { all, navigation, product, setters, setIsLoading, pass, scrollViewRef, inputRef} = props
     const {inputValue,setInputValue, setIsResponseTo} = setters 
     
-    const { comments, loadMoreComments, searchAgain} = useContext(CommentsContext)
+    const { reshapedComments, loadMoreComments, isLoading, searchAgain, hasMore, page, totalComments} = useContext(CommentsContext)
     const loadMore = async () => {
-        await searchAgain();
+        //await searchAgain();
         await loadMoreComments(product._id)
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollToEnd({ animated: true });
+        }
     }
 //console.log(comments)
     //console.log("allComments")
@@ -48,7 +52,7 @@ useEffect(()=>{
 
     // quand on vient a partir des notifs
     if(pass)
-        navigation.navigate("AllComments",{comments:comments,product:product,inputFocused:false, page:page})
+        navigation.navigate("AllComments",{reshapedComments:reshapedComments,product:product,inputFocused:false, page:page})
 })
 
 //console.log(comments?.slice(0,2))
@@ -66,13 +70,18 @@ useEffect(()=>{
           };
 
 //console.log(comment)
+const respondTo = (id, username) => {
+    setIsResponseTo(id);
+    setInputValue("@"+username+" " +inputValue);
+    if (inputRef.current) {inputRef.current.focus() }
+}
         return (
                     <View style={[styles.commentContainer,]} >
                         <View style={{flexDirection:"row", alignItems:"center"}}>
                             <Pressable style={[styles.comment, ]} onPress={()=>{ }}>
                                 <Text style={[commentsStyles.commentText]} >{comment.text}</Text>
                             </Pressable>
-                            <Pressable  onPress={()=>{setIsResponseTo(comment._id);setInputValue("@"+comment.username+" " +inputValue);}}>
+                            <Pressable  onPress={()=>{respondTo(comment._id, comment.username)}}>
                                 <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
                             </Pressable>
                         </View>
@@ -138,7 +147,7 @@ useEffect(()=>{
         
                     <Pressable onPress={()=>{navigation.navigate("AllComments",{comments:comments,product:product})}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
                             <Text style={[customText.text,{color:appColors.green,}]}>Tout Afficher</Text>
-                            <Text style={[customText.text,{color:appColors.black,}]}>({comments.length})</Text>
+                            <Text style={[customText.text,{color:appColors.black,}]}>({totalComments})</Text>
                     </Pressable>
             </View>
         }
@@ -155,7 +164,7 @@ useEffect(()=>{
                     contentContainerStyle={[commentsStyles.flatlistContainer, !all?commentsStyles.flatlistContainerNotAll:false]}
                 />*/
 
-                (all ? comments : comments?.slice(0,2))?.map((item, key)=>{
+                (all ? reshapedComments : reshapedComments?.slice(0,2))?.map((item, key)=>{
                     //console.log("   ITEM")
                     //console.log(item)
                     return(
@@ -169,14 +178,23 @@ useEffect(()=>{
                     <Text>Charger plus...</Text>
                 </Pressable>*/
             }
-                        <Pressable onPress={()=>{loadMore()}}>
-                            <Text>Charger plus...</Text>
-                        </Pressable>
-                
+            {all ?
+                !isLoading ?
+                    hasMore ?
+                            <Pressable onPress={()=>{loadMore()}} style={[{top:20,alignItems:"center",}]}>
+                                <Text style={[customText.text, {color:appColors.secondaryColor1,textDecorationLine:"underline",fontSize:16,fontWeight:"bold"}]}>Charger plus...</Text>
+                            </Pressable>
+                        :
+                        null
+                :
+                    <ActivityIndicator color={appColors.secondaryColor1} size="small" />
+            : null
+            }
+
             </View>
         { !all &&  
             <View style={[commentsStyles.inputContainer,]}>
-                <Pressable onPress={()=>{navigation.navigate("AllComments",{comments:comments,product:product,inputFocused:true})}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
+                <Pressable onPress={()=>{navigation.navigate("AllComments",{reshapedComments:reshapedComments,product:product,inputFocused:true})}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
                     <Input placeholder="Posez une question" onChangeText={(text)=>{(text)}}
                         multiline={true}
                         numberOfLines={1}

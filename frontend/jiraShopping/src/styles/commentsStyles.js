@@ -23,6 +23,7 @@ export const commentsStyles = StyleSheet.create({
     flatlistContainerView :
     {
       //flex : 1,
+      paddingBottom : 20,
     },
     flatlistContainer : 
     {
