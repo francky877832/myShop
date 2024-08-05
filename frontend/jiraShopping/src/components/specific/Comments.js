@@ -14,18 +14,22 @@ import { datas } from '../../utils/sampleDatas';
 
 import { server } from '../../remote/server';
 
-import { ProductItemContext } from '../../context/ProductItemContext';
+import { CommentsContext } from '../../context/CommentsContext';
 
 const loggedUserId = "66731fcb569b492d3ef429ba"
 const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const Comments = (props) =>
 {
-    const { all, navigation, product, setters, isLoading, setIsLoading, pass} = props
+    const { all, navigation, product, setters, isLoading, setIsLoading, pass, page} = props
     const {inputValue,setInputValue, setIsResponseTo} = setters 
     
-    const { comments, } = useContext(ProductItemContext)
-
+    const { comments, loadMoreComments, searchAgain} = useContext(CommentsContext)
+    const loadMore = async () => {
+        await searchAgain();
+        await loadMoreComments(product._id)
+    }
+//console.log(comments)
     //console.log("allComments")
     //console.log(allComments)
     //Requete parametres avec le nombre  de comments a afficher
@@ -40,9 +44,15 @@ const Comments = (props) =>
 
 
 useEffect(()=>{
+    //page est a 1 par defaut mais passons page quand meme bien quon sait quil est a un
+
+    // quand on vient a partir des notifs
     if(pass)
-        navigation.navigate("AllComments",{comments:comments,product:product,inputFocused:false})
+        navigation.navigate("AllComments",{comments:comments,product:product,inputFocused:false, page:page})
 })
+
+//console.log(comments?.slice(0,2))
+
 
 
     const Comment = (props) => {
@@ -55,7 +65,7 @@ useEffect(()=>{
             forceUpdate({}); // Forcer un re-render
           };
 
-
+//console.log(comment)
         return (
                     <View style={[styles.commentContainer,]} >
                         <View style={{flexDirection:"row", alignItems:"center"}}>
@@ -86,7 +96,7 @@ useEffect(()=>{
                     
                     {
                         showSubComment.current &&
-                            (comment.subComment && comment.subComment.length > 0
+                            (comment.subComment && comment.subComment?.length > 0
                                 ?
                                 comment.subComment.map((item, key)=>{
                                     return (
@@ -155,8 +165,14 @@ useEffect(()=>{
                         </View>
                     )
                     })
-                
+                    /*<Pressable onPress={()=>{loadMoreComments(product)}}>
+                    <Text>Charger plus...</Text>
+                </Pressable>*/
             }
+                        <Pressable onPress={()=>{loadMore()}}>
+                            <Text>Charger plus...</Text>
+                        </Pressable>
+                
             </View>
         { !all &&  
             <View style={[commentsStyles.inputContainer,]}>

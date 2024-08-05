@@ -15,7 +15,7 @@ import { appColors, screenHeight } from '../../styles/commonStyles';
 
 import { server } from '../../remote/server';
 import { reshapeComments, convertWordsToNumbers, containsEmail } from '../../utils/commonAppFonctions';
-import { ProductItemContext } from '../../context/ProductItemContext';
+import { CommentsContext } from '../../context/CommentsContext';
 
 
 const loggedUserId = "66731fcb569b492d3ef429ba"
@@ -25,8 +25,8 @@ const AllCommets = (props) =>
 {
     const navigation = useNavigation()
     const route = useRoute()
-    const { product } = route.params
-    const { comments, setComments } = useContext(ProductItemContext)
+    const { product, inputFocused } = route.params
+    const { comments, setComments } = useContext(CommentsContext)
     const [comments_, setComments_] = useState(comments)
     //const setIsLoading = route.params.setIsLoading
     const [isFocused, setIsFocused] = useState(false)

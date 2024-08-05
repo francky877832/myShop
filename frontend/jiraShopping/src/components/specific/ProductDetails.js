@@ -21,7 +21,7 @@ import { screenHeight, screenWidth } from '../../styles/commentsStyles';
 import { capitalizeFirstLetter, convertWordsToNumbers, containsEmail, reshapeComments,  } from '../../utils/commonAppFonctions';
 import { FavouritesContext } from '../../context/FavouritesContext';
 import { BasketContext } from '../../context/BasketContext';
-import { ProductItemContext } from '../../context/ProductItemContext';
+import { CommentsContext } from '../../context/CommentsContext';
 
 const loggedUserId = "66731fcb569b492d3ef429ba"
 const loggedUser = "Francky"
@@ -62,14 +62,19 @@ const ProductDetails = (props) => {
 
 
 
-    const { comments, setComments } = useContext(ProductItemContext)
-    const [numComments, setNumComments] = useState(0)
-    const [isLoading, setIsLoading] = useState(true)
+    const { comments, setComments, loadMoreComments, page, hasMore, isLoading, filtersUpdated, searchAgain } = useContext(CommentsContext)
+    function setIsLoading(){}
+    //const [numComments, setNumComments] = useState(0)
+    //const [isLoading, setIsLoading] = useState(true)
         const initialNumberOfComments = 2
+        const loadMoreComments_ = async () => { await loadMoreComments(product._id) ;}
+
+       
         //let data_ = [...comments] ; data_ = !all ? data_.slice(0, initialNumberOfComments+1) : comments
         //const comments_ = {comments : [...data_], count:2, total : 3} //format de retourn cote server Express
         //let  reshapedComments = reshapeComments(comments_.comments)
-
+    
+    
 
 /* //Bloquer le scroll au debut onScroll={handleScroll}
     const handleScroll = (event) => {
@@ -153,49 +158,24 @@ const ProductDetails = (props) => {
     {...panResponder.panHandlers}
    */ 
 
-    const fetchProductComments = async () =>{
-        try{
-    //console.log("Ok")
-            const response = await fetch(`${API_BACKEND}/api/datas/comments/get/${data._id}`);            
-            const datas = await response.json()
-            //console.log(datas)
-            if (!response.ok) {
-                throw new Error('Erreur lors de la requête');
-            }
-            //console.log(datasdatas[0].products)
-            //console.log(datas)
-            const cm = reshapeComments(datas)
-            setNumComments(datas.length)
-            /*console.log("cm.length")
-            console.log(cm.length)
-            console.log(comments.length)
-            if(cm.length != comments.length)
-            {
-                setIsLoading(true)
-            }*/
-            setComments(cm)
-            //Alert.alert("Commentaire recuperes avec success")
-        }catch(error){
-            Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
-        }
-    }
 
-    useFocusEffect(useCallback(()=>{
+
+    useEffect(()=>{ //or useFocusEffect
 
         // all ? false : 
        //console.log("o")
         const fetchData = async () => {
          //setIsLoading(true);
-         await fetchProductComments()
-         setIsLoading(false);
+         await loadMoreComments(data._id)
+         //setIsLoading(false);
        };
      
-       if (isLoading) {
+       //if (isLoading) {
          fetchData();
-       }
+       //}
        if(typeof setOnNewComment == 'function')
              setOnNewComment(false)
-     }, [isLoading]))
+     }, [])
 
 //WHEN COMMING FOR NOTIFICATIONS
     /*const scrollViewRef = useRef(null);
@@ -300,7 +280,7 @@ const ProductDetails = (props) => {
                 <View style={{height:20}}></View>
                 
                         <View>
-                            <Comments all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{onNewComment:onNewComment}} comments={comments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
+                            <Comments page={page} loadMoreComments={loadMoreComments_} searchAgain={searchAgain} all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{onNewComment:onNewComment}} comments={comments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
                             {isLoading &&
                                 <CustomActivityIndicator styles={{}} /> 
                             }

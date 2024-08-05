@@ -48,13 +48,20 @@ exports.removeProductComment = (req, res, next) => {
 };
 
 exports.getProductComments = (req, res, next) => {
-    Comment.find({product : req.params.id})
-    .sort({createdAt : -1})
-    .then( (products) => {
-        console.log(products)
-        res.status(200).json(products);
+    const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+    const limit = parseInt(req.query.limit) || 3; // Nombre d'éléments par page, par défaut 20
+    const skip = (page - 1) * limit;
+    console.log(req.query.page)
+
+    Comment.find({product : req.params.id}).sort({createdAt : -1}).skip(skip).limit(limit).exec()
+    .then( async (comments) => {
+        //console.log(comments)
+        const totalDatas = await Comment.countDocuments().exec();
+        const totalPages = Math.ceil(totalDatas / limit);
+        res.status(200).json({datas:comments, page:page,totalPages:totalPages,totalDatas:totalDatas});
     })
     .catch( (error) => {
+        console.log(error)
         res.status(400).json({ error: error });
     });
   };

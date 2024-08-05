@@ -30,6 +30,7 @@ import { ProductItemProvider } from '../context/ProductItemContext';
 import { BasketProvider } from '../context/BasketContext';
 import { UserProvider } from '../context/UserContext';
 import { ProductProvider } from '../context/ProductContext';
+import { CommentsProvider } from '../context/CommentsContext';
 
 const Stack = createStackNavigator();
 
@@ -46,6 +47,7 @@ export default function MainNavigation() {
   <NavigationContainer> 
     <ProductItemProvider>
           <FilterProvider>
+            <CommentsProvider>
               <Stack.Navigator initialRouteName="UserLogin"  /*screenOptions={{
                       gestureEnabled: false,
                       cardOverlayEnabled: false, // presentation: 'modal',  
@@ -66,6 +68,7 @@ export default function MainNavigation() {
                 <Stack.Screen name="UserSignup" component={UserSignup}  options={{ title: <HeaderNavigation title="Sign Up"/>, headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="PhoneAuth" component={PhoneAuth}  options={{ title: <HeaderNavigation title="PhoneAuth"/>, headerShown : true, tabBarVisible: false, }} />
               </Stack.Navigator>
+            </CommentsProvider>
           </FilterProvider>
       </ProductItemProvider>
     </NavigationContainer>
