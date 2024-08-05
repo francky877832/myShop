@@ -26,11 +26,11 @@ const AllCommets = (props) =>
     const navigation = useNavigation()
     const route = useRoute()
     const { product, inputFocused } = route.params
-    const { reshapedComments, setReshapedComments, comments, setComments } = useContext(CommentsContext)
+    const { reshapedComments, setReshapedComments } = useContext(CommentsContext)
     //const [comments_, setComments_] = useState(reshapedComments)
     //const setIsLoading = route.params.setIsLoading
     const [isFocused, setIsFocused] = useState(false)
-    const [isResponseTo, setIsResponseTo] = useState(product._id)
+    const [isResponseTo, setIsResponseTo] = useState("")
     const [inputValue, setInputValue] = useState("")
     const [onNewComment, setOnNewComment] = useState(false)
     const [refreshComponent, setRefreshComponent] = useState(false)
@@ -72,10 +72,23 @@ useEffect(()=>{
 }, [navigation])
 
 
-const updateComments_ = (comment)=>{
+const updateReshapedComments = (comment)=>{
     //console.log("okcOMMENT")
-    setComments((prevComments)=>{
-        return [comment, ...prevComments]
+    setReshapedComments((prevComments)=>{
+        if(!!isResponseTo)
+        {console.log("prevCommen")
+                prevComments.forEach((cm, i)=>{
+                if(cm._id == comment.isResponseTo)
+                {
+                    prevComments[i].subComment.push(comment)
+                }
+            })
+        }
+        else
+        {console.log("prevComments")
+            prevComments.push(comment)
+        }
+            return prevComments
     })
 }
 //username
@@ -96,7 +109,8 @@ const addComment = async (item) => {
         username : loggedUser,
         product : item._id,
         text : inputValue,
-        isResponseTo : isResponseTo,
+        subComment : [],
+        isResponseTo : isResponseTo
     }
 
         
@@ -105,7 +119,7 @@ const addComment = async (item) => {
     //console.log(comment)
         try{
             //console.log("Ok")
-            const response = await fetch(`${API_BACKEND}/api/datas/comments/add/${item._id}`, {
+            const response = await fetch(`${API_BACKEND}/api/datas/comments/add/${isResponseTo}`, {
                 method: 'POST',
                 body: JSON.stringify(comment),
                 headers: {
@@ -118,11 +132,13 @@ const addComment = async (item) => {
 
             //Alert.alert("Comment ajouté avec success.")
             //setIsLoading(true)
-            setReshapedComments(reshapeComments([comment,...comments]))
-            setComments([comment, ...comments])
+            updateReshapedComments(comment)
+            //setComments([comment, ...comments])
+            setIsResponseTo("")
             setIsLoading(false) //A VERIFIER
 
         }catch(error){
+            console.log(error)
             Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
             setIsLoading(false)
         }

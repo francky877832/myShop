@@ -17,7 +17,7 @@ const CommentsContext = createContext()
 const CommentsProvider = ({children}) => {
     //const { getProducts , loadMoreData, products} = useContext(ProductContext)
 
-    const [comments, setComments] = useState([])
+    //const [comments, setComments] = useState([])
     const [reshapedComments, setReshapedComments] = useState([])
 
     const [isLoading, setIsLoading] = useState(false);
@@ -78,8 +78,8 @@ const CommentsProvider = ({children}) => {
             //console.log(comments_)
             console.log("pk")
             //updateProducts(newData.datas);
-            setComments((prevComments)=>[...prevComments, ...comments_])
-            setReshapedComments((prevComments)=>reshapeComments([...prevComments, ...comments_]))
+            //setComments((prevComments)=>[...prevComments, ...comments_])
+            setReshapedComments((prevComments)=>[...prevComments, ...comments_])
             //console.log(comments_)
             //if(page < totalPages)
             setPage((prevPage) => prevPage + 1);
@@ -113,8 +113,8 @@ const CommentsProvider = ({children}) => {
         //setFiltersUpdated(true);
     }
 
-    const productStateVars = {isLoading, filtersUpdated, hasMore, page, refreshKey, comments, reshapedComments, totalComments}
-    const productStateStters = {setIsLoading, setComments}
+    const productStateVars = {isLoading, filtersUpdated, hasMore, page, refreshKey, reshapedComments, totalComments}
+    const productStateStters = {setIsLoading,}
     const utilsFunctions = {fetchProductComments, loadMoreComments, searchAgain, setReshapedComments}
     return (
         <CommentsContext.Provider value={{...productStateVars, ...productStateStters, ...utilsFunctions}}>

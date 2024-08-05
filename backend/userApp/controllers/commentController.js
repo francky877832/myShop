@@ -3,7 +3,7 @@ const mongoose = require('../../shared/db').mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
 
-exports.addProductComment = (req, res, next) => {
+const addProductComment = (req, res, next) => {
    
     //const commentObject = req.body.comment
     //delete commentObject._id
@@ -11,9 +11,9 @@ exports.addProductComment = (req, res, next) => {
     const comment = new Comment({
         user : req.body.user,
         username : req.body.username,
-        product : req.params.product,
+        product : req.body.product,
         text : req.body.text,
-        isResponseTo : req.body.isResponseTo
+        subComment : []
     })
     comment.save()
     .then( () => {
@@ -25,6 +25,51 @@ exports.addProductComment = (req, res, next) => {
         res.status(400).json({ error: error });
     });
 };
+
+
+exports.updateProductComment  = (req, res, next) => {
+    console.log("COMMENT")
+    const newComment = {
+            user : req.body.user,
+            username : req.body.username,
+            product : req.body.product,
+            text : req.body.text,
+            //isResponseTo : req.params.id
+    }
+    
+    Comment.find({ _id : req.params.id })
+    .then(
+        (comments) => 
+        {
+            //console.log(comments)
+            if(comments.length > 0)
+            {
+                    let cm = comments
+                    cm[0].subComment.push(newComment) //new comment
+                    Comment.updateOne({ product : req.params.product },  { subComment : cm[0].subComment })
+                        .then(
+                            () => {//console.log("ojk")
+                                res.status(200).json({message : "Commentaire ajoutée"});
+                        })
+                        .catch((error) => { res.status(400).json({error : error}); });    
+            }
+            else
+            {
+                //console.log("OKK")
+                
+                addProductComment(req, res, next)
+            }
+
+              
+        })
+        .catch((error) => { console.log(error);res.status(400).json({error : error}); });
+  };
+
+
+
+
+
+
 
 exports.validateProductComment = (req, res, next) => {
 
@@ -53,7 +98,7 @@ exports.getProductComments = (req, res, next) => {
     const skip = (page - 1) * limit;
     console.log(req.query.page)
 
-    Comment.find({product : req.params.id}).sort({createdAt : -1}).skip(skip).limit(limit).exec()
+    Comment.find({product : req.params.id}).sort({isResponseTo : -1, _id:-1}).skip(skip).limit(limit).exec()
     .then( async (comments) => {
         //console.log(comments)
         const totalDatas = await Comment.countDocuments().exec();

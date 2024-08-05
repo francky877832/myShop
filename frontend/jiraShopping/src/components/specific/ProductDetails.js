@@ -62,7 +62,7 @@ const ProductDetails = (props) => {
 
 
 
-    const { reshapedComments, setComments, loadMoreComments, page, hasMore, isLoading, filtersUpdated, searchAgain } = useContext(CommentsContext)
+    const { reshapedComments, loadMoreComments, page, hasMore, isLoading, filtersUpdated, searchAgain } = useContext(CommentsContext)
     function setIsLoading(){}
     //const [numComments, setNumComments] = useState(0)
     //const [isLoading, setIsLoading] = useState(true)
