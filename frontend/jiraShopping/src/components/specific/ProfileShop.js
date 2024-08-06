@@ -1,6 +1,6 @@
 import { API_BACKEND } from '@env';
 
-import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { View, Text, Animated, Pressable, PanResponder } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 //custom component
@@ -34,7 +34,10 @@ const ProfilShop = (props) => {
     const route = useRoute()
     const [follow, setIsFollow] = useState(true) //Je ne crois pas avoir besoin de Search
     const [products, setProducts] = useState([])
-    const [isLoading, setIsLoading]  = useState(true)
+    const [isLoading, setIsLoading]  = useState(false)
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [totalComments, setTotalComments] = useState(1)
 
 
     const flatListRef = useRef(null);
@@ -55,10 +58,24 @@ const ProfilShop = (props) => {
 
     //flatListRef.current.setNativeProps({ scrollEnabled: false });
     const onEndReached = () => {
-            if (flatListRef.current) {
+            /*if (flatListRef.current) {
                 flatListRef.current.setNativeProps({ scrollEnabled: false });
-              }
+              }*/
       };
+    const handleScroll = (event) => {
+        const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+        const isAtTop = contentOffset.y <= 0;
+        const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height;
+
+        if(isAtTop || isAtBottom)
+        {
+            if (flatListRef.current) 
+            {
+                flatListRef.current.setNativeProps({ scrollEnabled: false });
+            }
+        }
+        
+    };
       
     const panResponder = useRef(
       PanResponder.create({
@@ -115,36 +132,68 @@ const ProfilShop = (props) => {
     ).current;
 
 
-    const getProducts = async ()=> {
+    const getShopProducts = async (username, page)=> {
         try
         {
-            const response = await fetch(`${API_BACKEND}/api/datas/products/get/user/${loggedUserId}`,{
+            const response = await fetch(`${API_BACKEND}/api/datas/products/get/user/${username}?page=${page}`,{
                 method: 'GET',
                 headers: {
                     'Content-Type': 'Application/json',
                 },
                 });
                 const responseJson = await response.json();
-                setProducts(responseJson)
+                return responseJson
         } catch (error) {
         console.error(error);
+        return []
       }
     }
+
+    const loadMoreShopProducts = useCallback(async () => {
+        console.log("ook")
+        console.log(hasMore)
+        if (isLoading || !hasMore) return;
+    
+        setIsLoading(true);
+        try {
+  
+          const datas = await getShopProducts(loggedUserId, page);
+          const products = datas.datas
+          //console.log(comments_)
+          if (products.length > 0) {
+            //console.log(comments_)
+            console.log("pk")
+            //updateProducts(newData.datas);
+            //setComments((prevComments)=>[...prevComments, ...comments_])
+            setProducts((prevProducts)=>[...prevProducts, ...products])
+            //console.log(comments_)
+            //if(page < totalPages)
+            setPage((prevPage) => prevPage + 1);
+            //setRefreshKey(prevKey => prevKey + 1);
+            //console.log(page)
+          } else {
+            setHasMore(false); // Pas plus de données à charger
+          }
+        } catch (error) {
+            console.error('Erreur lors du chargement des commentaires :', error);
+        }finally {
+            setIsLoading(false);
+        }
+      }, [isLoading, hasMore, page])
     
     useEffect(()=>{
         const fetchData = async () => {
             //setIsLoading(true);
-            await getProducts()
-            setIsLoading(false);
-          };
+            await loadMoreShopProducts()
+        };
       
-          if (isLoading) {
+          //if (isLoading) {
             fetchData();
-          }
+          //}
            
             //console.log(products)
     
-    },[isLoading])
+    },[])
     
 
     return(
@@ -201,7 +250,7 @@ const ProfilShop = (props) => {
                     
 
                         <View style={{flex:1, paddingBottom:route.params==undefined?40:0}} {...panResponder.panHandlers}>
-                            <ProductsListWithFilters onEndReached={onEndReached} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products.length} ${products.length > 1 ? 'Produits' : 'Produit'}`} />
+                            <ProductsListWithFilters isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.5} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products.length} ${products.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
 
                     { route.params==undefined &&
@@ -210,9 +259,6 @@ const ProfilShop = (props) => {
                         </View>
                     }
 
-                    {isLoading && 
-                        <CustomActivityIndicator styles={{}} /> 
-                    }
                 </View>
     )
 }

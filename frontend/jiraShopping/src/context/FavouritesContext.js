@@ -1,4 +1,6 @@
-import React, { useState, createContext, useEffect } from "react";
+import { API_BACKEND } from '@env';
+
+import React, { useState, createContext, useEffect, useCallback } from "react";
 import { Alert } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native';
@@ -15,7 +17,10 @@ const FavouritesProvider = ({children}) => {
 
     const [favourites, setFavourites] = useState([])
     const [liked, setLikedIcon ] = useState()
-    const [isLoading, setIsLoading]  = useState(true)
+    const [isLoading, setIsLoading]  = useState(false)
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [totalComments, setTotalComments] = useState(1)
 
 
         
@@ -31,14 +36,14 @@ const FavouritesProvider = ({children}) => {
                 let tmp_fav = [...prevState]
                 //console.log(tmp_fav)
                 tmp_fav.splice(i,1)
-                console.log(tmp_fav)
+                //console.log(tmp_fav)
                 //console.log([...prevState])
                 return tmp_fav
             }
             else
             {
                 //console.log([...prevState, item])
-                return [...prevState, item]
+                return [item, ...prevState]
             }
 
             
@@ -57,14 +62,14 @@ const FavouritesProvider = ({children}) => {
             try{
                 if(bool)
                 {
-                    response = await fetch(`${server}/api/datas/favourites/update/${loggedUserId}`, {
+                    response = await fetch(`${API_BACKEND}/api/datas/favourites/update/${loggedUserId}`, {
                         method: 'POST',
                         body: JSON.stringify(favourite),
                         headers: {
                             'Content-Type': 'application/json',
                         },})
                         
-                        responseLikes = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
+                        responseLikes = await fetch(`${API_BACKEND}/api/datas/products/likes/update/${item._id}`, {
                             method: 'PUT',
                             body: JSON.stringify({updateLikes:1}),
                             headers: {
@@ -77,7 +82,7 @@ const FavouritesProvider = ({children}) => {
                 else
                 {
                     //console.log("fine")
-                    response = await fetch(`${server}/api/datas/favourites/remove/${loggedUserId}`, {
+                    response = await fetch(`${API_BACKEND}/api/datas/favourites/remove/${loggedUserId}`, {
                         method: 'PUT',
                         body: JSON.stringify(favourite),
                         headers: {
@@ -85,7 +90,7 @@ const FavouritesProvider = ({children}) => {
                         },
                     });
 
-                    responseLikes = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
+                    responseLikes = await fetch(`${API_BACKEND}/api/datas/products/likes/update/${item._id}`, {
                         method: 'PUT',
                         body: JSON.stringify({updateLikes:-1}),
                         headers: {
@@ -111,21 +116,53 @@ const FavouritesProvider = ({children}) => {
             }
     }
 
-    const fetchUserFavourites = async () =>{
+    const fetchUserFavourites = async (username, page) =>{
             try{
     //console.log("Ok")
-                const response = await fetch(`${server}/api/datas/favourites/get/${loggedUserId}`);            
+                const response = await fetch(`${API_BACKEND}/api/datas/favourites/get/${username}?page=${page}`);            
                 const datas = await response.json()
                 //console.log(datas)
                 if (!response.ok) {
                     throw new Error('Erreur lors de la requête');
                 }
                 //console.log(datasdatas[0].products)
-                setFavourites(datas[0].productDetails)
+                return datas
             }catch(error){
                 Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
             }
     }
+
+    const loadMoreFavouriteProducts = useCallback(async () => {
+        console.log("thennn")
+        console.log(hasMore)
+        if (isLoading || !hasMore) return;
+    
+        setIsLoading(true);
+        try {
+  
+          const datas = await fetchUserFavourites(loggedUserId, page);
+          const products = datas.datas
+          //console.log(comments_)
+          if (products.length > 0) {
+            //console.log(comments_)
+            console.log("pk")
+            //updateProducts(newData.datas);
+            //setComments((prevComments)=>[...prevComments, ...comments_])
+            setFavourites((prevProducts)=>[...prevProducts, ...products[0].productDetails])
+            //console.log(comments_)
+            //if(page < totalPages)
+            setPage((prevPage) => prevPage + 1);
+            //setRefreshKey(prevKey => prevKey + 1);
+            //console.log(page)
+          } else {
+            setHasMore(false); // Pas plus de données à charger
+          }
+        } catch (error) {
+            console.error('Erreur lors du chargement des commentaires :', error);
+        }finally {
+            setIsLoading(false);
+        }
+      }, [isLoading, hasMore, page])
 
     const hasLiked = (item) => {
        /* if(favourites.length != 0)
@@ -164,24 +201,11 @@ const FavouritesProvider = ({children}) => {
         return [bool, i]
     }
 
-//hook pour initialiser le contexte avec les donnees de mongoDB
-    useEffect(()=>{
-       
-        const fetchData = async () => {
-            //setIsLoading(true);
-            await fetchUserFavourites()
-            setIsLoading(false);
-        };
-      
-        if (isLoading) {
-            fetchData();
-        }
-        //console.log(favourites)
-    }, [isLoading])
+
 
     const favouritesStateVars = {favourites, liked, isLoading}
     const favouritesStateStters = {hasLiked, setLikedIcon, setIsLoading}
-    const utilsFunctions = {addFavourite, }// removeFavourite}
+    const utilsFunctions = {addFavourite, loadMoreFavouriteProducts }// removeFavourite}
     return (
         <FavouritesContext.Provider value={{...favouritesStateVars, ...favouritesStateStters, ...utilsFunctions}}>
             {children}

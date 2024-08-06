@@ -4,6 +4,9 @@ const Favourite = require('../models/favouriteModel');
 
 const ObjectId = mongoose.Types.ObjectId;
 exports.getUserLikedProducts  =  (req, res, next) => {
+    const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+    const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 20
+    const skip = (page - 1) * limit;
     const userId = req.params.user
         Favourite.aggregate([
             { $match: { user: new ObjectId(userId) } }, 
@@ -27,10 +30,15 @@ exports.getUserLikedProducts  =  (req, res, next) => {
               }
             }
            
-        ]).then( (favourites) => { 
+        ]).then(async (favourites) => { 
             //console.log("AGG")
-                console.log(favourites)
-            res.status(200).json(favourites);
+                //console.log(favourites)
+            //res.status(200).json(favourites);
+            const totalDatas = await Favourite.countDocuments({ user: new ObjectId(userId) }).exec();
+            const totalPages = Math.ceil(totalDatas / limit);
+            favourites[0].productDetails.reverse()
+            res.status(200).json({datas:favourites.slice(skip, skip+limit), page:page,totalPages:totalPages,totalDatas:totalDatas});
+
         })
         .catch( (error) => { 
             console.log(error)

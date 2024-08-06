@@ -17,18 +17,33 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 
 const Favourites = (props) => {
 
-    const {favourites, isLoading} = useContext(FavouritesContext)
+    const {favourites, isLoading, loadMoreFavouriteProducts} = useContext(FavouritesContext)
     const [datas, setDatas] = useState([])
 //console.log(favourites)
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
  
+
+    //hook pour initialiser le contexte avec les donnees de mongoDB
+    useEffect(()=>{
+       
+        const fetchData = async () => {
+            //setIsLoading(true);
+            await loadMoreFavouriteProducts()
+        };
+      
+        //if (isLoading) {
+            fetchData();
+        //}
+        //console.log(favourites)
+    }, [])
+
     return(
         <View style={[favouritesStyles.container,]}>
                     <View style={[favouritesStyles.top]}>
                         <Top />
                     </View>
                     <View style={[{flex:1,paddingBottom:0,}]}>
-                        <ProductsListWithFilters isLoading={isLoading} filters={false} datas={favourites} horizontal={false} title="Mes Favoris" />
+                        <ProductsListWithFilters  isLoading={isLoading} onEndReached={loadMoreFavouriteProducts} onEndReachedThreshold={100} filters={false} datas={favourites} horizontal={false} title="Mes Favoris" />
                     </View>
         </View>
     )

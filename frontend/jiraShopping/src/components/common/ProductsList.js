@@ -17,7 +17,7 @@ import { server } from '../../remote/server';
 import { appColors } from '../../styles/commonStyles';
 
 const ProductsList = React.forwardRef((props, ref) => {
-    const { datas, horizontal, styles, onEndReached, name, isLoading, replace, hasMore, onEndReachedThreshold} = props;
+    const { datas, horizontal, styles, onEndReached, onScroll, name, isLoading, replace, hasMore, onEndReachedThreshold} = props;
     //console.log(datas[0].product)
     
     useEffect(()=>{
@@ -40,6 +40,8 @@ const ProductsList = React.forwardRef((props, ref) => {
                         ref={ref}
                         onEndReached={()=>{onEndReached()}}
                         onEndReachedThreshold={onEndReachedThreshold}
+                        onScroll={onScroll}
+                        scrollEventThrottle={16}
                         ListFooterComponent={isLoading ? <ActivityIndicator size="large" color={appColors.secondaryColor1} /> : null}
                     />
                     {/*isLoading && 

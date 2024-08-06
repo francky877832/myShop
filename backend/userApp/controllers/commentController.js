@@ -112,7 +112,7 @@ exports.getProductComments = (req, res, next) => {
     Comment.find({product : req.params.id}).sort({isResponseTo : -1, _id:-1}).skip(skip).limit(limit).exec()
     .then( async (comments) => {
         //console.log(comments)
-        const totalDatas = await Comment.countDocuments().exec();
+        const totalDatas = await Comment.countDocuments({product : req.params.id}).exec();
         const totalPages = Math.ceil(totalDatas / limit);
         res.status(200).json({datas:comments, page:page,totalPages:totalPages,totalDatas:totalDatas});
     })

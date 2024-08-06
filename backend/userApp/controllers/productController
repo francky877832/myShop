@@ -157,13 +157,24 @@ exports.getProductsFromCategories  =async  (req, res, next) => {
 };
 
 exports.getProductsUser  = (req, res, next) => {
-  Product.find({ seller : req.params.user })
-  .then( (products) => { 
-      res.status(200).json(products);
-   })
-  .catch( (error) => { 
-      res.status(400).json({ error: error });
-   });
+  console.log("getProductsUser")
+  const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+  const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 20
+  const skip = (page - 1) * limit;
+  console.log(req.query.page)
+
+  Product.find({ seller : req.params.user }).skip(skip).limit(limit).exec()
+    .then (async(products) => {
+    //console.log("ok");
+    const totalDatas = await Product.countDocuments().exec();
+    const totalPages = Math.ceil(totalDatas / limit);
+    //console.log("ooooo")
+      res.status(200).json({datas:products, page:page,totalPages:totalPages,totalDatas:totalDatas});
+  })
+  .catch ((error) => {
+    console.log(error)
+      res.status(400).json({ error: error+"go"});
+  });
 };
 
 //Cest mieux de gerer cette fonctionnalite cote backend
