@@ -71,6 +71,7 @@ useEffect(()=>{
 
 //console.log(comment)
 const respondTo = (id, username) => {
+    console.log(id)
     setIsResponseTo(id);
     setInputValue("@"+username+" " +inputValue);
     if (inputRef.current) {inputRef.current.focus() }
@@ -81,9 +82,11 @@ const respondTo = (id, username) => {
                             <Pressable style={[styles.comment, ]} onPress={()=>{ }}>
                                 <Text style={[commentsStyles.commentText]} >{comment.text}</Text>
                             </Pressable>
-                            <Pressable  onPress={()=>{respondTo(comment._id, comment.username)}}>
-                                <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
-                            </Pressable>
+                            { !!comment._id &&
+                                <Pressable  onPress={()=>{respondTo(comment._id, comment.username)}}>
+                                    <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
+                                </Pressable>
+                            }
                         </View>
 
                         <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>{isNaN(sinceDate(comment.createdAt)[0]) || (sinceDate(comment.createdAt)[0]==0 && 

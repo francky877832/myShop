@@ -1,6 +1,7 @@
 const Comment = require('../models/commentModel');
 const mongoose = require('../../shared/db').mongoose;
-const ObjectId = mongoose.Types.ObjectId;
+const { ObjectId } = require('mongodb');
+const ObjectID = mongoose.Types.ObjectId;
 
 
 const addProductComment = (req, res, next) => {
@@ -13,7 +14,7 @@ const addProductComment = (req, res, next) => {
         username : req.body.username,
         product : req.body.product,
         text : req.body.text,
-        subComment : []
+        subComment : [],
     })
     comment.save()
     .then( () => {
@@ -34,19 +35,23 @@ exports.updateProductComment  = (req, res, next) => {
             username : req.body.username,
             product : req.body.product,
             text : req.body.text,
-            //isResponseTo : req.params.id
     }
-    
+    console.log(req.params.id)
+
+if(ObjectId.isValid(req.params.id))
+{  //console.log(req.params.id)
+    newComment.isResponseTo = req.params.id
     Comment.find({ _id : req.params.id })
     .then(
         (comments) => 
         {
-            //console.log(comments)
+            //console.log("comments")
             if(comments.length > 0)
             {
+                //console.log("comments")
                     let cm = comments
                     cm[0].subComment.push(newComment) //new comment
-                    Comment.updateOne({ product : req.params.product },  { subComment : cm[0].subComment })
+                    Comment.updateOne({ _id : req.params.id },  { subComment : cm[0].subComment })
                         .then(
                             () => {//console.log("ojk")
                                 res.status(200).json({message : "Commentaire ajoutée"});
@@ -59,11 +64,17 @@ exports.updateProductComment  = (req, res, next) => {
                 
                 addProductComment(req, res, next)
             }
+        
 
               
         })
         .catch((error) => { console.log(error);res.status(400).json({error : error}); });
-  };
+    }
+    else
+    {            
+        addProductComment(req, res, next)
+    }
+};
 
 
 

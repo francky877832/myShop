@@ -30,7 +30,7 @@ const AllCommets = (props) =>
     //const [comments_, setComments_] = useState(reshapedComments)
     //const setIsLoading = route.params.setIsLoading
     const [isFocused, setIsFocused] = useState(false)
-    const [isResponseTo, setIsResponseTo] = useState("")
+    const [isResponseTo, setIsResponseTo] = useState(null)
     const [inputValue, setInputValue] = useState("")
     const [onNewComment, setOnNewComment] = useState(false)
     const [refreshComponent, setRefreshComponent] = useState(false)
@@ -73,21 +73,26 @@ useEffect(()=>{
 
 
 const updateReshapedComments = (comment)=>{
-    //console.log("okcOMMENT")
+    //console.log("isResponseTo")
     setReshapedComments((prevComments)=>{
+        //console.log(isResponseTo)
         if(!!isResponseTo)
-        {console.log("prevCommen")
-                prevComments.forEach((cm, i)=>{
+        {
+            //console.log("prevComments")
+            prevComments.forEach((cm, i)=>{
+                    console.log(cm)
                 if(cm._id == comment.isResponseTo)
                 {
+                    //console.log( prevComments[i].subComment)
                     prevComments[i].subComment.push(comment)
                 }
             })
         }
         else
-        {console.log("prevComments")
-            prevComments.push(comment)
+        {//console.log("prevComments")
+            prevComments.unshift(comment)
         }
+        setIsResponseTo("")
             return prevComments
     })
 }
@@ -116,7 +121,7 @@ const addComment = async (item) => {
         
 
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-    //console.log(comment)
+    //console.log(isResponseTo)
         try{
             //console.log("Ok")
             const response = await fetch(`${API_BACKEND}/api/datas/comments/add/${isResponseTo}`, {
@@ -134,7 +139,6 @@ const addComment = async (item) => {
             //setIsLoading(true)
             updateReshapedComments(comment)
             //setComments([comment, ...comments])
-            setIsResponseTo("")
             setIsLoading(false) //A VERIFIER
 
         }catch(error){
