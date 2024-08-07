@@ -75,9 +75,9 @@ const Preferences = (props) => {
     const {user, loginUserWithEmailAndPassword, isAuthenticated, setIsAuthenticated } = useContext(UserContext)
     const { getProducts , loadMoreData, products, isLoading, hasMore, setIsLoading, refreshKey} = useContext(ProductContext)
 
-    const loadMoreData_ = async () => {
+    const loadMoreData_ = useCallback(async () => {
       await loadMoreData()
-    }
+    })
 useEffect(()=>{
     //loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
 }, [])
@@ -161,16 +161,12 @@ const renderTabBar = (props) => (
                         <Top />
                     </View>
             <View style={[{flex:1,}]}>
-                { isSearch ?
-                        <ProductsListWithFilters name="Preference" filters={true} datas={products} horizontal={false} styles={preferencesStyles} title="Resultats de recherche" />
-                    :
                     
                     <View style={{flex:1}}>
                         <TabView  
-                        //key={refreshKey} 
                         lazy renderLazyPlaceholder={() => <View><Text>Loading...</Text></View>} navigationState={{ index, routes }} renderScene={renderScene} onIndexChange={setIndex} initialLayout={initialLayout} renderTabBar={renderTabBar} />
                     </View>
-                }
+  
 
         </View>
     </View>

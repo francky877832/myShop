@@ -122,6 +122,21 @@ exports.getProductComments = (req, res, next) => {
     });
   };
 
+  exports.getUserProductLastComment = (req, res, next) => {
+    const username = parseInt(req.query.user)
+
+
+    Comment.find({product : req.params.id, username : username})
+    .then( async (comments) => {
+        //console.log(comments)
+        res.status(200).json(comments[0]);
+    })
+    .catch( (error) => {
+        console.log(error)
+        res.status(400).json({ error: error });
+    });
+  };
+
 
 
 

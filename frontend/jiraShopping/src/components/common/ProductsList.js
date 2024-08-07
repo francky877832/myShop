@@ -38,9 +38,9 @@ const ProductsList = React.forwardRef((props, ref) => {
                         showsHorizontalScrollIndicator={horizontal}
                         contentContainerStyle={[productsListStyles.flatlist, horizontal ? productsListStyles.flatlistHorizontal : false, styles.flatlist]}
                         ref={ref}
-                        onEndReached={()=>{onEndReached()}}
-                        onEndReachedThreshold={onEndReachedThreshold}
-                        onScroll={onScroll}
+                        onEndReached={()=>{typeof(onEndReached)=='function' ? onEndReached():function(){}}}
+                        onEndReachedThreshold={onEndReachedThreshold || 0.5}
+                        onScroll={typeof(onScroll)=='function' ? onScroll():function(){}}
                         scrollEventThrottle={16}
                         ListFooterComponent={isLoading ? <ActivityIndicator size="large" color={appColors.secondaryColor1} /> : null}
                     />

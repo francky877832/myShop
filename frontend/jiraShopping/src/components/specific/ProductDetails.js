@@ -40,7 +40,6 @@ const ProductDetails = (props) => {
     const [description, setDescription] = useState(truncateText(data.description, numChars));
     const {favourites} = useContext(FavouritesContext)
     const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
-    const [onNewComment, setOnNewComment] = useState(false)
 
 
    
@@ -62,8 +61,8 @@ const ProductDetails = (props) => {
 
 
 
-    const { reshapedComments, loadMoreComments, page, hasMore, isLoading, filtersUpdated, searchAgain } = useContext(CommentsContext)
-    function setIsLoading(){}
+    const { reshapedComments, loadMoreComments, page, hasMore, isLoading, setIsLoading, filtersUpdated, searchAgain, searchAgain_, setPage, onNewComment, setOnNewComment, setHasMore } = useContext(CommentsContext)
+    //function setIsLoading(){}
     //const [numComments, setNumComments] = useState(0)
     //const [isLoading, setIsLoading] = useState(true)
         const initialNumberOfComments = 2
@@ -163,19 +162,18 @@ const ProductDetails = (props) => {
     useFocusEffect(useCallback(()=>{ //or useFocusEffect(useCallback(,[]))
 
         // all ? false : 
-        //console.log("o")
+        console.log("o")
+
         const fetchData = async () => {
             //setIsLoading(true);
-            await loadMoreComments(data._id)
-            //setIsLoading(false);
+            await loadMoreComments(data._id)    
         };
      
         //if (isLoading) {
         fetchData();
         //}
-        if(typeof setOnNewComment == 'function')
-            setOnNewComment(false)
-     }, [/*filtersUpdated*/]))
+        
+     }, [onNewComment]))
 
 //WHEN COMMING FOR NOTIFICATIONS
     /*const scrollViewRef = useRef(null);
@@ -281,7 +279,7 @@ const ProductDetails = (props) => {
                 <View style={{height:20}}></View>
                 
                         <View>
-                            <Comments page={page} loadMoreComments={loadMoreComments_} searchAgain={searchAgain} all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{onNewComment:onNewComment}} reshapedComments={reshapedComments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
+                            <Comments page={page} loadMoreComments={loadMoreComments_} searchAgain={searchAgain} all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{setOnNewComment:setOnNewComment}} reshapedComments={reshapedComments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
                             {isLoading &&
                                 <CustomActivityIndicator styles={{}} /> 
                             }

@@ -44,7 +44,7 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
                     {filters &&
                         <Filters  getDatas={getDatas} notDisplayFilters={notDisplayFilters || {}} suggestion={false} searchText={searchText} display={display}/>
                     }
-                        <ProductsList name={name} onScroll={onScroll || function(){}} isLoading={isLoading} onEndReached={onEndReached} onEndReachedThreshold={onEndReachedThreshold} ref={ref} datas={datas} horizontal={false} styles={preferencesStyles} />
+                        <ProductsList name={name} onScroll={onScroll || function(){}} isLoading={isLoading} onEndReached={onEndReached||function(){}} onEndReachedThreshold={onEndReachedThreshold} ref={ref} datas={datas} horizontal={false} styles={preferencesStyles} />
                 </View>
 
             </View>

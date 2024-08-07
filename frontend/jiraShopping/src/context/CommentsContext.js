@@ -11,8 +11,11 @@ import { reshapeComments  } from '../utils/commonAppFonctions';
 
 
 import { UserContext } from './UserContext';
+
+
 const CommentsContext = createContext()
 
+const loggedUser = 'Francky'
 
 const CommentsProvider = ({children}) => {
     //const { getProducts , loadMoreData, products} = useContext(ProductContext)
@@ -27,6 +30,8 @@ const CommentsProvider = ({children}) => {
     const {user} = useContext(UserContext)
     const [refreshKey, setRefreshKey] = useState(0);
     const [filtersUpdated, setFiltersUpdated] = useState(false);
+    const [onNewComment, setOnNewComment] = useState(false)
+    const COMMENT_PER_PAGE = 3
 
 
 
@@ -64,22 +69,68 @@ const CommentsProvider = ({children}) => {
         }
     }
 
-    const loadMoreComments = useCallback(async (id) => {
+
+    
+    const fetchProductLastComment = async (id, username) =>{
+        let comment = []
+        try{
+    //console.log("Ok")
+            const response = await fetch(`${API_BACKEND}/api/datas/comments/get/last/${id}?user=${username}`);            
+            comment = await response.json()
+            //console.log(comments_)
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+            return comment
+        }catch(error){
+            console.log(error)
+            return []
+        }
+    }
+
+    const loadMoreComments = useCallback(async (productId) => {
         console.log("ook")
+        /*if(onNewComment)
+            searchAgain_()*/
+        console.log(onNewComment)
         console.log(hasMore)
+        console.log(isLoading)
+        
+        if(onNewComment)
+        {
+            try 
+            {
+  
+                const comment_ = await fetchProductLastComment(productId, loggedUser);
+                setReshapedComments((prevComments)=>{
+                    prevComments[0] = comment_
+                    return [ ...prevComments]
+                })
+
+            }catch (error) {
+                console.error('Erreur lors du chargement des commentaires :', error);
+            }finally {
+                setIsLoading(false);
+                setOnNewComment(false);
+            }
+        }
+
         if (isLoading || !hasMore) return;
     
         setIsLoading(true);
         try {
   
-          const comments_ = await fetchProductComments(id, page);
+          const comments_ = await fetchProductComments(productId, page);
           //console.log(comments_)
           if (comments_.length > 0) {
             //console.log(comments_)
             console.log("pk")
             //updateProducts(newData.datas);
             //setComments((prevComments)=>[...prevComments, ...comments_])
-            setReshapedComments((prevComments)=>[...prevComments, ...comments_])
+            setReshapedComments((prevComments)=>{  
+                return [...prevComments, ...comments_]
+            })
+            //console.log(comments_.length)
             //console.log(comments_)
             //if(page < totalPages)
             setPage((prevPage) => prevPage + 1);
@@ -92,30 +143,32 @@ const CommentsProvider = ({children}) => {
             console.error('Erreur lors du chargement des commentaires :', error);
         }finally {
             setIsLoading(false);
+            setOnNewComment(false);
         }
       }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);    
 
     const searchAgain = async () => {
         setIsLoading(false);
-        //setHasMore(true);
+        setHasMore(true);
 
         //setPage(1);
         //setComments([]);
         //setFiltersUpdated(true);
     }
 
-    const searchAgain_ = async () => {
+    const searchAgain_ =  () => {
+        setPage((prevPage) => prevPage - 1);
         setIsLoading(false);
-        //setHasMore(true);
+        setHasMore(true);
         
         //setPage(1);
         //setComments([]);
         //setFiltersUpdated(true);
     }
 
-    const productStateVars = {isLoading, filtersUpdated, hasMore, page, refreshKey, reshapedComments, totalComments}
-    const productStateStters = {setIsLoading,}
-    const utilsFunctions = {fetchProductComments, loadMoreComments, searchAgain, setReshapedComments}
+    const productStateVars = {isLoading, filtersUpdated, hasMore, page, refreshKey, reshapedComments, totalComments, onNewComment}
+    const productStateStters = {setIsLoading, setOnNewComment, setPage}
+    const utilsFunctions = {fetchProductComments, loadMoreComments, searchAgain, searchAgain_, setReshapedComments,}
     return (
         <CommentsContext.Provider value={{...productStateVars, ...productStateStters, ...utilsFunctions}}>
             {children}

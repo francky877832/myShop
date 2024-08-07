@@ -26,13 +26,12 @@ const AllCommets = (props) =>
     const navigation = useNavigation()
     const route = useRoute()
     const { product, inputFocused } = route.params
-    const { reshapedComments, setReshapedComments } = useContext(CommentsContext)
+    const { reshapedComments, setReshapedComments, onNewComment, setOnNewComment, setPage} = useContext(CommentsContext)
     //const [comments_, setComments_] = useState(reshapedComments)
     //const setIsLoading = route.params.setIsLoading
     const [isFocused, setIsFocused] = useState(false)
     const [isResponseTo, setIsResponseTo] = useState(null)
     const [inputValue, setInputValue] = useState("")
-    const [onNewComment, setOnNewComment] = useState(false)
     const [refreshComponent, setRefreshComponent] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const scrollViewRef = useRef(null);
@@ -92,7 +91,6 @@ const updateReshapedComments = (comment)=>{
         {//console.log("prevComments")
             prevComments.unshift(comment)
         }
-        setIsResponseTo("")
             return prevComments
     })
 }
@@ -137,9 +135,15 @@ const addComment = async (item) => {
 
             //Alert.alert("Comment ajouté avec success.")
             //setIsLoading(true)
+            setOnNewComment(true)
+            setPage((prevPage) => prevPage - 1);
+            //console.log(onNewComment)
+            setIsResponseTo("")
             updateReshapedComments(comment)
-            //setComments([comment, ...comments])
             setIsLoading(false) //A VERIFIER
+
+            //setComments([comment, ...comments])
+            //console.log(onNewComment)
 
         }catch(error){
             console.log(error)
@@ -168,7 +172,7 @@ const addComment = async (item) => {
     return(
 <View style={{ flex: 1 }}>
             <ScrollView ref={scrollViewRef} contentContainerStyle={[allCommetsStyles.container,{}]} >
-                <Comments scrollViewRef={scrollViewRef} inputRef={inputRef} setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  onNewComment={onNewComment} setOnNewComment={setOnNewComment} all={true} reshapedComments={reshapedComments} product={product}/>
+                <Comments scrollViewRef={scrollViewRef} inputRef={inputRef} setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  all={true} reshapedComments={reshapedComments} product={product}/>
             </ScrollView>
         
         <View style={[allCommetsStyles.inputContainer]}>

@@ -25,7 +25,7 @@ const Comments = (props) =>
     const { all, navigation, product, setters, setIsLoading, pass, scrollViewRef, inputRef} = props
     const {inputValue,setInputValue, setIsResponseTo} = setters 
     
-    const { reshapedComments, loadMoreComments, isLoading, searchAgain, hasMore, page, totalComments} = useContext(CommentsContext)
+    const { reshapedComments, loadMoreComments, isLoading, searchAgain, hasMore, page, totalComments, } = useContext(CommentsContext)
     const loadMore = async () => {
         //await searchAgain();
         await loadMoreComments(product._id)
