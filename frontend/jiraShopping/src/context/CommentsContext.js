@@ -85,6 +85,8 @@ const CommentsProvider = ({children}) => {
         }catch(error){
             console.log(error)
             return []
+        }finally {
+            setOnNewComment(false);
         }
     }
 
