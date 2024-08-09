@@ -1,3 +1,5 @@
+import { Easing } from "react-native";
+
 export const annimatedStackTransition = (layoutWidthOutputRatio, openAnimationTime, closeAnimationTime) => {
     return {
         headerShown: false,
@@ -23,13 +25,15 @@ export const annimatedStackTransition = (layoutWidthOutputRatio, openAnimationTi
           open: {
             animation: 'timing',
             config: {
-              duration: openAnimationTime, // Durée de l'animation en millisecondes
+                duration: openAnimationTime, // Durée de l'animation en millisecondes
+                //easing: Easing.inOut(Easing.ease),
             },
           },
           close: {
             animation: 'timing',
             config: {
-              duration: closeAnimationTime, // Durée de l'animation en millisecondes
+                duration: closeAnimationTime, // Durée de l'animation en millisecondes
+                //easing: Easing.inOut(Easing.ease),
             },
           },
         },

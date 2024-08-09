@@ -148,7 +148,7 @@ const respondTo = (id, username) => {
                         <Text style={[customText.text, {fontWeight:"bold",fontSize:20,color:appColors.black}]}>Une Questions ?</Text>
                     </Pressable>
         
-                    <Pressable onPress={()=>{navigation.navigate("AllComments",{comments:comments,product:product})}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
+                    <Pressable onPress={()=>{navigation.navigate("AllComments",{comments:reshapedComments,product:product})}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
                             <Text style={[customText.text,{color:appColors.green,}]}>Tout Afficher</Text>
                             <Text style={[customText.text,{color:appColors.black,}]}>({totalComments})</Text>
                     </Pressable>
