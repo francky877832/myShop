@@ -23,19 +23,6 @@ const Favourites = (props) => {
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
  
 
-    //hook pour initialiser le contexte avec les donnees de mongoDB
-    useEffect(()=>{
-       
-        const fetchData = async () => {
-            //setIsLoading(true);
-            await loadMoreFavouriteProducts()
-        };
-      
-        //if (isLoading) {
-            fetchData();
-        //}
-        //console.log(favourites)
-    }, [])
 
     return(
         <View style={[favouritesStyles.container,]}>

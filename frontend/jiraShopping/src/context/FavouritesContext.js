@@ -203,6 +203,25 @@ const FavouritesProvider = ({children}) => {
 
 
 
+    
+    /*
+        Hook pour initialiser le contexte avec les donnees de mongoDB
+        Gotta be here to pre-charge favourites on Preferences
+    */
+    useEffect(()=>{
+       
+        const fetchData = async () => {
+            //setIsLoading(true);
+            await loadMoreFavouriteProducts()
+        };
+      
+        //if (isLoading) {
+            fetchData();
+        //}
+        //console.log(favourites)
+    }, [])
+
+
     const favouritesStateVars = {favourites, liked, isLoading}
     const favouritesStateStters = {hasLiked, setLikedIcon, setIsLoading}
     const utilsFunctions = {addFavourite, loadMoreFavouriteProducts }// removeFavourite}

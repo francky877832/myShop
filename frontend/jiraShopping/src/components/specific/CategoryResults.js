@@ -44,7 +44,6 @@ const CategoryResults = (props) => {
         const {user} = useContext(UserContext)
         const navigation = useNavigation()
 
-
         const getProductsFromCategories = async () =>{
             //console.log(selectedCategories)
             const category = {
@@ -71,12 +70,12 @@ useEffect(()=>{
     //console.log(searchText)
     cat_reminder = selectedCategories
 },[])
-        async function getDatas({searchText, selectedModalCategories, selectedCategory, selectedBrands, conditions, orderBy})
+        async function getDatas({searchText, selectedModalCategories, selectedCategory={}, selectedBrands, conditions, orderBy})
         {
             //console.log("GETDATAS")
             //console.log({searchText, selectedModalCategories, selectedCategories, selectedBrands, conditions, orderBy})
             
-            await loadMoreDataWithFilters({searchText:searchText, selectedCategory:category, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
+            await loadMoreDataWithFilters({searchText:searchText, selectedCategory:selectedCategory, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
                             //{searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})    
         }
 
@@ -121,7 +120,7 @@ const title = `Resultats de recherche "${searchText}"`
                         </View>
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="CategoryResults" getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false}} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters name="CategoryResults" selectedCategory={category} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false}} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )

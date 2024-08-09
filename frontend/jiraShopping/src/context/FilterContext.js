@@ -297,7 +297,7 @@ const FilterProvider = ({children}) => {
           setProducts([]);
     }
 
-    
+//These 2 functiopn are important : used in Search, SR, Cat   
     const searchAgainWithoutUpdate = async () => {
         setIsLoading(false);
         setHasMore(true);

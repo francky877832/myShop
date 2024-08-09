@@ -219,7 +219,7 @@ const handleOrderby = async (val)=>{
         //console.log(selectedOrderBy)
         //await searchAgain()
         await searchAgainWithoutUpdate()
-        await loadMoreDataWithFilters({searchText:searchText||" ", orderBy:val,selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions});
+        await loadMoreDataWithFilters({searchText:searchText||" ", selectedCategory:selectedCategories, orderBy:val,selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions});
         //Pas besoin de getSearchedTextWithFilters par ce Filters est dans SearchResults et cela se fait auto.
     //Il ya juste besoin de mettre a jour selectedOrderBy et de re-rendre le component avec un activityIndicator
    
@@ -231,7 +231,7 @@ useEffect(()=>{
     {
         if(filtersUpdated)
         {
-            await loadMoreDataWithFilters({searchText:searchText||" ", selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions,orderBy:selectedOrderBy})
+            await loadMoreDataWithFilters({searchText:searchText||" ", selectedCategory:selectedCategories, selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions,orderBy:selectedOrderBy})
         }
         setFiltersUpdated(false);
     }

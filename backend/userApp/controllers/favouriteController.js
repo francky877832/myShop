@@ -5,7 +5,7 @@ const Favourite = require('../models/favouriteModel');
 const ObjectId = mongoose.Types.ObjectId;
 exports.getUserLikedProducts  =  (req, res, next) => {
     const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
-    const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 20
+    const limit = parseInt(req.query.limit) || 100; // Nombre d'éléments par page, par défaut 20
     const skip = (page - 1) * limit;
     const userId = req.params.user
         Favourite.aggregate([

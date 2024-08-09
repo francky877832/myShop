@@ -40,7 +40,7 @@ const ProductsList = React.forwardRef((props, ref) => {
                         ref={ref}
                         onEndReached={()=>{typeof(onEndReached)=='function' ? onEndReached():function(){}}}
                         onEndReachedThreshold={onEndReachedThreshold || 0.5}
-                        onScroll={typeof(onScroll)=='function' ? onScroll():function(){}}
+                        onScroll={(e)=>{typeof(onScroll)=='function' ? onScroll(e):function(e){}}}
                         scrollEventThrottle={16}
                         ListFooterComponent={isLoading ? <ActivityIndicator size="large" color={appColors.secondaryColor1} /> : null}
                     />
