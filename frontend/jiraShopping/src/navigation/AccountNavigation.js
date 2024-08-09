@@ -11,12 +11,19 @@ import PasswordChange from '../components/specific/PasswordChange';
 import Address from '../components/specific/Address';
 import AboutUs from '../components/specific/AboutUs';
 import HeaderNavigation from '../components/common/HeaderNavigation';
+
+import {annimatedStackTransition} from './commonNavigationFonctions'
+
+
 const Stack = createStackNavigator();
 
 export default function AccountNavigation() {
 
   return ( 
-        <Stack.Navigator initialRouteName="AccountHome">
+        <Stack.Navigator 
+          initialRouteName="AccountHome"
+          screenOptions={annimatedStackTransition(1, 300, 100)}
+        >
             <Stack.Screen name="AccountHome" component={Account} options={{ title: 'Account', headerShown : false, tabBarVisible: true }} />
             <Stack.Screen name="AccountSettings" component={AccountSettings} options={{ title: 'Parametre Du Compte', headerShown : true, tabBarVisible: true }} />
             <Stack.Screen name="PasswordChange" component={PasswordChange} options={{ title: 'Changer De Mot De Passe', headerShown : true, tabBarVisible: true }} />

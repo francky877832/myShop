@@ -32,6 +32,8 @@ import { UserProvider } from '../context/UserContext';
 import { ProductProvider } from '../context/ProductContext';
 import { CommentsProvider } from '../context/CommentsContext';
 
+import { annimatedStackTransition } from './commonNavigationFonctions'
+
 const Stack = createStackNavigator();
 
 
@@ -49,42 +51,8 @@ export default function MainNavigation() {
           <FilterProvider>
             <CommentsProvider>
             <Stack.Navigator
-        initialRouteName="UserLogin"
-        screenOptions={{
-          headerShown: false,
-          gestureEnabled: true,
-          cardStyleInterpolator: ({ current, next, layouts }) => {
-            const progress = current.progress.interpolate({
-              inputRange: [0, 1],
-              outputRange: [layouts.screen.width * 0.8, 0], // Ajuste la vitesse de défilement
-              extrapolate: 'clamp',
-            });
-
-            return {
-              cardStyle: {
-                transform: [
-                  {
-                    translateX: progress,
-                  },
-                ],
-              },
-            };
-          },
-          transitionSpec: {
-            open: {
-              animation: 'timing',
-              config: {
-                duration: 500, // Durée de l'animation en millisecondes
-              },
-            },
-            close: {
-              animation: 'timing',
-              config: {
-                duration: 300, // Durée de l'animation en millisecondes
-              },
-            },
-          },
-        }}
+              initialRouteName="UserLogin"
+              screenOptions={annimatedStackTransition(1, 400, 200)}
       >
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
                 <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false,}} />
