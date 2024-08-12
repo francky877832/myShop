@@ -38,7 +38,7 @@ const ProductDetails = (props) => {
     const numChars = 150;
     
     const [description, setDescription] = useState(truncateText(data.description, numChars));
-    const {favourites} = useContext(FavouritesContext)
+    const {favourites, addFavourite, removeFavourite, hasLiked} = useContext(FavouritesContext)
     const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
 
 
@@ -182,7 +182,29 @@ const ProductDetails = (props) => {
             scrollViewRef.current.scrollTo({ y: 200, animated: true });
         }
     };*/
-     
+
+    //const [likeClicked, setLikeClicked] = useState(data.liked)
+    const [like, setLikeIcon ] = useState(hasLiked(data))
+    const [numLike, setNumLike] = useState(data.likes)
+
+    const _handleLikePressed =  useCallback((item) => {
+        setLikeIcon((liked) => {
+            if(liked)
+            {
+                setNumLike((prevNumLike) => prevNumLike-1)
+                data.likes--
+            }
+            else
+            {
+                setNumLike((prevNumLike) => prevNumLike+1)
+                data.likes++
+            }
+            return !liked
+        });  
+    },[like])
+    /*useEffect(()=>{
+        setLikeIcon(hasLiked(data));
+    }, [favourites])*/
     return (
 
   <View style={productDetailsStyles.container}>
@@ -197,7 +219,8 @@ const ProductDetails = (props) => {
                     <View style={productDetailsStyles.buttonContainerLeft}>
                         <ShareButton styles={productDetailsStyles.shareButton} />
                         <View style={{ width: 10 }}></View>
-                        <LikeButton hasLiked={data.liked} item={data} styles={{ color: appColors.white }} isCard={false} />
+                        
+                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} synchro={true} item={data} styles={{ color: appColors.white }} isCard={false} />
                     </View>
                 </View>
 
@@ -220,7 +243,9 @@ const ProductDetails = (props) => {
                             <Text style={[customText.text, { color: appColors.secondaryColor4 }]}>Mis à jour il y'a {sinceDate(data.updatedAt).join(" ")}</Text>
                         </View>
                         <View style={{justifyContent:"center",alignItems:"center",}}>
-                            <LikeButton hasLiked={data.liked} item={data} styles={{ color: appColors.black }} isCard={false} />
+
+                                <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} synchro={true} item={data} styles={{ color: appColors.black }} isCard={false} />
+
                             <Text style={[customText.text]}>{data.likes}</Text>
                         </View>
                     </View>

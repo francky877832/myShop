@@ -21,10 +21,12 @@ const FavouritesProvider = ({children}) => {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [totalComments, setTotalComments] = useState(1)
+    const [disableLikeButton, setDisableLikeButton] = useState(false)
 
 
         
     const addFavouriteContext = (item, bool) => {
+        //console.log("timeout")
         setFavourites((prevState) =>{
             //item.liked = bool
             //console.log(item.id_)
@@ -59,6 +61,9 @@ const FavouritesProvider = ({children}) => {
             product : item._id,
         }
         //console.log(bool)
+        //setDisableLikeButton(true)
+        let didAddLikeUpdate = false; 
+        let didRemoveLikeUpdate = false;
             try{
                 if(bool)
                 {
@@ -77,7 +82,12 @@ const FavouritesProvider = ({children}) => {
                             },
     
                         });
-                        item.likes++
+                        //item.likes++
+                        if(response.ok && responseLikes.ok)
+                        {
+                            didAddLikeUpdate = true
+                        }
+                        
                 }
                 else
                 {
@@ -98,21 +108,35 @@ const FavouritesProvider = ({children}) => {
                         },
 
                     });
-                    item.likes > 0 ? item.likes-- : false
+                    //item.likes > 0 ? item.likes-- : false
                     //console.log("REMOVE LIKE")
+
+                        if(response.ok && responseLikes.ok)
+                        {
+                            didRemoveLikeUpdate = true
+                        }
 
                 }        
                     
                 /*if (!response.ok) {
                     throw new Error('Erreur lors de la requête');
                 }*/
-                addFavouriteContext(item, bool)
                 const responseData = await response.json(); // Convertir la réponse en JSON
                 console.log('Réponse de l\'API:', responseData);
                 return responseData;
             }catch(error){
                 console.log(error)
                 Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+            }finally{
+                //setDisableLikeButton(false)
+                if(!didAddLikeUpdate)
+                {
+                    item.liked--
+                }
+                else if(!didRemoveLikeUpdate)
+                {
+                    item.liked++ 
+                }
             }
     }
 
@@ -185,7 +209,7 @@ const FavouritesProvider = ({children}) => {
 
 
 
-    const isFavouritePresent = (item) => {
+    /*const isFavouritePresent = (item) => {
         let i = 0, bool = false
         const f = [...favourites]
         while(i < f.length)
@@ -199,7 +223,20 @@ const FavouritesProvider = ({children}) => {
         }
         //console.log(i)
         return [bool, i]
-    }
+    }*/
+        const isFavouritePresent = (item) => {
+            // Créez un Set des _id des éléments favoris
+            const favouriteIds = new Set(favourites.map(fav => fav._id));
+            
+            // Vérifiez si l'ID de l'élément est dans le Set
+            const bool = favouriteIds.has(item._id);
+        
+            // Trouvez l'index dans le tableau si nécessaire
+            const index = bool ? favourites.findIndex(fav => fav._id === item._id) : -1;
+        
+            return [bool, index];
+        };
+        
 
 
 
@@ -222,9 +259,9 @@ const FavouritesProvider = ({children}) => {
     }, [])
 
 
-    const favouritesStateVars = {favourites, liked, isLoading}
+    const favouritesStateVars = {favourites, liked, isLoading, disableLikeButton}
     const favouritesStateStters = {hasLiked, setLikedIcon, setIsLoading}
-    const utilsFunctions = {addFavourite, loadMoreFavouriteProducts }// removeFavourite}
+    const utilsFunctions = {addFavourite, loadMoreFavouriteProducts, addFavouriteContext }// removeFavourite}
     return (
         <FavouritesContext.Provider value={{...favouritesStateVars, ...favouritesStateStters, ...utilsFunctions}}>
             {children}

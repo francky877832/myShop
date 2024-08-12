@@ -31,7 +31,24 @@ const Product = (props) => {
         
     }, [])
     const [like, setLikeIcon ] = useState(item.liked)
+    const [numLike, setNumLike] = useState(item.likes)
 
+    //hasLikedItem={hasLiked(item)}
+    const _handleLikePressed =  useCallback((item) => {
+        setLikeIcon((liked) => {
+            if(liked)
+            {
+                setNumLike((prevNumLike) => prevNumLike-1)
+                item.likes--
+            }
+            else
+            {
+                setNumLike((prevNumLike) => prevNumLike+1)
+                item.likes++
+            }
+            return !liked
+        });  
+    },[like])
     return(
             <View style={[productStyles.container, productStyles.card, horizontal ? productStyles.containerHorizontal : false]} >
                         <View style={[productStyles.top,] } >
@@ -40,7 +57,7 @@ const Product = (props) => {
                                  <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{item.feesBy=="seller" ? "Gratuit"  : "Reduction"} </Text>
                             </Pressable>
 
-                            <LikeButton hasLikedItem={hasLiked(item)} item={item} isCard={false} styles={{color:appColors.white}}/>
+                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={hasLiked(item)} synchro={false} item={item} isCard={false} styles={{color:appColors.white}}/>
 
                         </View>
                     
