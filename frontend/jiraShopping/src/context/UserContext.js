@@ -1,3 +1,5 @@
+import { API_BACKEND } from '@env';
+
 import React, { createContext, useState, useEffect } from 'react'
 import { Alert } from 'react-native';
 import { serialize } from '../utils/commonAppFonctions'
@@ -50,6 +52,7 @@ const UserProvider = ({children}) => {
     // console.log(JSON.stringify(user))
         try
         {
+            console.log(server)
             const response = await fetch(`${server}/api/auth/login?${serialize(user)}`, {
                 method: 'GET',
                 headers : {

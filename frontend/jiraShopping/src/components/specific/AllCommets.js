@@ -122,7 +122,7 @@ const addComment = async (item) => {
     //console.log(isResponseTo)
         try{
             //console.log("Ok")
-            const response = await fetch(`${API_BACKEND}/api/datas/comments/add/${isResponseTo}`, {
+            const response = await fetch(`${server}/api/datas/comments/add/${isResponseTo}`, {
                 method: 'POST',
                 body: JSON.stringify(comment),
                 headers: {

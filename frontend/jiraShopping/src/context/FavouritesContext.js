@@ -62,14 +62,14 @@ const FavouritesProvider = ({children}) => {
             try{
                 if(bool)
                 {
-                    response = await fetch(`${API_BACKEND}/api/datas/favourites/update/${loggedUserId}`, {
+                    response = await fetch(`${server}/api/datas/favourites/update/${loggedUserId}`, {
                         method: 'POST',
                         body: JSON.stringify(favourite),
                         headers: {
                             'Content-Type': 'application/json',
                         },})
                         
-                        responseLikes = await fetch(`${API_BACKEND}/api/datas/products/likes/update/${item._id}`, {
+                        responseLikes = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
                             method: 'PUT',
                             body: JSON.stringify({updateLikes:1}),
                             headers: {
@@ -82,7 +82,7 @@ const FavouritesProvider = ({children}) => {
                 else
                 {
                     //console.log("fine")
-                    response = await fetch(`${API_BACKEND}/api/datas/favourites/remove/${loggedUserId}`, {
+                    response = await fetch(`${server}/api/datas/favourites/remove/${loggedUserId}`, {
                         method: 'PUT',
                         body: JSON.stringify(favourite),
                         headers: {
@@ -90,7 +90,7 @@ const FavouritesProvider = ({children}) => {
                         },
                     });
 
-                    responseLikes = await fetch(`${API_BACKEND}/api/datas/products/likes/update/${item._id}`, {
+                    responseLikes = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
                         method: 'PUT',
                         body: JSON.stringify({updateLikes:-1}),
                         headers: {
@@ -119,7 +119,7 @@ const FavouritesProvider = ({children}) => {
     const fetchUserFavourites = async (username, page) =>{
             try{
     //console.log("Ok")
-                const response = await fetch(`${API_BACKEND}/api/datas/favourites/get/${username}?page=${page}`);            
+                const response = await fetch(`${server}/api/datas/favourites/get/${username}?page=${page}`);            
                 const datas = await response.json()
                 //console.log(datas)
                 if (!response.ok) {

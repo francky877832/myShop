@@ -10,7 +10,7 @@
         "simulator": true
       },
       "env": {
-        "API_BACKEND": "http://192.168.100.254:3000"
+        "API_BACKEND": "http://192.168.133.254:3000"
       }
     },
     "preview": {
@@ -22,7 +22,7 @@
         "buildType": "apk"
       },
       "env": {
-        "API_BACKEND": "http://192.168.100.254:3000"
+        "API_BACKEND": "http://192.168.133.254:3000"
       }
     },
     "production": {
@@ -33,7 +33,7 @@
         "image": "latest"
       },
       "env": {
-        "API_BACKEND": "http://192.168.100.254:3000"
+        "API_BACKEND": "http://192.168.133.254:3000"
       }
     }
   },

@@ -40,7 +40,7 @@ const CommentsProvider = ({children}) => {
         let comments_ = []
         try{
     //console.log("Ok")
-            const response = await fetch(`${API_BACKEND}/api/datas/comments/get/${id}?page=${page}`);            
+            const response = await fetch(`${server}/api/datas/comments/get/${id}?page=${page}`);            
             comments_ = await response.json()
             //console.log(comments_)
             if (!response.ok) {
@@ -60,7 +60,7 @@ const CommentsProvider = ({children}) => {
             }*/
                 
             //console.log(cm)
-            return comments_.datas
+            return comments_.datas || []
             //Alert.alert("Commentaire recuperes avec success")
         }catch(error){
             //Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
@@ -75,7 +75,7 @@ const CommentsProvider = ({children}) => {
         let comment = []
         try{
     //console.log("Ok")
-            const response = await fetch(`${API_BACKEND}/api/datas/comments/get/last/${id}?user=${username}`);            
+            const response = await fetch(`${server}/api/datas/comments/get/last/${id}?user=${username}`);            
             comment = await response.json()
             //console.log(comments_)
             if (!response.ok) {
@@ -106,11 +106,11 @@ const CommentsProvider = ({children}) => {
                 const comment_ = await fetchProductLastComment(productId, loggedUser);
                 setReshapedComments((prevComments)=>{
                     prevComments[0] = comment_
-                    return [ ...prevComments]
+                    return [...prevComments]
                 })
 
             }catch (error) {
-                console.error('Erreur lors du chargement des commentaires :', error);
+                console.error('Erreur lors du chargement des commentaires onNewComment :', error);
             }finally {
                 setIsLoading(false);
                 setOnNewComment(false);
@@ -124,7 +124,7 @@ const CommentsProvider = ({children}) => {
   
           const comments_ = await fetchProductComments(productId, page);
           //console.log(comments_)
-          if (comments_.length > 0) {
+          if (comments_?.length > 0) {
             //console.log(comments_)
             console.log("pk")
             //updateProducts(newData.datas);

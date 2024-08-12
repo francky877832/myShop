@@ -45,7 +45,7 @@ useEffect(() => {
     const checkToken = async () => {
         //await SecureStore.deleteItemAsync('user');
         //await SecureStore.deleteItemAsync('authToken');
-
+//console.log("oj")
         try{
             const token = await SecureStore.getItemAsync('authToken');
             
@@ -54,7 +54,7 @@ useEffect(() => {
                 const user = JSON.parse(await SecureStore.getItemAsync('user'));
                 //A remplace par user.email...
                 await loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
-
+                
                 //setIsAuthenticated(true);
                 return;
             }

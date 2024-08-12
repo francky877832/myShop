@@ -28,7 +28,7 @@ const ProductProvider = ({children}) => {
       //console.log("responseJson")
         try
         {
-            const response = await fetch(`${API_BACKEND}/api/datas/products/get?page=${page}`,{
+            const response = await fetch(`${server}/api/datas/products/get?page=${page}`,{
                 method: 'GET',
                 headers: {
                     'Content-Type': 'Application/json',

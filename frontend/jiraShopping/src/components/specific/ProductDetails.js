@@ -159,7 +159,7 @@ const ProductDetails = (props) => {
 
 
 
-    useFocusEffect(useCallback(()=>{ //or useFocusEffect(useCallback(,[]))
+    useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
 
         // all ? false : 
         console.log("o")
@@ -173,7 +173,7 @@ const ProductDetails = (props) => {
         fetchData();
         //}
         
-     }, [onNewComment]))
+     }, [onNewComment])
 
 //WHEN COMMING FOR NOTIFICATIONS
     /*const scrollViewRef = useRef(null);

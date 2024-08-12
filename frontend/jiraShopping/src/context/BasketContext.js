@@ -59,7 +59,7 @@ const addBasket = async (item) => {
     }
     try
     {
-        response = await fetch(`${API_BACKEND}/api/datas/basket/update/${loggedUserId}`, {
+        response = await fetch(`${server}/api/datas/basket/update/${loggedUserId}`, {
             method: 'POST',
             body: JSON.stringify(basket),
             headers: {
@@ -84,7 +84,7 @@ const removeBasket = async (item) => {
     }
     try
     {
-        response = await fetch(`${API_BACKEND}/api/datas/basket/remove/${loggedUserId}`, {
+        response = await fetch(`${server}/api/datas/basket/remove/${loggedUserId}`, {
             method: 'PUT',
             body: JSON.stringify(basket),
             headers: {
@@ -158,7 +158,7 @@ const updateTotalPrice = (spro) => {
 const fetchUserBasket = async () =>{
     try{
         //console.log("Ok")
-            const response = await fetch(`${API_BACKEND}/api/datas/basket/get/${loggedUserId}`);            
+            const response = await fetch(`${server}/api/datas/basket/get/${loggedUserId}`);            
             const datas = await response.json()
                     //console.log(datas)
             if (!response.ok) {
