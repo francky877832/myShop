@@ -13,42 +13,69 @@ import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 
 //contexte
-import { FavouritesContext } from '../../context/FavouritesContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { addFavourite, addFavouriteContext, setLikedIcon, updateLocalFavourites, isProductFavourite, addLocalFavourite, removeLocalFavourite} from '../../store/favourites/favouritesSlice'; 
+
 exports.LikeButton = (props) => {
-    const {favourites, addFavourite, addFavouriteContext, removeFavourite, hasLiked, liked, setLikedIcon, disableLikeButton} = useContext(FavouritesContext)
-    const {item, hasLikedItem, _handleLikePressed, synchro, isCard, styles} = props
-    const style = styles || {}
+    const dispatch = useDispatch();
+    const { favourites, liked } = useSelector(state => state.favourites);
+    const { item, hasLikedItem, _handleLikePressed, synchro, isCard, styles } = props;
+    const style = styles || {};
 
-    const [like, setLikeIcon ] = useState(hasLikedItem)
     const timeoutRef = useRef(null);
+   // const isFavourite = useSelector((state) => isProductFavourite(state, item._id))
+    const isFavourite = hasLikedItem
+    const [like, setLikeIcon] = useState(isFavourite);
+    
 
-    const handleLikePressed = (item) => {
-        synchro ? _handleLikePressed(item) : setLikeIcon(!like)
 
-        //addFavouriteContext(item)
+    const handleLikePressed = useCallback((product) => {
+        _handleLikePressed(product)
+        //synchro ? _handleLikePressed() : _handleLikePressed();
+        //dispatch(addFavouriteContext({ item:item, bool: !like }));
+        //setLikeIcon(!isFavourite);
+        
+
+        
+
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
 
         // Configurer un nouveau timeout
-        timeoutRef.current = setTimeout(() => {
-            like ?  addFavourite(item,false) : addFavourite(item,true)
-        }, 1000);
+        /*timeoutRef.current = setTimeout(() => {
+            if (isFavourite) {
+                product.likes--
+                dispatch(removeLocalFavourite(product));
+            } else {
+                product.likes--
+                dispatch(addLocalFavourite(product));
+            }
+            //dispatch(addFavourite({ item:item, bool: !like }));
+        }, 1000);*/
 
-    }
-    useEffect(()=>{
-        item.liked = hasLiked(item)
-        setLikeIcon(item.liked);
-        //setLikedIcon(hasLiked(item));
-    }, [favourites])
-    //console.log(hasLikedItem)
+    },[])
 
-    return(
-            <Pressable style={[commonSimpleComponentsStyles.likeButton.likeIcon, isCard ? productStyles.card : false]} onPress = { ()=>{ handleLikePressed(item)  } }>
-                    {!hasLikedItem  ? <BadgeIcon name="heart-outline" size={24} color={style.color} badgeCount={0} styles={{}}/> : <BadgeIcon name="heart-sharp" size={24} color={appColors.secondaryColor1} badgeCount={0} styles={{}}/>}
-            </Pressable>
-    )
-}
+   useEffect(() => {
+        // Ici, nous devons également mettre à jour l'état local 'like' en fonction du state global
+
+       //setLikeIcon(isFavourite);
+        //dispatch(setLikedIcon(isFavourite)); // Met à jour l'état global 'liked'
+    }, []);
+
+    return (
+        <Pressable
+            style={[commonSimpleComponentsStyles.likeButton.likeIcon, isCard ? productStyles.card : false]}
+            onPress={() => handleLikePressed(item)}
+        >
+            {!hasLikedItem
+                ? <BadgeIcon name="heart-outline" size={24} color={style.color} badgeCount={0} styles={{}} />
+                : <BadgeIcon name="heart-sharp" size={24} color={appColors.secondaryColor1} badgeCount={0} styles={{}} />
+            }
+        </Pressable>
+    );
+};
+
 
 
 exports.PrevButton = (props) => {

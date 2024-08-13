@@ -30,7 +30,7 @@ const HomeNavigation = () => {
   return (
     <Tab.Navigator initialRouteName='Home'
         screenOptions={({ route }) => ({
-          lazy : false,
+          //lazy : false,
           headerShown : false,
           tabBarActiveTintColor: appColors.secondaryColor1,
           tabBarInactiveTintColor: appColors.clearBlack,

@@ -23,6 +23,9 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 import { BasketContext } from '../../context/BasketContext';
 import { CommentsContext } from '../../context/CommentsContext';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { isProductFavourite } from '../../store/favourites/favouritesSlice'; 
+
 const loggedUserId = "66731fcb569b492d3ef429ba"
 const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
@@ -38,8 +41,9 @@ const ProductDetails = (props) => {
     const numChars = 150;
     
     const [description, setDescription] = useState(truncateText(data.description, numChars));
-    const {favourites, addFavourite, removeFavourite, hasLiked} = useContext(FavouritesContext)
-    const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
+    //const {favourites, addFavourite, removeFavourite, hasLiked} = useContext(FavouritesContext)
+    const favourites = useSelector((state) => state.favourites.favourites);
+    //const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
 
 
    
@@ -184,12 +188,27 @@ const ProductDetails = (props) => {
     };*/
 
     //const [likeClicked, setLikeClicked] = useState(data.liked)
-    const [like, setLikeIcon ] = useState(hasLiked(data))
+    
+//console.log("boss")
+    const dispatch = useDispatch();
+    //const isFavourite = useSelector((state) => isProductFavourite(state, data._id))
+    const [like, setLikeIcon ] = useState(false)
     const [numLike, setNumLike] = useState(data.likes)
 
-    const _handleLikePressed =  useCallback((item) => {
+    //hasLikedItem={hasLiked(item)}
+    const _handleLikePressed = useCallback(() => {
+        setLikeIcon(prevLike => {
+            const newLike = !prevLike;
+            setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
+            return newLike;
+        });
+    }, []);
+
+   
+
+    /*const _handleLikePressed =  useCallback((item) => {
         setLikeIcon((liked) => {
-            if(liked)
+           /* if(liked)
             {
                 setNumLike((prevNumLike) => prevNumLike-1)
                 data.likes--
@@ -201,10 +220,9 @@ const ProductDetails = (props) => {
             }
             return !liked
         });  
-    },[like])
-    /*useEffect(()=>{
-        setLikeIcon(hasLiked(data));
-    }, [favourites])*/
+    },[like])*/
+
+
     return (
 
   <View style={productDetailsStyles.container}>
@@ -354,4 +372,4 @@ const ProductDetails = (props) => {
     );
 };
 
-export default ProductDetails;
+export default React.memo(ProductDetails);

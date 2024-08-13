@@ -8,6 +8,7 @@ exports.getUserLikedProducts  =  (req, res, next) => {
     const limit = parseInt(req.query.limit) || 100; // Nombre d'éléments par page, par défaut 20
     const skip = (page - 1) * limit;
     const userId = req.params.user
+    console.log(userId)
         Favourite.aggregate([
             { $match: { user: new ObjectId(userId) } }, 
             { $unwind: '$products' }, // Décompose le tableau de user_ids

@@ -28,6 +28,12 @@ import { ProductItemContext } from '../../context/ProductItemContext';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
 import {CustomActivityIndicator} from '../common/CommonSimpleComponents'
 
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchUserFavourites } from '../../store/favourites/favouritesSlice'; 
+
+
+const loggedUser = "Francky"
+const loggedUserId = "66715deae5f65636347e7f9e"
 
 const ProductsListWithFilters_ = React.memo(({onEndReached, isLoading, hasMore, products}) => {
     useEffect(()=>{
@@ -70,6 +76,15 @@ const Preferences = (props) => {
     const navigation = useNavigation()
     const [isSearch, setIsSearch] = useState(false) 
     //const [isLoading, setIsLoading]  = useState(true)
+    const dispatch = useDispatch();
+    const page = useSelector((state) => state.favourites.page);
+    //console.log(page)
+
+    useEffect(() => {
+      const userId = "66715deae5f65636347e7f9e"; // ID utilisateur
+      //console.log(loggedUserId)
+      dispatch(fetchUserFavourites({user:loggedUserId, page:page}));
+  }, [dispatch]);
 
 
     const {user, loginUserWithEmailAndPassword, isAuthenticated, setIsAuthenticated } = useContext(UserContext)

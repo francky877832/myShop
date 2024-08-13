@@ -14,6 +14,9 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 import { BasketContext } from '../../context/BasketContext';
 import { server } from '../../remote/server';
 
+import {shallowEqual, useSelector, useDispatch } from 'react-redux';
+import { isProductFavourite } from '../../store/favourites/favouritesSlice'; 
+
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
 const username = "Franck"
@@ -23,32 +26,36 @@ const Product = (props) => {
     //console.log(item)
    
 //console.log(item.images[0])
-    const {favourites, addFavourite, hasLiked} = useContext(FavouritesContext)
+    //const {favourites, addFavourite, hasLiked} = useContext(FavouritesContext)
     const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
 
 
     useEffect(() => {
         
     }, [])
-    const [like, setLikeIcon ] = useState(item.liked)
+    const dispatch = useDispatch();
+    const isFavourite = useSelector((state) => isProductFavourite(state, item._id), shallowEqual);
+    const [like, setLikeIcon ] = useState(isFavourite)
     const [numLike, setNumLike] = useState(item.likes)
 
     //hasLikedItem={hasLiked(item)}
-    const _handleLikePressed =  useCallback((item) => {
-        setLikeIcon((liked) => {
-            if(liked)
-            {
-                setNumLike((prevNumLike) => prevNumLike-1)
-                item.likes--
-            }
-            else
-            {
-                setNumLike((prevNumLike) => prevNumLike+1)
-                item.likes++
-            }
-            return !liked
-        });  
-    },[like])
+
+    const _handleLikePressed = useCallback(() => {
+        setLikeIcon(prevLike => {
+            const newLike = !prevLike;
+            setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
+            return newLike;
+        });
+    }, []);
+    
+
+    const handlePress = () => {
+        if (replace) {
+          navigation.replace("ProductDetails", { productDetails: item });
+        } else {
+          navigation.navigate("ProductDetails", { productDetails: item });
+        }
+      };
     return(
             <View style={[productStyles.container, productStyles.card, horizontal ? productStyles.containerHorizontal : false]} >
                         <View style={[productStyles.top,] } >
@@ -57,11 +64,11 @@ const Product = (props) => {
                                  <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{item.feesBy=="seller" ? "Gratuit"  : "Reduction"} </Text>
                             </Pressable>
 
-                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={hasLiked(item)} synchro={false} item={item} isCard={false} styles={{color:appColors.white}}/>
+                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} synchro={false} item={item} isCard={false} styles={{color:appColors.white}}/>
 
                         </View>
                     
-                <Pressable style={ productStyles.pressable } onPress = { ()=>{replace ? navigation.replace("ProductDetails", {productDetails:item,}) : navigation.navigate("ProductDetails", {productDetails:item,});} } >
+                <Pressable style={ productStyles.pressable } onPress = {handlePress} >
                     <Image source={{uri: item.images[0]}}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
                     <View style={ productStyles.text }>
                         <View style={{ flexDirection:"column", justifyContent:"flex-start", }}>
