@@ -36,7 +36,7 @@ const CommentsProvider = ({children}) => {
 
 
     const fetchProductComments = async (id, page) =>{
-        console.log("cm")
+        //console.log("cm")
         let comments_ = []
         try{
     //console.log("Ok")
@@ -149,16 +149,16 @@ const CommentsProvider = ({children}) => {
         }
       }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);    
 
-    const searchAgain = async () => {
+    const searchAgain = useCallback(async () => {
         setIsLoading(false);
         setHasMore(true);
 
         //setPage(1);
         //setComments([]);
         //setFiltersUpdated(true);
-    }
+    },[isLoading, hasMore])
 
-    const searchAgain_ =  () => {
+    const searchAgain_ =  useCallback(() => {
         setPage((prevPage) => prevPage - 1);
         setIsLoading(false);
         setHasMore(true);
@@ -166,7 +166,7 @@ const CommentsProvider = ({children}) => {
         //setPage(1);
         //setComments([]);
         //setFiltersUpdated(true);
-    }
+    }, [page, isLoading, hasMore])
 
     const productStateVars = {isLoading, filtersUpdated, hasMore, page, refreshKey, reshapedComments, totalComments, onNewComment}
     const productStateStters = {setIsLoading, setOnNewComment, setPage}

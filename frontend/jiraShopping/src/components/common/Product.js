@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, createContext, useContext, useCallback} from 'react';
+import React, { useState, useMemo, useEffect, createContext, useContext, useCallback, useRef} from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, Image, Pressable, Alert} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -15,11 +15,15 @@ import { BasketContext } from '../../context/BasketContext';
 import { server } from '../../remote/server';
 
 import {shallowEqual, useSelector, useDispatch } from 'react-redux';
-import { isProductFavourite } from '../../store/favourites/favouritesSlice'; 
+import { isProductFavourite } from '../../store/favourites/favouritesSlice';
+import { addToBasket, removeFromBasket, fetchUserBasket, updateSelectedProducts, setSelectedSeller, isProductBasket, updateLocalBasket } from '../../store/baskets/basketsSlice';
+
 
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
 const username = "Franck"
+const user = {_id:loggedUserId, username:loggedUser}
+
 const Product = (props) => { 
     const { item, horizontal, replace } = props;
     const navigation = useNavigation()
@@ -27,26 +31,60 @@ const Product = (props) => {
    
 //console.log(item.images[0])
     //const {favourites, addFavourite, hasLiked} = useContext(FavouritesContext)
-    const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
-
+    //const {basket, addBasket} = useContext(BasketContext)
+    
+    /*const renderCount = useRef(0);
+    renderCount.current += 1;
+    console.log(renderCount.current)*/
 
     useEffect(() => {
         
     }, [])
     const dispatch = useDispatch();
     const isFavourite = useSelector((state) => isProductFavourite(state, item._id), shallowEqual);
+    const isBasketPresent = useSelector((state) => isProductBasket(state, item._id), shallowEqual);
+//console.log(isFavourite)
     const [like, setLikeIcon ] = useState(isFavourite)
     const [numLike, setNumLike] = useState(item.likes)
+    const timeoutRef = useRef(null);
 
     //hasLikedItem={hasLiked(item)}
 
-    const _handleLikePressed = useCallback(() => {
+    const _handleLikePressed = () => {
         setLikeIcon(prevLike => {
             const newLike = !prevLike;
             setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
             return newLike;
         });
-    }, []);
+    }
+
+
+    const handleBasketPressed = (product) => {
+        
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        
+        if(isBasketPresent)
+        {
+            navigation.navigate("Basket")
+        }
+        else
+        {
+            dispatch(updateLocalBasket({product:product, isAdding:true}));
+        }
+
+
+        // Configurer un nouveau timeout
+       timeoutRef.current = setTimeout(() => {
+        //console.log(isBasketPresent)
+            if(isBasketPresent)
+            {
+                dispatch(addToBasket({product:product, user:user})); 
+            }
+            
+        }, 1000)
+    }//,[timeoutRef, isBasketPresent, navigation])
     
 
     const handlePress = () => {
@@ -55,7 +93,8 @@ const Product = (props) => {
         } else {
           navigation.navigate("ProductDetails", { productDetails: item });
         }
-      };
+      }//,[navigation]);
+      
     return(
             <View style={[productStyles.container, productStyles.card, horizontal ? productStyles.containerHorizontal : false]} >
                         <View style={[productStyles.top,] } >
@@ -88,9 +127,9 @@ const Product = (props) => {
                         </View>
 
                        
-                        <View style={[productStyles.bottom, productStyles.card, isBasketPresent(item)[0]?productStyles.isBasketPresent:false] } >
-                            <Pressable onPress = { ()=>{isBasketPresent(item)[0]?navigation.navigate("Basket"):addBasket(item) } }>
-                                <Text numberOfLines={1} style={[customText.text, productStyles.category, isBasketPresent(item)[0]?productStyles.isBasketPresentText:false]}>{isBasketPresent(item)[0]? "Aller Au Panier":"Ajouter Au Panier"}</Text>
+                        <View style={[productStyles.bottom, productStyles.card, isBasketPresent?productStyles.isBasketPresent:false] } >
+                            <Pressable onPress = { ()=>{isBasketPresent?navigation.navigate("Basket"):handleBasketPressed(item) } }>
+                                <Text numberOfLines={1} style={[customText.text, productStyles.category, isBasketPresent?productStyles.isBasketPresentText:false]}>{isBasketPresent? "Aller Au Panier":"Ajouter Au Panier"}</Text>
                             </Pressable>
                         </View>
                     </View>

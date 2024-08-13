@@ -220,4 +220,4 @@ const respondTo = (id, username) => {
     )
 }
 
-export default Comments
+export default React.memo(Comments)

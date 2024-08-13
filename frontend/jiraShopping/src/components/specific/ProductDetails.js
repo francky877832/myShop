@@ -191,8 +191,8 @@ const ProductDetails = (props) => {
     
 //console.log("boss")
     const dispatch = useDispatch();
-    //const isFavourite = useSelector((state) => isProductFavourite(state, data._id))
-    const [like, setLikeIcon ] = useState(false)
+    const isFavourite = useSelector((state) => isProductFavourite(state, data._id))
+    const [like, setLikeIcon ] = useState(isFavourite)
     const [numLike, setNumLike] = useState(data.likes)
 
     //hasLikedItem={hasLiked(item)}
@@ -202,7 +202,7 @@ const ProductDetails = (props) => {
             setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
             return newLike;
         });
-    }, []);
+    }, [like, numLike]);
 
    
 
@@ -321,27 +321,41 @@ const ProductDetails = (props) => {
                     </Pressable>
                 <View style={{height:20}}></View>
                 
-                        <View>
+                        {
+                            <View>
                             <Comments page={page} loadMoreComments={loadMoreComments_} searchAgain={searchAgain} all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{setOnNewComment:setOnNewComment}} reshapedComments={reshapedComments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
                             {isLoading &&
                                 <CustomActivityIndicator styles={{}} /> 
                             }
                         </View>
+                        
+                        }
 
                 </View>
 
+               {
+                
+
+                    isLoading 
+                    ?
+                                <CustomActivityIndicator styles={{}} /> 
+                                :
                 <View style={[productDetailsStyles.similarContainer]}>
                     <View>
                         <Text style={[customText.text, { fontWeight: "bold", fontSize: 20, color: appColors.black ,paddingLeft:10,}]}>Produits Similaires</Text>
                     </View>
-
+                    
                     <View>
                         <ProductsList datas={favourites} horizontal={true} replace={true} styles={{}} />
                     </View>
+        
                 </View>
-
+        }
+                
 </View>
-            </View>
+        </View>
+
+
         
         </ScrollView>
     </TouchableWithoutFeedback>

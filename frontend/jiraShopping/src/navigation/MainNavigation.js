@@ -42,17 +42,16 @@ export default function MainNavigation() {
 
   return ( 
 <SafeAreaView style={{ flex: 1 }}>
-  <UserProvider>
-    <ProductProvider>
-<FavouritesProvider>
-  <BasketProvider>
+  
   <NavigationContainer> 
+  <UserProvider>
+  <ProductProvider>
     <ProductItemProvider>
           <FilterProvider>
             <CommentsProvider>
             <Stack.Navigator
               initialRouteName="UserLogin"
-              screenOptions={annimatedStackTransition(1, 400, 200)}
+              screenOptions={annimatedStackTransition(0.9, 250, 200)}
       >
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
                 <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false,}} />
@@ -72,11 +71,9 @@ export default function MainNavigation() {
             </CommentsProvider>
           </FilterProvider>
       </ProductItemProvider>
-    </NavigationContainer>
-    </BasketProvider>
-      </FavouritesProvider>
       </ProductProvider>
-  </UserProvider>
+      </UserProvider>
+    </NavigationContainer> 
   </SafeAreaView>
   );
 

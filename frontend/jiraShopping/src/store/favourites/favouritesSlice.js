@@ -62,8 +62,8 @@ export const addFavourite = createAsyncThunk(
 export const fetchUserFavourites = createAsyncThunk(
   'favourites/fetchUserFavourites',
   async ({ user, page }, { getState, rejectWithValue }) => {
-    console.log("page")
-    console.log(user)
+    //console.log("page")
+    //console.log(user)
     try {
       const response = await fetch(`${server}/api/datas/favourites/get/${user}?page=${page}`);
       if (!response.ok) {
@@ -180,8 +180,8 @@ const favouritesSlice = createSlice({
 });
 
 export const isProductFavourite = (state, productId) => {
-    console.log("productId-")
-    console.log(productId)
+    //console.log("productId-")
+    //console.log(productId)
 
     return state.favourites.favourites.some(product => product._id === productId);
   };

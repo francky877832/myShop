@@ -206,7 +206,7 @@ const addComment = async (item) => {
 }
 
 
-export default AllCommets
+export default React.memo(AllCommets)
 
 const allCommetsStyles = StyleSheet.create({
     container :

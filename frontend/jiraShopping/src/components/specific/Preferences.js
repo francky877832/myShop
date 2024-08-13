@@ -30,16 +30,19 @@ import {CustomActivityIndicator} from '../common/CommonSimpleComponents'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserFavourites } from '../../store/favourites/favouritesSlice'; 
-
+import { fetchUserBasket } from '../../store/baskets/basketsSlice';
 
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
+
 
 const ProductsListWithFilters_ = React.memo(({onEndReached, isLoading, hasMore, products}) => {
     useEffect(()=>{
         console.log("ok")
         console.log(products)
     })
+
+
     return (
        
     <View style={{flex:1,}}>
@@ -78,12 +81,15 @@ const Preferences = (props) => {
     //const [isLoading, setIsLoading]  = useState(true)
     const dispatch = useDispatch();
     const page = useSelector((state) => state.favourites.page);
+    const { favourites, liked } = useSelector(state => state.favourites);
     //console.log(page)
 
     useEffect(() => {
       const userId = "66715deae5f65636347e7f9e"; // ID utilisateur
       //console.log(loggedUserId)
       dispatch(fetchUserFavourites({user:loggedUserId, page:page}));
+      dispatch(fetchUserBasket(loggedUserId));
+
   }, [dispatch]);
 
 

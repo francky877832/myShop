@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
+import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, Pressable, Alert } from 'react-native';
 import { RadioButton, } from 'react-native-paper';
 //custom component
@@ -19,9 +19,51 @@ import { CheckBox } from 'react-native-elements';
 import { BasketContext } from '../../context/BasketContext';
 
 import { formatMoney } from '../../utils/commonAppFonctions';
+
+import { useSelector, useDispatch } from 'react-redux';
+import  {
+    removeFromBasket,
+    updateSelectedProducts,
+    updateLocalBasket,
+    setSelectedSeller,
+  } from '../../store/baskets/basketsSlice';
+
+  const loggedUser = "Francky"
+  const loggedUserId = "66715deae5f65636347e7f9e"
+  const username = "Franck"
+  const user = {_id:loggedUserId, username:loggedUser}
+
 const RadioProductsList = (props) => {
     const { item, datas  } = props;
-    const {basket, removeBasket, selectedProducts, updateSelectedProducts, selectedSeller, setSelectedSeller, totalPrice, updateTotalPrice} = useContext(BasketContext)
+    
+    //const { removeBasket, updateTotalPrice} = useContext(BasketContext)
+    
+    dispatch = useDispatch()
+    const basket = datas
+    const selectedProducts = useSelector((state) => state.basket.selectedProducts);
+    const selectedSeller = useSelector((state) => state.basket.selectedSeller);
+    const totalPrice = useSelector((state) => state.basket.totalPrice);
+    const isLoading = useSelector((state) => state.basket.status);
+    const error = useSelector((state) => state.basket.error);
+
+
+    const timeoutRef = useRef(null);
+
+
+//UTİLS FONCT
+const handleRemoveFromBasket = useCallback((product) => {
+    dispatch(updateSelectedProducts({itemId:product._id, bool:"remove"}));
+    dispatch(updateLocalBasket({product:product, isAdding:false}));
+
+        timeoutRef.current = setTimeout(() => {
+        //console.log(isBasketPresent)
+        dispatch(removeFromBasket({product:product, user:user})); 
+        }, 1000)
+    
+  },[]);
+
+  const handleSelectedSeller = useCallback((val) => {dispatch(setSelectedSeller(val)) },[]);
+  const handleUpdateSelectedProducts  = useCallback((product) => {dispatch(updateSelectedProducts({itemId:product._id}))},[])
 
     const RadioProduct = (props) => {
         const {item} = props
@@ -32,7 +74,7 @@ const RadioProductsList = (props) => {
         const inBasket = 3
         return (
             <View styles={[radioProductStyles.container,{}]}>       
-                <RadioButton.Group onValueChange={val => {setSelectedSeller(val)}} value={selectedSeller} style={[radioProductStyles.radioGroup,radioProductStyles.radioGroup1,]}>
+                <RadioButton.Group onValueChange={val => {handleSelectedSeller(val)}} value={selectedSeller} style={[radioProductStyles.radioGroup,radioProductStyles.radioGroup1,]}>
                     {
                         item.products.map((product1, key) => {
                                
@@ -64,7 +106,7 @@ const RadioProductsList = (props) => {
                                                             <Text style={[customText.text, ]}>{product2.seller}</Text>
                                                             <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
                                                             <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(product2.price)} XAF{/* prix de la proposition ou real Price*/}</Text>
-                                                            <Pressable onPress={()=>{removeBasket(product2);updateSelectedProducts(product2,"remove");}}>
+                                                            <Pressable onPress={()=>{handleRemoveFromBasket(product2);}}>
                                                                 <Icon name="trash-outline" color={appColors.black} size={18} type="ionicon" style={[{alignSelf:"flex-end"}]} />
                                                             </Pressable>
                                                         </View>
@@ -73,7 +115,7 @@ const RadioProductsList = (props) => {
                                                 containerStyle={[radioProductStyles.checkBoxContainer,{}]} 
                                                 textStyle={[customText.text,radioProductStyles.checkBoxText]} 
                                                 checked={selectedSeller==product2.seller && selectedProducts[product2._id]} 
-                                                onPress={() => {selectedSeller==product2.seller ? updateSelectedProducts(product2) : Alert.alert("Infos","Veillez d'abord selectionner le vendeur adéquat.") }} 
+                                                onPress={() => {selectedSeller==product2.seller ? handleUpdateSelectedProducts(product2) : Alert.alert("Infos","Veillez d'abord selectionner le vendeur adéquat.") }} 
                                             
                                                 />
 

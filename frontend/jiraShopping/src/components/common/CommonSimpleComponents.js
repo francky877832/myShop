@@ -43,7 +43,7 @@ exports.LikeButton = (props) => {
         }
 
         // Configurer un nouveau timeout
-        /*timeoutRef.current = setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
             if (isFavourite) {
                 product.likes--
                 dispatch(removeLocalFavourite(product));
@@ -51,8 +51,8 @@ exports.LikeButton = (props) => {
                 product.likes--
                 dispatch(addLocalFavourite(product));
             }
-            //dispatch(addFavourite({ item:item, bool: !like }));
-        }, 1000);*/
+            dispatch(addFavourite({ item:item, bool: !like }));
+        }, 1000);
 
     },[])
 
