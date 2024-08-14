@@ -31,6 +31,7 @@ const CommentsProvider = ({children}) => {
     const [refreshKey, setRefreshKey] = useState(0);
     const [filtersUpdated, setFiltersUpdated] = useState(false);
     const [onNewComment, setOnNewComment] = useState(false)
+    const [isResponseTo, setIsResponseTo] = useState(null)
     const COMMENT_PER_PAGE = 3
 
 
@@ -60,7 +61,7 @@ const CommentsProvider = ({children}) => {
             }*/
                 
             //console.log(cm)
-            return comments_.datas || []
+            return comments_.datas
             //Alert.alert("Commentaire recuperes avec success")
         }catch(error){
             //Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
@@ -90,40 +91,67 @@ const CommentsProvider = ({children}) => {
         }
     }
 
-    const loadMoreComments = useCallback(async (productId) => {
+    const loadMoreComments = useCallback(async (product) => {
         console.log("ook")
         /*if(onNewComment)
             searchAgain_()*/
         console.log(onNewComment)
-        console.log(hasMore)
         console.log(isLoading)
+        console.log(hasMore)
         
         if(onNewComment)
         {
             try 
             {
   
-                const comment_ = await fetchProductLastComment(productId, loggedUser);
+                const comment_ = await fetchProductLastComment(product._id, loggedUser);
+                let updatedComments;
                 setReshapedComments((prevComments)=>{
-                    prevComments[0] = comment_
-                    return [...prevComments]
+                    if(!!isResponseTo)
+                    {
+                            //console.log("prevComments")
+                        updatedComments = prevComments.map(cm => {
+                            if (cm._id == comment_.isResponseTo) {
+                                return {
+                                    ...cm,
+                                    subComment: [...cm.subComment, comment_]
+                                };
+                            }
+                            return cm;
+                        });
+                        product.comments = updatedComments
+                        return updatedComments
+                    }
+                    else
+                    {
+                            //product.comments.unshift(comment_)
+                            //prevComments[0] = comment_
+                            updatedComments = [comment_, ...prevComments.slice(1)];
+                            product.comments = updatedComments
+                            return updatedComments
+                    }
                 })
+                
+
+                
 
             }catch (error) {
                 console.error('Erreur lors du chargement des commentaires onNewComment :', error);
             }finally {
                 setIsLoading(false);
                 setOnNewComment(false);
+                setIsResponseTo("")
             }
         }
 
+/*
         if (isLoading || !hasMore) return;
     
         setIsLoading(true);
         try {
   
           const comments_ = await fetchProductComments(productId, page);
-          //console.log(comments_)
+          console.log(comments_)
           if (comments_?.length > 0) {
             //console.log(comments_)
             console.log("pk")
@@ -146,7 +174,8 @@ const CommentsProvider = ({children}) => {
         }finally {
             setIsLoading(false);
             setOnNewComment(false);
-        }
+        }*/
+
       }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);    
 
     const searchAgain = useCallback(async () => {
@@ -166,10 +195,11 @@ const CommentsProvider = ({children}) => {
         //setPage(1);
         //setComments([]);
         //setFiltersUpdated(true);
+        
     }, [page, isLoading, hasMore])
 
-    const productStateVars = {isLoading, filtersUpdated, hasMore, page, refreshKey, reshapedComments, totalComments, onNewComment}
-    const productStateStters = {setIsLoading, setOnNewComment, setPage}
+    const productStateVars = {isLoading, filtersUpdated, hasMore, page, refreshKey, reshapedComments, totalComments, onNewComment, isResponseTo}
+    const productStateStters = {setIsLoading, setOnNewComment, setPage, setIsResponseTo}
     const utilsFunctions = {fetchProductComments, loadMoreComments, searchAgain, searchAgain_, setReshapedComments,}
     return (
         <CommentsContext.Provider value={{...productStateVars, ...productStateStters, ...utilsFunctions}}>

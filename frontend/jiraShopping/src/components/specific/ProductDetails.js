@@ -25,6 +25,7 @@ import { CommentsContext } from '../../context/CommentsContext';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { isProductFavourite } from '../../store/favourites/favouritesSlice'; 
+import { ActivityIndicator } from 'react-native-paper';
 
 const loggedUserId = "66731fcb569b492d3ef429ba"
 const loggedUser = "Francky"
@@ -40,6 +41,7 @@ const ProductDetails = (props) => {
     data.color = "blue";
     const numChars = 150;
     
+    const [comments, setComments] = useState(data.comments)
     const [description, setDescription] = useState(truncateText(data.description, numChars));
     //const {favourites, addFavourite, removeFavourite, hasLiked} = useContext(FavouritesContext)
     const favourites = useSelector((state) => state.favourites.favourites);
@@ -65,12 +67,11 @@ const ProductDetails = (props) => {
 
 
 
-    const { reshapedComments, loadMoreComments, page, hasMore, isLoading, setIsLoading, filtersUpdated, searchAgain, searchAgain_, setPage, onNewComment, setOnNewComment, setHasMore } = useContext(CommentsContext)
-    //function setIsLoading(){}
-    //const [numComments, setNumComments] = useState(0)
-    //const [isLoading, setIsLoading] = useState(true)
+    const { reshapedComments, setReshapedComments, loadMoreComments, page, hasMore, isLoading, setIsLoading, filtersUpdated, searchAgain, searchAgain_, setPage, onNewComment, setOnNewComment, setHasMore } = useContext(CommentsContext)
+ 
         const initialNumberOfComments = 2
         const loadMoreComments_ = async () => { await loadMoreComments(product._id) ;}
+        
 
        
         //let data_ = [...comments] ; data_ = !all ? data_.slice(0, initialNumberOfComments+1) : comments
@@ -162,22 +163,14 @@ const ProductDetails = (props) => {
    */ 
 
 
+ useEffect(()=>{
+    setReshapedComments(data.comments)
+}, [])
 
-    useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
+    
 
-        // all ? false : 
-        console.log("o")
+    
 
-        const fetchData = async () => {
-            //setIsLoading(true);
-            await loadMoreComments(data._id)    
-        };
-     
-        //if (isLoading) {
-        fetchData();
-        //}
-        
-     }, [onNewComment])
 
 //WHEN COMMING FOR NOTIFICATIONS
     /*const scrollViewRef = useRef(null);
@@ -325,7 +318,7 @@ const ProductDetails = (props) => {
                             <View>
                             <Comments page={page} loadMoreComments={loadMoreComments_} searchAgain={searchAgain} all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{setOnNewComment:setOnNewComment}} reshapedComments={reshapedComments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
                             {isLoading &&
-                                <CustomActivityIndicator styles={{}} /> 
+                                <ActivityIndicator color={appColors.secondaryColor1} size="small" styles={{}} /> 
                             }
                         </View>
                         
@@ -338,7 +331,7 @@ const ProductDetails = (props) => {
 
                     isLoading 
                     ?
-                                <CustomActivityIndicator styles={{}} /> 
+                                <ActivityIndicator color={appColors.secondaryColor1} size="small" styles={{}} /> 
                                 :
                 <View style={[productDetailsStyles.similarContainer]}>
                     <View>

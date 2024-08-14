@@ -26,11 +26,11 @@ const AllCommets = (props) =>
     const navigation = useNavigation()
     const route = useRoute()
     const { product, inputFocused } = route.params
-    const { reshapedComments, setReshapedComments, onNewComment, setOnNewComment, setPage} = useContext(CommentsContext)
+    const { reshapedComments, setReshapedComments, onNewComment, setOnNewComment, setPage, isResponseTo, setIsResponseTo, loadMoreComments} = useContext(CommentsContext)
     //const [comments_, setComments_] = useState(reshapedComments)
     //const setIsLoading = route.params.setIsLoading
     const [isFocused, setIsFocused] = useState(false)
-    const [isResponseTo, setIsResponseTo] = useState(null)
+    //const [isResponseTo, setIsResponseTo] = useState(null)
     const [inputValue, setInputValue] = useState("")
     const [refreshComponent, setRefreshComponent] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -79,7 +79,7 @@ const updateReshapedComments = (comment)=>{
         {
             //console.log("prevComments")
             prevComments.forEach((cm, i)=>{
-                    console.log(cm)
+                    //console.log(cm)
                 if(cm._id == comment.isResponseTo)
                 {
                     //console.log( prevComments[i].subComment)
@@ -116,12 +116,11 @@ const addComment = async (item) => {
         isResponseTo : isResponseTo
     }
 
-        
-
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
     //console.log(isResponseTo)
         try{
             //console.log("Ok")
+            
             const response = await fetch(`${server}/api/datas/comments/add/${isResponseTo}`, {
                 method: 'POST',
                 body: JSON.stringify(comment),
@@ -129,16 +128,18 @@ const addComment = async (item) => {
                     'Content-Type': 'application/json',
                 },})
                         //console.log(datas)
+                
             if (!response.ok) {
                 throw new Error('Erreur lors de la requête'+(await response.text()));
             }
 
             //Alert.alert("Comment ajouté avec success.")
             //setIsLoading(true)
+            //await async function(){setOnNewComment(true)}()
             setOnNewComment(true)
             setPage((prevPage) => prevPage - 1);
             //console.log(onNewComment)
-            setIsResponseTo("")
+            //setIsResponseTo("")
             updateReshapedComments(comment)
             setIsLoading(false) //A VERIFIER
 
@@ -149,25 +150,29 @@ const addComment = async (item) => {
             console.log(error)
             Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
             setIsLoading(false)
+            setOnNewComment(false)
         }
 
 }
 
-/*
-  <KeyboardAwareScrollView style={[allCommetsStyles.container,{}]}  
-            //resetScrollToCoords={{ x: 0, y: 0 }} 
-            contentContainerStyle={{flexGrow:1}} 
-            scrollEnabled={true}
-            //extraScrollHeight={0}
-            //keyboardShouldPersistTaps="always"
-            enableOnAndroid={true}
-        >
+useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
+        
+    // all ? false : 
+    console.log("o")
+
+    const fetchData = async () => {
+        //setIsLoading(true);
+        console.log("o")
+        await loadMoreComments(product)    
+    };
+ 
+    //if (isLoading) {
+    fetchData();
+    //}
+    
+ }, [onNewComment])
 
 
-</KeyboardAwareScrollView>
-
-
-*/
 
     return(
 <View style={{ flex: 1 }}>

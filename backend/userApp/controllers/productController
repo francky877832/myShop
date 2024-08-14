@@ -96,7 +96,7 @@ exports.removeProduct  = (req, res, next) => {
    });
 };
 
-exports.getProducts = async (req, res, next) => {
+/*exports.getProducts = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
   const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 20
   const skip = (page - 1) * limit;
@@ -114,7 +114,113 @@ exports.getProducts = async (req, res, next) => {
     console.log(error)
       res.status(400).json({ error: error+"go"});
   });
-};
+};*/
+
+
+exports.getProducts = async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+  const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
+  const skip = (page - 1) * limit;
+
+  try {
+    const products = await Product.aggregate([
+      { $sort: { createdAt: -1 } }, // Trier les produits les plus récents en premier
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: 'comments', // Nom de la collection des commentaires
+          localField: '_id',
+          foreignField: 'product',
+          as: 'comments'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users', // Nom de la collection des utilisateurs
+          localField: 'comments.user',
+          foreignField: '_id',
+          as: 'userDetails'
+        }
+      },
+      {
+        $addFields: {
+          comments: {
+            $map: {
+              input: "$comments",
+              as: "comment",
+              in: {
+                _id: "$$comment._id",
+                text: "$$comment.text",
+                user: "$$comment.user",
+                username: "$$comment.username",
+                isResponseTo: "$$comment.isResponseTo",
+                visible: "$$comment.visible",
+                createdAt: "$$comment.createdAt",
+                updatedAt: "$$comment.updatedAt",
+                userDetails: {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: "$userDetails",
+                        as: "userDetail",
+                        cond: { $eq: ["$$userDetail._id", "$$comment.user"] }
+                      }
+                    },
+                    0
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          name: { $first: '$name' },
+          description: { $first: '$description' },
+          price: { $first: '$price' },
+          newPrice: { $first: '$newPrice' },
+          minPrice: { $first: '$minPrice' },
+          maxPrice: { $first: '$maxPrice' },
+          condition: { $first: '$condition' },
+          seller: { $first: '$seller' },
+          sellerName: { $first: '$sellerName' },
+          category: { $first: '$category' },
+          brand: { $first: '$brand' },
+          couleur: { $first: '$couleur' },
+          images: { $first: '$images' },
+          feesBy: { $first: '$feesBy' },
+          garanti: { $first: '$garanti' },
+          stock: { $first: '$stock' },
+          likes: { $first: '$likes' },
+          inBasket: { $first: '$inBasket' },
+          sold: { $first: '$sold' },
+          visibility: { $first: '$visibility' },
+          createdAt: { $first: '$createdAt' },
+          updatedAt: { $first: '$updatedAt' },
+          comments: { $first: '$comments' } // Utiliser $first pour garder les commentaires correctement formatés
+        }
+      }
+    ]);
+
+    const totalDatas = await Product.countDocuments().exec();
+    const totalPages = Math.ceil(totalDatas / limit);
+
+    console.log(products)
+
+    res.status(200).json({ datas: products, page: page, totalPages: totalPages, totalDatas: totalDatas });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: error.message });
+  }
+}
+
+
+
+
+
 
 exports.getProduct  = (req, res, next) => {
   
