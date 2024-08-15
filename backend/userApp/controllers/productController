@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const Product = require('../models/productModel');
+const Comment = require('../models/commentModel');
 const Fuse = require('fuse.js');
 
 
@@ -116,106 +117,43 @@ exports.removeProduct  = (req, res, next) => {
   });
 };*/
 
-exports.getProducts = async (req, res, next) => {
+exports.getProducts =  (req, res, next) => {
   const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
   const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
   const skip = (page - 1) * limit;
 
-  try {
-    const result = await Product.aggregate([
-      {
-        $lookup: {
-          from: 'comments', // Nom de la collection des commentaires
-          localField: '_id',
-          foreignField: 'product',
-          as: 'comments'
-        }
-      },
-      {
-        $lookup: {
-          from: 'users', // Nom de la collection des utilisateurs
-          localField: 'comments.user',
-          foreignField: '_id',
-          as: 'userDetails'
-        }
-      },
-      {
-        $addFields: {
-          comments: {
-            $map: {
-              input: {
-                $let: {
-                  vars: {
-                    sortedComments: {
-                      $sortArray: { input: "$comments", sortBy: { createdAt: -1 } }
-                    }
-                  },
-                  in: "$$sortedComments"
-                }
-              },
-              as: "comment",
-              in: {
-                _id: "$$comment._id",
-                text: "$$comment.text",
-                user: "$$comment.user",
-                username: "$$comment.username",
-                isResponseTo: "$$comment.isResponseTo",
-                visible: "$$comment.visible",
-                createdAt: "$$comment.createdAt",
-                updatedAt: "$$comment.updatedAt",
-                userDetails: {
-                  $arrayElemAt: [
-                    {
-                      $filter: {
-                        input: "$userDetails",
-                        as: "userDetail",
-                        cond: { $eq: ["$$userDetail._id", "$$comment.user"] }
-                      }
-                    },
-                    0
-                  ]
-                },
-                subComment: "$$comment.subComment" // Inclure les sous-commentaires
-              }
-            }
-          }
-        }
-      },
-      {
-        $facet: {
-          totalCount: [{ $count: "count" }],
-          products: [
-            { $sort: { createdAt: -1 } }, // Trier les produits les plus récents en premier
-            { $skip: skip },
-            { $limit: limit }
-          ]
-        }
-      },
-      {
-        $addFields: {
-          totalCount: { $arrayElemAt: ["$totalCount.count", 0] }
-        }
-      },
-      {
-        $addFields: {
-          totalPages: {
-            $ceil: {
-              $divide: ["$totalCount", limit]
-            }
-          }
-        }
-      }
-    ]);
+      //console.log(page,skip,limit)
+      //console.log(products)
+  Product.find().sort({_id:-1}).skip(skip).limit(limit).exec()
+      .then (async(products) => {
+            // Étape 2 : Compter le total des produits pour la pagination
+          const totalDatas = await Product.countDocuments().exec();
+          const totalPages = Math.ceil(totalDatas / limit);
 
-    const products = result[0].products;
-    const totalDatas = result[0].totalCount;
-    const totalPages = result[0].totalPages;
+          // Étape 3 : Récupérer les identifiants des produits de la page actuelle
+          const productIds = products.map(product => product._id);
 
-    res.status(200).json({ datas: products, page: page, totalPages: totalPages, totalDatas: totalDatas });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ error: error.message });
-  }
+          // Étape 4 : Récupérer les commentaires pour les produits de la page actuelle
+          const comments = await Comment.find({ product: { $in: productIds } }).sort({_id:-1})
+            .populate('user', 'username') // Joindre les détails de l'utilisateur (optionnel)
+            .exec();
+
+          // Étape 5 : Joindre les commentaires aux produits
+          const productsWithComments = products.map(product => {
+            return {
+              ...product.toObject(),
+              comments: comments.filter(comment => comment.product.toString() === product._id.toString())
+            };
+          });
+
+          // Retourner la réponse
+          res.status(200).json({ datas: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
+        })
+
+    .catch((error)=> {
+        console.log(error);
+        res.status(400).json({ error: error.message });
+    })
 };
 
 
@@ -404,9 +342,26 @@ exports.getSearchedProducts = async (req, res, next) => {
       filteredResult.sort((a, b) => a.sortIndex - b.sortIndex);
     //res.json(filteredResult); 
     //console.log(skip, skip+limit)
-    console.log(filteredResult.slice(skip, skip+limit).length)
-    res.status(200).json({datas:filteredResult.slice(skip, skip+limit), page:page,totalPages:totalPages,totalDatas:totalDatas});
+    //console.log(filteredResult.slice(skip, skip+limit).length)
 
+
+    const productIds = filteredResult.map(product => product._id);
+    const comments = await Comment.find({ product: { $in: productIds } }).sort({_id:-1})
+      .populate('user', 'username')
+      .exec();
+
+    const productsWithComments = filteredResult.map(product => {
+      return {
+        ...product.toObject(),
+        comments: comments.filter(comment => comment.product.toString() === product._id.toString())
+      };
+    });
+
+    // Étape 6 : Appliquer la pagination
+    const paginatedResult = productsWithComments.slice(skip, skip + limit);
+
+
+    res.status(200).json({ datas: paginatedResult, page: page, totalPages: totalPages, totalDatas: totalDatas });
   } catch (err) {
     console.log(err)
     res.status(500).json({ error: err.message });

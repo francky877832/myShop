@@ -38,6 +38,8 @@ const Categories = (props) => {
 
         const updateCategories_ = useCallback((id, path) => {
             setSelectedCategories_((prevSelectedCategory) => {
+                console.log("path")
+                console.log(path)
                 if(path==undefined)
                 {        //console.log(id)
                     if(prevSelectedCategory["name"] == id)
@@ -50,7 +52,7 @@ const Categories = (props) => {
                     return {[id] : true, name:id,}
                 }
                 else
-                { //console.log(path)
+                { 
                     return {[id] : true, name:id, subCategories:path}
                 }
             })
@@ -183,14 +185,17 @@ const getCategory = async (type, cat, subCat) => {
     {
         case "category" :    
             updateCategories(selectedCategories_.name, "complete_category");
+            navigation.navigate("CategoryResults", {category:selectedCategories_, searchText:"", display:"category"});
             break;
         case "subCategory" :
             updateCategories(cat, subCat)
+            //{[id] : true, name:id, subCategories:path}
+            navigation.navigate("CategoryResults", {category:{[cat] : true, name:cat, subCategories:subCat}, searchText:"", display:"category"});
             break;
         default : break;
 
     }
-    navigation.navigate("CategoryResults", {category:selectedCategories_, searchText:"", display:"category"});
+    //navigation.navigate("CategoryResults", {category:selectedCategories_, searchText:"", display:"category"});
 }
 
     return(

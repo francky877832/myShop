@@ -23,7 +23,7 @@ import { server } from '../../remote/server';
 import { serialize } from '../../utils/commonAppFonctions';
 
 const CategoryResults = (props) => {
-
+    const [onExit, setOnExit] = useState(false);
     //const [products, setProducts] = useState([])
    
     //{selectedBrands:selectedBrands, isNewFocused:isNewFocused,isOldFocused:isOldFocused, isNewOldFocusedconditions:isNewOldFocusedconditions,conditions:conditions, selectedModalCategories:selectedModalCategories}
@@ -43,6 +43,26 @@ const CategoryResults = (props) => {
         //const {selectedCategory,  } = useContext(ProductItemContext)
         const {user} = useContext(UserContext)
         const navigation = useNavigation()
+
+
+        const onBackPress = useCallback((e) => {
+            if (e) {
+              e.preventDefault(); // Empêcher le comportement par défaut de la navigation
+            }
+        
+            setOnExit(true)
+           
+            navigation.dispatch(e.data.action);
+          }, [navigation]);
+    
+    
+    useEffect(()=>{
+        //Appel de useCallBack
+           // Ajouter l'écouteur pour l'événement de retour
+        const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
+        return unsubscribe;
+    }, [navigation, onBackPress])
+
 
         const getProductsFromCategories = async () =>{
             //console.log(selectedCategories)
@@ -120,7 +140,7 @@ const title = `Resultats de recherche "${searchText}"`
                         </View>
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="CategoryResults" selectedCategory={category} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false}} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters name="CategoryResults" onExit={onExit} setOnExit={setOnExit} selectedCategory={category} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false}} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )

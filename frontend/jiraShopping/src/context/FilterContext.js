@@ -92,8 +92,9 @@ const FilterProvider = ({children}) => {
 
     })*/
 
-    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory, selectedBrands, conditions}) =>
+    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory, selectedBrands, conditions, resetPage}) =>
     {
+        if(resetPage){ setPage(1)}
         //console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, selectedCategories})
         //setIsLoading(true)
         //setSelectedOrderBy(orderBy);
@@ -181,7 +182,10 @@ const FilterProvider = ({children}) => {
         }
      
         //GESTION DE LA PAGE
-        filters["customFilters"]['page'] = page
+        filters["customFilters"]['page'] = (resetPage===true)?1:page
+        
+        
+
         //console.log(filters)
         
         const queryString = serialize(filters)
@@ -216,18 +220,20 @@ const FilterProvider = ({children}) => {
     })
 
     
-    const loadMoreDataWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory={}, selectedBrands, conditions}) =>
+    const loadMoreDataWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory={}, selectedBrands, conditions, resetPage=false}) =>
     {
         //console.log("selectedCategory")
         //console.log(selectedCategory)
-        console.log(hasMore)
+        console.log("hasMore")
+        console.log(resetPage)
         if (isLoading || !hasMore) return;
+        //if (isLoading) return;
     
         setIsLoading(true);
         try {
             console.log("page")
             console.log(page)
-            const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedCategory:selectedCategory, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy}); //A MODDIFIER
+            const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedCategory:selectedCategory, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, resetPage}); //A MODDIFIER
             //console.log(newData)
             if (newData.datas.length > 0) {
                 //setProducts(newData.datas)

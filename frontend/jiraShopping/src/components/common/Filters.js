@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useCallback, useMemo  } from 'react';
-import { View, Text, Pressable, TextInput, ScrollView, FlatList} from 'react-native';
+import { View, Text, Pressable, TextInput, ScrollView, FlatList, Alert} from 'react-native';
 
 import { Button, CheckBox } from 'react-native-elements';
 import { RadioButton, } from 'react-native-paper';
@@ -21,10 +21,10 @@ import { formatMoney } from '../../utils/commonAppFonctions';
 //Context
 import { FilterContext } from '../../context/FilterContext';
 import { ProductItemContext } from '../../context/ProductItemContext';
+import { useNavigation } from '@react-navigation/native';
 
 const Filters = (props) => {
-    
-
+    const navigation = useNavigation()
     //const [isLoading, setIsLoading] = useState(true)
 
     const {selectedCategories, selectedOrderBy, minPrice, maxPrice, setSelectedCategories, setSelectedOrderBy, refreshComponent,
@@ -45,9 +45,33 @@ const Filters = (props) => {
 
     const { categories, brands, /*isLoading, setIsLoading*/ } = useContext(ProductItemContext)
 //console.log(categories)
-    const { suggestion, searchText,  getDatas, display, notDisplayFilters } = props
+    const { suggestion, searchText,  getDatas, display, notDisplayFilters, onExit, setOnExit } = props
     const [showSuggestion, setShowSuggestion] = useState(suggestion)
     
+
+
+    useEffect(() => {
+        // Fonction de nettoyage à exécuter lorsque le composant est démonté
+        return () => {
+          if (onExit) {
+            setSelectedBrands({})
+            setIsNewFocused(true)
+            setIsOldFocused(true)
+            setIsNewOldFocused(true)
+            setConditions({"old":true, "new":true, "new used":true})
+            setSelectedModalCategories({})
+            setSelectedOrderBy("")
+            //setSelectedCategories({})
+            setOnExit(false)
+            //Alert.alert("ok")
+          }
+        };
+
+        
+      }, [onExit]);
+
+
+
 
     const updateConditions = useCallback((name) =>
     {
@@ -218,8 +242,9 @@ const handleOrderby = async (val)=>{
         setSelectedOrderBy(val)
         //console.log(selectedOrderBy)
         //await searchAgain()
+        console.log(selectedBrands)
         await searchAgainWithoutUpdate()
-        await loadMoreDataWithFilters({searchText:searchText||" ", selectedCategory:selectedCategories, orderBy:val,selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions});
+        await loadMoreDataWithFilters({searchText:searchText||" ", selectedCategory:selectedCategories, orderBy:val, selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions, resetPage:true});
         //Pas besoin de getSearchedTextWithFilters par ce Filters est dans SearchResults et cela se fait auto.
     //Il ya juste besoin de mettre a jour selectedOrderBy et de re-rendre le component avec un activityIndicator
    
