@@ -40,7 +40,7 @@ exports.updateUserNotifications = (req, res, next) => {
     .then( (notificaitons) => {
         if(notificaitons.length > 0)
         {
-            notificaitons[0].notifications.push(notificaiton)
+            notificaitons[0].notifications.unshift(notificaiton)
             Notification.updateOne({ user : req.params.user }, ({ notifications : notificaitons[0].notifications}))
             .then( () => {
                 res.status(200).json({ message : "Notification Ajoutée." });

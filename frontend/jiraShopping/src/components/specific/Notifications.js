@@ -25,6 +25,19 @@ const initialLayout = { width: Dimensions.get('window').width };
 
 const RenderNotificationItem = (props) =>{
     const {item, openNotif, user} = props
+    const [date, setDate] = useState(sinceDate(item.updatedAt).join(' '))
+    const timeoutRef = useRef(null);
+
+  if(['seconde','secondes', 'minute', 'minutes'].includes(sinceDate(item.updatedAt)[1]))
+  { 
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setInterval(() => {
+        setDate(sinceDate(item.updatedAt).join(' '))
+      }, 60000);
+  }
+
 
     return(
         <View style={[notificationsStyles.item, item.read ? notificationsStyles.itemRead : false]}>
@@ -38,7 +51,7 @@ const RenderNotificationItem = (props) =>{
                 </View>
             </Pressable>
                   <View style={[notificationsStyles.sinceDate, {}]}>
-                    <Text style={[customText.text, notificationsStyles.textDate, {}]}>{sinceDate(item.updatedAt).join(' ')}</Text>
+                    <Text style={[customText.text, notificationsStyles.textDate, {}]}>{date}</Text>
                   </View>
         </View>
     )
@@ -54,6 +67,7 @@ const AllNotifications = () => {
   const navigation = useNavigation()
 
 const sendNotif = async (username, source, model, type) => {
+    setIsLoading(true)
     const response = await sendNotificaitons({username:username, source:source, model:model, type:type})
     if(response)
     {
@@ -63,6 +77,7 @@ const sendNotif = async (username, source, model, type) => {
     {
       Alert.alert('Notif','Verifier votre connexion Internet.')
     }
+    setIsLoading(false)
 }
 
 /*const updateNotif = async (username, id) => {
@@ -99,8 +114,8 @@ useEffect(() => {
       fetchData();
   }
   
-  
 }, [isLoading]);
+
 
 const openNotif = async (username, item) => {
   try
@@ -133,11 +148,14 @@ const openNotif = async (username, item) => {
                     contentContainerStyle={[notificationsStyles.flatlist]}
                     onEndReached={()=>{}}
                     onEndReachedThreshold={0.5}
+                    ListFooterComponent={
+                      <Pressable onPress={async()=>{sendNotif(user.username, 'app', 'USER', 'ON_REGISTERED')}} style={{backgroundColor:appColors.secondaryColor1,color:appColors.white,alignItems:"center",paddingVertical:20,}}>
+                        <Text style={{color:appColors.white,}}>Send Notifications</Text>
+                      </Pressable>
+                    }
             />
 
-            <Pressable onPress={async()=>{sendNotif(user.username, 'app', 'USER', 'ON_REGISTERED')}} style={{backgroundColor:appColors.secondaryColor1,color:appColors.white,alignItems:"center",paddingVertical:20,}}>
-              <Text style={{color:appColors.white,}}>Send Notifications</Text>
-            </Pressable>
+            
         </View>
   )
 }
@@ -197,14 +215,18 @@ const Notifications = (props) => {
     const [index, setIndex] = useState(0);
     const [routes] = useState([
       { key: 'all', title: 'Toutes' },
-      { key: 'offers', title: 'Offres' },
-      { key: 'orders', title: 'Commandes' },
+     
     ]);
   
+  /*
+    { key: 'offers', title: 'Offres' },
+    { key: 'orders', title: 'Commandes' },
+
+     offers: Offers,
+    orders: Orders,
+  */
     const renderScene = SceneMap({
-        all: AllNotifications,
-      offers: Offers,
-      orders: Orders,
+      all: AllNotifications
     });
   
    

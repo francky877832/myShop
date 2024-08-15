@@ -2,6 +2,7 @@ import { API_BACKEND } from '@env';
 
 import {Alert} from 'react-native';
 import { notifications } from './offersDatas';
+import { server } from '../remote/server';
 
 
 exports.sendNotificaitons = async ({username, source, model, type, data}) => {
@@ -22,7 +23,7 @@ exports.sendNotificaitons = async ({username, source, model, type, data}) => {
         //console.log(comment)
             try{
                 //console.log("Ok")
-                const response = await fetch(`${API_BACKEND}/api/datas/notifications/update/${username}`, {
+                const response = await fetch(`${server}/api/datas/notifications/update/${username}`, {
                     method: 'PUT',
                     body: JSON.stringify(notification),
                     headers: {
@@ -42,10 +43,11 @@ exports.sendNotificaitons = async ({username, source, model, type, data}) => {
             }
 }
 
+
 exports.getNotifications = async (username) => {
     try{
         
-        const response = await fetch(`${API_BACKEND}/api/datas/notifications/get/${username}`);            
+        const response = await fetch(`${server}/api/datas/notifications/get/${username}`);            
         const datas = await response.json()
                 //console.log(datas)
         if (!response.ok) {
@@ -64,7 +66,7 @@ exports.updateNotificationsRead = async ({username, id}) => {
     //console.log(id)
     try{
         
-        const response = await fetch(`${API_BACKEND}/api/datas/notifications/read/${username}/${id}`, {
+        const response = await fetch(`${server}/api/datas/notifications/read/${username}/${id}`, {
             method: 'PUT',
             body: JSON.stringify({}),
             headers: {
@@ -87,7 +89,7 @@ exports.updateNotificationsRead = async ({username, id}) => {
 exports.getProductFromNotifications = async (id) => {
     try{
         
-        const response = await fetch(`${API_BACKEND}/api/datas/products/get/${id}`);            
+        const response = await fetch(`${server}/api/datas/products/get/${id}`);            
         const data = await response.json()
        
         if (!response.ok) {

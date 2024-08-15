@@ -42,6 +42,7 @@ const Filters = (props) => {
     const [isNewOldFocused, setIsNewOldFocused] = useState(true)
     const [conditions, setConditions] = useState({"old":true, "new":true, "new used":true})
     const [selectedModalCategories, setSelectedModalCategories] = useState({})
+    const timeoutRef = useRef(null);
 
     const { categories, brands, /*isLoading, setIsLoading*/ } = useContext(ProductItemContext)
 //console.log(categories)
@@ -50,7 +51,7 @@ const Filters = (props) => {
     
 
 
-    useEffect(() => {
+useEffect(() => {
         // Fonction de nettoyage à exécuter lorsque le composant est démonté
         return () => {
           if (onExit) {
@@ -68,7 +69,7 @@ const Filters = (props) => {
         };
 
         
-      }, [onExit]);
+}, [onExit]);
 
 
 
@@ -242,11 +243,22 @@ const handleOrderby = async (val)=>{
         setSelectedOrderBy(val)
         //console.log(selectedOrderBy)
         //await searchAgain()
-        console.log(selectedBrands)
+        //console.log(selectedBrands)
         await searchAgainWithoutUpdate()
-        await loadMoreDataWithFilters({searchText:searchText||" ", selectedCategory:selectedCategories, orderBy:val, selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions, resetPage:true});
+
+
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        // Configurer un nouveau timeout
+        timeoutRef.current = setTimeout(async () => {
+            await loadMoreDataWithFilters({searchText:searchText||" ", selectedCategory:selectedCategories, orderBy:val, 
+                selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions, resetPage:true});
+        }, 100);
+        
         //Pas besoin de getSearchedTextWithFilters par ce Filters est dans SearchResults et cela se fait auto.
-    //Il ya juste besoin de mettre a jour selectedOrderBy et de re-rendre le component avec un activityIndicator
+        //Il ya juste besoin de mettre a jour selectedOrderBy et de re-rendre le component avec un activityIndicator
    
 }
 
@@ -266,9 +278,18 @@ useEffect(()=>{
 }, [filtersUpdated])
 const validateFilters = async () => {
     await searchAgain()
-    setSelectedModalCategoriesFromContext(selectedModalCategories)
-    setSelectedBrandFromContext(selectedBrands)
-    setSelectedConditionsFromContext(conditions)
+    
+    if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+    }
+
+    // Configurer un nouveau timeout
+    timeoutRef.current = setTimeout(async () => {
+        setSelectedModalCategoriesFromContext(selectedModalCategories)
+        setSelectedBrandFromContext(selectedBrands)
+        setSelectedConditionsFromContext(conditions)
+    }, 100);
+    
 }
     return (
     
