@@ -24,7 +24,7 @@ const ProductProvider = ({children}) => {
     const [refreshKey, setRefreshKey] = useState(0);
 
 
-     const getProducts = async ()=> {
+     const getProducts = async (page)=> {
       //console.log("responseJson")
         try
         {
@@ -36,7 +36,10 @@ const ProductProvider = ({children}) => {
                 },});
                 const responseJson = await response.json();
                 //console.log(responseJson)
-                return responseJson
+                if(!response.ok){
+                  throw new Error("Erreur lors de la recuperation des produits")
+                }
+                return responseJson.datas
         } catch (error) {
             console.error(error);
             return []
@@ -78,17 +81,17 @@ const ProductProvider = ({children}) => {
       setIsLoading(true);
       try {
 
-        const newData = await getProducts();
-        //console.log(newData)
-        if (newData.datas.length > 0) {
+        const newData = await getProducts(page);
+       // console.log(newData)
+        if (newData.length > 0) {
           //setProducts(newData)
           console.log("pk")
           //updateProducts(newData.datas);
-          setProducts((prevProducts)=>[...prevProducts, ...newData.datas])
+          setProducts((prevProducts)=>[...prevProducts, ...newData])
           //if(page < totalPages)
           setPage((prevPage) => prevPage + 1);
           //setRefreshKey(prevKey => prevKey + 1);
-          //console.log(page)
+          console.log(page)
         } else {
           setHasMore(false); // Pas plus de données à charger
         }

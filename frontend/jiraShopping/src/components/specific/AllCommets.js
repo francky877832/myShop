@@ -111,6 +111,7 @@ const addComment = async (item) => {
         try{
             //console.log("Ok")
             const comment = {
+                //_id : "",
                 id : Math.random().toString(),
                 user: loggedUserId,
                 username : loggedUser,
