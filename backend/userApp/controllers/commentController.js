@@ -35,6 +35,7 @@ exports.updateProductComment  = (req, res, next) => {
             username : req.body.username,
             product : req.body.product,
             text : req.body.text,
+            subComment : [],
     }
     console.log(req.params.id)
 

@@ -5,8 +5,7 @@ import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, Platf
 import { Input, Icon } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
-
+import { nanoid } from 'nanoid';
 import Comments from './Comments';
 import { CustomActivityIndicator } from "../common/CommonSimpleComponents";
 
@@ -26,7 +25,7 @@ const AllCommets = (props) =>
     const navigation = useNavigation()
     const route = useRoute()
     const { product, inputFocused } = route.params
-    const { reshapedComments, setReshapedComments, onNewComment, setOnNewComment, setPage, isResponseTo, setIsResponseTo, loadMoreComments} = useContext(CommentsContext)
+    const { reshapedComments, setReshapedComments, onNewComment, setOnNewComment, setPage, isResponseTo, setIsResponseTo, loadMoreComments, loadLastComment} = useContext(CommentsContext)
     //const [comments_, setComments_] = useState(reshapedComments)
     //const setIsLoading = route.params.setIsLoading
     const [isFocused, setIsFocused] = useState(false)
@@ -34,10 +33,11 @@ const AllCommets = (props) =>
     const [inputValue, setInputValue] = useState("")
     const [refreshComponent, setRefreshComponent] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const scrollViewRef = useRef(null);
+    const flatListRef = useRef(null);
 
-
-
+    const handleChangeText = useCallback((text) => {
+        setInputValue(text);
+      }, []);
     const inputRef = useRef(null)
     
 useEffect(()=>{
@@ -77,12 +77,12 @@ const updateReshapedComments = (comment)=>{
         //console.log(isResponseTo)
         if(!!isResponseTo)
         {
-            //console.log("prevComments")
+            console.log("prevComments")
             prevComments.forEach((cm, i)=>{
-                    //console.log(cm)
+                    console.log(cm)
                 if(cm._id == comment.isResponseTo)
                 {
-                    //console.log( prevComments[i].subComment)
+                    console.log( prevComments[i].subComment)
                     prevComments[i].subComment.push(comment)
                 }
             })
@@ -107,20 +107,24 @@ const addComment = async (item) => {
                     return;
     }  
 
-    const comment = {
-        user: loggedUserId,
-        username : loggedUser,
-        product : item._id,
-        text : inputValue,
-        subComment : [],
-        isResponseTo : isResponseTo
-    }
-
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-    //console.log(isResponseTo)
+   
         try{
             //console.log("Ok")
-            
+            const comment = {
+                id : Math.random().toString(),
+                user: loggedUserId,
+                username : loggedUser,
+                product : item._id,
+                text : inputValue,
+                subComment : [],
+                isResponseTo : isResponseTo
+            }
+            if (flatListRef.current) {
+                flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+            }
+            //console.log(isResponseTo)
+                updateReshapedComments(comment)
+
             const response = await fetch(`${server}/api/datas/comments/add/${isResponseTo}`, {
                 method: 'POST',
                 body: JSON.stringify(comment),
@@ -136,11 +140,11 @@ const addComment = async (item) => {
             //Alert.alert("Comment ajouté avec success.")
             //setIsLoading(true)
             //await async function(){setOnNewComment(true)}()
-            setOnNewComment(true)
+            await loadLastComment(product)
+            //setOnNewComment(true)
             setPage((prevPage) => prevPage - 1);
             //console.log(onNewComment)
             //setIsResponseTo("")
-            updateReshapedComments(comment)
             setIsLoading(false) //A VERIFIER
 
             //setComments([comment, ...comments])
@@ -149,6 +153,9 @@ const addComment = async (item) => {
         }catch(error){
             console.log(error)
             Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+            setIsLoading(false)
+            setOnNewComment(false)
+        } finally {
             setIsLoading(false)
             setOnNewComment(false)
         }
@@ -172,35 +179,44 @@ useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
     
  }, [onNewComment])
 
-
+/*
+ <ScrollView ref={scrollViewRef} contentContainerStyle={[allCommetsStyles.container,{}]} >
+                <Comments scrollViewRef={scrollViewRef} inputRef={inputRef} setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  all={true} reshapedComments={reshapedComments} product={product}/>
+            </ScrollView>
+*/
 
     return(
 <View style={{ flex: 1 }}>
-            <ScrollView ref={scrollViewRef} contentContainerStyle={[allCommetsStyles.container,{}]} >
-                <Comments scrollViewRef={scrollViewRef} inputRef={inputRef} setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  all={true} reshapedComments={reshapedComments} product={product}/>
-            </ScrollView>
-        
+        <View  style={[allCommetsStyles.container,{}]} >
+            <Comments flatListRef={flatListRef} inputRef={inputRef} setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  all={true} reshapedComments={reshapedComments} product={product}/>
+        </View>
+
         <View style={[allCommetsStyles.inputContainer]}>
-            <Input placeholder="Posez une question" onChangeText={(text)=>{setInputValue(text)}}
-                    multiline={true}
-                    numberOfLines={1}
-                    placeholderTextColor={appColors.lightWhite}
-                    inputStyle = {[commentsStyles.searchBarInput, commentsStyles.input, isFocused && commentsStyles.inputFocused,]}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    underlineColorAndroid='transparent'
-                    inputContainerStyle={{ borderBottomWidth:isFocused?0:1, }}
-                    ref={inputRef}
-                    rightIcon={ isLoading 
-                            ?
-                                <ActivityIndicator color={appColors.secondaryColor1} /> 
-                            :
-                                <Pressable onPress={() => {addComment(route.params.product);}} style={[commentsStyles.sendButton, {}]}>
-                                    <Icon name='send-sharp' type='ionicon' size={40} color={appColors.secondaryColor1} />
-                                </Pressable>
-                        }
-                    value={inputValue}
-                />
+            <Input
+                placeholder="Posez une question"
+                onChangeText={handleChangeText}
+                multiline={true}
+                placeholderTextColor={appColors.lightWhite}
+                inputStyle={[
+                    //commentsStyles.searchBarInput,
+                    //commentsStyles.input,
+                    isFocused && commentsStyles.inputFocused,
+                    {fontSize:14}
+                ]}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                underlineColorAndroid='transparent'
+                inputContainerStyle={{ borderBottomWidth: isFocused ? 0 : 1 }}
+                ref={inputRef}
+                rightIcon={isLoading 
+                    ? <ActivityIndicator color={appColors.secondaryColor1} /> 
+                    : <Pressable onPress={() => { addComment(route.params.product); }} style={[commentsStyles.sendButton]}>
+                        <Icon name='send-sharp' type='ionicon' size={40} color={appColors.secondaryColor1} />
+                    </Pressable>
+                }
+                value={inputValue}
+                autoCorrect={false}
+            />
                 
         </View>
                         { isLoading &&
@@ -218,11 +234,13 @@ const allCommetsStyles = StyleSheet.create({
     {
         //flex:1,
         backgroundColor : appColors.white,
-        minHeight:screenHeight,
+        heighteight:screenHeight,
+        paddingBottom : 90,
     },
     inputContainer :
     {
-        position : "relative",
+        flex : 1,
+        position : "absolute",
         left : 0,
         right : 0,
         bottom : 0,

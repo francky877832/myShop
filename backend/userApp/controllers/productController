@@ -147,7 +147,16 @@ exports.getProducts = async (req, res, next) => {
         $addFields: {
           comments: {
             $map: {
-              input: "$comments",
+              input: {
+                $let: {
+                  vars: {
+                    sortedComments: {
+                      $sortArray: { input: "$comments", sortBy: { createdAt: -1 } }
+                    }
+                  },
+                  in: "$$sortedComments"
+                }
+              },
               as: "comment",
               in: {
                 _id: "$$comment._id",
@@ -169,7 +178,8 @@ exports.getProducts = async (req, res, next) => {
                     },
                     0
                   ]
-                }
+                },
+                subComment: "$$comment.subComment" // Inclure les sous-commentaires
               }
             }
           }
@@ -200,22 +210,20 @@ exports.getProducts = async (req, res, next) => {
           visibility: { $first: '$visibility' },
           createdAt: { $first: '$createdAt' },
           updatedAt: { $first: '$updatedAt' },
-          comments: { $first: '$comments' } // Utiliser $first pour garder les commentaires correctement formatés
+          comments: { $first: '$comments' } // Conserver les commentaires correctement triés
         }
       }
     ]);
 
     const totalDatas = await Product.countDocuments().exec();
     const totalPages = Math.ceil(totalDatas / limit);
-
-    console.log(products)
-
+    console.log(products[0].comments)
     res.status(200).json({ datas: products, page: page, totalPages: totalPages, totalDatas: totalDatas });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
   }
-}
+};
 
 
 

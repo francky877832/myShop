@@ -144,6 +144,8 @@ const CommentsProvider = ({children}) => {
             }
         }
 
+       
+
 /*
         if (isLoading || !hasMore) return;
     
@@ -187,6 +189,55 @@ const CommentsProvider = ({children}) => {
         //setFiltersUpdated(true);
     },[isLoading, hasMore])
 
+
+    const loadLastComment = useCallback(async (product) => {
+        console.log(onNewComment)
+        console.log(isLoading)
+        console.log(hasMore)
+            try 
+            {
+  
+                const comment_ = await fetchProductLastComment(product._id, loggedUser);
+                let updatedComments;
+                setReshapedComments((prevComments)=>{
+                    if(!!isResponseTo)
+                    {
+                            //console.log("prevComments")
+                        updatedComments = prevComments.map(cm => {
+                            if (cm._id == comment_.isResponseTo) {
+                                return {
+                                    ...cm,
+                                    subComment: [...cm.subComment, comment_]
+                                };
+                            }
+                            return cm;
+                        });
+                        product.comments = updatedComments
+                        return updatedComments
+                    }
+                    else
+                    {
+                            //product.comments.unshift(comment_)
+                            //prevComments[0] = comment_
+                            updatedComments = [comment_, ...prevComments.slice(1)];
+                            product.comments = updatedComments
+                            return updatedComments
+                    }
+                })
+                
+
+                
+
+            }catch (error) {
+                console.error('Erreur lors du chargement des commentaires onNewComment :', error);
+            }finally {
+                setIsLoading(false);
+                setOnNewComment(false);
+                setIsResponseTo("")
+            }
+    })
+
+
     const searchAgain_ =  useCallback(() => {
         setPage((prevPage) => prevPage - 1);
         setIsLoading(false);
@@ -199,8 +250,8 @@ const CommentsProvider = ({children}) => {
     }, [page, isLoading, hasMore])
 
     const productStateVars = {isLoading, filtersUpdated, hasMore, page, refreshKey, reshapedComments, totalComments, onNewComment, isResponseTo}
-    const productStateStters = {setIsLoading, setOnNewComment, setPage, setIsResponseTo}
-    const utilsFunctions = {fetchProductComments, loadMoreComments, searchAgain, searchAgain_, setReshapedComments,}
+    const productStateStters = {setIsLoading, setOnNewComment, setPage, setIsResponseTo, setReshapedComments}
+    const utilsFunctions = {fetchProductComments, loadMoreComments, searchAgain, searchAgain_, loadLastComment}
     return (
         <CommentsContext.Provider value={{...productStateVars, ...productStateStters, ...utilsFunctions}}>
             {children}

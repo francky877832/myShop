@@ -22,15 +22,15 @@ const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const Comments = (props) =>
 {
-    const { all, navigation, product, setters, setIsLoading, pass, scrollViewRef, inputRef} = props
-    const {inputValue,setInputValue, setIsResponseTo} = setters 
+    const { all, navigation, product, setters, setIsLoading, pass, flatListRef, inputRef} = props
+    const {inputValue, setInputValue, setIsResponseTo} = setters 
     
     const { reshapedComments, loadMoreComments, isLoading, searchAgain, hasMore, page, totalComments, } = useContext(CommentsContext)
     const loadMore = async () => {
         //await searchAgain();
         await loadMoreComments(product._id)
-        if (scrollViewRef.current) {
-            scrollViewRef.current.scrollToEnd({ animated: true });
+        if (flatListRef.current) {
+            flatListRef.current.scrollToOffset({ offset: Number.MAX_SAFE_INTEGER, animated: true });
         }
     }
 //console.log(comments)
@@ -118,9 +118,13 @@ const respondTo = (id, username) => {
                                                     <Text style={[commentsStyles.commentText]} >{item.text}</Text>
                                                 </Pressable>
 
-                                                <Pressable onPress={()=>{setIsResponseTo(comment._id);setInputValue("@"+comment.username+" " +inputValue)}}>
-                                                    <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
-                                                </Pressable>
+                                                {
+                                                /*
+                                                    <Pressable onPress={()=>{setIsResponseTo(comment._id);setInputValue("@"+comment.username+" " +inputValue)}}>
+                                                        <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
+                                                    </Pressable>
+                                                */
+                                                }
                                             </View>
 
                                             <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>Ecrit il y'a {sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }</Text></View>
@@ -137,7 +141,9 @@ const respondTo = (id, username) => {
                 );
             
     }
-
+    const renderItem = useCallback(({item}) => { return <Comment all={all} comment={item} styles={ {comment : {...commentsStyles.comment}, subComment : {...commentsStyles.subComment}}} /> })
+    const memoizedData = useMemo(() => reshapedComments, [reshapedComments]);
+    const memoizedRenderItem = useMemo(() => renderItem, [renderItem]);
 
     return(
         <View style={[commentsStyles.container,{}]}>
@@ -155,19 +161,32 @@ const respondTo = (id, username) => {
             </View>
         }
             <View style={[commentsStyles.flatlistContainerView]}>
-                {/*<FlatList
-                    data={reshapedComments}
+                {all ?
+                    <FlatList
+                    data={memoizedData}
                     nestedScrollEnabled={true}
-                    renderItem={ ({item}) => { return <Comment all={all} comment={item} styles={ {comment : {...commentsStyles.comment}, subComment : {...commentsStyles.subComment}}} /> } }
-                    keyExtractor={ (item) => { return item.id_.toString(); } }
+                    renderItem={ memoizedRenderItem }
+                    keyExtractor={ (item) => { return item._id?item._id.toString():item.id.toString(); } }
                     horizontal={false}
                     numColumns={ 1 }
+                    ref={flatListRef}
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={[commentsStyles.flatlistContainer, !all?commentsStyles.flatlistContainerNotAll:false]}
-                />*/
+                />
 
-                (all ? reshapedComments : reshapedComments?.slice(0,2))?.map((item, key)=>{
+                :
+                    (reshapedComments?.slice(0,2))?.map((item, key)=>{
+                    return(
+                        <View style={{}} key={key}>
+                            <Comment all={all} comment={item} styles={ {comment : {...commentsStyles.comment}, subComment : {...commentsStyles.subComment}}} />
+                            <View style={{width:5,}}></View>
+                        </View>
+                    )
+                    })
+            
+
+                /*(all ? reshapedComments : reshapedComments?.slice(0,2))?.map((item, key)=>{
                     //console.log("   ITEM")
                     //console.log(item)
                     return(

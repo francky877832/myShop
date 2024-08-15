@@ -163,7 +163,7 @@ const ProductDetails = (props) => {
    */ 
 
 
- useEffect(()=>{
+useEffect(()=>{
     setReshapedComments(data.comments)
 }, [])
 
