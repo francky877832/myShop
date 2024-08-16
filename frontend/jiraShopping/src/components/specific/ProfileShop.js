@@ -19,9 +19,10 @@ import { appColors, customText, screenHeight, screenWidth } from '../../styles/c
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
 import SellerBrand from '../common/SellerBrand';
 import { server } from '../../remote/server';
+import { UserContext } from '../../context/UserContext';
 
 
-const loggedUserId = "66731fcb569b492d3ef429ba"
+const loggedUserId = "668fdfc6077f2a5c361dd7fc"
 const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const ProfilShop = (props) => {
@@ -32,22 +33,26 @@ const ProfilShop = (props) => {
 */}
     const navigation = useNavigation()
     const route = useRoute()
-    const [follow, setIsFollow] = useState(true) //Je ne crois pas avoir besoin de Search
+    
     const [products, setProducts] = useState([])
     const [isLoading, setIsLoading]  = useState(false)
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [totalComments, setTotalComments] = useState(1)
 
-
+    const {user, setUser} = useContext(UserContext)
+    const {seller} = route.params!=undefined ? route.params : {seller:user}
+    const [follow, setIsFollow] = useState(user.followings.some((el)=> el._id == seller._id)) //Je ne crois pas avoir besoin de Search
     const flatListRef = useRef(null);
+    const timeoutRef = useRef(null);
+
+    //verifier si le seller est dans la liste de following de users
 
     const maxTop = 180;
     const minTop = 65
     const halfTop = maxTop / 2;
     const initialTop = maxTop;
 
-    
     const pan = useRef(new Animated.Value(initialTop)).current;
     const [lastValidTop, setLastValidTop] = useState(initialTop);
     const animatedTop = pan.interpolate({
@@ -135,14 +140,18 @@ const ProfilShop = (props) => {
     const getShopProducts = async (username, page)=> {
         try
         {
-            const response = await fetch(`${API_BACKEND}/api/datas/products/get/user/${username}?page=${page}`,{
+            const response = await fetch(`${server}/api/datas/products/get/user/${username}?page=${page}`,{
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'Application/json',
+                    'Content-Type': 'application/json',
                 },
                 });
-                const responseJson = await response.json();
-                return responseJson
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la requête'+(await response.text()));
+                }
+                const datas = await response.json();
+                //console.log(datas)
+                return datas
         } catch (error) {
         console.error(error);
         return []
@@ -157,22 +166,14 @@ const ProfilShop = (props) => {
         setIsLoading(true);
         try {
   
-          const datas = await getShopProducts(loggedUserId, page);
-          const products = datas.datas
-          //console.log(comments_)
+          const datas = await getShopProducts(seller._id, page);
+          const products = datas.products
           if (products.length > 0) {
-            //console.log(comments_)
             console.log("pk")
-            //updateProducts(newData.datas);
-            //setComments((prevComments)=>[...prevComments, ...comments_])
             setProducts((prevProducts)=>[...prevProducts, ...products])
-            //console.log(comments_)
-            //if(page < totalPages)
             setPage((prevPage) => prevPage + 1);
-            //setRefreshKey(prevKey => prevKey + 1);
-            //console.log(page)
           } else {
-            setHasMore(false); // Pas plus de données à charger
+            setHasMore(false);
           }
         } catch (error) {
             console.error('Erreur lors du chargement des commentaires :', error);
@@ -187,14 +188,63 @@ const ProfilShop = (props) => {
             await loadMoreShopProducts()
         };
       
-          //if (isLoading) {
-            fetchData();
-          //}
-           
-            //console.log(products)
+        fetchData();
     
     },[])
+
+const setFollowers = async (follower, following) => {
+    if (!follow) {
+        // Remove following
+        const newFollowings = user.followings.filter((el) => el._id !== seller._id);
     
+        // Remove follower
+        const newFollowers = seller.followers.filter((el) => el._id !== user._id);
+    
+        // Update seller's followers
+        seller.followers = newFollowers;
+    
+        // Update the user state with new followings
+        setUser({ ...user, followings: newFollowings });
+    } else {
+        // Add follower to seller's followers
+        const newFollowers = [user, ...seller.followers];
+        seller.followers = newFollowers;
+    
+        // Add following to user's followings
+        const newFollowings = [seller, ...user.followings];
+        setUser({ ...user, followings: newFollowings });
+    }
+
+    setIsFollow(!follow)
+    
+    if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+    }
+
+    // Configurer un nouveau timeout
+    timeoutRef.current = setTimeout(async () => {
+        try
+        {
+            const response = await fetch(`${server}/api/auth/users/setFollowers/${following._id}`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body : JSON.stringify({follower:follower._id})
+                });
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la requête'+(await response.text()));
+                }
+                const datas = await response.json();
+                console.log(datas)
+        } catch (error) {
+        console.error(error);
+        return []
+      } 
+    }, 1000);
+    
+}
+
 
     return(
                 <View style={profilShopStyles.container}>
@@ -204,53 +254,53 @@ const ProfilShop = (props) => {
                                 <PrevButton styles={{color:appColors.black}}/>
                             </View>
 
-                            <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={loggedUser}/>
+                            <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={seller.username} navigation={navigation} />
 
-                            <View style={[profilShopStyles.notifParameter]}>
-                                <Pressable  style={[profilShopStyles.notification, ]} onPress = { ()=>{ navigation.navigate("Notifications");} }>
-                                    <BadgeIcon name="create-outline" size={24} color="black" badgeCount={0} styles={badgeIconStyles} />
-                                </Pressable>
-                                
-                                <Pressable  style={[profilShopStyles.notification, ]}onPress = { ()=>{ navigation.navigate("Notifications");} }>
-                                    <BadgeIcon name="notifications-outline" size={24} color="black" badgeCount={5} styles={badgeIconStyles} />
-                                </Pressable>
-                            </View>
+                            
                         </View>
                 
                         <View style={[profilShopStyles.follow]}>
                             <View style={[profilShopStyles.followInformations]}>
                                 <View style={[profilShopStyles.followLeftElements,profilShopStyles.sold,{}]}>
-                                    <Text style={[customText.text,{fontWeight:"bold"}]}>154</Text>
+                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.ventes : seller.ventes}</Text>
                                     <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Ventes</Text>
                                 </View>
 
                                 <View  style={[profilShopStyles.followLeftElements,profilShopStyles.follower,{}]}>
-                                        <Text style={[customText.text,{fontWeight:"bold"}]}>15</Text>
+                                        <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.followers.length : seller.followers.length}</Text>
                                         <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Followers</Text>
                                 </View>
 
                                 <View  style={[profilShopStyles.followLeftElements, profilShopStyles.following,{}]}>
-                                    <Text style={[customText.text,{fontWeight:"bold"}]}>18</Text>
+                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.followings.length : seller.followings.length}</Text>
                                     <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Following</Text>
                                 </View>
 
                                 <View  style={[profilShopStyles.followLeftElements, profilShopStyles.favourites,{}]}>
-                                    <Text style={[customText.text,{fontWeight:"bold"}]}>30</Text>
+                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.favourites.length : seller.favourites.length}</Text>
                                     <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Likes</Text>
                                 </View>
                             </View>
 
 
                         </View>
-                                <Pressable  style={[profilShopStyles.followButton, follow ? profilShopStyles.followFocused : false, {}]} onPress = { ()=>{ setIsFollow(!follow);} }>
+                        { route.params!=undefined ?
+
+                                <Pressable  style={[profilShopStyles.followButton, follow ? profilShopStyles.followFocused : false, {}]} onPress = { ()=>{ setFollowers(user, seller); } }>
                                     <BadgeIcon name={follow ? "person-remove" : "person-add"} size={24} color={follow ? appColors.secondaryColor1 : appColors.white} badgeCount={0} styles={badgeIconStyles} />
                                     <Text style={[customText.text,{ fontWeight:"bold", color : follow ? appColors.secondaryColor1 : appColors.white}]}>{follow ? "Unfollow" : "Follow"}</Text>
                                 </Pressable>
+                            :
+                                <Pressable  style={[profilShopStyles.followButton, ]} onPress = { ()=>{ navigation.navigate('Account', {screen: 'AccountSettings',params: {},});} }>
+                                    <BadgeIcon name="create-outline" size={24} color={appColors.white} badgeCount={0} styles={badgeIconStyles} />
+                                    <Text style={[customText.text,{ fontWeight:"bold", color : appColors.white}]}>Modifier Mon Profil</Text>
+                                </Pressable>
+                        }
                     </Animated.View>
                     
 
                         <View style={{flex:1, paddingBottom:route.params==undefined?40:0}} {...panResponder.panHandlers}>
-                            <ProductsListWithFilters isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.5} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products.length} ${products.length > 1 ? 'Produits' : 'Produit'}`} />
+                            <ProductsListWithFilters isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products.length} ${products.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
 
                     { route.params==undefined &&

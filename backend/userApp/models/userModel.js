@@ -21,9 +21,15 @@ const userSchema = new Schema({
     isEmailVerified : { type: Number, enum: [0, 1], default : 0 },
     image : { type: String },
     ventes : { type: Number, default : 0 },
+
     follower : { type: Number, default : 0 },
     following : { type: Number, default : 0 },
-    favourites : { type: Number, default : 0 },
+    favourite : { type: Number, default : 0 },
+
+    followers : [{ type : Schema.Types.ObjectId, ref : 'User', required : false }],
+    followings : [{ type : Schema.Types.ObjectId, ref : 'User', required : false }],
+    favourites : [{ type : Schema.Types.ObjectId, ref : 'User', required : false }],
+    
     online : { type: Number, enum: [0, 1], default : 0 },
     actif : { type: Number, enum: [0, 1], default : 0 },
     star : { type: Number, default : 0 },

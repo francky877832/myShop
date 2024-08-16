@@ -1,18 +1,20 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable} from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import BadgeIcon from './BadgeIcon';
 import badgeIconStyles from '../../styles/badgeIconStyles';
+import { profilShopStyles } from '../../styles/profilShopStyles';
 
 import { appColors,customText, screenWidth} from '../../styles/commonStyles';
 import { sinceDate } from '../../utils/commonAppFonctions';
 
 const SellerBrand = (props) => {
-    const { pub, onlineDate, certified, pp, username} = props
+    const { pub, onlineDate, certified, pp, username, navigation} = props
         const profile = pp || require('../../assets/images/product.png')
     return(
             <View style={[sellerBrandStyles.sellerBrand]}>
+                <View style={[sellerBrandStyles.left]}>
                 <View style={[sellerBrandStyles.sellerBrandImageContainer]}>
                     <Image source={profile}   style={[sellerBrandStyles.sellerBrandImage]}/>
                 </View>
@@ -34,6 +36,16 @@ const SellerBrand = (props) => {
                             <BadgeIcon name="checkmark-circle" size={18} color={appColors.secondaryColor1} badgeCount={0} styles={badgeIconStyles} />
                     </View>
                 </View>
+                </View>
+                        <View style={[profilShopStyles.notifParameter, {alignSelf:'flex-end'}]}>
+                                <Pressable  style={[profilShopStyles.notification, ]} onPress = { ()=>{ navigation.navigate('Account', {screen: 'AccountSettings',params: {},});} }>
+                                    <BadgeIcon name="create-outline" size={24} color="black" badgeCount={0} styles={badgeIconStyles} />
+                                </Pressable>
+                                
+                                <Pressable  style={[profilShopStyles.notification, ]}onPress = { ()=>{ navigation.navigate("Notifications");} }>
+                                    <BadgeIcon name="notifications-outline" size={24} color="black" badgeCount={5} styles={badgeIconStyles} />
+                                </Pressable>
+                        </View>
             </View>
     )
 }
@@ -42,9 +54,11 @@ const sellerBrandStyles = StyleSheet.create({
     sellerBrand :
     {
         flexDirection : "row",
-        width : screenWidth,//"70%",
+        justifyContent : 'space-between',
+        width : screenWidth-10-40,
         left : 10,
         //paddingHorizontal : 50,
+        //backgroundColor : 'red',
     },
     sellerBrandImageContainer :
     {
@@ -66,6 +80,10 @@ const sellerBrandStyles = StyleSheet.create({
         flexDirection : "column",
         justifyContent : "space-evenly",
         paddingLeft : 7,
+    },
+    left :
+    {
+        flexDirection : 'row',
     },
 })
 

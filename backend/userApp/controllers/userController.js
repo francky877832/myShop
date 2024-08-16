@@ -4,6 +4,7 @@ const Session = require('../models/sessionModel');
 const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
 const JWT_SECRET = 'RANDOM_TOKEN_SECRET'
 const generateToken = (userId) => {
@@ -30,6 +31,9 @@ exports.signupUser = (req, res, next) => {
   exports.loginUser =  (req, res, next) => {
     console.log("LOGIN")
     User.findOne({ username: req.query.username })
+        .populate('followers')
+        .populate('followings')
+        .populate('favourites')
         .then(user => {
             if (!user) {
                 return res.status(401).json({ error: 'auth/user-not-found' });
@@ -47,6 +51,46 @@ exports.signupUser = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
  };
+
+ 
+
+ 
+ exports.setUserFollowers = async (req, res, next) => {
+   const followingId = new mongoose.Types.ObjectId(req.params.user);
+   const followerId = new mongoose.Types.ObjectId(req.body.follower);
+ 
+   try {
+     const followingUser = await User.findById(followingId).exec();
+     const followerUser = await User.findById(followerId).exec();
+ 
+     if (!followingUser || !followerUser) {
+       throw new Error("User not found");
+     }
+ 
+     // Update followers of the following user
+     const followerIndex = followingUser.followers.indexOf(followerId);
+     if (followerIndex > -1) {
+       followingUser.followers.splice(followerIndex, 1);
+     } else {
+       followingUser.followers.unshift(followerId);  // Add to the beginning
+     }
+     await User.findByIdAndUpdate(followingId, { followers: followingUser.followers }).exec();
+ 
+     // Update followings of the follower user
+     const followingIndex = followerUser.followings.indexOf(followingId);
+     if (followingIndex > -1) {
+       followerUser.followings.splice(followingIndex, 1);
+     } else {
+       followerUser.followings.unshift(followingId);  // Add to the beginning
+     }
+     await User.findByIdAndUpdate(followerId, { followings: followerUser.followings }).exec();
+ 
+     res.status(200).json('User followers and followings updated');
+   } catch (error) {
+     res.status(500).json({ error: error.message });
+   }
+ };
+ 
 
 
 exports.getUser = (req, res, next) => {

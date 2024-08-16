@@ -27,7 +27,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { isProductFavourite } from '../../store/favourites/favouritesSlice'; 
 import { ActivityIndicator } from 'react-native-paper';
 
-const loggedUserId = "66731fcb569b492d3ef429ba"
+const loggedUserId = "668fdfc6077f2a5c361dd7fc"
 const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 
@@ -262,7 +262,7 @@ useEffect(()=>{
                     </View>
 
                     <View style={[productDetailsStyles.name]}>
-                        <Text numberOfLines={2} style={[customText.text, { fontWeight: "bold" }]}>@{capitalizeFirstLetter(data.sellerName)}</Text>
+                        <Text numberOfLines={2} style={[customText.text, { fontWeight: "bold" }]}>@{capitalizeFirstLetter(data.seller.username)}</Text>
                         <View style={{ flexDirection: "row", top: 0 }}>
                             <Text style={[customText.text,{fontWeight:"bold",fontSize:15,color:appColors.gray}]}>{data.category.replace(/\//g, ' | ')}</Text>
                         </View>
@@ -309,10 +309,11 @@ useEffect(()=>{
              
 
                 <View style={[productDetailsStyles.commentsContainer]}>
-                    <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{loggedUserId!=visitorUserId ? navigation.navigate("Shop", {username:data.seller}) : false }}>
-                        <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={data.seller}/>
+                    <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{loggedUserId!=visitorUserId ? navigation.navigate("Shop", {seller:data.seller}) : false }}>
+                        <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={data.seller.username} navigation={navigation} />
                     </Pressable>
                 <View style={{height:20}}></View>
+
                 
                         {
                             <View>

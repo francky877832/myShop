@@ -1,6 +1,5 @@
 import { StyleSheet, StatusBar } from "react-native";
 import { appColors, appFont } from "./commonStyles";
-import SellerBrand from "../components/common/SellerBrand";
 
 
 
@@ -45,7 +44,8 @@ export const profilShopStyles = StyleSheet.create({
     notifParameter :
     {
         flexDirection : "row",
-        justifyContent : "space-between"
+        justifyContent : "space-between",
+        //left : -100,
     },
 
 //follow

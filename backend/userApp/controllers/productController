@@ -3,6 +3,10 @@ const fs = require('fs');
 const Product = require('../models/productModel');
 const Comment = require('../models/commentModel');
 const Fuse = require('fuse.js');
+const mongoose = require('mongoose');
+
+
+
 
 
 
@@ -124,7 +128,7 @@ exports.getProducts =  (req, res, next) => {
 
       //console.log(page,skip,limit)
       //console.log(products)
-  Product.find().sort({_id:-1}).skip(skip).limit(limit).exec()
+  Product.find().sort({_id:-1}).skip(skip).limit(limit).populate('seller').exec()
       .then (async(products) => {
             // Étape 2 : Compter le total des produits pour la pagination
           const totalDatas = await Product.countDocuments().exec();
@@ -138,14 +142,17 @@ exports.getProducts =  (req, res, next) => {
             .populate('user', 'username') // Joindre les détails de l'utilisateur (optionnel)
             .exec();
 
+            
+
           // Étape 5 : Joindre les commentaires aux produits
           const productsWithComments = products.map(product => {
             return {
               ...product.toObject(),
-              comments: comments.filter(comment => comment.product.toString() === product._id.toString())
+              comments: comments.filter(comment => comment.product.toString() === product._id.toString()),
             };
           });
 
+          console.log(productsWithComments)
           // Retourner la réponse
           res.status(200).json({ datas: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
         })
@@ -202,12 +209,14 @@ exports.getProductsFromCategories  =async  (req, res, next) => {
   }
 };
 
+
+/*
 exports.getProductsUser  = (req, res, next) => {
   console.log("getProductsUser")
   const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
   const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 20
   const skip = (page - 1) * limit;
-  console.log(req.query.page)
+  //console.log(req.query.page)
 
   Product.find({ seller : req.params.user }).skip(skip).limit(limit).exec()
     .then (async(products) => {
@@ -222,6 +231,53 @@ exports.getProductsUser  = (req, res, next) => {
       res.status(400).json({ error: error+"go"});
   });
 };
+*/
+
+exports.getProductsUser =  (req, res, next) => {
+  const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+  const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
+  const skip = (page - 1) * limit;
+
+      //console.log(page,skip,limit)
+      //console.log(products)
+  Product.find({seller : new mongoose.Types.ObjectId(req.params.user)}).sort({_id:-1}).skip(skip).limit(limit).populate('seller').exec()
+      .then (async(products) => {
+            // Étape 2 : Compter le total des produits pour la pagination
+          const totalDatas = await Product.countDocuments().exec();
+          const totalPages = Math.ceil(totalDatas / limit);
+
+          // Étape 3 : Récupérer les identifiants des produits de la page actuelle
+          const productIds = products.map(product => product._id);
+
+          // Étape 4 : Récupérer les commentaires pour les produits de la page actuelle
+          const comments = await Comment.find({ product: { $in: productIds } }).sort({_id:-1})
+            .populate('user', 'username') // Joindre les détails de l'utilisateur (optionnel)
+            .exec();
+
+            
+          // Étape 5 : Joindre les commentaires aux produits
+          const productsWithComments = products.map(product => {
+            return {
+              ...product.toObject(),
+              comments: comments.filter(comment => comment.product.toString() === product._id.toString()),
+            };
+          });
+
+          // Retourner la réponse
+          res.status(200).json({ products: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
+        })
+
+    .catch((error)=> {
+        console.log(error);
+        res.status(400).json({ error: error.message });
+    })
+};
+
+
+
+
+
+
 
 //Cest mieux de gerer cette fonctionnalite cote backend
 exports.getUserProductsFromCategory  = (req, res, next) => {
@@ -272,11 +328,11 @@ exports.getSearchedProducts = async (req, res, next) => {
           let filed = Object.keys(customFilters.orderBy)[0]
           let sortValue = {[filed]:parseInt(customFilters.orderBy[filed])}
           //console.log(sortValue)
-          products  = await Product.find().sort(sortValue)//.skip(skip).limit(limit).exec()
+          products  = await Product.find().populate('seller').sort(sortValue)//.skip(skip).limit(limit).exec()
         }
         else
         {
-          products  = await Product.find().sort({updatedAt:-1})//.skip(skip).limit(limit).exec()
+          products  = await Product.find().populate('seller').sort({updatedAt:-1})//.skip(skip).limit(limit).exec()
           
         }
       const totalDatas = await Product.countDocuments().exec();
@@ -353,7 +409,7 @@ exports.getSearchedProducts = async (req, res, next) => {
     const productsWithComments = filteredResult.map(product => {
       return {
         ...product.toObject(),
-        comments: comments.filter(comment => comment.product.toString() === product._id.toString())
+        comments: comments.filter(comment => comment.product.toString() === product._id.toString()),
       };
     });
 

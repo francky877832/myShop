@@ -111,7 +111,7 @@ const Product = (props) => {
                     <Image source={{uri: item.images[0]}}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
                     <View style={ productStyles.text }>
                         <View style={{ flexDirection:"column", justifyContent:"flex-start", }}>
-                            <Text numberOfLines={1} style={[customText.text, productStyles.shopName]}> @{item.seller} | </Text>
+                            <Text numberOfLines={1} style={[customText.text, productStyles.shopName]}> @{item.seller.username} | </Text>
                             <Text numberOfLines={2} style={[customText.text, productStyles.productName]}>{item.name}</Text>
                         </View>
 
