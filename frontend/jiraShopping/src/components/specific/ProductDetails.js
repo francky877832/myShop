@@ -310,7 +310,7 @@ useEffect(()=>{
 
                 <View style={[productDetailsStyles.commentsContainer]}>
                     <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{loggedUserId!=visitorUserId ? navigation.navigate("Shop", {seller:data.seller}) : false }}>
-                        <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={data.seller.username} navigation={navigation} />
+                        <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={data.seller.username} navigation={navigation} route={route} closeNotif={true} />
                     </Pressable>
                 <View style={{height:20}}></View>
 

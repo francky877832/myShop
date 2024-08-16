@@ -8,9 +8,10 @@ import { profilShopStyles } from '../../styles/profilShopStyles';
 
 import { appColors,customText, screenWidth} from '../../styles/commonStyles';
 import { sinceDate } from '../../utils/commonAppFonctions';
+import { useRoute } from '@react-navigation/native';
 
 const SellerBrand = (props) => {
-    const { pub, onlineDate, certified, pp, username, navigation} = props
+    const { pub, onlineDate, certified, pp, username, navigation, route, closeNotif} = props
         const profile = pp || require('../../assets/images/product.png')
     return(
             <View style={[sellerBrandStyles.sellerBrand]}>
@@ -31,21 +32,25 @@ const SellerBrand = (props) => {
                             </View>
                         }
                     </View>
-                    <View style={[{flexDirection:"row",justifyContent:"flex-start",alignItems:"center",/*backgroundColor:"red",*/}]}>
+                    <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center", alignSelf:'center',width:'100%',/*backgroundColor:"red",*/}]}>
                         <Text style={[customText.text, {color:appColors.secondaryColor1,}]}>{certified?"Vendeur certifié":"Membre"}</Text>
                             <BadgeIcon name="checkmark-circle" size={18} color={appColors.secondaryColor1} badgeCount={0} styles={badgeIconStyles} />
                     </View>
                 </View>
                 </View>
+                {!closeNotif &&
                         <View style={[profilShopStyles.notifParameter, {alignSelf:'flex-end'}]}>
+                            {route.params==undefined && 
                                 <Pressable  style={[profilShopStyles.notification, ]} onPress = { ()=>{ navigation.navigate('Account', {screen: 'AccountSettings',params: {},});} }>
                                     <BadgeIcon name="create-outline" size={24} color="black" badgeCount={0} styles={badgeIconStyles} />
                                 </Pressable>
+                            }
                                 
                                 <Pressable  style={[profilShopStyles.notification, ]}onPress = { ()=>{ navigation.navigate("Notifications");} }>
                                     <BadgeIcon name="notifications-outline" size={24} color="black" badgeCount={5} styles={badgeIconStyles} />
                                 </Pressable>
                         </View>
+                }
             </View>
     )
 }
@@ -57,6 +62,8 @@ const sellerBrandStyles = StyleSheet.create({
         justifyContent : 'space-between',
         width : screenWidth-10-40,
         left : 10,
+        paddingRight : 15,
+
         //paddingHorizontal : 50,
         //backgroundColor : 'red',
     },

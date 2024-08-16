@@ -2,7 +2,7 @@ import { API_BACKEND } from '@env';
 
 import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { View, Text, Animated, Pressable, PanResponder } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 //custom component
 import Top from '../common/Top';
 import ProductsList from '../common/ProductsList';
@@ -25,6 +25,7 @@ import { UserContext } from '../../context/UserContext';
 const loggedUserId = "668fdfc6077f2a5c361dd7fc"
 const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
+
 const ProfilShop = (props) => {
 {/*
                             numColumns={ calculateNumColumns() }
@@ -41,8 +42,8 @@ const ProfilShop = (props) => {
     const [totalComments, setTotalComments] = useState(1)
 
     const {user, setUser} = useContext(UserContext)
-    const {seller} = route.params!=undefined ? route.params : {seller:user}
-    const [follow, setIsFollow] = useState(user.followings.some((el)=> el._id == seller._id)) //Je ne crois pas avoir besoin de Search
+    const {seller,} = route.params!=undefined ? route.params : {seller:user}
+    const [follow, setIsFollow] = useState(!user.followings.some((el)=> el._id == seller._id))
     const flatListRef = useRef(null);
     const timeoutRef = useRef(null);
 
@@ -183,17 +184,38 @@ const ProfilShop = (props) => {
       }, [isLoading, hasMore, page])
     
     useEffect(()=>{
+        
         const fetchData = async () => {
             //setIsLoading(true);
             await loadMoreShopProducts()
         };
-      
-        fetchData();
+/*
+console.log("reload")
+console.log(reload)
+    if(reload=='reload')
+    {
+        console.log("reload")
+        setIsLoading(false)
+        setHasMore(true)
+        setProducts([]) 
+        reload=""
+    } */   
+
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
     
-    },[])
+        // Configurer un nouveau timeout
+        timeoutRef.current = setTimeout(async () => {
+            fetchData(); 
+        }, 0);
+
+       //console.log(seller.followings)
+    
+    }, [])
 
 const setFollowers = async (follower, following) => {
-    if (!follow) {
+    if (follow) {
         // Remove following
         const newFollowings = user.followings.filter((el) => el._id !== seller._id);
     
@@ -254,7 +276,7 @@ const setFollowers = async (follower, following) => {
                                 <PrevButton styles={{color:appColors.black}}/>
                             </View>
 
-                            <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={seller.username} navigation={navigation} />
+                            <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={seller.username} navigation={navigation} route={route} />
 
                             
                         </View>
@@ -266,18 +288,22 @@ const setFollowers = async (follower, following) => {
                                     <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Ventes</Text>
                                 </View>
 
-                                <View  style={[profilShopStyles.followLeftElements,profilShopStyles.follower,{}]}>
+                                <Pressable  style={[profilShopStyles.followLeftElements,profilShopStyles.follower,{}]}
+                                    onPress={()=>{seller.followers.length>0 ?navigation.navigate('Followers', {seller:seller, who:'followers'}):false}}
+                                >
                                         <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.followers.length : seller.followers.length}</Text>
                                         <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Followers</Text>
-                                </View>
+                                </Pressable>
 
-                                <View  style={[profilShopStyles.followLeftElements, profilShopStyles.following,{}]}>
+                                <Pressable  style={[profilShopStyles.followLeftElements, profilShopStyles.following,{}]}
+                                    onPress={()=>{seller.followings.length>0 ?navigation.navigate('Followers', {seller:seller, who:'followings'}):false}}
+                                >
                                     <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.followings.length : seller.followings.length}</Text>
                                     <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Following</Text>
-                                </View>
+                                </Pressable>
 
                                 <View  style={[profilShopStyles.followLeftElements, profilShopStyles.favourites,{}]}>
-                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.favourites.length : seller.favourites.length}</Text>
+                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.favourite : seller.favourite}</Text>
                                     <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Likes</Text>
                                 </View>
                             </View>

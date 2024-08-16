@@ -19,6 +19,7 @@ import CategoryResults from '../components/specific/CategoryResults';
 import UserLogin from '../components/user/UserLogin';
 import UserSignup from '../components/user/UserSignup';
 import PhoneAuth from '../components/specific/PhoneAuth';
+import Followers from '../components/specific/Followers';
 import HeaderNavigation from '../components/common/HeaderNavigation';
 
 import HomeNavigation from '../navigation/HomeNavigation';
@@ -31,6 +32,7 @@ import { BasketProvider } from '../context/BasketContext';
 import { UserProvider } from '../context/UserContext';
 import { ProductProvider } from '../context/ProductContext';
 import { CommentsProvider } from '../context/CommentsContext';
+
 
 import { annimatedStackTransition } from './commonNavigationFonctions'
 
@@ -56,6 +58,7 @@ export default function MainNavigation() {
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
                 <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false,}} />
                 <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
+                <Stack.Screen name="Followers" component={Followers}  options={{ title: 'Account Informations', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Offers" component={Offers}  options={{ title: 'Propositions', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="AllComments" component={AllCommets}  options={{title: 'Tous Les Commentaires', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Notifications" component={Notifications}  options={{ title: 'Notifications', headerShown : true, tabBarVisible: false, }} />

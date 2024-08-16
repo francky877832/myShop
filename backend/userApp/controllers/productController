@@ -128,7 +128,12 @@ exports.getProducts =  (req, res, next) => {
 
       //console.log(page,skip,limit)
       //console.log(products)
-  Product.find().sort({_id:-1}).skip(skip).limit(limit).populate('seller').exec()
+  Product.find().sort({_id:-1}).skip(skip).limit(limit).populate({path: 'seller', populate: [
+    { path: 'followers' },
+    { path: 'followings' },
+    { path: 'favourites' },
+  ]
+}).exec()
       .then (async(products) => {
             // Étape 2 : Compter le total des produits pour la pagination
           const totalDatas = await Product.countDocuments().exec();
@@ -240,7 +245,16 @@ exports.getProductsUser =  (req, res, next) => {
 
       //console.log(page,skip,limit)
       //console.log(products)
-  Product.find({seller : new mongoose.Types.ObjectId(req.params.user)}).sort({_id:-1}).skip(skip).limit(limit).populate('seller').exec()
+  Product.find({seller : new mongoose.Types.ObjectId(req.params.user)})
+  .sort({_id:-1})
+  .skip(skip)
+  .limit(limit)
+  .populate({path: 'seller', populate: [
+        { path: 'followers' },
+        { path: 'followings' },
+        { path: 'favourites' },
+      ]
+  }).exec()
       .then (async(products) => {
             // Étape 2 : Compter le total des produits pour la pagination
           const totalDatas = await Product.countDocuments().exec();
@@ -260,6 +274,11 @@ exports.getProductsUser =  (req, res, next) => {
             return {
               ...product.toObject(),
               comments: comments.filter(comment => comment.product.toString() === product._id.toString()),
+              seller: {
+                ...product.seller.toObject(),
+                followers: product.seller.followers.map(follower => follower.toObject()),
+                followings: product.seller.followings.map(following => following.toObject())
+              }
             };
           });
 
@@ -328,11 +347,21 @@ exports.getSearchedProducts = async (req, res, next) => {
           let filed = Object.keys(customFilters.orderBy)[0]
           let sortValue = {[filed]:parseInt(customFilters.orderBy[filed])}
           //console.log(sortValue)
-          products  = await Product.find().populate('seller').sort(sortValue)//.skip(skip).limit(limit).exec()
+          products  = await Product.find().populate({path: 'seller', populate: [
+            { path: 'followers' },
+            { path: 'followings' },
+            { path: 'favourites' },
+          ]
+      }).sort(sortValue)//.skip(skip).limit(limit).exec()
         }
         else
         {
-          products  = await Product.find().populate('seller').sort({updatedAt:-1})//.skip(skip).limit(limit).exec()
+          products  = await Product.find().populate({path: 'seller', populate: [
+        { path: 'followers' },
+        { path: 'followings' },
+        { path: 'favourites' },
+      ]
+  }).sort({updatedAt:-1})//.skip(skip).limit(limit).exec()
           
         }
       const totalDatas = await Product.countDocuments().exec();

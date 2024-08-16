@@ -8,6 +8,7 @@ const userCtrl = require('../controllers/userController');
 router.post('/signup', userCtrl.signupUser);
 router.get('/login', userCtrl.loginUser);
 router.get('/users/get/:id', userCtrl.getUser);
+router.get('/users/followers/:id', userCtrl.getUserFollowers);
 router.post('/users/setFollowers/:user', userCtrl.setUserFollowers);
 
 module.exports = router;

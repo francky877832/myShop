@@ -5,7 +5,6 @@ import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, Platf
 import { Input, Icon } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { nanoid } from 'nanoid';
 import Comments from './Comments';
 import { CustomActivityIndicator } from "../common/CommonSimpleComponents";
 

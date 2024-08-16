@@ -163,17 +163,17 @@ const respondTo = (id, username) => {
             <View style={[commentsStyles.flatlistContainerView]}>
                 {all ?
                     <FlatList
-                    data={memoizedData}
-                    nestedScrollEnabled={true}
-                    renderItem={ memoizedRenderItem }
-                    keyExtractor={ (item) => { return item._id?item._id.toString():item.id.toString(); } }
-                    horizontal={false}
-                    numColumns={ 1 }
-                    ref={flatListRef}
-                    ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={[commentsStyles.flatlistContainer, !all?commentsStyles.flatlistContainerNotAll:false]}
-                />
+                        data={memoizedData}
+                        nestedScrollEnabled={true}
+                        renderItem={ memoizedRenderItem }
+                        keyExtractor={ (item) => { return item._id?item._id.toString():item.id.toString(); } }
+                        horizontal={false}
+                        numColumns={ 1 }
+                        ref={flatListRef}
+                        ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={[commentsStyles.flatlistContainer, !all?commentsStyles.flatlistContainerNotAll:false]}
+                    />
 
                 :
                     (reshapedComments?.slice(0,2))?.map((item, key)=>{

@@ -90,7 +90,31 @@ exports.signupUser = (req, res, next) => {
      res.status(500).json({ error: error.message });
    }
  };
+
  
+ 
+ exports.getUserFollowers = (req, res, next) => {
+    const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+    const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
+    const skip = (page - 1) * limit;
+
+    User.findOne({ _id : req.params.id })
+    .populate('followers')
+    .populate('followings')
+    .populate('favourites')
+    .then(async (user)=>{
+        if(!user)
+        {
+            throw new Error('No-user-found')
+        }
+        const totalDatas = await User.countDocuments().exec();
+        const totalPages = Math.ceil(totalDatas / limit);
+        const datas = {followers:user.followers.slice(skip, skip+limit), followings:user.followings.slice(skip, skip+limit)}
+        res.status(200).json({user:datas, page: page, totalPages: totalPages, totalDatas: totalDatas });
+    })
+    .catch(error => res.status(500).json({ error }));
+ }
+
 
 
 exports.getUser = (req, res, next) => {
