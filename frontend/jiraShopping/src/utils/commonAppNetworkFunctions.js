@@ -44,23 +44,32 @@ exports.sendNotificaitons = async ({username, source, model, type, data}) => {
 }
 
 
-exports.getNotifications = async (username) => {
+exports.getNotifications = async (username, page, limit) => {
+    //console.log(username, page, limit)
     try{
-        
-        const response = await fetch(`${server}/api/datas/notifications/get/${username}`);            
+        const response = await fetch(`${server}/api/datas/notifications/get/${username}?page=${page}&limit=${limit}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'Application/json',
+            },});
+            
         const datas = await response.json()
-                //console.log(datas)
+        //console.log(datas)
         if (!response.ok) {
             throw new Error('Erreur lors de la requête');
         }
-            //console.log(datas)
-        return datas[0]?.notifications
+           // console.log(datas.notifications)
+        return datas.notifications
     }catch(error){
         console.log(error)
-        Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+        //Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
         return []
     }
 }
+
+
+
+
 
 exports.updateNotificationsRead = async ({username, id}) => {
     //console.log(id)

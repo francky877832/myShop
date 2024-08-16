@@ -95,11 +95,17 @@ exports.updateUserNotificationRead = (req, res, next) => {
 
 
 exports.getUserNotifications = (req, res, next) => {
-    console.log("req.params.user")
-    Notification.find({ user : req.params.user })
-    .then( (notificaitons) => {
-        console.log(notificaitons)
-        res.status(200).json(notificaitons);
+    console.log("notification")
+    const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+    const limit = parseInt(req.query.limit) || 3; // Nombre d'éléments par page, par défaut 20
+    const skip = (page - 1) * limit;
+
+    Notification.find({ user : req.params.user }).sort({_id:-1}).exec()
+    .then(async (notifications) => {
+        console.log(notifications)
+        const totalDatas = await Notification.countDocuments({ user : req.params.user }).exec();
+        const totalPages = Math.ceil(totalDatas / limit);
+        res.status(200).json({notifications:notifications[0].notifications.slice(skip, skip+limit), page:page,totalPages:totalPages,totalDatas:totalDatas});
     })
     .catch( (error) => {
         console.log(error)

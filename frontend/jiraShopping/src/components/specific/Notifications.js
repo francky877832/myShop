@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext, useRef,  } from 'react';
+import React, { useState, useEffect, createContext, useContext, useRef, useCallback  } from 'react';
 import { View, Text, StyleSheet,  Dimensions, FlatList, Pressable, Alert } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Icon } from 'react-native-elements';
@@ -28,6 +28,8 @@ const RenderNotificationItem = (props) =>{
     const [date, setDate] = useState(sinceDate(item.updatedAt).join(' '))
     const timeoutRef = useRef(null);
 
+
+useEffect(()=>{
   if(['seconde','secondes', 'minute', 'minutes'].includes(sinceDate(item.updatedAt)[1]))
   { 
       if (timeoutRef.current) {
@@ -37,7 +39,7 @@ const RenderNotificationItem = (props) =>{
         setDate(sinceDate(item.updatedAt).join(' '))
       }, 60000);
   }
-
+},[])
 
     return(
         <View style={[notificationsStyles.item, item.read ? notificationsStyles.itemRead : false]}>
@@ -59,10 +61,15 @@ const RenderNotificationItem = (props) =>{
 
 
 
+
+
+
 const AllNotifications = () => {
 
   const { user } = useContext(UserContext)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [notificaitons, setNotifications] = useState([])
   const navigation = useNavigation()
 
@@ -92,29 +99,38 @@ const sendNotif = async (username, source, model, type) => {
   }
 }*/
 
-const getNotif = async (username) => {
-  //console.log("GETNOTIF");
-  try{
-    const response = await getNotifications(username)
-    //console.log(response)
-    setNotifications(response)
-  }catch(error){
-    console.log(error)
+const getNotif = useCallback(async (username, page, limit) => {
+  if (isLoading || !hasMore) return;
+
+  setIsLoading(true);
+  try {
+
+    const newData = await getNotifications(username, page, limit);
+    if (newData.length > 0) {
+      setNotifications((prevNotif)=>[...prevNotif, ...newData])
+      setPage((prevPage) => prevPage + 1);
+    } else {
+      setHasMore(false);
+    }
+  } catch (error) {
+    console.error('Erreur lors du chargement des données :', error);
+  } finally {
+    setIsLoading(false);
   }
-}
+}, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);
+
+const onEndReached = async () => { await getNotif(user.username, page, 10) }
+
 
 useEffect(() => {
   const fetchData = async () => {  
       //console.log("isLoading")
-      await getNotif(user.username)
-      setIsLoading(false)
+      await getNotif(user.username, page, 10)
     };
     
-    if (isLoading) {
       fetchData();
-  }
   
-}, [isLoading]);
+}, []);
 
 
 const openNotif = async (username, item) => {
@@ -146,8 +162,8 @@ const openNotif = async (username, item) => {
                     keyExtractor={ (item) => { return item._id.toString(); } }
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     contentContainerStyle={[notificationsStyles.flatlist]}
-                    onEndReached={()=>{}}
-                    onEndReachedThreshold={0.5}
+                    onEndReached={()=>{onEndReached()}}
+                    onEndReachedThreshold={0.3}
                     ListFooterComponent={
                       <Pressable onPress={async()=>{sendNotif(user.username, 'app', 'USER', 'ON_REGISTERED')}} style={{backgroundColor:appColors.secondaryColor1,color:appColors.white,alignItems:"center",paddingVertical:20,}}>
                         <Text style={{color:appColors.white,}}>Send Notifications</Text>
