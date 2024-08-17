@@ -22,7 +22,11 @@ const productSchema = new Schema({
     feesBy : { type : String, enum : ['seller', 'buyer'], default : "buyer" },
     garanti : { type : Number, default : 0 }, //en jour
     stock : { type : Number, default : 1 },
-    likes : { type : Number, default : 0 },
+    likes : { type : Number, default : 0, validate: {validator: function(v) {
+        return v >= 1;
+        },
+        message: 'Les likes doit être au moins 1.'
+    }},
     inBasket : { type : Number, default : 0 },
     sold : { type : Number, enum : [0, 1], default : 0 },
     visibility : { type : Number, enum : [0, 1], default : 1  },

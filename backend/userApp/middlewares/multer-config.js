@@ -6,9 +6,10 @@ const MIME_TYPES = {
   'image/png': 'png'
 };
 
-const storage = multer.diskStorage({
+
+const productsStorage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, 'userApp/assets/images');
+    callback(null, 'userApp/assets/images/products');
   },
   filename: (req, file, callback) => {
     const name = file.originalname.split(' ').join('_');
@@ -17,5 +18,23 @@ const storage = multer.diskStorage({
   }
 });
 
-module.exports = multer({storage: storage})
+
+const userStorage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, 'userApp/assets/images/user');
+  },
+  filename: (req, file, callback) => {
+    const name = file.originalname.split(' ').join('_');
+    const extension = MIME_TYPES[file.mimetype];
+    callback(null, name + Date.now() + '.' + extension);
+  }
+});
+
+
+const productsUserApp  = multer({storage: productsStorage})
+const userUserApp = multer({storage: userStorage})
+module.exports = {
+  productsUserApp,
+  userUserApp
+};
 //module.exports = multer({storage: storage}).single('image');

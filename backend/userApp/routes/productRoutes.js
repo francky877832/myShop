@@ -3,7 +3,7 @@ const router = express.Router();
 
 //apres le middleware auth
 const auth = require('../middlewares/auth');
-const multer = require('../middlewares/multer-config');
+const {productsUserApp, userUserApp} = require('../middlewares/multer-config');
 
 const prodCtrl = require('../controllers/productController');
 
@@ -16,8 +16,8 @@ router.get('/likes/get/:id', prodCtrl.getProductNumLikes);
 router.get('/categories', prodCtrl.getProductsFromCategories);
 router.get('/get/:id', prodCtrl.getProduct);
 
-router.post('/add', multer.array('images', 6), prodCtrl.addProductUser);
-router.put('/update/:id', multer.array('images', 6), prodCtrl.updateProduct);
+router.post('/add', productsUserApp.array('images', 6), prodCtrl.addProductUser);
+router.put('/update/:id', productsUserApp.array('images', 6), prodCtrl.updateProduct);
 router.put('/likes/update/:id', prodCtrl.updateProductNumLikes);
 router.delete('/remove/:id', prodCtrl.removeProduct);
 

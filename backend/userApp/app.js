@@ -22,8 +22,9 @@ app.use('/api/auth', userRoutes);
 
 const imagesPath =  path.join(__dirname, '/assets/images').replace(/\\/g, '/')
 app.use('/api/datas', routes);
-console.log( path.join(__dirname, '/assets/images').replace(/\\/g, '/'))
+//console.log( path.join(__dirname, '/assets/images').replace(/\\/g, '/'))
 app.use('/userApp/assets/images', express.static(path.join(__dirname, '/assets/images').replace(/\\/g, '/')))
+
 app.get('/userApp/assets/images/:imageName', (req, res) => {
   res.sendFile(path.join(imagesPath, req.params.imageName));
 });
