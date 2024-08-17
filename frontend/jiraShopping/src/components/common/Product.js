@@ -50,19 +50,22 @@ const Product = (props) => {
     //const numLike = useRef(product.likes)
     const timeoutRef = useRef(null);
     
-    const state = useSelector(state => state.favourites);
+    const favouritesState = useSelector(state => state.favourites);
 
+/*
     useEffect(() => {
+        console.log(product.likes)
         if(product._id=="668a681b25a5467dd508118c")
-            console.log('State updated:', numLike);
+            console.log('State updated:', favouritesState.addLike);
     }, [numLike]);
+*/
 
     //hasLikedItem={hasLiked(item)}
 
     const _handleLikePressed = useCallback((product) => {
         setLikeIcon(prevLike => {
             const newLike = !prevLike;
-            setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
+            //setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
            // numLike.current = newLike ? numLike.current + 1 : numLike.current - 1;
             //newLike ? data.likes++ : data.likes--
             return newLike;
@@ -98,22 +101,14 @@ const Product = (props) => {
 
 
     const handlePress = () => {
-        console.log(numLike)
-        let addLikes = 0 
-        if(isFavourite===false && like===true)
-        {
-            addLikes = 1
-        }
-        else if(isFavourite===true && like===false)
-        {
-            addLikes = -1
-        }
-        
-        
+        /*
+        console.log("favouritesState.addLike")
+        console.log(favouritesState.addLike)
+        */
         if (replace) {
-          navigation.replace({name:"ProductDetails", params:{ productDetails: product, numLike:numLike+addLikes },  key: Date.now().toString()});
+          navigation.replace({name:"ProductDetails", params:{ productDetails: product, numLike:numLike+favouritesState.addLike },  key: Date.now().toString()});
         } else {
-          navigation.navigate({name:"ProductDetails", params:{ productDetails: product, numLike:numLike+addLikes },  key: Date.now().toString()});
+          navigation.navigate({name:"ProductDetails", params:{ productDetails: product, numLike:numLike+favouritesState.addLike },  key: Date.now().toString()});
         }
       }//,[navigation]);
       

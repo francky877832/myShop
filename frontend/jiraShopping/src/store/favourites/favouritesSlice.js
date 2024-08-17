@@ -88,6 +88,7 @@ const favouritesSlice = createSlice({
     hasMore: true, // Equivalent de `const [hasMore, setHasMore] = useState(true)`
     page: 1, // Equivalent de `const [page, setPage] = useState(1)`
     error: null,
+    addLike : 0,
   },
   reducers: {
     addLocalFavourite(state, action) {
@@ -96,10 +97,12 @@ const favouritesSlice = createSlice({
       if (!state.favourites.some(product => product._id === newProduct._id)) {
         state.favourites.unshift(newProduct);
       }
+      state.addLike = state.addLike+1
     },
     // Méthode pour supprimer un produit de la liste des favoris (exemple)
     removeLocalFavourite(state, action) {
       state.favourites = state.favourites.filter(product => product._id !== action.payload._id);
+      state.addLike = state.addLike-1
     },
     setLikedIcon(state, action) {
       state.liked = action.payload; // Equivalent de `setLikedIcon`
@@ -146,14 +149,10 @@ const favouritesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(addFavourite.pending, (state) => {
-        state.isLoading = true; // Equivalent de `setIsLoading(true)`
+        state.isLoading = true; // eviter un render pour eviter product.likes+2
       })
       .addCase(addFavourite.fulfilled, (state, action) => {
-        state.isLoading = false; // Equivalent de `setIsLoading(false)`
-        /*const { item, bool } = action.payload;
-        state.favourites = state.favourites.map(fav =>
-          fav._id === item._id ? { ...fav, liked: bool ? fav.liked + 1 : fav.liked - 1 } : fav
-        );*/
+        state.isLoading = false; // eviter un render pour eviter product.likes-2
       })
       .addCase(addFavourite.rejected, (state, action) => {
         state.isLoading = false; // Equivalent de `setIsLoading(false)`
