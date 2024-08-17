@@ -34,7 +34,7 @@ import  {
   const user = {_id:loggedUserId, username:loggedUser}
 
 const RadioProductsList = (props) => {
-    const { item, datas  } = props;
+    const { item, datas, navigation, route  } = props;
     
     //const { removeBasket, updateTotalPrice} = useContext(BasketContext)
     
@@ -83,7 +83,7 @@ const handleRemoveFromBasket = useCallback((product) => {
                                 { passed_sellers.includes(product1.seller) ? false :
                                     <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer1]} >
                                         <RadioButton value={product1.seller} />
-                                        <SellerBrand pub={false} certified={true} username={product1.seller} /> 
+                                        <SellerBrand pub={false} certified={true} username={product1.seller} route={route} navigation={navigation} closeNotif={true} /> 
                                         <Text>{/*A MODIFIER*/}</Text>
                                     </View>
                                 }

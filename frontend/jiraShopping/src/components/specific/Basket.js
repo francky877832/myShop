@@ -21,11 +21,14 @@ import { server } from '../../remote/server';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectBasket, selectIsLoading, selectError } from '../../store/baskets/basketsSlice';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
 const Basket = (props) => {
+    const navigation = useNavigation()
+    const route = useRoute()
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
     //const [basket, setBasket] = useState([])
     //const {basket, fetchUserBasket, isLoading} = useContext(BasketContext)
@@ -43,7 +46,7 @@ useEffect(()=>{
     return(
         <View style={[basketStyles.container,]}>
             <View style={[{flex:1,}]}>
-                <RadioProductsList datas={basket} styles={{}} />   
+                <RadioProductsList route={route} navigation={navigation} datas={basket} styles={{}} />   
                     {
                         isLoading && 
                             <CustomActivityIndicator styles={{}} /> 

@@ -119,7 +119,7 @@ useEffect(()=>{
  const renderItem = useCallback(({item}) => { return(
         <View style={[productDetailsStyles.commentsContainer]}>
             <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{navigation.navigate({name:"Shop", params:{seller:item,}, key:Date.now().toString()}) }}>
-                <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={item.username} navigation={navigation} route={route} closeNotif={true} />
+                <SellerBrand pub={true} onlineDate={item.updatedAt} username={item.username} navigation={navigation} route={route} closeNotif={true} />
             </Pressable>
             <View style={{height:20}}></View>
         </View>

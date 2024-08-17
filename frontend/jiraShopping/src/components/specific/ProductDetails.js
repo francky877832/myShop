@@ -26,6 +26,7 @@ import { CommentsContext } from '../../context/CommentsContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { isProductFavourite } from '../../store/favourites/favouritesSlice'; 
 import { ActivityIndicator } from 'react-native-paper';
+import { UserContext } from '../../context/UserContext';
 
 const loggedUserId = "668fdfc6077f2a5c361dd7fc"
 const loggedUser = "Francky"
@@ -35,6 +36,7 @@ const ProductDetails = (props) => {
     //console.log(props)
     const navigation = useNavigation()
     const route = useRoute()
+    const {user} = useContext(UserContext)
 //console.log(route.params.productDetails) length
     const data = route.params.productDetails;
     const pass = route.params.pass;
@@ -309,8 +311,8 @@ useEffect(()=>{
              
 
                 <View style={[productDetailsStyles.commentsContainer]}>
-                    <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{loggedUserId!=visitorUserId ? navigation.navigate("Shop", {seller:data.seller}) : false }}>
-                        <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={data.seller.username} navigation={navigation} route={route} closeNotif={true} />
+                    <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{user._id!=data.seller._id ? navigation.navigate("Shop", {seller:data.seller}) :  navigation.navigate('Preferences', {screen: 'Shop',params:undefined}); }}>
+                        <SellerBrand pub={true} onlineDate={data.seller.updatedAt} username={data.seller.username} navigation={navigation} route={route} closeNotif={true} />
                     </Pressable>
                 <View style={{height:20}}></View>
 

@@ -146,16 +146,17 @@ const ProfilShop = (props) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                });
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la requête'+(await response.text()));
-                }
-                const datas = await response.json();
+            });
+            
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête'+(await response.text()));
+            }
+            const datas = await response.json();
                 //console.log(datas)
-                return datas
+            return datas
         } catch (error) {
-        console.error(error);
-        return []
+            console.error(error);
+            return []
       }
     }
 
@@ -276,9 +277,7 @@ const setFollowers = async (follower, following) => {
                                 <PrevButton styles={{color:appColors.black}}/>
                             </View>
 
-                            <SellerBrand pub={true} onlineDate="2024-02-01T00:00:00Z" username={seller.username} navigation={navigation} route={route} />
-
-                            
+                            <SellerBrand pub={true} onlineDate={seller.updatedAt} username={seller.username} navigation={navigation} route={route} />
                         </View>
                 
                         <View style={[profilShopStyles.follow]}>
@@ -289,14 +288,14 @@ const setFollowers = async (follower, following) => {
                                 </View>
 
                                 <Pressable  style={[profilShopStyles.followLeftElements,profilShopStyles.follower,{}]}
-                                    onPress={()=>{seller.followers.length>0 ?navigation.navigate('Followers', {seller:seller, who:'followers'}):false}}
+                                    onPress={()=>{seller.followers.length>0 ?navigation.navigate({name:"Followers", params:{seller:seller, who:'followers'}, key:Date.now().toString()}):false}}
                                 >
                                         <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.followers.length : seller.followers.length}</Text>
                                         <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Followers</Text>
                                 </Pressable>
 
                                 <Pressable  style={[profilShopStyles.followLeftElements, profilShopStyles.following,{}]}
-                                    onPress={()=>{seller.followings.length>0 ?navigation.navigate('Followers', {seller:seller, who:'followings'}):false}}
+                                    onPress={()=>{seller.followings.length>0 ?navigation.navigate({name:"Followers", params:{seller:seller, who:'followings'}, key:Date.now().toString()}):false}}
                                 >
                                     <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.followings.length : seller.followings.length}</Text>
                                     <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Following</Text>
