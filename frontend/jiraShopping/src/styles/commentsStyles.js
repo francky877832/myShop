@@ -13,7 +13,7 @@ export const commentsStyles = StyleSheet.create({
     {
       backgroundColor : appColors.white,
       paddingHorizontal:20,
-      paddingBottom : 20,
+      paddingBottom : 0,
     },
     commentContainer: 
     {
@@ -23,7 +23,7 @@ export const commentsStyles = StyleSheet.create({
     flatlistContainerView :
     {
       //flex : 1,
-      paddingBottom : 20,
+      paddingBottom : 10,
     },
     flatlistContainer : 
     {
@@ -62,7 +62,7 @@ export const commentsStyles = StyleSheet.create({
 
     inputContainer :
     {
-      top : 10,
+      top : 0,
       //justifyContent : "center",
       //alignItems : "center",
     },

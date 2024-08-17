@@ -11,17 +11,17 @@ const loggedUserId = "66715deae5f65636347e7f9e";
 // Equivalent de la fonction `addFavourite` dans FavouritesContext
 export const addFavourite = createAsyncThunk(
   'favourites/addFavourite',
-  async ({ item, bool }, { rejectWithValue }) => {
+  async ({ item, bool, user }, { rejectWithValue }) => {
     try {
       let response = {};
       const favourite = {
-        user: loggedUserId,
-        username: loggedUser,
+        user: user._id,
+        username: user.username,
         product: item._id,
       };
 
       if (bool) {
-          response = await fetch(`${server}/api/datas/favourites/update/${loggedUserId}`, {
+          response = await fetch(`${server}/api/datas/favourites/update/${user._id}`, {
               method: 'POST',
               body: JSON.stringify(favourite),
               headers: { 'Content-Type': 'application/json' },
@@ -29,11 +29,11 @@ export const addFavourite = createAsyncThunk(
 
           response = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
               method: 'PUT',
-              body: JSON.stringify({ updateLikes: 1 }),
+              body: JSON.stringify({ updateLikes: 1, userId:user._id }),
               headers: { 'Content-Type': 'application/json' },
           });
       } else {
-          response = await fetch(`${server}/api/datas/favourites/remove/${loggedUserId}`, {
+          response = await fetch(`${server}/api/datas/favourites/remove/${user._id}`, {
               method: 'PUT',
               body: JSON.stringify(favourite),
               headers: { 'Content-Type': 'application/json' },
@@ -41,7 +41,7 @@ export const addFavourite = createAsyncThunk(
 
           response = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
               method: 'PUT',
-              body: JSON.stringify({ updateLikes: -1 }),
+              body: JSON.stringify({ updateLikes: -1, userId:user._id }),
               headers: { 'Content-Type': 'application/json' },
           });
       }

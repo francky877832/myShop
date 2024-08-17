@@ -6,9 +6,9 @@ const productSchema = new Schema({
     name : { type : String, required : true },
     description : { type : String, required : true },
     price : { type : Number, required : true },
-    newPrice : { type : Number, default : () => { return this.price; } },
-    minPrice : { type : Number, default : () => { return this.price; } },
-    maxPrice : { type : Number, default : () => { return this.price; } },
+    newPrice: { type: Number, default: function() { return this.price; } },
+    minPrice: { type: Number, default: function() { return this.price; } },
+    maxPrice: { type: Number, default: function() { return this.price; } },
     condition : { type : String, enum : ['new', 'used', "new used"], default : 'new' },
     seller : { type : Schema.Types.ObjectId, ref : 'User', required : true },
     sellerName : { type : String, required : false, },
@@ -26,6 +26,8 @@ const productSchema = new Schema({
     inBasket : { type : Number, default : 0 },
     sold : { type : Number, enum : [0, 1], default : 0 },
     visibility : { type : Number, enum : [0, 1], default : 1  },
+
+    favourites : [{ type : Schema.Types.ObjectId, ref : 'User', required : false }],
 
     createdAt : { type : Date, default : Date.now },
     updatedAt : { type : Date, default : Date.now }

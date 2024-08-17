@@ -1,11 +1,11 @@
 import { API_BACKEND } from '@env';
 
 import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
-import { View, Text, Pressable, StyleSheet, ScrollView, Animated, PanResponder, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import { View, Text, Pressable, StyleSheet, ScrollView, FlatList, Image, Animated, PanResponder, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import nlp from 'compromise';
+import { Icon } from 'react-native-elements';
 
 import CarouselImage from '../common/CarouselImages';
 import { PrevButton, ShareButton, LikeButton, CustomButton, CustomActivityIndicator } from "../common/CommonSimpleComponents";
@@ -168,6 +168,7 @@ const ProductDetails = (props) => {
 
 useEffect(()=>{
     setReshapedComments(data.comments)
+    //console.log(data.favourites)
 }, [])
 
     
@@ -185,7 +186,7 @@ useEffect(()=>{
 
     //const [likeClicked, setLikeClicked] = useState(data.liked)
     
-//console.log("boss")
+//console.log("data")
     const dispatch = useDispatch();
     const isFavourite = useSelector((state) => isProductFavourite(state, data._id))
     const [like, setLikeIcon ] = useState(isFavourite)
@@ -199,6 +200,7 @@ useEffect(()=>{
             //newLike ? data.likes++ : data.likes--
             return newLike;
         });
+        //data.favourites.unshift(user)
         
     }, [like, numLike]);
 
@@ -220,7 +222,7 @@ useEffect(()=>{
         });  
     },[like])*/
 
-
+console.log(data.favourites)
     return (
 
   <View style={productDetailsStyles.container}>
@@ -236,7 +238,7 @@ useEffect(()=>{
                         <ShareButton styles={productDetailsStyles.shareButton} />
                         <View style={{ width: 10 }}></View>
                         
-                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} synchro={true} item={data} styles={{ color: appColors.white }} isCard={false} />
+                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user} synchro={true} item={data} styles={{ color: appColors.white }} isCard={false} />
                     </View>
                 </View>
 
@@ -260,7 +262,7 @@ useEffect(()=>{
                         </View>
                         <View style={{justifyContent:"center",alignItems:"center",}}>
 
-                                <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} synchro={true} item={data} styles={{ color: appColors.black }} isCard={false} />
+                                <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user}  synchro={true} item={data} styles={{ color: appColors.black }} isCard={false} />
 
                             <Text style={[customText.text]}>{numLike}</Text>
                         </View>
@@ -321,7 +323,7 @@ useEffect(()=>{
 
                 
                         {
-                            <View>
+                            <View style={[{borderTopWidth:1,borderColor:appColors.lightWhite}]}>
                             <Comments page={page} loadMoreComments={loadMoreComments_} searchAgain={searchAgain} all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{setOnNewComment:setOnNewComment}} reshapedComments={reshapedComments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
                             {isLoading &&
                                 <ActivityIndicator color={appColors.secondaryColor1} size="small" styles={{}} /> 
@@ -329,6 +331,8 @@ useEffect(()=>{
                         </View>
                         
                         }
+
+                       
 
                 </View>
 
@@ -340,8 +344,49 @@ useEffect(()=>{
                                 <ActivityIndicator color={appColors.secondaryColor1} size="small" styles={{}} /> 
                                 :
                 <View style={[productDetailsStyles.similarContainer]}>
+                        <View style={{height:20}}></View>
+                    <Pressable style={[productDetailsStyles.likeAdders]} onPress={()=>{}}>
+                        <View style={[productDetailsStyles.likeTitle]}>
+                            <Text style={[customText.text, productDetailsStyles.someText]}>
+                                ...ont aimé
+                            </Text>
+                        </View>
+
+                        <View style={{height:10}}></View>
+
+                        <View style={[productDetailsStyles.likeContent, {flexDirection:data.favourites?.length<=0?'column':'row'}]}>
+                            <FlatList
+                                data={[...data.favourites]}
+                                renderItem={ ({item}) => { return (
+                                    <View style={[productDetailsStyles.likeItem]}>
+                                        <Image source={{uri: item.image}} style={[productDetailsStyles.likeAddersImages]} />
+                                    </View>
+                                )} }
+                                keyExtractor={ (item) => { return Math.random().toString();} }
+                                horizontal={true}
+                                ItemSeparatorComponent ={ (item) => { return <View style={{width:0,}}></View> }}
+                                showsHorizontalScrollIndicator={false}
+                                ListEmptyComponent={() => (
+                                    <View style={[{alignItems:'center', justifyContent:'center',}]}>
+                                        <Icon name="heart-dislike-outline" type="ionicon" color={appColors.secondaryColor1} size={50} />
+                                        <Text style={[customText.text,  productDetailsStyles.someText, {color:appColors.gray,fontSize:16,fontWeight:'normal'}]}>Pas de likes actuellement</Text>
+                                    </View>
+                                )}
+                                contentContainerStyle={[{justifyContent:'center', alignItems:'center'}]}
+                            />
+                             { data.favourites?.length>0 &&
+                                <Pressable>
+                                    <Text style={[customText.text, productDetailsStyles.someText, {color:appColors.gray,fontSize:16,fontWeight:'normal'}]}>
+                                        {data.favourites?.length} like{data.favourites?.length>1?"s":false} {">>"}
+                                    </Text>
+                                </Pressable>
+                            }
+                        </View>
+                    </Pressable>
+
+            <View style={{height:20}}></View>
                     <View>
-                        <Text style={[customText.text, { fontWeight: "bold", fontSize: 20, color: appColors.black ,paddingLeft:10,}]}>Produits Similaires</Text>
+                        <Text style={[customText.text, productDetailsStyles.someText ]}>Produits Similaires</Text>
                     </View>
                     
                     <View>
@@ -386,3 +431,4 @@ useEffect(()=>{
 };
 
 export default React.memo(ProductDetails);
+

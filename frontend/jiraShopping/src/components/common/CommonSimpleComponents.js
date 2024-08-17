@@ -19,7 +19,7 @@ import { addFavourite, addFavouriteContext, setLikedIcon, updateLocalFavourites,
 exports.LikeButton = (props) => {
     const dispatch = useDispatch();
     const { favourites, liked } = useSelector(state => state.favourites);
-    const { item, hasLikedItem, _handleLikePressed, synchro, isCard, styles } = props;
+    const { item, hasLikedItem, _handleLikePressed, synchro, isCard, styles, user } = props;
     const style = styles || {};
 
     const timeoutRef = useRef(null);
@@ -51,8 +51,8 @@ exports.LikeButton = (props) => {
                 //product.likes++
                 dispatch(addLocalFavourite(product));
             }
-            dispatch(addFavourite({ item:item, bool: !like }));
-        }, 1000);
+            dispatch(addFavourite({ item:item, bool: !like, user:user }));
+        }, 500);
         
 
     },[])

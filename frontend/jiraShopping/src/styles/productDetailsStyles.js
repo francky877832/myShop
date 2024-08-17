@@ -26,6 +26,9 @@ export const productDetailsStyles = StyleSheet.create({
         //paddingLeft : 1,
         paddingBottom :  20,
         //backgroundColor : appColors.white,
+        //justifyContent : 'center',
+        //alignItems : 'center',
+        //width : '100%',
     },
     getBackPosition :
     {
@@ -172,7 +175,45 @@ export const productDetailsStyles = StyleSheet.create({
         paddingVertical : 10,
         paddingHorizontal : 5,
         width : screenWidth,
-    },  
+    }, 
+
+    likeAddersImages : 
+    {
+        width : 50,
+        height : 50,
+        borderRadius : 25,
+        //left : -10,
+    },
+
+    likeAdders : 
+    {
+        backgroundColor : appColors.white,
+        padding : 10,
+        //alignItems : 'center',
+    },
+    likeTitle : 
+    {
+
+    },
+    likeContent :
+    {
+        width : '100%',
+        flexDirection : 'row',
+        justifyContent : 'center',
+        alignItems : 'center',
+    },
+    likeItem :
+    {
+        position : 'relaive',
+       
+    },
+    someText : 
+    {
+        fontWeight: "bold", fontSize: 20, color: appColors.black ,paddingLeft:10,
+    }
+
+ 
+    
 
   
 })

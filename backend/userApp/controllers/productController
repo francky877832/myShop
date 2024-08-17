@@ -2,6 +2,7 @@ const fs = require('fs');
 
 const Product = require('../models/productModel');
 const Comment = require('../models/commentModel');
+const User = require('../models/userModel');
 const Fuse = require('fuse.js');
 const mongoose = require('mongoose');
 
@@ -132,8 +133,8 @@ exports.getProducts =  (req, res, next) => {
     { path: 'followers' },
     { path: 'followings' },
     { path: 'favourites' },
-  ]
-}).exec()
+    ]}).populate('favourites')
+    .exec()
       .then (async(products) => {
             // Étape 2 : Compter le total des produits pour la pagination
           const totalDatas = await Product.countDocuments().exec();
@@ -254,7 +255,8 @@ exports.getProductsUser =  (req, res, next) => {
         { path: 'followings' },
         { path: 'favourites' },
       ]
-  }).exec()
+    }).populate('favourites')
+  .exec()
       .then (async(products) => {
             // Étape 2 : Compter le total des produits pour la pagination
           const totalDatas = await Product.countDocuments().exec();
@@ -352,7 +354,8 @@ exports.getSearchedProducts = async (req, res, next) => {
             { path: 'followings' },
             { path: 'favourites' },
           ]
-      }).sort(sortValue)//.skip(skip).limit(limit).exec()
+      }).populate('favourites')
+        .sort(sortValue).exec() //.skip(skip).limit(limit).exec()
         }
         else
         {
@@ -361,7 +364,8 @@ exports.getSearchedProducts = async (req, res, next) => {
         { path: 'followings' },
         { path: 'favourites' },
       ]
-  }).sort({updatedAt:-1})//.skip(skip).limit(limit).exec()
+    }).populate('favourites')
+      .sort({updatedAt:-1}).exec() //.skip(skip).limit(limit).exec()
           
         }
       const totalDatas = await Product.countDocuments().exec();
@@ -464,16 +468,75 @@ exports.getProductNumLikes  = (req, res, next) => {
       });
 };
 
+/*
 exports.updateProductNumLikes  = (req, res, next) => {
   //const datas = req.body
   Product.updateOne({ _id : req.params.id }, { $inc : { likes : req.body.updateLikes } } )
       .then( () => { 
         //console.log("LIKEE")
+
           res.status(200).json({ message : (req.body.updateLikes==1) ? "Le produit a recu un nouveau like." : "Le produit a perdu un like." });
       })
       .catch( (error) => { 
           res.status(400).json({ error: error });
       });
 };
+*/
+
+
+exports.updateProductNumLikes = async (req, res, next) => {
+    try {
+        const { userId, updateLikes } = req.body;
+
+        // 1. Mettre à jour le nombre de likes du produit
+        const product = await Product.findOneAndUpdate(
+            { _id: req.params.id },
+            { $inc: { likes: updateLikes } },
+            { new: true }
+        );
+
+        if (!product) {
+            return res.status(404).json({ message: "Produit non trouvé." });
+        }
+
+        // 2. Mettre à jour le champ favourites de l'utilisateur
+        const seller = await User.findOne({ _id: product.seller });
+        if (!seller) {
+            return res.status(404).json({ message: "Utilisateur non trouvé." });
+        }
+
+        seller.favourite += updateLikes; // Incrémente ou décrémente
+
+        // 3. Ajouter ou retirer le vendeur de la liste des utilisateurs qui ont aimé
+        const sellerIndex = product.favourites.findIndex(sellerId => sellerId.equals(userId));
+        
+        if (updateLikes === 1) {
+            if (sellerIndex === -1) {
+              product.favourites.unshift(product.seller); // Ajouter le vendeur si non présent
+            }
+        } else {
+            if (sellerIndex !== -1) {
+              product.favourites.splice(sellerIndex, 1); // Retirer le vendeur si présent
+            }
+        }
+
+        // Sauvegarder les changements de l'utilisateur
+        await seller.save();
+        await product.save();
+
+        // Envoyer une réponse réussie
+        res.status(200).json({ 
+            message: updateLikes === 1 
+                ? "Le produit a reçu un nouveau like et l'utilisateur a été mis à jour."
+                : "Le produit a perdu un like et l'utilisateur a été mis à jour."
+        });
+    } catch (error) {
+      console.log(error)
+        res.status(400).json({ error: error.message });
+    }
+};
+
+
+
 
 

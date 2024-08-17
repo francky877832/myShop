@@ -12,6 +12,7 @@ import { appColors, customText } from '../../styles/commonStyles';
 //CONTEXTE
 import { FavouritesContext } from '../../context/FavouritesContext';
 import { BasketContext } from '../../context/BasketContext';
+import { UserContext } from '../../context/UserContext';
 import { server } from '../../remote/server';
 
 import {shallowEqual, useSelector, useDispatch } from 'react-redux';
@@ -22,12 +23,13 @@ import { addToBasket, removeFromBasket, fetchUserBasket, updateSelectedProducts,
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
 const username = "Franck"
-const user = {_id:loggedUserId, username:loggedUser}
+//const user = {_id:loggedUserId, username:loggedUser}
 
 const Product = (props) => { 
-    const { item, horizontal, replace } = props;
+    const { item, horizontal, replace, } = props;
     const navigation = useNavigation()
     const [product, setProduct] = useState({...item})
+    const {user} = useContext(UserContext)
     //console.log(item)
    
 //console.log(item.images[0])
@@ -120,7 +122,7 @@ const Product = (props) => {
                                  <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{product.feesBy=="seller" ? "Gratuit"  : "Reduction"} </Text>
                             </Pressable>
 
-                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} synchro={false} item={product} isCard={false} styles={{color:appColors.white}}/>
+                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user}  synchro={false} item={product} isCard={false} styles={{color:appColors.white}}/>
 
                         </View>
                     

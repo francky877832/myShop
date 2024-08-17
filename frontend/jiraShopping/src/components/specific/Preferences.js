@@ -84,13 +84,6 @@ const Preferences = (props) => {
     const { favourites, liked } = useSelector(state => state.favourites);
     //console.log(page)
 
-    useEffect(() => {
-      const userId = "66715deae5f65636347e7f9e"; // ID utilisateur
-      //console.log(loggedUserId)
-      dispatch(fetchUserFavourites({user:loggedUserId, page:page}));
-      dispatch(fetchUserBasket(loggedUserId));
-
-  }, [dispatch]);
 
 
     const {user, loginUserWithEmailAndPassword, isAuthenticated, setIsAuthenticated } = useContext(UserContext)
@@ -99,6 +92,17 @@ const Preferences = (props) => {
     const loadMoreData_ = useCallback(async () => {
       await loadMoreData()
     })
+
+
+    
+    useEffect(() => {
+      const userId = "66715deae5f65636347e7f9e"; // ID utilisateur
+      //console.log(loggedUserId)
+      dispatch(fetchUserFavourites({user:user._id, page:page}));
+      dispatch(fetchUserBasket(user._id));
+
+  }, [dispatch]);
+  
 useEffect(()=>{
     //loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
 }, [])
