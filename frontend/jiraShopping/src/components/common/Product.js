@@ -27,6 +27,7 @@ const user = {_id:loggedUserId, username:loggedUser}
 const Product = (props) => { 
     const { item, horizontal, replace } = props;
     const navigation = useNavigation()
+    const [product, setProduct] = useState({...item})
     //console.log(item)
    
 //console.log(item.images[0])
@@ -41,23 +42,32 @@ const Product = (props) => {
         
     }, [])
     const dispatch = useDispatch();
-    const isFavourite = useSelector((state) => isProductFavourite(state, item._id), shallowEqual);
-    const isBasketPresent = useSelector((state) => isProductBasket(state, item._id), shallowEqual);
+    const isFavourite = useSelector((state) => isProductFavourite(state, product._id), shallowEqual);
+    const isBasketPresent = useSelector((state) => isProductBasket(state, product._id), shallowEqual);
 //console.log(isFavourite)
     const [like, setLikeIcon ] = useState(isFavourite)
-    const [numLike, setNumLike] = useState(item.likes)
+    const [numLike, setNumLike] = useState(product.likes)
+    //const numLike = useRef(product.likes)
     const timeoutRef = useRef(null);
+    
+    const state = useSelector(state => state.favourites);
+
+    useEffect(() => {
+        if(product._id=="668a681b25a5467dd508118c")
+            console.log('State updated:', numLike);
+    }, [numLike]);
 
     //hasLikedItem={hasLiked(item)}
 
-    const _handleLikePressed = () => {
+    const _handleLikePressed = useCallback((product) => {
         setLikeIcon(prevLike => {
             const newLike = !prevLike;
             setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
+           // numLike.current = newLike ? numLike.current + 1 : numLike.current - 1;
+            //newLike ? data.likes++ : data.likes--
             return newLike;
-        });
-    }
-
+        })
+    })
 
     const handleBasketPressed = (product) => {
         
@@ -85,13 +95,25 @@ const Product = (props) => {
             
         }, 1000)
     }//,[timeoutRef, isBasketPresent, navigation])
-    
+
 
     const handlePress = () => {
+        console.log(numLike)
+        let addLikes = 0 
+        if(isFavourite===false && like===true)
+        {
+            addLikes = 1
+        }
+        else if(isFavourite===true && like===false)
+        {
+            addLikes = -1
+        }
+        
+        
         if (replace) {
-          navigation.replace("ProductDetails", { productDetails: item });
+          navigation.replace({name:"ProductDetails", params:{ productDetails: product, numLike:numLike+addLikes },  key: Date.now().toString()});
         } else {
-          navigation.navigate("ProductDetails", { productDetails: item });
+          navigation.navigate({name:"ProductDetails", params:{ productDetails: product, numLike:numLike+addLikes },  key: Date.now().toString()});
         }
       }//,[navigation]);
       
@@ -100,35 +122,35 @@ const Product = (props) => {
                         <View style={[productStyles.top,] } >
                             <Pressable style={[productStyles.feesBy, productStyles.card]}  onPress = { ()=>{ } } >
                                 <Ionicons name="cube-sharp" size={24} color={appColors.white} />
-                                 <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{item.feesBy=="seller" ? "Gratuit"  : "Reduction"} </Text>
+                                 <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{product.feesBy=="seller" ? "Gratuit"  : "Reduction"} </Text>
                             </Pressable>
 
-                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} synchro={false} item={item} isCard={false} styles={{color:appColors.white}}/>
+                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} synchro={false} item={product} isCard={false} styles={{color:appColors.white}}/>
 
                         </View>
                     
                 <Pressable style={ productStyles.pressable } onPress = {handlePress} >
-                    <Image source={{uri: item.images[0]}}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
+                    <Image source={{uri: product.images[0]}}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
                     <View style={ productStyles.text }>
                         <View style={{ flexDirection:"column", justifyContent:"flex-start", }}>
-                            <Text numberOfLines={1} style={[customText.text, productStyles.shopName]}> @{item.seller.username} | </Text>
-                            <Text numberOfLines={2} style={[customText.text, productStyles.productName]}>{item.name}</Text>
+                            <Text numberOfLines={1} style={[customText.text, productStyles.shopName]}> @{product.seller.username} | </Text>
+                            <Text numberOfLines={2} style={[customText.text, productStyles.productName]}>{product.name}</Text>
                         </View>
 
                         <View style={{ }} >
-                            {item.numLikes ? <Text>{item.updateLikes} Likes</Text> : <Text style={{alignSelf:"center"}}>---</Text>}
-                            {item.price == item.newPrice  ? <Text style={[customText.text, productStyles.price,{fontSize:12}]}>{item.price} XAF</Text>
+                            {product.numLikes ? <Text>{product.updateLikes} Likes</Text> : <Text style={{alignSelf:"center"}}>---</Text>}
+                            {product.price == product.newPrice  ? <Text style={[customText.text, productStyles.price,{fontSize:12}]}>{product.price} XAF</Text>
                                 :
                                 <View style={{ flexDirection:"row", justifyContent:"flex-start" }} >
-                                    <Text style={[customText.text, productStyles.price, {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{item.realPrice} </Text>
-                                    <Text style={[customText.text, productStyles.price, {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:12}]}>{item.realPrice} XAF</Text>
+                                    <Text style={[customText.text, productStyles.price, {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{product.realPrice} </Text>
+                                    <Text style={[customText.text, productStyles.price, {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:12}]}>{product.realPrice} XAF</Text>
                                 </View>
                             }
                         </View>
 
                        
                         <View style={[productStyles.bottom, productStyles.card, isBasketPresent?productStyles.isBasketPresent:false] } >
-                            <Pressable onPress = { ()=>{isBasketPresent?navigation.navigate("Basket"):handleBasketPressed(item) } }>
+                            <Pressable onPress = { ()=>{isBasketPresent?navigation.navigate("Basket"):handleBasketPressed(product) } }>
                                 <Text numberOfLines={1} style={[customText.text, productStyles.category, isBasketPresent?productStyles.isBasketPresentText:false]}>{isBasketPresent? "Aller Au Panier":"Ajouter Au Panier"}</Text>
                             </Pressable>
                         </View>

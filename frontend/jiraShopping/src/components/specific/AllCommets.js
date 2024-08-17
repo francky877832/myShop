@@ -81,7 +81,7 @@ const updateReshapedComments = (comment)=>{
                     console.log(cm)
                 if(cm._id == comment.isResponseTo)
                 {
-                    console.log( prevComments[i].subComment)
+                    //console.log( prevComments[i].subComment)
                     prevComments[i].subComment.push(comment)
                 }
             })

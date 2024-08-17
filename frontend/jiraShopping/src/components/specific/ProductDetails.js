@@ -46,7 +46,8 @@ const ProductDetails = (props) => {
     const [comments, setComments] = useState(data.comments)
     const [description, setDescription] = useState(truncateText(data.description, numChars));
     //const {favourites, addFavourite, removeFavourite, hasLiked} = useContext(FavouritesContext)
-    const favourites = useSelector((state) => state.favourites.favourites);
+    //const favourites = useSelector((state) => state.favourites.favourites);
+    const favourites = []
     //const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
 
 
@@ -188,15 +189,17 @@ useEffect(()=>{
     const dispatch = useDispatch();
     const isFavourite = useSelector((state) => isProductFavourite(state, data._id))
     const [like, setLikeIcon ] = useState(isFavourite)
-    const [numLike, setNumLike] = useState(data.likes)
+    const [numLike, setNumLike] = useState(route.params.numLike)
 
     //hasLikedItem={hasLiked(item)}
-    const _handleLikePressed = useCallback(() => {
+    const _handleLikePressed = useCallback((product) => {
         setLikeIcon(prevLike => {
             const newLike = !prevLike;
             setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
+            //newLike ? data.likes++ : data.likes--
             return newLike;
         });
+        
     }, [like, numLike]);
 
    
@@ -259,7 +262,7 @@ useEffect(()=>{
 
                                 <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} synchro={true} item={data} styles={{ color: appColors.black }} isCard={false} />
 
-                            <Text style={[customText.text]}>{data.likes}</Text>
+                            <Text style={[customText.text]}>{numLike}</Text>
                         </View>
                     </View>
 

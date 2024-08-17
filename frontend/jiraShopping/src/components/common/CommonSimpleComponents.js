@@ -45,14 +45,15 @@ exports.LikeButton = (props) => {
         // Configurer un nouveau timeout
         timeoutRef.current = setTimeout(() => {
             if (isFavourite) {
-                product.likes--
+                //product.likes--
                 dispatch(removeLocalFavourite(product));
             } else {
-                product.likes--
+                //product.likes++
                 dispatch(addLocalFavourite(product));
             }
             dispatch(addFavourite({ item:item, bool: !like }));
         }, 1000);
+        
 
     },[])
 
@@ -61,7 +62,8 @@ exports.LikeButton = (props) => {
 
        //setLikeIcon(isFavourite);
         //dispatch(setLikedIcon(isFavourite)); // Met à jour l'état global 'liked'
-    }, []);
+        //console.log("okj")
+    },[]);
 
     return (
         <Pressable

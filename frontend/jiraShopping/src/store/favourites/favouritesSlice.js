@@ -13,7 +13,7 @@ export const addFavourite = createAsyncThunk(
   'favourites/addFavourite',
   async ({ item, bool }, { rejectWithValue }) => {
     try {
-      let response;
+      let response = {};
       const favourite = {
         user: loggedUserId,
         username: loggedUser,
@@ -21,36 +21,36 @@ export const addFavourite = createAsyncThunk(
       };
 
       if (bool) {
-        response = await fetch(`${server}/api/datas/favourites/update/${loggedUserId}`, {
-          method: 'POST',
-          body: JSON.stringify(favourite),
-          headers: { 'Content-Type': 'application/json' },
-        });
+          response = await fetch(`${server}/api/datas/favourites/update/${loggedUserId}`, {
+              method: 'POST',
+              body: JSON.stringify(favourite),
+              headers: { 'Content-Type': 'application/json' },
+          });
 
-        await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
-          method: 'PUT',
-          body: JSON.stringify({ updateLikes: 1 }),
-          headers: { 'Content-Type': 'application/json' },
-        });
+          response = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
+              method: 'PUT',
+              body: JSON.stringify({ updateLikes: 1 }),
+              headers: { 'Content-Type': 'application/json' },
+          });
       } else {
-        response = await fetch(`${server}/api/datas/favourites/remove/${loggedUserId}`, {
-          method: 'PUT',
-          body: JSON.stringify(favourite),
-          headers: { 'Content-Type': 'application/json' },
-        });
+          response = await fetch(`${server}/api/datas/favourites/remove/${loggedUserId}`, {
+              method: 'PUT',
+              body: JSON.stringify(favourite),
+              headers: { 'Content-Type': 'application/json' },
+          });
 
-        await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
-          method: 'PUT',
-          body: JSON.stringify({ updateLikes: -1 }),
-          headers: { 'Content-Type': 'application/json' },
-        });
+          response = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
+              method: 'PUT',
+              body: JSON.stringify({ updateLikes: -1 }),
+              headers: { 'Content-Type': 'application/json' },
+          });
       }
 
       if (!response.ok) {
         throw new Error('Erreur lors de la requête');
       }
 
-      return { item, bool };
+      //return { item, bool };
     } catch (error) {
         console.error(error)
       return rejectWithValue(error.message);
@@ -150,10 +150,10 @@ const favouritesSlice = createSlice({
       })
       .addCase(addFavourite.fulfilled, (state, action) => {
         state.isLoading = false; // Equivalent de `setIsLoading(false)`
-        const { item, bool } = action.payload;
+        /*const { item, bool } = action.payload;
         state.favourites = state.favourites.map(fav =>
           fav._id === item._id ? { ...fav, liked: bool ? fav.liked + 1 : fav.liked - 1 } : fav
-        );
+        );*/
       })
       .addCase(addFavourite.rejected, (state, action) => {
         state.isLoading = false; // Equivalent de `setIsLoading(false)`
