@@ -19,7 +19,7 @@ exports.addProductUser = (req, res, next) => {
  // delete datas.seller;
 
   const imageFiles = req.files
-  let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/userApp/assets/images/${file.filename}`})
+  let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/userApp/assets/images/products/${file.filename}`})
  
   const product = new Product(
     {
