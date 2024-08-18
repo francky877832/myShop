@@ -67,10 +67,10 @@ const getUserFollowers = async (userId, page)=> {
                 switch(who)
                 {
                     case 'followers':
-                        return [...prevUsers, ...user.followers]
+                        return [...user.followers, ...prevUsers]
                         break;
                     case 'followings':
-                        return [...prevUsers, ...user.followings]
+                        return [...user.followings, ...prevUsers]
                         break;
                     default : return []; break;
                 }

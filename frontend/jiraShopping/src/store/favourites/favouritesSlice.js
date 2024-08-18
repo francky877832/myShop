@@ -89,19 +89,45 @@ const favouritesSlice = createSlice({
     page: 1, // Equivalent de `const [page, setPage] = useState(1)`
     error: null,
     addLike : 0,
+    modifiedProducts : [],
   },
   reducers: {
     addLocalFavourite(state, action) {
         //console.log(action.payload)
-      const newProduct = action.payload;
-      if (!state.favourites.some(product => product._id === newProduct._id)) {
-        state.favourites.unshift(newProduct);
+      const {product, user} = action.payload;
+      //console.log(user)
+      if (!state.favourites.some(item => item._id === product._id)) {
+        const updatedProduct = {
+          ...product,
+          likes : product.likes+1,
+          favourites: [user, ...product.favourites]
+        };
+
+        state.favourites.unshift(updatedProduct);
+        state.modifiedProducts.unshift(updatedProduct);
+        //console.log(product.likes)
       }
+      //console.log(state.favourites)
       state.addLike = state.addLike+1
     },
     // Méthode pour supprimer un produit de la liste des favoris (exemple)
     removeLocalFavourite(state, action) {
-      state.favourites = state.favourites.filter(product => product._id !== action.payload._id);
+      const {product, user} = action.payload;
+
+      const updatedProduct = {
+        ...product,
+        likes : product.likes-1,
+        favourites: product.favourites.filter(item => item._id !== user._id)
+      };
+
+      state.favourites = state.favourites.filter(item => item._id !== product._id);
+      state.modifiedProducts = state.modifiedProducts.map(item => {
+          if (item._id === product._id) {
+            return updatedProduct 
+          }
+            return item
+        })
+  
       state.addLike = state.addLike-1
     },
     setLikedIcon(state, action) {
@@ -166,6 +192,7 @@ const favouritesSlice = createSlice({
         const products = action.payload.datas;
         if (products.length > 0) {
           state.favourites = [...state.favourites, ...products[0].productDetails]; // Equivalent de `setFavourites([...prevProducts, ...products[0].productDetails])`
+          state.modifiedProducts = [...state.favourites, ...products[0].productDetails]; 
           state.page += 1; // Equivalent de `setPage((prevPage) => prevPage + 1)`
         } else {
           state.hasMore = false; // Equivalent de `setHasMore(false)`
@@ -179,10 +206,10 @@ const favouritesSlice = createSlice({
 });
 
 export const isProductFavourite = (state, productId) => {
-    //console.log("productId-")
-    //console.log(productId)
-
     return state.favourites.favourites.some(product => product._id === productId);
+  };
+  export const hasBeenModifiedProduct = (state, productId) => {
+    return state.favourites.modifiedProducts.some(product => product._id === productId);
   };
 
 export const { setLikedIcon, setIsLoading, setDisableLikeButton, setPage, setHasMore, addFavouriteContext, updateLocalFavourites,  addLocalFavourite, removeLocalFavourite } = favouritesSlice.actions;

@@ -35,9 +35,13 @@ exports.getUserLikedProducts  =  (req, res, next) => {
             //console.log("AGG")
                 //console.log(favourites)
             //res.status(200).json(favourites);
+            /*if(favourites.length <= 0)
+            {
+                throw new Error('No-favourite-found')
+            }*/
             const totalDatas = await Favourite.countDocuments({ user: new ObjectId(userId) }).exec();
             const totalPages = Math.ceil(totalDatas / limit);
-            favourites[0].productDetails.reverse()
+            favourites[0]?.productDetails.reverse()
             res.status(200).json({datas:favourites.slice(skip, skip+limit), page:page,totalPages:totalPages,totalDatas:totalDatas});
 
         })

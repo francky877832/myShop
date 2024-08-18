@@ -46,10 +46,10 @@ exports.LikeButton = (props) => {
         timeoutRef.current = setTimeout(() => {
             if (isFavourite) {
                 //product.likes--
-                dispatch(removeLocalFavourite(product));
+                dispatch(removeLocalFavourite({product, user}));
             } else {
                 //product.likes++
-                dispatch(addLocalFavourite(product));
+                dispatch(addLocalFavourite({product, user}));
             }
             dispatch(addFavourite({ item:item, bool: !like, user:user }));
         }, 500);

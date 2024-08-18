@@ -28,8 +28,12 @@ const username = "Franck"
 const Product = (props) => { 
     const { item, horizontal, replace, } = props;
     const navigation = useNavigation()
-    const [product, setProduct] = useState({...item})
     const {user} = useContext(UserContext)
+    const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
+    const modifiedProduct = modifiedProducts.filter(product => product._id === item._id)
+    const [product, setProduct] = useState(modifiedProduct.length>0?modifiedProduct[0]:{...item})
+
+
     //console.log(item)
    
 //console.log(item.images[0])
@@ -52,7 +56,7 @@ const Product = (props) => {
     //const numLike = useRef(product.likes)
     const timeoutRef = useRef(null);
     
-    const favouritesState = useSelector(state => state.favourites);
+    
 
 /*
     useEffect(() => {
@@ -64,7 +68,11 @@ const Product = (props) => {
 
     //hasLikedItem={hasLiked(item)}
 
-    const _handleLikePressed = useCallback((product) => {
+    const _handleLikePressed = useCallback(() => {
+        //console.log("product.likes")
+        //console.log(item.likes)
+        //console.log(modifiedProduct.length>0 ? modifiedProduct[0].likes:false)
+        //console.log(modifiedProduct)
         setLikeIcon(prevLike => {
             const newLike = !prevLike;
             //setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
@@ -108,9 +116,9 @@ const Product = (props) => {
         console.log(favouritesState.addLike)
         */
         if (replace) {
-          navigation.replace({name:"ProductDetails", params:{ productDetails: product, numLike:numLike+favouritesState.addLike },  key: Date.now().toString()});
+          navigation.replace({name:"ProductDetails", params:{ productDetails: product, },  key: Date.now().toString()});
         } else {
-          navigation.navigate({name:"ProductDetails", params:{ productDetails: product, numLike:numLike+favouritesState.addLike },  key: Date.now().toString()});
+          navigation.navigate({name:"ProductDetails", params:{ productDetails: product, },  key: Date.now().toString()});
         }
       }//,[navigation]);
       

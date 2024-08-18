@@ -21,7 +21,7 @@ const productsStorage = multer.diskStorage({
 
 const userStorage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, 'userApp/assets/images/user');
+    callback(null, 'userApp/assets/images/users');
   },
   filename: (req, file, callback) => {
     const name = file.originalname.split(' ').join('_');

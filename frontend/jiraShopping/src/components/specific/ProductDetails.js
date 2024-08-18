@@ -38,9 +38,9 @@ const ProductDetails = (props) => {
     const route = useRoute()
     const {user} = useContext(UserContext)
 //console.log(route.params.productDetails) length
-    const data = route.params.productDetails;
+    const [data, setData] = useState(route.params.productDetails);
     const pass = route.params.pass;
-    data.color = "blue";
+    //data.color = "blue";
     const numChars = 150;
     
     const [comments, setComments] = useState(data.comments)
@@ -190,18 +190,21 @@ useEffect(()=>{
     const dispatch = useDispatch();
     const isFavourite = useSelector((state) => isProductFavourite(state, data._id))
     const [like, setLikeIcon ] = useState(isFavourite)
-    const [numLike, setNumLike] = useState(route.params.numLike)
+    const [numLike, setNumLike] = useState(data.likes)
+    const [likeAdders, setLikeAdders] = useState(data.favourites)
 
     //hasLikedItem={hasLiked(item)}
     const _handleLikePressed = useCallback((product) => {
+        data.likes = data.likes+1
         setLikeIcon(prevLike => {
             const newLike = !prevLike;
             setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
+            newLike ? setLikeAdders([user, ...likeAdders]) : setLikeAdders(likeAdders.filter(item=>item._id!=user._id))
             //newLike ? data.likes++ : data.likes--
             return newLike;
         });
-        //data.favourites.unshift(user)
-        
+
+       
     }, [like, numLike]);
 
    
@@ -222,7 +225,7 @@ useEffect(()=>{
         });  
     },[like])*/
 
-console.log(data.favourites)
+
     return (
 
   <View style={productDetailsStyles.container}>
@@ -356,7 +359,7 @@ console.log(data.favourites)
 
                         <View style={[productDetailsStyles.likeContent, {flexDirection:data.favourites?.length<=0?'column':'row'}]}>
                             <FlatList
-                                data={[...data.favourites]}
+                                data={[...likeAdders]}
                                 renderItem={ ({item}) => { return (
                                     <View style={[productDetailsStyles.likeItem]}>
                                         <Image source={{uri: item.image}} style={[productDetailsStyles.likeAddersImages]} />

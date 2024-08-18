@@ -98,8 +98,10 @@ const Preferences = (props) => {
     useEffect(() => {
       const userId = "66715deae5f65636347e7f9e"; // ID utilisateur
       //console.log(loggedUserId)
-      dispatch(fetchUserFavourites({user:user._id, page:page}));
-      dispatch(fetchUserBasket(user._id));
+      if (isAuthenticated){
+        dispatch(fetchUserFavourites({user:user._id, page:page}));
+        dispatch(fetchUserBasket(user._id));
+      }
 
   }, [dispatch]);
   
