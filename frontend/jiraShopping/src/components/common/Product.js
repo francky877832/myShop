@@ -94,7 +94,7 @@ const Product = (props) => {
         }
         else
         {
-            dispatch(updateLocalBasket({product:product, isAdding:true}));
+            dispatch(updateLocalBasket({product:product, isAdding:!isBasketPresent}));
         }
 
 
@@ -155,7 +155,7 @@ const Product = (props) => {
 
                        
                         <View style={[productStyles.bottom, productStyles.card, isBasketPresent?productStyles.isBasketPresent:false] } >
-                            <Pressable onPress = { ()=>{isBasketPresent?navigation.navigate("Basket"):handleBasketPressed(product) } }>
+                            <Pressable onPress = { ()=>{handleBasketPressed(product) } }>
                                 <Text numberOfLines={1} style={[customText.text, productStyles.category, isBasketPresent?productStyles.isBasketPresentText:false]}>{isBasketPresent? "Aller Au Panier":"Ajouter Au Panier"}</Text>
                             </Pressable>
                         </View>

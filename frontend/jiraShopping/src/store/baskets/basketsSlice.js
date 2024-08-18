@@ -2,6 +2,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { API_BACKEND } from '@env';
 import { server } from '../../remote/server';
+import { addModifiedProduct } from '../favourites/favouritesSlice'; // Importer l'action
+import { useDispatch } from 'react-redux';
+
 
 // Initial state
 const initialState = {
@@ -89,6 +92,37 @@ export const addToBasket = createAsyncThunk(
     }
   );
 
+
+  export const updateLocalBasket = createAsyncThunk(
+    'basket/updateLocalBasket',
+    async ({product, isAdding}, { dispatch, getState }) => {
+      const { basket } = getState();
+      //console.log("ok")
+      let updatedProduct = {}
+      // Mettre à jour le panier
+      if(isAdding)
+      {
+        updatedProduct = {
+          ...product,
+          inBasket : product.inBasket+1,
+        };
+      }
+      else
+      {
+        updatedProduct = {
+          ...product,
+          inBasket : product.inBasket-1,
+        };
+      }
+      
+      //console.log("ok")
+      dispatch(addOrRemoveLocalBasket({product:product, isAdding:isAdding}));
+      
+      dispatch(addModifiedProduct(updatedProduct));
+    }
+  );
+
+
 // Slice
 const basketSlice = createSlice({
   name: 'basket',
@@ -111,28 +145,48 @@ const basketSlice = createSlice({
       state.selectedSeller = action.payload;
     },
 
-    updateLocalBasket(state, action) {
+    addOrRemoveLocalBasket(state, action) {
         const { product, isAdding } = action.payload;
         const existingIndex = state.basket.findIndex(basketItem => basketItem._id === product._id);
-      
+        console.log("ok")
         if (isAdding) {
           if (existingIndex === -1) {
-            state.basket.push(product);
+            if (!state.basket.some(item => item._id === product._id)) {
+              const updatedProduct = {
+                ...product,
+                inBasket : product.inBasket+1,
+              };
+      
+              state.basket.push(updatedProduct);
+              //console.log(product.likes)
+            }
           }
         } else {
           if (existingIndex !== -1) {
+
+            const updatedProduct = {
+              ...product,
+              inBasket : product.inBasket-1,
+            };
+      
+            //state.basket = state.basket.filter(item => item._id !== product._id);
             state.basket.splice(existingIndex, 1);
           }
         }
       },
 
       addLocalBasket(state, action) {
-        const item = action.payload;
-        const existingIndex = state.basket.findIndex(basketItem => basketItem._id === item._id);
+        //state.dispatch(addModifiedProducts(updatedModifiedProducts));
+
+        const product = action.payload;
+        const existingIndex = state.basket.findIndex(basketItem => basketItem._id === product._id);
   
         if (existingIndex === -1) {
           state.basket.push(item);
         }
+
+        
+
       },
       removeLocalBasket(state, action) {
         const itemId = action.payload;
@@ -163,9 +217,11 @@ const basketSlice = createSlice({
         } else {
           state.basket = state.basket.filter((product) => product._id !== item._id);
         }
+          state.isLoading = false;
       })
       .addCase(removeFromBasket.fulfilled, (state, action) => {
         state.basket = state.basket.filter((product) => product._id !== action.payload);
+        state.isLoading = false;
       });
   },
 });
@@ -184,5 +240,5 @@ export const selectSelectedProducts = (state) => state.basket.selectedProducts;
 export const selectSelectedSeller = (state) => state.basket.selectedSeller;
 export const selectTotalPrice = (state) => state.basket.totalPrice;
 
-export const { updateSelectedProducts, setSelectedSeller, updateLocalBasket } = basketSlice.actions;
+export const { updateSelectedProducts, setSelectedSeller, addOrRemoveLocalBasket } = basketSlice.actions;
 export default basketSlice.reducer;
