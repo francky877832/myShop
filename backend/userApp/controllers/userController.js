@@ -95,7 +95,7 @@ exports.signupUser = (req, res, next) => {
  
  exports.getUserFollowers = (req, res, next) => {
     const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
-    const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
+    const limit = parseInt(req.query.limit) || 100; // Nombre d'éléments par page, par défaut 5
     const skip = (page - 1) * limit;
 
     User.findOne({ _id : req.params.id })

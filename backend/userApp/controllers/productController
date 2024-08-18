@@ -139,7 +139,7 @@ exports.getProducts =  (req, res, next) => {
             // Étape 2 : Compter le total des produits pour la pagination
           const totalDatas = await Product.countDocuments().exec();
           const totalPages = Math.ceil(totalDatas / limit);
-
+        //console.log(products)
           // Étape 3 : Récupérer les identifiants des produits de la page actuelle
           const productIds = products.map(product => product._id);
 
@@ -158,7 +158,7 @@ exports.getProducts =  (req, res, next) => {
             };
           });
 
-          console.log(productsWithComments)
+          //console.log(productsWithComments)
           // Retourner la réponse
           res.status(200).json({ datas: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
         })

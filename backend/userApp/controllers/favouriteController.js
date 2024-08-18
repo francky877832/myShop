@@ -9,31 +9,55 @@ exports.getUserLikedProducts  =  (req, res, next) => {
     const skip = (page - 1) * limit;
     const userId = req.params.user
     console.log(userId)
-        Favourite.aggregate([
-            { $match: { user: new ObjectId(userId) } }, 
-            { $unwind: '$products' }, // Décompose le tableau de user_ids
-            {
-              $lookup: {
-                from: 'products',
-                localField: 'products',
-                foreignField: '_id',
-                as: 'productDetails'
-              }
-            },
-            { $unwind: '$productDetails' }, // Décompose le tableau résultant de la jointure
-            {
-              $group: {
-                _id: '$_id',
-                user: { $first: '$user' },
-                username: { $first: '$username' },
-                products: { $push: '$products' },
-                productDetails : { $push: '$productDetails' }
+    Favourite.aggregate([
+        { $match: { user: new ObjectId(userId) } }, 
+        { $unwind: '$products' }, // Décompose le tableau de produits likés
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'products',
+            foreignField: '_id',
+            as: 'productDetails'
+          }
+        },
+        { $unwind: '$productDetails' }, // Décompose le tableau résultant de la jointure
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'productDetails.favourites',
+            foreignField: '_id',
+            as: 'favouriteUserDetails'
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'productDetails.seller',
+            foreignField: '_id',
+            as: 'sellerDetails'
+          }
+        },
+        {
+          $group: {
+            _id: '$_id',
+            user: { $first: '$user' },
+            username: { $first: '$username' },
+            products: { $push: '$products' },
+            productDetails: {
+              $push: {
+                $mergeObjects: [
+                  '$productDetails',
+                  { favourites: '$favouriteUserDetails' }, // Remplacer les IDs par les objets utilisateur complets pour les favoris
+                  { seller: { $arrayElemAt: ['$sellerDetails', 0] } } // Remplacer l'ID du vendeur par l'objet utilisateur complet
+                ]
               }
             }
-           
-        ]).then(async (favourites) => { 
-            //console.log("AGG")
-                //console.log(favourites)
+          }
+        }
+      ]).then(async (favourites) => { 
+            console.log("AGG")
+            console.log(favourites[0].productDetails)
+            console.log("END")
             //res.status(200).json(favourites);
             /*if(favourites.length <= 0)
             {

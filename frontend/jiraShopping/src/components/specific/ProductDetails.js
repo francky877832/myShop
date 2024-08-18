@@ -37,8 +37,10 @@ const ProductDetails = (props) => {
     const navigation = useNavigation()
     const route = useRoute()
     const {user} = useContext(UserContext)
-//console.log(route.params.productDetails) length
-    const [data, setData] = useState(route.params.productDetails);
+    //On utilise la version la plus a jour du produit!!!!
+    const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
+    const modifiedProduct = modifiedProducts.filter(product => product?._id === route.params.productDetails._id)
+    const [data, setData] = useState(modifiedProduct.length>0?modifiedProduct[0]:route.params.productDetails);
     const pass = route.params.pass;
     //data.color = "blue";
     const numChars = 150;
@@ -195,7 +197,7 @@ useEffect(()=>{
 
     //hasLikedItem={hasLiked(item)}
     const _handleLikePressed = useCallback((product) => {
-        data.likes = data.likes+1
+        //data.likes = data.likes+1
         setLikeIcon(prevLike => {
             const newLike = !prevLike;
             setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
@@ -208,7 +210,7 @@ useEffect(()=>{
     }, [like, numLike]);
 
    
-
+//console.log(likeAdders)
     /*const _handleLikePressed =  useCallback((item) => {
         setLikeIcon((liked) => {
            /* if(liked)
@@ -225,7 +227,8 @@ useEffect(()=>{
         });  
     },[like])*/
 
-
+    
+//console.log(data.seller)
     return (
 
   <View style={productDetailsStyles.container}>
@@ -348,7 +351,7 @@ useEffect(()=>{
                                 :
                 <View style={[productDetailsStyles.similarContainer]}>
                         <View style={{height:20}}></View>
-                    <Pressable style={[productDetailsStyles.likeAdders]} onPress={()=>{}}>
+                    <Pressable style={[productDetailsStyles.likeAdders]} onPress={()=>{likeAdders.length>0?navigation.navigate({name:"Followers", params:{seller:data.seller, favourites:likeAdders, who:'favourites'}, key:Date.now().toString()}):false}}>
                         <View style={[productDetailsStyles.likeTitle]}>
                             <Text style={[customText.text, productDetailsStyles.someText]}>
                                 ...ont aimé
@@ -357,15 +360,15 @@ useEffect(()=>{
 
                         <View style={{height:10}}></View>
 
-                        <View style={[productDetailsStyles.likeContent, {flexDirection:data.favourites?.length<=0?'column':'row'}]}>
+                        <View style={[productDetailsStyles.likeContent, {flexDirection:likeAdders?.length<=0?'column':'row'}]}>
                             <FlatList
-                                data={[...likeAdders]}
+                                data={[...likeAdders].slice(0,5)}
                                 renderItem={ ({item}) => { return (
                                     <View style={[productDetailsStyles.likeItem]}>
                                         <Image source={{uri: item.image}} style={[productDetailsStyles.likeAddersImages]} />
                                     </View>
                                 )} }
-                                keyExtractor={ (item) => { return Math.random().toString();} }
+                                keyExtractor={ (item) => { return item._id.toString();} }
                                 horizontal={true}
                                 ItemSeparatorComponent ={ (item) => { return <View style={{width:0,}}></View> }}
                                 showsHorizontalScrollIndicator={false}
@@ -377,10 +380,10 @@ useEffect(()=>{
                                 )}
                                 contentContainerStyle={[{justifyContent:'center', alignItems:'center'}]}
                             />
-                             { data.favourites?.length>0 &&
+                             { likeAdders?.length>0 &&
                                 <Pressable>
                                     <Text style={[customText.text, productDetailsStyles.someText, {color:appColors.gray,fontSize:16,fontWeight:'normal'}]}>
-                                        {data.favourites?.length} like{data.favourites?.length>1?"s":false} {">>"}
+                                        {likeAdders?.length} like{likeAdders?.length>1?"s":false} {">>"}
                                     </Text>
                                 </Pressable>
                             }

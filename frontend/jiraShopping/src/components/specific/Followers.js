@@ -13,6 +13,7 @@ import { appColors, screenHeight } from '../../styles/commonStyles';
 
 import SellerBrand from '../common/SellerBrand';
 import { server } from '../../remote/server';
+import { UserContext } from '../../context/UserContext';
 
 
 const loggedUserId = "66731fcb569b492d3ef429ba"
@@ -22,7 +23,8 @@ const Followers = (props) =>
 {
     const navigation = useNavigation()
     const route = useRoute()
-    const { seller, who } = route.params
+    const { seller, who, favourites } = route.params
+    const {user} = useContext(UserContext)
     const [users, setUsers] = useState([]);
     const [isLoading, setIsLoading]  = useState(false)
     const [page, setPage] = useState(1);
@@ -38,13 +40,15 @@ const getUserFollowers = async (userId, page)=> {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                });
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la requête'+(await response.text()));
-                }
-                const datas = await response.json();
-                console.log(datas)
-                return datas
+            });
+            
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête'+(await response.text()));
+            }
+
+            const datas = await response.json();
+            //console.log(datas)
+            return datas
         } catch (error) {
         console.error(error);
         return []
@@ -58,19 +62,31 @@ const getUserFollowers = async (userId, page)=> {
     
         setIsLoading(true);
         try {
+            let datas = []
+            let user = {}
   
-          const datas = await getUserFollowers(seller._id, page);
-          const user = datas.user
+          if(who==='followers' ||  who==='followings')
+          {
+            datas = await getUserFollowers(seller._id, page);
+            user = datas.user
+          }
+            
           //console.log(datas)
-          if ((who==='followers' && user.followers.length > 0) || (who==='followings' && user.followings.length > 0)) {
+          if ((who==='followers' && user.followers.length > 0) || (who==='followings' && user.followings.length > 0)
+                || (who==='favourites' && favourites.length > 0)) 
+            {
             setUsers((prevUsers)=>{
                 switch(who)
                 {
                     case 'followers':
-                        return [...user.followers, ...prevUsers]
+                        return [...prevUsers, ...user.followers]
                         break;
                     case 'followings':
-                        return [...user.followings, ...prevUsers]
+                        return [...prevUsers, ...user.followings]
+                        break;
+                    case 'favourites':
+                        //console.log(favourites)
+                        return [...favourites]
                         break;
                     default : return []; break;
                 }
@@ -115,10 +131,20 @@ useEffect(()=>{
                 </View>
             </Pressable> 
 */
+        const handleNavigate = (item) => {
+            if(item._id === user._id)
+            {
+                navigation.navigate('Preferences', {screen: 'Shop',params:undefined,})
+            }
+            else
+            {
+                navigation.navigate({name:"Shop", params:{seller:item,}, key:Date.now().toString()})
+            }
+        }
 
  const renderItem = useCallback(({item}) => { return(
         <View style={[productDetailsStyles.commentsContainer]}>
-            <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{navigation.navigate({name:"Shop", params:{seller:item,}, key:Date.now().toString()}) }}>
+            <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{ handleNavigate(item) }}>
                 <SellerBrand pub={true} onlineDate={item.updatedAt} username={item.username} navigation={navigation} route={route} closeNotif={true} />
             </Pressable>
             <View style={{height:20}}></View>
