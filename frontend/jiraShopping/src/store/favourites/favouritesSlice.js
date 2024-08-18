@@ -130,6 +130,24 @@ const favouritesSlice = createSlice({
   
       state.addLike = state.addLike-1
     },
+    addModifiedProduct(state, action) {
+      const product = action.payload
+      const isModifiedProduct = state.modifiedProducts.some(item => item._id === product._id);
+      if(isModifiedProduct)
+      {
+        state.modifiedProducts = state.modifiedProducts.map(item => {
+          if (item._id === product._id) {
+            return product 
+          }
+          return item
+        })
+      }
+      else
+      {
+        const updatedProducts = [product, state.modifiedProducts]
+        state.modifiedProducts = updatedProducts
+      }
+    },
     setLikedIcon(state, action) {
       state.liked = action.payload; // Equivalent de `setLikedIcon`
     },
@@ -212,6 +230,6 @@ export const isProductFavourite = (state, productId) => {
     return state.favourites.modifiedProducts.some(product => product._id === productId);
   };
 
-export const { setLikedIcon, setIsLoading, setDisableLikeButton, setPage, setHasMore, addFavouriteContext, updateLocalFavourites,  addLocalFavourite, removeLocalFavourite } = favouritesSlice.actions;
+export const { setLikedIcon, setIsLoading, setDisableLikeButton, setPage, setHasMore, addFavouriteContext, updateLocalFavourites,  addLocalFavourite, removeLocalFavourite, addModifiedProduct } = favouritesSlice.actions;
 
 export default favouritesSlice.reducer;

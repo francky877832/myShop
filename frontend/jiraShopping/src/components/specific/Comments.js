@@ -156,7 +156,7 @@ const respondTo = (id, username) => {
         
                     <Pressable onPress={()=>{navigation.navigate("AllComments",{comments:reshapedComments,product:product})}} style={[{alignSelf:"flex-end",flexDirection:"row",}]}>
                             <Text style={[customText.text,{color:appColors.green,}]}>Tout Afficher</Text>
-                            <Text style={[customText.text,{color:appColors.black,}]}>({totalComments})</Text>
+                            <Text style={[customText.text,{color:appColors.black,}]}>({reshapedComments.length})</Text>
                     </Pressable>
             </View>
         }
@@ -200,7 +200,10 @@ const respondTo = (id, username) => {
                     <Text>Charger plus...</Text>
                 </Pressable>*/
             }
-            {all ?
+            
+            {
+            /*
+            all ?
                 !isLoading ?
                     hasMore ?
                             <Pressable onPress={()=>{loadMore()}} style={[{top:20,alignItems:"center",}]}>
@@ -211,6 +214,7 @@ const respondTo = (id, username) => {
                 :
                     <ActivityIndicator color={appColors.secondaryColor1} size="small" />
             : null
+            */
             }
 
             </View>

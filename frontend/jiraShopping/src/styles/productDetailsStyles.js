@@ -205,7 +205,8 @@ export const productDetailsStyles = StyleSheet.create({
     likeItem :
     {
         position : 'relaive',
-       
+        justifyContent:"center",
+        alignItems : 'center',
     },
     someText : 
     {

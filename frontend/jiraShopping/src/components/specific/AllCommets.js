@@ -74,23 +74,34 @@ const updateReshapedComments = (comment)=>{
     //console.log("isResponseTo")
     setReshapedComments((prevComments)=>{
         //console.log(isResponseTo)
+        console.log(prevComments)
+        if (!Array.isArray(prevComments)) {
+            prevComments = [];
+        }
+
+        let updatedComments = [...prevComments];
         if(!!isResponseTo)
         {
-            console.log("prevComments")
-            prevComments.forEach((cm, i)=>{
-                    console.log(cm)
-                if(cm._id == comment.isResponseTo)
+            //console.log("updatedComments")
+            updatedComments = prevComments.map((item)=>{
+                    //console.log(cm)
+                if(item._id === comment.isResponseTo)
                 {
-                    //console.log( prevComments[i].subComment)
-                    prevComments[i].subComment.push(comment)
+                    /*if (!Array.isArray(updatedComments[i].subComment)) {
+                        updatedComments[i].subComment = [];
+                    }*/
+                    //console.log( updatedComments[i].subComment)
+                    //updatedComments[i].subComment.push(comment)
+                    return {...item, subComment:[...item.subComment, comment]}
                 }
+                return item
             })
         }
         else
         {//console.log("prevComments")
-            prevComments.unshift(comment)
+            updatedComments.unshift(comment)
         }
-            return prevComments
+            return updatedComments
     })
 }
 //username
@@ -235,7 +246,7 @@ const allCommetsStyles = StyleSheet.create({
         //flex:1,
         backgroundColor : appColors.white,
         heighteight:screenHeight,
-        paddingBottom : 90,
+        paddingBottom : 70,
     },
     inputContainer :
     {

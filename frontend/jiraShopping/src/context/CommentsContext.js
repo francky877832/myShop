@@ -9,6 +9,8 @@ import { datas } from "../utils/sampleDatas";
 import { server } from "../remote/server";
 import { reshapeComments  } from '../utils/commonAppFonctions';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { hasBeenModifiedProduct, addModifiedProduct } from '../store/favourites/favouritesSlice';
 
 import { UserContext } from './UserContext';
 
@@ -21,6 +23,7 @@ const CommentsProvider = ({children}) => {
     //const { getProducts , loadMoreData, products} = useContext(ProductContext)
 
     //const [comments, setComments] = useState([])
+    const dispatch = useDispatch();
     const [reshapedComments, setReshapedComments] = useState([])
 
     const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +37,8 @@ const CommentsProvider = ({children}) => {
     const [isResponseTo, setIsResponseTo] = useState(null)
     const COMMENT_PER_PAGE = 3
 
+
+    const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
 
 
     const fetchProductComments = async (id, page) =>{
@@ -107,6 +112,11 @@ const CommentsProvider = ({children}) => {
                 const comment_ = await fetchProductLastComment(product._id, loggedUser);
                 let updatedComments;
                 setReshapedComments((prevComments)=>{
+
+                    if (!Array.isArray(prevComments)) {
+                        prevComments = [];
+                    }
+
                     if(!!isResponseTo)
                     {
                             //console.log("prevComments")
@@ -119,21 +129,22 @@ const CommentsProvider = ({children}) => {
                             }
                             return cm;
                         });
-                        product.comments = updatedComments
-                        return updatedComments
+                       
+                        
                     }
                     else
                     {
                             //product.comments.unshift(comment_)
                             //prevComments[0] = comment_
                             updatedComments = [comment_, ...prevComments.slice(1)];
-                            product.comments = updatedComments
-                            return updatedComments
+                            
                     }
-                })
-                
 
-                
+                    const modifiedProduct = {...product, comments:updatedComments}
+                    dispatch(addModifiedProduct(modifiedProduct));
+                    product.comments = updatedComments
+                    return updatedComments
+                })
 
             }catch (error) {
                 console.error('Erreur lors du chargement des commentaires onNewComment :', error);
@@ -194,12 +205,17 @@ const CommentsProvider = ({children}) => {
         console.log(onNewComment)
         console.log(isLoading)
         console.log(hasMore)
-            try 
+        try 
             {
   
                 const comment_ = await fetchProductLastComment(product._id, loggedUser);
                 let updatedComments;
                 setReshapedComments((prevComments)=>{
+
+                    if (!Array.isArray(prevComments)) {
+                        prevComments = [];
+                    }
+
                     if(!!isResponseTo)
                     {
                             //console.log("prevComments")
@@ -212,21 +228,22 @@ const CommentsProvider = ({children}) => {
                             }
                             return cm;
                         });
-                        product.comments = updatedComments
-                        return updatedComments
+                       
+                        
                     }
                     else
                     {
                             //product.comments.unshift(comment_)
                             //prevComments[0] = comment_
                             updatedComments = [comment_, ...prevComments.slice(1)];
-                            product.comments = updatedComments
-                            return updatedComments
+                            
                     }
-                })
-                
 
-                
+                    const modifiedProduct = {...product, comments:updatedComments}
+                    dispatch(addModifiedProduct(modifiedProduct));
+                    product.comments = updatedComments
+                    return updatedComments
+                })
 
             }catch (error) {
                 console.error('Erreur lors du chargement des commentaires onNewComment :', error);

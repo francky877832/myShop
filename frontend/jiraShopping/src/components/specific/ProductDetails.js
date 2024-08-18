@@ -227,7 +227,7 @@ useEffect(()=>{
         });  
     },[like])*/
 
-    
+
 //console.log(data.seller)
     return (
 
@@ -366,6 +366,7 @@ useEffect(()=>{
                                 renderItem={ ({item}) => { return (
                                     <View style={[productDetailsStyles.likeItem]}>
                                         <Image source={{uri: item.image}} style={[productDetailsStyles.likeAddersImages]} />
+                                        <Text style={[customText.text, ]}>{item.username.substring(0,4)}...</Text>
                                     </View>
                                 )} }
                                 keyExtractor={ (item) => { return item._id.toString();} }
