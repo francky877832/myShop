@@ -80,17 +80,17 @@ const handleRemoveFromBasket = useCallback((product) => {
                                
                             return(
                             <View style={[radioProductsListtStyles.seller,{}]} key={key}>
-                                { passed_sellers.includes(product1.seller) ? false :
+                                { passed_sellers.includes(product1.seller._id) ? false :
                                     <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer1]} >
-                                        <RadioButton value={product1.seller} />
-                                        <SellerBrand pub={false} certified={true} username={product1.seller} route={route} navigation={navigation} closeNotif={true} /> 
+                                        <RadioButton value={product1.seller._id} />
+                                        <SellerBrand pub={false} certified={true} username={product1.seller.username} route={route} navigation={navigation} closeNotif={true} /> 
                                         <Text>{/*A MODIFIER*/}</Text>
                                     </View>
                                 }
                             
                         {item.products.map((product2, key) => {
-                             passed_sellers.push(product1.seller) 
-                            if(product1.seller == product2.seller && !passed_product.includes(product2._id))
+                             passed_sellers.push(product1.seller._id) 
+                            if(product1.seller._id == product2.seller._id && !passed_product.includes(product2._id))
                             { 
                                 passed_product.push(product2._id)
                                 return(
@@ -103,7 +103,7 @@ const handleRemoveFromBasket = useCallback((product) => {
                                                             <Image source={{uri: product2.images[0]}} style={[radioProductStyles.productImage,{}]} />
                                                         </View>
                                                         <View style={[{left : 10,}]}>
-                                                            <Text style={[customText.text, ]}>{product2.seller}</Text>
+                                                            <Text style={[customText.text, ]}>{product2.seller.username}</Text>
                                                             <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
                                                             <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(product2.price)} XAF{/* prix de la proposition ou real Price*/}</Text>
                                                             <Pressable onPress={()=>{handleRemoveFromBasket(product2);}}>
@@ -114,8 +114,8 @@ const handleRemoveFromBasket = useCallback((product) => {
                                                 } 
                                                 containerStyle={[radioProductStyles.checkBoxContainer,{}]} 
                                                 textStyle={[customText.text,radioProductStyles.checkBoxText]} 
-                                                checked={selectedSeller==product2.seller && selectedProducts[product2._id]} 
-                                                onPress={() => {selectedSeller==product2.seller ? handleUpdateSelectedProducts(product2) : Alert.alert("Infos","Veillez d'abord selectionner le vendeur adéquat.") }} 
+                                                checked={selectedSeller==product2.seller._id && selectedProducts[product2._id]} 
+                                                onPress={() => {selectedSeller==product2.seller._id ? handleUpdateSelectedProducts(product2) : Alert.alert("Infos","Veillez d'abord selectionner le vendeur adéquat.") }} 
                                             
                                                 />
 
@@ -124,7 +124,7 @@ const handleRemoveFromBasket = useCallback((product) => {
                                                 </View> 
                                             {product2.inBasket>0 &&
                                                 <View style={radioProductStyles.inBasket}>
-                                                    <Text style={[customText.text, {fontSize:10,}]}>{`Dans le panier de ${product2.inBasket} personnes!`}</Text>
+                                                    <Text style={[customText.text, {fontSize:10,}]}>{`Dans le panier de ${product2.inBasket} ${product2.inBasket>1?"personnes":"personne"}!`}</Text>
                                                 </View>
                                             }
                                             <View style={{height:10,}}></View>

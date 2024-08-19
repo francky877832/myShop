@@ -30,7 +30,6 @@ const CommentsProvider = ({children}) => {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [totalComments, setTotalComments] = useState(1)
-    const {user} = useContext(UserContext)
     const [refreshKey, setRefreshKey] = useState(0);
     const [filtersUpdated, setFiltersUpdated] = useState(false);
     const [onNewComment, setOnNewComment] = useState(false)
@@ -77,11 +76,11 @@ const CommentsProvider = ({children}) => {
 
 
     
-    const fetchProductLastComment = async (id, username) =>{
+    const fetchProductLastComment = async (id, userId) =>{
         let comment = []
         try{
     //console.log("Ok")
-            const response = await fetch(`${server}/api/datas/comments/get/last/${id}?user=${username}`);            
+            const response = await fetch(`${server}/api/datas/comments/get/last/${id}?user=${userId}`);            
             comment = await response.json()
             //console.log(comments_)
             if (!response.ok) {
@@ -109,7 +108,7 @@ const CommentsProvider = ({children}) => {
             try 
             {
   
-                const comment_ = await fetchProductLastComment(product._id, loggedUser);
+                const comment_ = await fetchProductLastComment(product._id, user._id);
                 let updatedComments;
                 setReshapedComments((prevComments)=>{
 
@@ -201,14 +200,14 @@ const CommentsProvider = ({children}) => {
     },[isLoading, hasMore])
 
 
-    const loadLastComment = useCallback(async (product) => {
+    const loadLastComment = useCallback(async (product, user) => {
         console.log(onNewComment)
         console.log(isLoading)
         console.log(hasMore)
         try 
             {
   
-                const comment_ = await fetchProductLastComment(product._id, loggedUser);
+                const comment_ = await fetchProductLastComment(product._id, user._id);
                 let updatedComments;
                 setReshapedComments((prevComments)=>{
 

@@ -86,7 +86,7 @@ exports.removeProduct  = (req, res, next) => {
       for(let i in product.images)
       {
           const filename = product.images[i].split('/images/')[1];
-          s.unlink(`./userApp/assets/images/${filename}`, () => {})
+          s.unlink(`./userApp/assets/images/products/${filename}`, () => {})
       }
 
       Product.deleteOne({ _id : req.params.id })
@@ -122,57 +122,134 @@ exports.removeProduct  = (req, res, next) => {
   });
 };*/
 
-exports.getProducts =  (req, res, next) => {
-  const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
-  const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
-  const skip = (page - 1) * limit;
 
-      //console.log(page,skip,limit)
-      //console.log(products)
-  Product.find().sort({_id:-1}).skip(skip).limit(limit).populate({path: 'seller', populate: [
-    { path: 'followers' },
-    { path: 'followings' },
-    { path: 'favourites' },
-    ]}).populate('favourites')
-    .exec()
-      .then (async(products) => {
-            // Étape 2 : Compter le total des produits pour la pagination
-          const totalDatas = await Product.countDocuments().exec();
-          const totalPages = Math.ceil(totalDatas / limit);
-        //console.log(products)
-          // Étape 3 : Récupérer les identifiants des produits de la page actuelle
-          const productIds = products.map(product => product._id);
+exports.getProducts = async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+    const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
+    const skip = (page - 1) * limit;
 
-          // Étape 4 : Récupérer les commentaires pour les produits de la page actuelle
-          const comments = await Comment.find({ product: { $in: productIds } }).sort({_id:-1})
-            .populate('user', 'username') // Joindre les détails de l'utilisateur (optionnel)
-            .exec();
+    // Étape 1 : Pipeline d'agrégation pour les produits
+    const pipeline = [
+      { $sort: { _id: -1 } }, // Tri des produits par _id décroissant
+      { $skip: skip }, // Sauter les produits précédents
+      { $limit: limit }, // Limiter le nombre de produits
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'seller',
+          foreignField: '_id',
+          as: 'seller'
+        }
+      },
+      { $unwind: '$seller' }, // Décomposer le tableau seller en objets individuels
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'seller.followers',
+          foreignField: '_id',
+          as: 'seller.followers'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'seller.followings',
+          foreignField: '_id',
+          as: 'seller.followings'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'seller.favourites',
+          foreignField: '_id',
+          as: 'seller.favourites'
+        }
+      },
+      {
+        $lookup: {
+          from: 'favourites',
+          localField: 'favourites',
+          foreignField: '_id',
+          as: 'favourites'
+        }
+      },
+      {
+        $lookup: {
+          from: 'comments',
+          let: { productId: '$_id' },
+          pipeline: [
+            { $match: { $expr: { $eq: ['$product', '$$productId'] } } },
+            { $sort: { _id: -1 } },
+            {
+              $lookup: {
+                from: 'users',
+                localField: 'user',
+                foreignField: '_id',
+                as: 'user'
+              }
+            },
+            {
+              $unwind: '$user' // Décomposer le tableau user en objets individuels
+            },
+            {
+              $lookup: {
+                from: 'users',
+                localField: 'subComment.user',
+                foreignField: '_id',
+                as: 'subCommentUsers'
+              }
+            },
+            {
+              $addFields: {
+                subComment: {
+                  $map: {
+                    input: '$subComment',
+                    as: 'sub',
+                    in: {
+                      _id: '$$sub._id',
+                      user: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: '$subCommentUsers',
+                              cond: { $eq: ['$$sub.user', '$$sub.user'] }
+                            }
+                          },
+                          0
+                        ]
+                      },
+                      username: '$$sub.username',
+                      isResponseTo: '$$sub.isResponseTo',
+                      text: '$$sub.text',
+                      visible: '$$sub.visible',
+                      createdAt: '$$sub.createdAt',
+                      updatedAt: '$$sub.updatedAt'
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          as: 'comments'
+        }
+      }
+    ];
 
-          
-          // Étape 5 : Joindre les commentaires aux produits
-          const productsWithComments = products.map(product => {
-            const productComments = comments.filter(comment => comment.product.toString() === product._id.toString());
-          
-            return {
-              ...product.toObject(),
-              comments: productComments.length > 0 ? productComments : [] // Assurez-vous que le champ `comments` est toujours présent
-            };
-          });
-          //console.log("productsWithComments[0].comments")
-          //console.log(typeof productsWithComments[2].comments)
-          //console.log(comments)
-          
-          //console.log(productsWithComments)
-          // Retourner la réponse
+    // Étape 2 : Exécuter le pipeline d'agrégation pour obtenir les produits avec commentaires
+    const productsWithComments = await Product.aggregate(pipeline).exec();
 
-          //productsWithComments.forEach((el)=> console.log(el.comments.length))
-          res.status(200).json({ datas: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
-        })
+    // Étape 3 : Compter le total des produits pour la pagination
+    const totalDatas = await Product.countDocuments().exec();
+    const totalPages = Math.ceil(totalDatas / limit);
 
-    .catch((error)=> {
-        console.log(error);
-        res.status(400).json({ error: error.message });
-    })
+    // Retourner la réponse
+    res.status(200).json({ datas: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: error.message });
+  }
 };
 
 

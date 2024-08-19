@@ -49,7 +49,7 @@ const Product = (props) => {
     }, [])
     const dispatch = useDispatch();
     const [isFavourite, setIsFavourite] = useState(useSelector((state) => isProductFavourite(state, product._id), shallowEqual));
-    const [isBasketPresent, setIsbasketPresent] = useState(useSelector((state) => isProductBasket(state, product._id), shallowEqual));
+    const [isBasketPresent, setIsBasketPresent] = useState(useSelector((state) => isProductBasket(state, product._id), shallowEqual));
 //console.log(isFavourite)
     const [like, setLikeIcon ] = useState(isFavourite)
     const [numLike, setNumLike] = useState(product.likes)
@@ -91,13 +91,13 @@ const Product = (props) => {
         if(isBasketPresent)
         {
             navigation.navigate("Basket")
-           // setIsbasketPresent(!isBasketPresent)
         }
         else
         {
-            const isBasketPresent = !isBasketPresent
-            dispatch(updateLocalBasket({product, isBasketPresent}));
-
+            setIsBasketPresent(!isBasketPresent)
+            const isAdding = true
+            dispatch(updateLocalBasket({product, isAdding}));
+            console.log("BASKET")
             timeoutRef.current = setTimeout(() => {
                 dispatch(addToBasket({product, user})); 
             }, 1000)

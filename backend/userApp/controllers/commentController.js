@@ -125,14 +125,15 @@ exports.getProductComments = (req, res, next) => {
 
   exports.getUserProductLastComment = (req, res, next) => {
     const productId = req.params.id;
-    const username = req.query.user; // Assurez-vous que le username est traité comme une chaîne
+    const userId = req.query.user; // Assurez-vous que le username est traité comme une chaîne
 
     console.log("LAST COMMENT");
     console.log("Product ID:", productId);
-    console.log("Username:", username);
+    console.log("UserId:", userId);
 
     // Convertir productId en ObjectId si ce n'est pas déjà le cas
     const productObjectId = mongoose.Types.ObjectId.isValid(productId) ? new mongoose.Types.ObjectId(productId) : null;
+    const userObjectId = mongoose.Types.ObjectId.isValid(userId) ? new mongoose.Types.ObjectId(userId) : null;
 
     // Vérifier si le productObjectId est valide avant d'exécuter la requête
     if (!productObjectId) {
@@ -141,7 +142,7 @@ exports.getProductComments = (req, res, next) => {
 
     Comment.find({ 
         product: productObjectId, 
-        username: username // Assurez-vous que `username` correspond à la façon dont il est stocké dans votre base de données
+        user: userObjectId
     })
     .sort({ updatedAt: -1 })
     .then(comments => {

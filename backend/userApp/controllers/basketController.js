@@ -85,46 +85,161 @@ exports.removeBasketProduct  = (req, res, next) => {
   };
 
 
-exports.getBasketProducts = (req, res, next) => {
+exports.getBasketProducts = async (req, res, next) => {
   
     const userId = req.params.user
-        Basket.aggregate([
-            //{ $match: { user: new ObjectId(userId) } }, 
-            { $unwind: '$products' }, // Décompose le tableau de user_ids
-            {
-              $lookup: {
-                from: 'products',
-                localField: 'products',
-                foreignField: '_id',
-                as: 'productDetails'
-              }
+    try {
+        const basketAggregation = await Basket.aggregate([
+            // Étape 1 : Filtrer le panier par userId
+            { 
+                $match: { user: new ObjectId(userId) } 
             },
-            /*{
-                $unwind: {
-                  path: '$productDetails',
-                  preserveNullAndEmptyArrays: true // Préserve les documents même si le tableau est vide ou n'a qu'un seul élément
-                }
-            },*/
-            { $unwind: '$productDetails' },
+            // Étape 2 : Décomposer le tableau de produits
+            { 
+                $unwind: '$products' 
+            },
+            // Étape 3 : Récupérer les détails des produits
             {
-              $group: {
-                _id: '$_id',
-                user: { $first: '$user' },
-                username: { $first: '$username' },
-                products: { $push: '$products' },
-                productDetails : { $push: '$productDetails' }
-              }
+                $lookup: {
+                    from: 'products',
+                    localField: 'products',
+                    foreignField: '_id',
+                    as: 'productDetails'
+                }
+            },
+            // Étape 4 : Décomposer le tableau de productDetails pour un traitement plus approfondi
+            { 
+                $unwind: '$productDetails' 
+            },
+            // Étape 5 : Récupérer les informations du vendeur et ses abonnés
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'productDetails.seller',
+                    foreignField: '_id',
+                    as: 'sellerDetails'
+                }
+            },
+            // Étape 6 : Récupérer les favoris associés au produit
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'productDetails.favourites',
+                    foreignField: '_id',
+                    as: 'favouritesDetails'
+                }
+            },
+            // Étape 7 : Récupérer les commentaires associés au produit
+            {
+                $lookup: {
+                    from: 'comments',
+                    localField: 'productDetails._id',
+                    foreignField: 'product',
+                    as: 'comments'
+                }
+            },
+            // Étape 8 : Remplacer le champ user dans les commentaires par ses informations détaillées
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'comments.user',
+                    foreignField: '_id',
+                    as: 'commentUserDetails'
+                }
+            },
+            {
+                $addFields: {
+                    comments: {
+                        $map: {
+                            input: '$comments',
+                            as: 'comment',
+                            in: {
+                                $mergeObjects: [
+                                    '$$comment',
+                                    { user: { $arrayElemAt: ['$commentUserDetails', 0] } }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            // Étape 9 : Remplacer le champ user dans les subComments par ses informations détaillées
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'comments.subComment.user',
+                    foreignField: '_id',
+                    as: 'subCommentUserDetails'
+                }
+            },
+            {
+                $addFields: {
+                    comments: {
+                        $map: {
+                            input: '$comments',
+                            as: 'comment',
+                            in: {
+                                $mergeObjects: [
+                                    '$$comment',
+                                    {
+                                        subComment: {
+                                            $map: {
+                                                input: '$$comment.subComment',
+                                                as: 'subComment',
+                                                in: {
+                                                    $mergeObjects: [
+                                                        '$$subComment',
+                                                        { user: { $arrayElemAt: ['$subCommentUserDetails', 0] } }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            // Étape 10 : Regrouper les informations pour reconstruire la structure du panier
+            {
+                $group: {
+                    _id: '$_id',
+                    user: { $first: '$user' },
+                    username: { $first: '$username' },
+                    products: { $push: '$products' },
+                    productDetails: {
+                        $push: {
+                            $mergeObjects: [
+                                '$productDetails',
+                                { 
+                                    seller: { $arrayElemAt: ['$sellerDetails', 0] } 
+                                },
+                                { 
+                                    favourites: '$favouritesDetails' 
+                                },
+                                {
+                                    comments: '$comments' // Ajouter les commentaires modifiés
+                                }
+                            ]
+                        }
+                    }
+                }
             }
-           
-        ]).then( (basket) => { 
-            console.log("AGG")
-                console.log(basket)
-            res.status(200).json(basket);
-        })
-        .catch( (error) => { 
-            console.log(error)
-            res.status(400).json({ error: error });
-        });
+        ]);
+    
+        if (basketAggregation.length === 0) {
+            return res.status(404).json({ error: 'Basket not found' });
+        }
+    
+        console.log(basketAggregation[0]);
+        res.status(200).json(basketAggregation[0]);
+    
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ error: error.message })
     }
+    
+}
 
 

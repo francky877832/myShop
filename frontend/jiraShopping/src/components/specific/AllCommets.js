@@ -14,11 +14,14 @@ import { appColors, screenHeight } from '../../styles/commonStyles';
 import { server } from '../../remote/server';
 import { reshapeComments, convertWordsToNumbers, containsEmail } from '../../utils/commonAppFonctions';
 import { CommentsContext } from '../../context/CommentsContext';
+import { UserContext } from '../../context/UserContext';
 
 
+/*
 const loggedUserId = "66731fcb569b492d3ef429ba"
 const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
+*/
 const AllCommets = (props) =>
 {
     const navigation = useNavigation()
@@ -33,6 +36,7 @@ const AllCommets = (props) =>
     const [refreshComponent, setRefreshComponent] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const flatListRef = useRef(null);
+    const {user} = useContext(UserContext)
 
     const handleChangeText = useCallback((text) => {
         setInputValue(text);
@@ -123,8 +127,8 @@ const addComment = async (item) => {
             const comment = {
                 //_id : "",
                 id : Math.random().toString(),
-                user: loggedUserId,
-                username : loggedUser,
+                user: user._id,
+                username : user.username,
                 product : item._id,
                 text : inputValue,
                 subComment : [],
@@ -151,7 +155,7 @@ const addComment = async (item) => {
             //Alert.alert("Comment ajouté avec success.")
             //setIsLoading(true)
             //await async function(){setOnNewComment(true)}()
-            await loadLastComment(product)
+            await loadLastComment(product, user)
             //setOnNewComment(true)
             setPage((prevPage) => prevPage - 1);
             //console.log(onNewComment)

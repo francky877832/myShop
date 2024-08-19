@@ -40,8 +40,58 @@ exports.getUserLikedProducts  =  (req, res, next) => {
       {
         $lookup: {
           from: 'comments',
-          localField: 'productDetails._id',
-          foreignField: 'product',
+          let: { productId: '$productDetails._id' }, // Utiliser l'ID du produit détaillé
+          pipeline: [
+            { $match: { $expr: { $eq: ['$product', '$$productId'] } } },
+            { $sort: { _id: -1 } },
+            {
+              $lookup: {
+                from: 'users',
+                localField: 'user',
+                foreignField: '_id',
+                as: 'user'
+              }
+            },
+            { $unwind: '$user' }, // Décomposer le tableau user en objets individuels
+            {
+              $lookup: {
+                from: 'users',
+                localField: 'subComment.user',
+                foreignField: '_id',
+                as: 'subCommentUsers'
+              }
+            },
+            {
+              $addFields: {
+                subComment: {
+                  $map: {
+                    input: '$subComment',
+                    as: 'sub',
+                    in: {
+                      _id: '$$sub._id',
+                      user: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: '$subCommentUsers',
+                              cond: { $eq: ['$$sub.user', '$$sub.user'] }
+                            }
+                          },
+                          0
+                        ]
+                      },
+                      username: '$$sub.username',
+                      isResponseTo: '$$sub.isResponseTo',
+                      text: '$$sub.text',
+                      visible: '$$sub.visible',
+                      createdAt: '$$sub.createdAt',
+                      updatedAt: '$$sub.updatedAt'
+                    }
+                  }
+                }
+              }
+            }
+          ],
           as: 'comments'
         }
       },
@@ -55,15 +105,17 @@ exports.getUserLikedProducts  =  (req, res, next) => {
             $push: {
               $mergeObjects: [
                 '$productDetails',
-                { favourites: '$favouriteUserDetails' }, // Remplacer les IDs par les objets utilisateur complets pour les favoris
-                { seller: { $arrayElemAt: ['$sellerDetails', 0] } }, // Remplacer l'ID du vendeur par l'objet utilisateur complet
-                { comments: '$comments' } // Ajouter les commentaires du produit
+                { favourites: '$favouriteUserDetails' },
+                { seller: { $arrayElemAt: ['$sellerDetails', 0] } },
+                { comments: '$comments' }
               ]
             }
           }
         }
       }
-    ]).then(async (favourites) => { 
+    ])
+    
+    .then(async (favourites) => { 
             console.log("AGG")
             console.log(favourites[0].productDetails)
             console.log("END")
