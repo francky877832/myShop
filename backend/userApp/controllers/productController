@@ -148,18 +148,24 @@ exports.getProducts =  (req, res, next) => {
             .populate('user', 'username') // Joindre les détails de l'utilisateur (optionnel)
             .exec();
 
-            
-
+          
           // Étape 5 : Joindre les commentaires aux produits
           const productsWithComments = products.map(product => {
+            const productComments = comments.filter(comment => comment.product.toString() === product._id.toString());
+          
             return {
               ...product.toObject(),
-              comments: comments.filter(comment => comment.product.toString() === product._id.toString()),
+              comments: productComments.length > 0 ? productComments : [] // Assurez-vous que le champ `comments` est toujours présent
             };
           });
-
+          //console.log("productsWithComments[0].comments")
+          //console.log(typeof productsWithComments[2].comments)
+          //console.log(comments)
+          
           //console.log(productsWithComments)
           // Retourner la réponse
+
+          //productsWithComments.forEach((el)=> console.log(el.comments.length))
           res.status(200).json({ datas: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
         })
 
@@ -494,6 +500,8 @@ exports.updateProductNumLikes = async (req, res, next) => {
             { $inc: { likes: updateLikes } },
             { new: true }
         );
+
+        product.likes = product.likes<0?1:product.likes
 
         if (!product) {
             return res.status(404).json({ message: "Produit non trouvé." });

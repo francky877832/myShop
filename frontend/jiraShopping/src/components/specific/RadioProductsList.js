@@ -27,15 +27,15 @@ import  {
     updateLocalBasket,
     setSelectedSeller,
   } from '../../store/baskets/basketsSlice';
+import { UserContext } from '../../context/UserContext';
 
   const loggedUser = "Francky"
   const loggedUserId = "66715deae5f65636347e7f9e"
   const username = "Franck"
-  const user = {_id:loggedUserId, username:loggedUser}
 
 const RadioProductsList = (props) => {
     const { item, datas, navigation, route  } = props;
-    
+    const {user} = useContext(UserContext)
     //const { removeBasket, updateTotalPrice} = useContext(BasketContext)
     
     dispatch = useDispatch()

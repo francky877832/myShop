@@ -29,7 +29,7 @@ export const fetchUserBasket = createAsyncThunk(
 
         //console.log(data)
 
-        return data[0].productDetails;
+        return data.length>0?data[0].productDetails:[];
       } catch (error) {
         console.error(error)
         return rejectWithValue(error.message);
@@ -40,6 +40,8 @@ export const fetchUserBasket = createAsyncThunk(
 export const addToBasket = createAsyncThunk(
     'basket/addToBasket',
     async ({product, user}, { rejectWithValue }) => {
+      //console.log(product)
+     // console.log(user)
         const basket = {
             user : user._id,
             username : user.username,
@@ -85,6 +87,7 @@ export const addToBasket = createAsyncThunk(
         }
   
         //return item._id;
+        //console.error("error")
       } catch (error) {
         console.error(error)
         return rejectWithValue(error.message);
@@ -97,7 +100,7 @@ export const addToBasket = createAsyncThunk(
     'basket/updateLocalBasket',
     async ({product, isAdding}, { dispatch, getState }) => {
       const { basket } = getState();
-      //console.log("ok")
+      
       let updatedProduct = {}
       // Mettre à jour le panier
       if(isAdding)
@@ -114,10 +117,10 @@ export const addToBasket = createAsyncThunk(
           inBasket : product.inBasket-1,
         };
       }
-      
+      //console.log(updatedProduct._id)
       //console.log("ok")
-      dispatch(addOrRemoveLocalBasket({product:product, isAdding:isAdding}));
-      
+      dispatch(addOrRemoveLocalBasket({product, isAdding}));
+      //console.log("ok")
       dispatch(addModifiedProduct(updatedProduct));
     }
   );
@@ -210,17 +213,9 @@ const basketSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(addToBasket.fulfilled, (state, action) => {
-        const item = action.payload;
-        const isPresent = state.basket.find((product) => product._id === item._id);
-        if (!isPresent) {
-          state.basket.push(item);
-        } else {
-          state.basket = state.basket.filter((product) => product._id !== item._id);
-        }
           state.isLoading = false;
       })
       .addCase(removeFromBasket.fulfilled, (state, action) => {
-        state.basket = state.basket.filter((product) => product._id !== action.payload);
         state.isLoading = false;
       });
   },

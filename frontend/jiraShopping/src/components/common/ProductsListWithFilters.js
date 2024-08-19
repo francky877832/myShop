@@ -13,7 +13,7 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
     const { datas, horizontal, title, onEndReached, onEndReachedThreshold, onScroll, filters, notDisplayFilters, name, searchText, isLoading, 
         getDatas, display, onExit, setOnExit
     } = props;
-    const {selectedCategories} = useContext(FilterContext)
+    //const {selectedCategories} = useContext(FilterContext)
 
     return(
             <View style={[productsListWithFiltersStyles.container]}>

@@ -82,11 +82,13 @@ const ProductProvider = ({children}) => {
       try {
 
         const newData = await getProducts(page);
-       // console.log(newData)
+    
+        //console.log(newData[2].comments)
         if (newData.length > 0) {
           //setProducts(newData)
-          console.log("pk")
+          //console.log("pk")
           //updateProducts(newData.datas);
+          //newData.map((el)=>console.log(el.comments))
           setProducts((prevProducts)=>[...prevProducts, ...newData])
           //if(page < totalPages)
           setPage((prevPage) => prevPage + 1);

@@ -22,10 +22,12 @@ const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const Comments = (props) =>
 {
-    const { all, navigation, product, setters, setIsLoading, pass, flatListRef, inputRef} = props
+    const { all, navigation, product, setters, setIsLoading, pass, flatListRef, inputRef, reshapedComments} = props
     const {inputValue, setInputValue, setIsResponseTo} = setters 
+    //console.log(reshapedComments)
     
-    const { reshapedComments, loadMoreComments, isLoading, searchAgain, hasMore, page, totalComments, } = useContext(CommentsContext)
+    const { /*reshapedComments,*/ loadMoreComments, isLoading, searchAgain, hasMore, page, totalComments, } = useContext(CommentsContext)
+    
     const loadMore = async () => {
         //await searchAgain();
         await loadMoreComments(product._id)
@@ -93,7 +95,7 @@ const respondTo = (id, username) => {
                                                                                                                                                                                                     (sinceDate(comment.createdAt)[1]=="secondes" || sinceDate(comment.createdAt)[1]=="ans"))
                                                                                                                                                                       ? "A l'instant" :"Ecrit il y'a " + sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }</Text></View>
                         {
-                            comment?.subComment && comment.subComment?.length > 0 && all
+                            Object.keys(comment).includes("subComment") && comment.subComment?.length > 0 && all
                             ?
                                     <Pressable onPress={()=>{setShowSubComment(!showSubComment.current)}} style={{alignSelf:"flex-end",}}>
                                         { showSubComment.current ?
@@ -108,9 +110,9 @@ const respondTo = (id, username) => {
                     
                     {
                         showSubComment.current &&
-                            (comment.subComment && comment.subComment?.length > 0
+                            (Object.keys(comment).includes("subComment") && comment?.subComment?.length > 0
                                 ?
-                                comment.subComment.map((item, key)=>{
+                                comment?.subComment.map((item, key)=>{
                                     return (
                                         <View style={[{flex:0}]}  key={key}>
                                             <View style={{flexDirection:"row-reverse",alignItems:"center"}}>

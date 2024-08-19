@@ -10,51 +10,60 @@ exports.getUserLikedProducts  =  (req, res, next) => {
     const userId = req.params.user
     console.log(userId)
     Favourite.aggregate([
-        { $match: { user: new ObjectId(userId) } }, 
-        { $unwind: '$products' }, // Décompose le tableau de produits likés
-        {
-          $lookup: {
-            from: 'products',
-            localField: 'products',
-            foreignField: '_id',
-            as: 'productDetails'
-          }
-        },
-        { $unwind: '$productDetails' }, // Décompose le tableau résultant de la jointure
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'productDetails.favourites',
-            foreignField: '_id',
-            as: 'favouriteUserDetails'
-          }
-        },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'productDetails.seller',
-            foreignField: '_id',
-            as: 'sellerDetails'
-          }
-        },
-        {
-          $group: {
-            _id: '$_id',
-            user: { $first: '$user' },
-            username: { $first: '$username' },
-            products: { $push: '$products' },
-            productDetails: {
-              $push: {
-                $mergeObjects: [
-                  '$productDetails',
-                  { favourites: '$favouriteUserDetails' }, // Remplacer les IDs par les objets utilisateur complets pour les favoris
-                  { seller: { $arrayElemAt: ['$sellerDetails', 0] } } // Remplacer l'ID du vendeur par l'objet utilisateur complet
-                ]
-              }
+      { $match: { user: new ObjectId(userId) } },
+      { $unwind: '$products' }, // Décompose le tableau de produits likés
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'products',
+          foreignField: '_id',
+          as: 'productDetails'
+        }
+      },
+      { $unwind: '$productDetails' }, // Décompose le tableau résultant de la jointure
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'productDetails.favourites',
+          foreignField: '_id',
+          as: 'favouriteUserDetails'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'productDetails.seller',
+          foreignField: '_id',
+          as: 'sellerDetails'
+        }
+      },
+      {
+        $lookup: {
+          from: 'comments',
+          localField: 'productDetails._id',
+          foreignField: 'product',
+          as: 'comments'
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          user: { $first: '$user' },
+          username: { $first: '$username' },
+          products: { $push: '$products' },
+          productDetails: {
+            $push: {
+              $mergeObjects: [
+                '$productDetails',
+                { favourites: '$favouriteUserDetails' }, // Remplacer les IDs par les objets utilisateur complets pour les favoris
+                { seller: { $arrayElemAt: ['$sellerDetails', 0] } }, // Remplacer l'ID du vendeur par l'objet utilisateur complet
+                { comments: '$comments' } // Ajouter les commentaires du produit
+              ]
             }
           }
         }
-      ]).then(async (favourites) => { 
+      }
+    ]).then(async (favourites) => { 
             console.log("AGG")
             console.log(favourites[0].productDetails)
             console.log("END")

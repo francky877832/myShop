@@ -75,7 +75,7 @@ const ProductDetails = (props) => {
     const { reshapedComments, setReshapedComments, loadMoreComments, page, hasMore, isLoading, setIsLoading, filtersUpdated, searchAgain, searchAgain_, setPage, onNewComment, setOnNewComment, setHasMore } = useContext(CommentsContext)
  
         const initialNumberOfComments = 2
-        const loadMoreComments_ = async () => { await loadMoreComments(product._id) ;}
+        const loadMoreComments_ = async () => { await loadMoreComments(data._id) ;}
         
 
        
@@ -169,6 +169,8 @@ const ProductDetails = (props) => {
 
 
 useEffect(()=>{
+    //console.log("product")
+    //console.log(data.comments)
     setReshapedComments(data.comments)
     //console.log(data.favourites)
 }, [])
@@ -194,7 +196,7 @@ useEffect(()=>{
     const [like, setLikeIcon ] = useState(isFavourite)
     const [numLike, setNumLike] = useState(data.likes)
     const [likeAdders, setLikeAdders] = useState(data.favourites)
-
+//console.log(data.favourites)
     //hasLikedItem={hasLiked(item)}
     const _handleLikePressed = useCallback((product) => {
         //data.likes = data.likes+1

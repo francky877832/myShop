@@ -21,7 +21,7 @@ const ProductsList = React.forwardRef((props, ref) => {
     //console.log(datas[0].product)
     
     useEffect(()=>{
-        console.log(onEndReachedThreshold)
+        //console.log(datas)
     }, [])
 
 

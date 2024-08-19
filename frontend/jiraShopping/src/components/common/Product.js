@@ -30,11 +30,11 @@ const Product = (props) => {
     const navigation = useNavigation()
     const {user} = useContext(UserContext)
     const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
-    const modifiedProduct = modifiedProducts.filter(product => product._id === item._id)
+    const modifiedProduct = modifiedProducts.filter(product => product._id?.toString() === item._id?.toString())
     const [product, setProduct] = useState(modifiedProduct.length>0?modifiedProduct[0]:{...item})
 
-
-    //console.log(item)
+    //console.log("*********==============={...item}")
+    //console.log(product)
    
 //console.log(item.images[0])
     //const {favourites, addFavourite, hasLiked} = useContext(FavouritesContext)
@@ -48,15 +48,15 @@ const Product = (props) => {
         
     }, [])
     const dispatch = useDispatch();
-    const isFavourite = useSelector((state) => isProductFavourite(state, product._id), shallowEqual);
-    const isBasketPresent = useSelector((state) => isProductBasket(state, product._id), shallowEqual);
+    const [isFavourite, setIsFavourite] = useState(useSelector((state) => isProductFavourite(state, product._id), shallowEqual));
+    const [isBasketPresent, setIsbasketPresent] = useState(useSelector((state) => isProductBasket(state, product._id), shallowEqual));
 //console.log(isFavourite)
     const [like, setLikeIcon ] = useState(isFavourite)
     const [numLike, setNumLike] = useState(product.likes)
     //const numLike = useRef(product.likes)
     const timeoutRef = useRef(null);
     
-    
+    //console.log(product.comments)
 
 /*
     useEffect(() => {
@@ -91,22 +91,21 @@ const Product = (props) => {
         if(isBasketPresent)
         {
             navigation.navigate("Basket")
+           // setIsbasketPresent(!isBasketPresent)
         }
         else
         {
-            dispatch(updateLocalBasket({product:product, isAdding:!isBasketPresent}));
+            const isBasketPresent = !isBasketPresent
+            dispatch(updateLocalBasket({product, isBasketPresent}));
+
+            timeoutRef.current = setTimeout(() => {
+                dispatch(addToBasket({product, user})); 
+            }, 1000)
         }
 
 
         // Configurer un nouveau timeout
-       timeoutRef.current = setTimeout(() => {
-        //console.log(isBasketPresent)
-            if(isBasketPresent)
-            {
-                dispatch(addToBasket({product:product, user:user})); 
-            }
-            
-        }, 1000)
+       
     }//,[timeoutRef, isBasketPresent, navigation])
 
 
