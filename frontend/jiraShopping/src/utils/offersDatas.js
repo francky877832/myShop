@@ -92,18 +92,22 @@ export const notifications =
 
 	PRODUCTS : {
 		ON_NEW_LIKE : { 
-			message : "",
-			action : "",
+			message : "Votre Produit a reçu un nouveau Like. Précipitez-vous pour faire une propositon.",
+			action : "ProductDetails",
 		},
 		ON_NEW_COMMENT : { 
-			message : "",
-			action : "",
+			message : "Votre produit a unnouveau commentaire.",
+			action : "AllComments",
 		},
 		ON_RESPONSE_COMMENT : { 
+			message : "Votre commentaire a reçu a une nouvelle réponse.",
+			action : "AllComments",
+		},
+		ON_NEW_BASKET : { 
 			message : "",
 			action : "",
 		},
-		ON_NEW_BASKET : { 
+		ON_DELETE_BASKET : { 
 			message : "",
 			action : "",
 		},

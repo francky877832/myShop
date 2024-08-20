@@ -22,7 +22,7 @@ const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const Comments = (props) =>
 {
-    const { all, navigation, product, setters, setIsLoading, pass, flatListRef, inputRef, reshapedComments, user} = props
+    const { all, navigation, product, setters, setIsLoading, setUserToResponse, pass, flatListRef, inputRef, reshapedComments, user} = props
     const {inputValue, setInputValue, setIsResponseTo} = setters 
     //console.log(reshapedComments)
     
@@ -62,7 +62,7 @@ useEffect(()=>{
 
 
     const Comment = (props) => {
-        const { comment, styles, all, } = props
+        const { comment, styles, all } = props
         const [_, forceUpdate] = useState();
         const showSubComment = useRef(true)
 //console.log(showSubComment!=false ? showSubComment : false)
@@ -72,10 +72,11 @@ useEffect(()=>{
           };
 
 //console.log(comment)
-const respondTo = (id, username) => {
+const respondTo = (id, user) => {
     //console.log(id)
     setIsResponseTo(id);
-    setInputValue("@"+username+" " +inputValue);
+    setInputValue("@"+user.username+" " +inputValue);
+    setUserToResponse(user)
     if (inputRef.current) {inputRef.current.focus() }
 }
         return (
@@ -83,14 +84,14 @@ const respondTo = (id, username) => {
                         <View style={{flexDirection:"row", alignItems:"center"}}>
 
                             <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{user._id!=comment.user._id ? navigation.navigate("Shop", {seller:comment.user}) :  navigation.navigate('Preferences', {screen: 'Shop',params:undefined});}}>
-                                <Image source={{uri: comment.user.image}} style={[commentsStyles.commentProfile, ]} />
+                                <Image source={{uri: comment.user.image||user.image}} style={[commentsStyles.commentProfile, ]} />
                             </Pressable>
 
                             <Pressable style={[styles.comment, ]} onPress={()=>{ }}>
                                 <Text style={[commentsStyles.commentText]} >{comment.text}</Text>
                             </Pressable>
                             { !!comment._id &&
-                                <Pressable  onPress={()=>{respondTo(comment._id, comment.username)}}>
+                                <Pressable  onPress={()=>{respondTo(comment._id, comment.user)}}>
                                     <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
                                 </Pressable>
                             }
@@ -143,7 +144,7 @@ const respondTo = (id, username) => {
                                                 </Pressable>
 
                                                 <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{user._id!=item.user._id ? navigation.navigate("Shop", {seller:item.user}) :  navigation.navigate('Preferences', {screen: 'Shop',params:undefined});}}>
-                                                    <Image source={{uri: item.user.image}} style={[commentsStyles.commentProfile, ]} />
+                                                    <Image source={{uri: item.user.image||user.image}} style={[commentsStyles.commentProfile, ]} />
                                                 </Pressable>
 
                                                 {

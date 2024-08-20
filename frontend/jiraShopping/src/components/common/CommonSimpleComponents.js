@@ -5,7 +5,7 @@ import BadgeIcon from './BadgeIcon';
 import { Ionicons } from '@expo/vector-icons';
 import { productStyles } from '../../styles/productStyles';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
-import { appFont, appColors, appFontSize } from '../../styles/commonStyles';
+import { appFont, appColors, appFontSize, customText } from '../../styles/commonStyles';
 //import { CheckBox } from 'react-native-elements';
 import { CheckBox } from '@rneui/themed';
 
@@ -138,6 +138,17 @@ exports.CustomActivityIndicator = (props) => {
         </View>
     )
 }
+
+
+exports.TemporaryNotification = (props) => {
+    const {message} = props
+    return (
+        <View style={[commonSimpleComponentsStyles.temporaryNotification.container,{}]}>
+            <Text style={[customText, commonSimpleComponentsStyles.temporaryNotification.message]}>{message}</Text>
+        </View>
+    )
+} 
+
 
 
 

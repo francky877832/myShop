@@ -4,14 +4,15 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const addUserNotification = (req, res, next) => {
     const notification = new Notification({
-        user : req.body.user,
+        user : req.params.user,
         notifications : [{
             _id : new ObjectId().toHexString(),
             source : req.body.source,
             type : req.body.type,
             message : req.body.message,
             action : req.body.action,
-            read : req.body.read
+            read : req.body.read,
+            datas : req.body.datas
         }]
     })
     notification.save()
@@ -32,11 +33,12 @@ exports.updateUserNotifications = (req, res, next) => {
         type : req.body.type,
         message : req.body.message,
         action : req.body.action,
-        read : req.body.read
+        read : req.body.read,
+        datas : req.body.datas
     }
     //console.log(notificaiton)
 
-    Notification.find({ user : req.body.user })
+    Notification.find({ user : req.params.user })
     .then( (notificaitons) => {
         if(notificaitons.length > 0)
         {
@@ -95,7 +97,7 @@ exports.updateUserNotificationRead = (req, res, next) => {
 
 
 exports.getUserNotifications = (req, res, next) => {
-    console.log("notification")
+    //console.log("notification")
     const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
     const limit = parseInt(req.query.limit) || 3; // Nombre d'éléments par page, par défaut 20
     const skip = (page - 1) * limit;

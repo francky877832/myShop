@@ -69,9 +69,11 @@ const AllNotifications = () => {
   const { user } = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(1);
+  const limit = 50
   const [hasMore, setHasMore] = useState(true);
   const [notificaitons, setNotifications] = useState([])
   const navigation = useNavigation()
+
 
 const sendNotif = async (username, source, model, type) => {
     setIsLoading(true)
@@ -119,13 +121,13 @@ const getNotif = useCallback(async (username, page, limit) => {
   }
 }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);
 
-const onEndReached = async () => { await getNotif(user.username, page, 10) }
+const onEndReached = async () => { await getNotif(user.username, page, limit) }
 
 
 useEffect(() => {
   const fetchData = async () => {  
       //console.log("isLoading")
-      await getNotif(user.username, page, 10)
+      await getNotif(user, page, limit)
     };
     
       fetchData();
@@ -133,16 +135,16 @@ useEffect(() => {
 }, []);
 
 
-const openNotif = async (username, item) => {
+const openNotif = async (user, item) => {
   try
   {
-    const response = await updateNotificationsRead({username:username, id:item._id})
+    const response = await updateNotificationsRead({user:user._id, id:item._id})
     //console.log(item)
     if(item.type == 'product')
     {
       const data = await getProductFromNotifications(item.datas)
-      console.log("data")
-      console.log(data)
+      //console.log("data")
+      //console.log(data)
       //{comments:comments,product:product,inputFocused:true}
       navigation.navigate(item.action, {productDetails:data,pass:true})
     }

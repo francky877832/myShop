@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { server } from '../../remote/server';
 import { useCallback } from 'react';
+import { sendNotifications } from '../../utils/commonAppNetworkFunctions' 
 // slices/favouritesSlice.js
 
 const loggedUser = "Francky";
@@ -32,6 +33,10 @@ export const addFavourite = createAsyncThunk(
               body: JSON.stringify({ updateLikes: 1, userId:user._id }),
               headers: { 'Content-Type': 'application/json' },
           });
+
+          //console.log(item.seller)
+          //await sendNotifications({ user:item.seller, source:"app", model:"PRODUCTS", type:"ON_NEW_LIKE", data:item._id })
+
       } else {
           response = await fetch(`${server}/api/datas/favourites/remove/${user._id}`, {
               method: 'PUT',

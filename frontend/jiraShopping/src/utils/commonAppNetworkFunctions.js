@@ -5,15 +5,15 @@ import { notifications } from './offersDatas';
 import { server } from '../remote/server';
 
 
-exports.sendNotificaitons = async ({username, source, model, type, data}) => {
+exports.sendNotifications = async ({user, source, model, type, data}) => {
     const notif = notifications[model]
     const message = notif[type].message
     const action = notif[type].action
 //console.log(notif)
     const notification = {
-        user : username,
+        user : user,
         source : source,
-        type : 'normal',
+        type : model.toLowerCase(),
         message : message,
         action : action,
         read : 0,
@@ -23,7 +23,7 @@ exports.sendNotificaitons = async ({username, source, model, type, data}) => {
         //console.log(comment)
             try{
                 //console.log("Ok")
-                const response = await fetch(`${server}/api/datas/notifications/update/${username}`, {
+                const response = await fetch(`${server}/api/datas/notifications/update/${user}`, {
                     method: 'PUT',
                     body: JSON.stringify(notification),
                     headers: {
@@ -37,17 +37,16 @@ exports.sendNotificaitons = async ({username, source, model, type, data}) => {
                 return true
 
             }catch(error){
-                Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
-
+                console.error("Erreur", "Une erreur est survenue! "+ error,)
                 return false
             }
 }
 
 
-exports.getNotifications = async (username, page, limit) => {
+exports.getNotifications = async (user, page, limit) => {
     //console.log(username, page, limit)
     try{
-        const response = await fetch(`${server}/api/datas/notifications/get/${username}?page=${page}&limit=${limit}`, {
+        const response = await fetch(`${server}/api/datas/notifications/get/${user}?page=${page}&limit=${limit}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'Application/json',
@@ -71,11 +70,11 @@ exports.getNotifications = async (username, page, limit) => {
 
 
 
-exports.updateNotificationsRead = async ({username, id}) => {
+exports.updateNotificationsRead = async ({user, id}) => {
     //console.log(id)
     try{
         
-        const response = await fetch(`${server}/api/datas/notifications/read/${username}/${id}`, {
+        const response = await fetch(`${server}/api/datas/notifications/read/${user}/${id}`, {
             method: 'PUT',
             body: JSON.stringify({}),
             headers: {
@@ -108,8 +107,8 @@ exports.getProductFromNotifications = async (id) => {
         return data
     }catch(error){
         //console.log(error)
-        Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
-        return {}
+        console.log("Erreur", "Une erreur est survenue! "+ error,)
+        return []
     }
 }
 

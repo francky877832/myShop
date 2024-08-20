@@ -16,6 +16,7 @@ import { reshapeComments, convertWordsToNumbers, containsEmail } from '../../uti
 import { CommentsContext } from '../../context/CommentsContext';
 import { UserContext } from '../../context/UserContext';
 
+import { sendNotifications } from '../../utils/commonAppNetworkFunctions'
 
 /*
 const loggedUserId = "66731fcb569b492d3ef429ba"
@@ -35,6 +36,8 @@ const AllCommets = (props) =>
     const [inputValue, setInputValue] = useState("")
     const [refreshComponent, setRefreshComponent] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [userToResponse , setUserToResponse] = useState(false)
+    
     const flatListRef = useRef(null);
     const {user} = useContext(UserContext)
 
@@ -152,19 +155,18 @@ const addComment = async (item) => {
                 throw new Error('Erreur lors de la requête'+(await response.text()));
             }
 
-            //Alert.alert("Comment ajouté avec success.")
-            //setIsLoading(true)
-            //await async function(){setOnNewComment(true)}()
             await loadLastComment(product, user)
-            //setOnNewComment(true)
             setPage((prevPage) => prevPage - 1);
-            //console.log(onNewComment)
-            //setIsResponseTo("")
-            setIsLoading(false) //A VERIFIER
-
-            //setComments([comment, ...comments])
-            //console.log(onNewComment)
-
+            setIsLoading(false)
+            if(!isResponseTo)
+            {
+                await sendNotifications({ user:item.seller._id, source:"app", model:"PRODUCTS", type:"ON_NEW_COMMENT", data:item._id })
+            }
+            else
+            {
+                await sendNotifications({ user:userToResponse._id, source:"app", model:"PRODUCTS", type:"ON_RESPONSE_COMMENT", data:item._id })
+            }
+       
         }catch(error){
             console.log(error)
             Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
@@ -203,7 +205,7 @@ useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
     return(
 <View style={{ flex: 1 }}>
         <View  style={[allCommetsStyles.container,{}]} >
-            <Comments navigation={navigation} user={user} flatListRef={flatListRef} inputRef={inputRef} setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  all={true} reshapedComments={reshapedComments} product={product}/>
+            <Comments navigation={navigation} user={user} setUserToResponse={setUserToResponse} flatListRef={flatListRef} inputRef={inputRef} setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  all={true} reshapedComments={reshapedComments} product={product}/>
         </View>
 
         <View style={[allCommetsStyles.inputContainer]}>
