@@ -116,9 +116,9 @@ exports.getUserLikedProducts  =  (req, res, next) => {
     ])
     
     .then(async (favourites) => { 
-            console.log("AGG")
-            console.log(favourites[0].productDetails)
-            console.log("END")
+            //console.log("AGG")
+            //console.log(favourites[0].productDetails)
+            //console.log("END")
             //res.status(200).json(favourites);
             /*if(favourites.length <= 0)
             {

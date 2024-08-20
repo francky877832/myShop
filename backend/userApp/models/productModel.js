@@ -23,7 +23,7 @@ const productSchema = new Schema({
     garanti : { type : Number, default : 0 }, //en jour
     stock : { type : Number, default : 1 },
     likes : { type : Number, default : 0, validate: {validator: function(v) {
-        return v >= 1;
+        return v >= 0;
         },
         message: 'Les likes doit être au moins 1.'
     }},

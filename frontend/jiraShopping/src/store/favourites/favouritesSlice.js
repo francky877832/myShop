@@ -47,7 +47,7 @@ export const addFavourite = createAsyncThunk(
       }
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la requête');
+        throw new Error('Erreur lors de la requête aadFavourite');
       }
 
       //return { item, bool };
@@ -67,7 +67,7 @@ export const fetchUserFavourites = createAsyncThunk(
     try {
       const response = await fetch(`${server}/api/datas/favourites/get/${user}?page=${page}`);
       if (!response.ok) {
-        throw new Error('Erreur lors de la requête');
+        throw new Error('Erreur lors de la requête Fetch favourite'+await response.text());
       }
       return await response.json();
     } catch (error) {
@@ -120,33 +120,38 @@ const favouritesSlice = createSlice({
         favourites: product.favourites.filter(item => item._id !== user._id)
       };
 
-      state.favourites = state.favourites.filter(item => item._id !== product._id);
-      state.modifiedProducts = state.modifiedProducts.map(item => {
+      const fav = state.favourites.filter(item => item._id !== product._id);
+      const mp = state.modifiedProducts.map(item => {
           if (item._id === product._id) {
             return updatedProduct 
           }
             return item
         })
-  
-      state.addLike = state.addLike-1
+        
+        state.favourites = fav
+        state.modifiedProducts = mp
+        state.addLike = state.addLike-1
     },
     addModifiedProduct(state, action) {
       const product = action.payload
       const isModifiedProduct = state.modifiedProducts.some(item => item._id === product._id);
       if(isModifiedProduct)
       {
-        state.modifiedProducts = state.modifiedProducts.map(item => {
+        const mp = state.modifiedProducts.map(item => {
           if (item._id === product._id) {
             return product 
           }
           return item
         })
+
+        state.modifiedProducts = mp
       }
       else
       {
         const updatedProducts = [product, state.modifiedProducts]
         state.modifiedProducts = updatedProducts
       }
+      //state.favourites = state.modifiedProducts
     },
     setLikedIcon(state, action) {
       state.liked = action.payload; // Equivalent de `setLikedIcon`

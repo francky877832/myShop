@@ -119,6 +119,7 @@ export const addToBasket = createAsyncThunk(
       }
       //console.log(updatedProduct._id)
       //console.log("ok")
+      
       dispatch(addOrRemoveLocalBasket({product, isAdding}));
       //console.log("ok")
       dispatch(addModifiedProduct(updatedProduct));
@@ -151,7 +152,7 @@ const basketSlice = createSlice({
     addOrRemoveLocalBasket(state, action) {
         const { product, isAdding } = action.payload;
         const existingIndex = state.basket.findIndex(basketItem => basketItem._id === product._id);
-        console.log("ok")
+        //console.log("ok")
         if (isAdding) {
           if (existingIndex === -1) {
             if (!state.basket.some(item => item._id === product._id)) {
@@ -212,11 +213,26 @@ const basketSlice = createSlice({
       .addCase(fetchUserBasket.rejected, (state) => {
         state.isLoading = false;
       })
+
+      .addCase(addToBasket.pending, (state) => {
+        state.isLoading = true; // eviter un render pour eviter product.likes+2
+      })
       .addCase(addToBasket.fulfilled, (state, action) => {
-          state.isLoading = false;
+        state.isLoading = false; // eviter un render pour eviter product.likes-2
+      })
+      .addCase(addToBasket.rejected, (state, action) => {
+        state.isLoading = false; // Equivalent de `setIsLoading(false)`
+        state.error = action.payload; // Gestion des erreurs
+      })
+      .addCase(removeFromBasket.pending, (state) => {
+        state.isLoading = true; // eviter un render pour eviter product.likes+2
       })
       .addCase(removeFromBasket.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.isLoading = false; // eviter un render pour eviter product.likes-2
+      })
+      .addCase(removeFromBasket.rejected, (state, action) => {
+        state.isLoading = false; // Equivalent de `setIsLoading(false)`
+        state.error = action.payload; // Gestion des erreurs
       });
   },
 });

@@ -1,6 +1,6 @@
 
 import React, { useState, forwardRef, useRef, useEffect, useCallback, useMemo, useContext } from 'react';
-import { View, Text, Pressable, FlatList, ScrollView, TextInput, Alert} from 'react-native';
+import { View, Text, Pressable, FlatList, ScrollView, TextInput, Alert, Image} from 'react-native';
 import { Input } from 'react-native-elements';
 import {CustomActivityIndicator} from '../common/CommonSimpleComponents'
 
@@ -22,7 +22,7 @@ const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
 const Comments = (props) =>
 {
-    const { all, navigation, product, setters, setIsLoading, pass, flatListRef, inputRef, reshapedComments} = props
+    const { all, navigation, product, setters, setIsLoading, pass, flatListRef, inputRef, reshapedComments, user} = props
     const {inputValue, setInputValue, setIsResponseTo} = setters 
     //console.log(reshapedComments)
     
@@ -73,7 +73,7 @@ useEffect(()=>{
 
 //console.log(comment)
 const respondTo = (id, username) => {
-    console.log(id)
+    //console.log(id)
     setIsResponseTo(id);
     setInputValue("@"+username+" " +inputValue);
     if (inputRef.current) {inputRef.current.focus() }
@@ -81,6 +81,11 @@ const respondTo = (id, username) => {
         return (
                     <View style={[styles.commentContainer,]} >
                         <View style={{flexDirection:"row", alignItems:"center"}}>
+
+                            <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{user._id!=comment.user._id ? navigation.navigate("Shop", {seller:comment.user}) :  navigation.navigate('Preferences', {screen: 'Shop',params:undefined});}}>
+                                <Image source={{uri: comment.user.image}} style={[commentsStyles.commentProfile, ]} />
+                            </Pressable>
+
                             <Pressable style={[styles.comment, ]} onPress={()=>{ }}>
                                 <Text style={[commentsStyles.commentText]} >{comment.text}</Text>
                             </Pressable>
@@ -104,6 +109,7 @@ const respondTo = (id, username) => {
                                             <Text style={[customText.text, {textDecorationLine:"underline",fontWeight:"bold",}]}>Afficher les reponses</Text>
                                         }
                                     </Pressable>
+                                    
                             :
                             false
                         }
@@ -113,11 +119,31 @@ const respondTo = (id, username) => {
                             (Object.keys(comment).includes("subComment") && comment?.subComment?.length > 0
                                 ?
                                 comment?.subComment.map((item, key)=>{
+                                    const parseMentions = (inputText) => {
+                                        const parts = inputText.split(/(@\w+)/g); // Sépare le texte en morceaux où chaque mention est séparée
+                                        return parts.map((part, index) => {
+                                          if (part.startsWith('@')) {
+                                            // Si c'est une mention, la rendre en gras
+                                            return (
+                                              <Text key={index} style={{ fontWeight: 'bold' }}>
+                                                {part}
+                                              </Text>
+                                            );
+                                          } else {
+                                            // Sinon, rendre le texte normal
+                                            return <Text key={index}>{part}</Text>;
+                                          }
+                                        });
+                                      };
                                     return (
                                         <View style={[{flex:0}]}  key={key}>
                                             <View style={{flexDirection:"row-reverse",alignItems:"center"}}>
                                                 <Pressable onPress={()=>{console.log(comment._id)}} style={[styles.comment, styles.subComment]} >
-                                                    <Text style={[commentsStyles.commentText]} >{item.text}</Text>
+                                                    <Text style={[commentsStyles.commentText]} >{parseMentions(item.text)}</Text>
+                                                </Pressable>
+
+                                                <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{user._id!=item.user._id ? navigation.navigate("Shop", {seller:item.user}) :  navigation.navigate('Preferences', {screen: 'Shop',params:undefined});}}>
+                                                    <Image source={{uri: item.user.image}} style={[commentsStyles.commentProfile, ]} />
                                                 </Pressable>
 
                                                 {

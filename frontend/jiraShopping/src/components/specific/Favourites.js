@@ -26,15 +26,16 @@ const Favourites = (props) => {
 
    // const {favourites, isLoading, loadMoreFavouriteProducts} = useContext(FavouritesContext)
    const dispatch = useDispatch();
-   const { favourites, isLoading, page, hasMore } = useSelector((state) => state.favourites);
-
+   const { favourites, isLoading, page, hasMore, modifiedProducts } = useSelector((state) => state.favourites);
+   const basket = useSelector((state) => state.basket.basket);
+   
     const [datas, setDatas] = useState([])
 //console.log(favourites)
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
     
     const loadMoreFavouriteProducts = useCallback(() => {
         //dispatch(fetchUserFavourites({user:loggedUserId, page:page}));
-    },[fetchUserFavourites, loggedUserId, page])
+    },[fetchUserFavourites, page])
 
 
     return(
@@ -43,7 +44,7 @@ const Favourites = (props) => {
                         <Top />
                     </View>
                     <View style={[{flex:1,paddingBottom:0,}]}>
-                        <ProductsListWithFilters  isLoading={isLoading} onEndReached={loadMoreFavouriteProducts} onEndReachedThreshold={100} filters={false} datas={favourites} horizontal={false} title="Mes Favoris" />
+                        <ProductsListWithFilters basket={basket} isLoading={isLoading} onEndReached={loadMoreFavouriteProducts} onEndReachedThreshold={100} filters={false} datas={favourites} horizontal={false} title="Mes Favoris" />
                     </View>
         </View>
     )

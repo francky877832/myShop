@@ -45,11 +45,16 @@ export const commentsStyles = StyleSheet.create({
       paddingLeft : 20,
       borderRadius : 10,
       maxWidth : "90%",
+      //left : 5,
     },
     subComment: 
     {
       backgroundColor : appColors.secondaryColor3,
       alignSelf : "flex-end",
+      width : "65%",
+      paddingHorizontal : 5,
+      paddingVertical : 10,
+      //left : 5,
     },
     commentText :
     {
@@ -76,6 +81,26 @@ export const commentsStyles = StyleSheet.create({
     {
       borderBottomWidth : 1,
       borderColor : appColors.secondaryColor1,
+    },
+
+    commentProfileContainer :
+    {
+      width : 30,
+      height : 30,
+      borderRadius : 15,
+      //justifyContent : 'flex-end',
+      alignSelf : 'flex-end',
+      borderWidth : 2,
+      borderColor : appColors.green,
+      zIndex : 99,
+      //bottom : 0,
+    },
+    commentProfile :
+    {
+      width : 30,
+      height : 30,
+      borderRadius : 15,
+      top : '2%',
     }
   
     

@@ -212,7 +212,7 @@ useEffect(()=>{
     }, [like, numLike]);
 
    
-//console.log(likeAdders)
+//console.log(data)
     /*const _handleLikePressed =  useCallback((item) => {
         setLikeIcon((liked) => {
            /* if(liked)
@@ -332,7 +332,7 @@ useEffect(()=>{
                 
                         {
                             <View style={[{borderTopWidth:1,borderColor:appColors.lightWhite}]}>
-                            <Comments page={page} loadMoreComments={loadMoreComments_} searchAgain={searchAgain} all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{setOnNewComment:setOnNewComment}} reshapedComments={reshapedComments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
+                            <Comments user={user} page={page} loadMoreComments={loadMoreComments_} searchAgain={searchAgain} all={false} pass={pass} isLoading={isLoading} setIsLoading={setIsLoading} setters={{setOnNewComment:setOnNewComment}} reshapedComments={reshapedComments} onNewComment={onNewComment} setOnNewComment={setOnNewComment} navigation={navigation} product={data} />
                             {isLoading &&
                                 <ActivityIndicator color={appColors.secondaryColor1} size="small" styles={{}} /> 
                             }

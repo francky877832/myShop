@@ -97,7 +97,7 @@ const Product = (props) => {
             setIsBasketPresent(!isBasketPresent)
             const isAdding = true
             dispatch(updateLocalBasket({product, isAdding}));
-            console.log("BASKET")
+            //console.log("BASKET")
             timeoutRef.current = setTimeout(() => {
                 dispatch(addToBasket({product, user})); 
             }, 1000)

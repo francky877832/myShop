@@ -203,7 +203,7 @@ useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
     return(
 <View style={{ flex: 1 }}>
         <View  style={[allCommetsStyles.container,{}]} >
-            <Comments flatListRef={flatListRef} inputRef={inputRef} setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  all={true} reshapedComments={reshapedComments} product={product}/>
+            <Comments navigation={navigation} user={user} flatListRef={flatListRef} inputRef={inputRef} setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  all={true} reshapedComments={reshapedComments} product={product}/>
         </View>
 
         <View style={[allCommetsStyles.inputContainer]}>
