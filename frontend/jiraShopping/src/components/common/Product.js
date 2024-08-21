@@ -121,7 +121,7 @@ const Product = (props) => {
         }
       }//,[navigation]);
       
-if(minified)
+/*if(!minified)
 {
     return (
         <View>
@@ -130,7 +130,7 @@ if(minified)
    )
 }
 else
-{
+{*/
     return(
                 <View style={[productStyles.container, productStyles.card, horizontal ? productStyles.containerHorizontal : false]} >
                             <View style={[productStyles.top,] } >
@@ -138,9 +138,10 @@ else
                                     <Ionicons name="cube-sharp" size={24} color={appColors.white} />
                                     <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{product.feesBy=="seller" ? "Gratuit"  : "Reduction"} </Text>
                                 </Pressable>
-
+                        {
+                            (!minified || user._id!=product.seller._id) &&
                                 <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user}  synchro={false} item={product} isCard={false} styles={{color:appColors.white}}/>
-
+                        }
                             </View>
                         
                     <Pressable style={ productStyles.pressable } onPress = {handlePress} >
@@ -162,17 +163,18 @@ else
                                 }
                             </View>
 
-                        
+                        {
+                           (!minified || user._id!=product.seller._id) &&
                             <View style={[productStyles.bottom, productStyles.card, isBasketPresent?productStyles.isBasketPresent:false] } >
                                 <Pressable onPress = { ()=>{handleBasketPressed(product) } }>
                                     <Text numberOfLines={1} style={[customText.text, productStyles.category, isBasketPresent?productStyles.isBasketPresentText:false]}>{isBasketPresent? "Aller Au Panier":"Ajouter Au Panier"}</Text>
                                 </Pressable>
                             </View>
+                        }
                         </View>
                     </Pressable>
                 </View>
         )
-}
 }
 
 export default React.memo(Product)

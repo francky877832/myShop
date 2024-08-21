@@ -181,20 +181,36 @@ const getCategory = async (type, cat, subCat) => {
                                             //mais ici cest selectedCategories_ passe en parametre
                                             //de navigate() qui sera utilisé puisque les setters sont asynchrones
     //console.log(selectedCategories)
-    switch(type)
-    {
-        case "category" :    
-            updateCategories(selectedCategories_.name, "complete_category");
-            navigation.navigate("CategoryResults", {category:selectedCategories_, searchText:"", display:"category"});
-            break;
-        case "subCategory" :
-            updateCategories(cat, subCat)
-            //{[id] : true, name:id, subCategories:path}
-            navigation.navigate("CategoryResults", {category:{[cat] : true, name:cat, subCategories:subCat}, searchText:"", display:"category"});
-            break;
-        default : break;
+    
+        switch(type)
+        {
+            case "category" :    
+                updateCategories(selectedCategories_.name, "complete_category");
+                if(!(params?.datas?.goBackTo==="AddProduct"))
+                {
+                    navigation.navigate("CategoryResults", {category:selectedCategories_, searchText:"", display:"category"});
+                }
+                else
+                {
+                    navigation.goBack()
+                }
+                break;
+            case "subCategory" :
+                updateCategories(cat, subCat)
+                //{[id] : true, name:id, subCategories:path}
+                if(!(params?.datas?.goBackTo==="AddProduct"))
+                {
+                    navigation.navigate("CategoryResults", {category:{[cat] : true, name:cat, subCategories:subCat}, searchText:"", display:"category"});
+                }
+                else
+                {
+                    navigation.goBack()
+                }
+                break;
+            default : break;
 
-    }
+        }
+
     //navigation.navigate("CategoryResults", {category:selectedCategories_, searchText:"", display:"category"});
 }
 
@@ -202,7 +218,7 @@ const getCategory = async (type, cat, subCat) => {
         <View style={[categoriesStyles.container]}>
 
         {
-            (page=="category" || params?.datas.page=="category") &&
+            (page=="category" || params?.datas?.page==="category") &&
             
             <View style={{flexDirection:"row",}}>
                 
@@ -249,14 +265,18 @@ const getCategory = async (type, cat, subCat) => {
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={[categoriesStyles.flatlist,{flex:1,}]}
-                    ListFooterComponent={ (item) => { return (
-                            <View style={{height:50,top:10, alignSelf:"center"}}>
-                                 <Text>{/* searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***` */}</Text>
-                                <Pressable onPress={()=>{getCategory("category")}} style={[categoriesStyles.fullCat]}>
-                                    <Text style={[categoriesStyles.text,{color:appColors.white, textDecorationLine:"none", fontSize:16,}]}>Afficher La Categorie {">>"} </Text>
-                                </Pressable>
-                            </View>
-                        )}
+                    ListFooterComponent={ (item) => { 
+                        if(!(params?.datas?.goBackTo==="AddProduct")){ 
+                            return (
+                                <View style={{height:50,top:10, alignSelf:"center"}}>
+                                    <Text>{/* searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***` */}</Text>
+                                    <Pressable onPress={()=>{getCategory("category")}} style={[categoriesStyles.fullCat]}>
+                                        <Text style={[categoriesStyles.text,{color:appColors.white, textDecorationLine:"none", fontSize:16,}]}>Afficher La Categorie {">>"} </Text>
+                                    </Pressable>
+                                </View>
+                            )
+                        }
+                    }
                 }
                 />
                     
@@ -266,7 +286,7 @@ const getCategory = async (type, cat, subCat) => {
         }
 
 {
-            params?.datas.page=="brand" &&
+            params?.datas?.page=="brand" &&
             <View style={[categoriesStyles.brandContainer]}>
                 <FlatList
                         data={brands}
@@ -291,7 +311,7 @@ const getCategory = async (type, cat, subCat) => {
         }
 
 {
-            params?.datas.page=="color" &&
+            params?.datas?.page=="color" &&
             <View style={[categoriesStyles.colorContainer,{}]}>
                 <FlatList
                         data={colors}
