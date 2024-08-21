@@ -9,6 +9,7 @@ import { productStyles } from '../../styles/productStyles';
 import { appColors, customText } from '../../styles/commonStyles';
 //import { Image } from 'expo-image';
 
+import { formatMoney } from '../../utils/commonAppFonctions'
 //CONTEXTE
 import { FavouritesContext } from '../../context/FavouritesContext';
 import { BasketContext } from '../../context/BasketContext';
@@ -120,6 +121,10 @@ const Product = (props) => {
           navigation.navigate({name:"ProductDetails", params:{ productDetails: product, },  key: Date.now().toString()});
         }
       }//,[navigation]);
+
+    const handleMofyProduct = () => {
+
+      }
       
 /*if(!minified)
 {
@@ -152,22 +157,29 @@ else
                                 <Text numberOfLines={2} style={[customText.text, productStyles.productName]}>{product.name}</Text>
                             </View>
 
-                            <View style={{ }} >
-                                {product.numLikes ? <Text>{product.updateLikes} Likes</Text> : <Text style={{alignSelf:"center"}}>---</Text>}
-                                {product.price == product.newPrice  ? <Text style={[customText.text, productStyles.price,{fontSize:12}]}>{product.price} XAF</Text>
+                            <View style={[{flexWrap:'wrap'}]} >
+                                {product.likes ? <Text style={[customText.text, {color:appColors.voilet}]}>{product.likes} Likes</Text> : <Text style={{alignSelf:"center"}}>---</Text>}
+                                {product.price === product.newPrice  ? <Text style={[customText.text, productStyles.price,{fontSize:12}]}>{formatMoney(product.price)} XAF</Text>
                                     :
-                                    <View style={{ flexDirection:"row", justifyContent:"flex-start" }} >
-                                        <Text style={[customText.text, productStyles.price, {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{product.realPrice} </Text>
-                                        <Text style={[customText.text, productStyles.price, {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:12}]}>{product.realPrice} XAF</Text>
+                                    <View style={{ flexDirection:"row", justifyContent:"flex-start", flexWrap:'wrap' }} >
+                                        <Text style={[customText.text, productStyles.price, {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{formatMoney(product.price)} </Text>
+                                        <Text style={[customText.text, productStyles.price, {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:12}]}>{formatMoney(product.newPrice)} XAF</Text>
                                     </View>
                                 }
                             </View>
 
                         {
-                           (!minified || user._id!=product.seller._id) &&
+                           (!minified || user._id!=product.seller._id) 
+                           ?
                             <View style={[productStyles.bottom, productStyles.card, isBasketPresent?productStyles.isBasketPresent:false] } >
                                 <Pressable onPress = { ()=>{handleBasketPressed(product) } }>
                                     <Text numberOfLines={1} style={[customText.text, productStyles.category, isBasketPresent?productStyles.isBasketPresentText:false]}>{isBasketPresent? "Aller Au Panier":"Ajouter Au Panier"}</Text>
+                                </Pressable>
+                            </View>
+                            :
+                            <View style={[productStyles.bottom, productStyles.card,] } >
+                                <Pressable onPress = { ()=>{handleMofyProduct(product) } }>
+                                    <Text numberOfLines={1} style={[customText.text, productStyles.category,]}>Modifier le produit</Text>
                                 </Pressable>
                             </View>
                         }

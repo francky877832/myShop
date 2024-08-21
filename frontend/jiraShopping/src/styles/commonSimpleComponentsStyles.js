@@ -79,9 +79,50 @@ export const commonSimpleComponentsStyles = StyleSheet.create({
             alignSelf : "center",
             justifyContent : "center",
             alignContent : "center",
-        }
+        },
         
-    }
+    },
+
+    priceDetails : 
+    {
+       container :
+       {
+            padding : 10,
+            backgroundColor : appColors.black,
+       },
+       title:
+       {
+            fontWeight : 'bold',
+            color : appColors.white,
+       },
+       priceLine:
+       {
+            flexDirection : 'row',
+            justifyContent : 'space-between',
+            alignItems : 'center',
+            paddingVertical : 5,
+       },
+       semiTitle:
+       {
+            color : appColors.secondaryColor3,
+       },
+       price:
+       {
+            fontWeight : 'bold',
+            color : appColors.white,
+       },
+       totalPriceLine:
+       {
+            backgroundColor : appColors.secondaryColor1,
+            padding : 5,
+       },
+       totalPriceText:
+       {
+            color : appColors.white,
+            fontWeight : 'bold',
+       }
+        
+    },
     
 
 })

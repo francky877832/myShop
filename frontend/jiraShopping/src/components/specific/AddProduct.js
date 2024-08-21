@@ -13,22 +13,20 @@ import * as ImageManipulator from 'expo-image-manipulator';
 
 
 import { appColors, customText } from '../../styles/commonStyles';
-import { CustomButton } from "../common/CommonSimpleComponents"
+import { CustomButton, PriceDetails} from "../common/CommonSimpleComponents"
 import { screenWidth, screenHeight } from '../../styles/commonStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { Icon } from 'react-native-elements';
 import Categories from '../common/Categories';
-import { formatMoney } from '../../utils/commonAppFonctions';
+import { formatMoney, capitalizeFirstLetter} from '../../utils/commonAppFonctions';
 import { categoriesStyles } from '../../styles/categoriesStyles';
 
 import { ProductItemContext } from '../../context/ProductItemContext';
 import { FilterContext
 
  } from '../../context/FilterContext';
-import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
 import { server } from '../../remote/server';
-import { ScreenWidth } from 'react-native-elements/dist/helpers';
 
 
 import { requestPermissions, pickImages, takePhoto, resizeImages } from '../../utils/utilsFunctions';
@@ -36,6 +34,8 @@ import { requestPermissions, pickImages, takePhoto, resizeImages } from '../../u
 
 const loggedUser = "66731fcb569b492d3ef429ba"
 const AddProduct = (props) => {
+    const [showPriceDetails, setShowPriceDetails] = useState(true)
+
     const IMG_MAX_HEIGHT = screenHeight/2
     const IMG_MAX_WIDTH = screenWidth
     const navigation = useNavigation();
@@ -51,6 +51,7 @@ const AddProduct = (props) => {
     const [valueStock, setValueStock] = useState("")
     const [valueEtat, setValueEtat] = useState("")
     const [valueFeesBy, setValueFeesBy] = useState("")
+    const [kargoPrice, setKargoPrice] = useState("")
 
 //IsFocused pour ls inputText
     const [isNameFocused, setIsNameFocused] = useState(false)
@@ -58,6 +59,7 @@ const AddProduct = (props) => {
     const [isPriceFocused, setIsPriceFocused] = useState(false)
     const [isGarantiFocused, setIsGarantiFocused] = useState(false)
     const [isStockFocused, setIsStockFocused] = useState(false)
+    const [isKargoPrice, setIsKargoPrice] = useState(false)
     //const [valueBrand, setValueBrand] = useState("")
     //const [valueCategory, setValueCategory] = useState("")
 
@@ -352,6 +354,7 @@ const submitProduct = async () => {
                 </View>
 
             </View>
+                
 
             <View style={[addProductStyles.containers]}>
                 <View style={[addProductStyles.titles]}>
@@ -373,8 +376,34 @@ const submitProduct = async () => {
                                 </View>
                                 
                             </View>
+
                         </RadioButton.Group>
+ 
                 </View>
+
+
+
+                <View style={[addProductStyles.containers]}>
+                    <View style={[addProductStyles.contents, {flexDirection:'column'}]}>
+                            <Input placeholder="Estimation des frais de transport. EX : 2500" value={valuePrice} onChangeText={(price)=>{setKargoPrice(formatMoney(price))}}
+                                inputMode='numeric'
+                                multiline={false}
+                                placeholderTextColor={appColors.secondaryColor3}
+                                inputStyle = {[searchBarStyles.inputText, ]}
+                                onFocus={() => setIsKargoPrice(true)}
+                                onBlur={() => setIsKargoPrice(false)}
+                                underlineColorAndroid='transparent'
+                                containerStyle={ [searchBarStyles.containerBox,]}
+                                inputContainerStyle = {[searchBarStyles.inputContainer, isKargoPrice && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
+                            />
+
+                    <View style={{}}>
+                    <Text style={[customText.text]}>Ce detail n'est onligatoire. Mais s'il est renseigné, nous aidera dans une estimation plus nette de vos gains </Text>
+                </View>
+
+    </View>
+</View>
+
             </View>
 
             
@@ -452,6 +481,15 @@ const submitProduct = async () => {
                 </Pressable>
             </View>
         }
+
+            {showPriceDetails &&
+                <View style={[]}>
+                    <PriceDetails title="Calculatrice De Gains" product={{
+                        newPrice:parseFloat(valuePrice.split('.').join('')),
+                        feesBy:valueFeesBy,
+                        }} />
+                </View>
+            }
         <View style={[addProductStyles.addProductSubmitView,{}]}>
                 <CustomButton text="Publier Le Produit" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={submitProduct} />
         </View>

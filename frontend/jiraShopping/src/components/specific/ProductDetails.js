@@ -8,7 +8,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Icon } from 'react-native-elements';
 
 import CarouselImage from '../common/CarouselImages';
-import { PrevButton, ShareButton, LikeButton, CustomButton, CustomActivityIndicator } from "../common/CommonSimpleComponents";
+import { PrevButton, ShareButton, LikeButton, CustomButton, CustomActivityIndicator, PriceDetails } from "../common/CommonSimpleComponents";
 import Comments from './Comments';
 import { productDetailsStyles } from '../../styles/productDetailsStyles';
 import { appColors, customText } from '../../styles/commonStyles';
@@ -37,7 +37,8 @@ const ProductDetails = (props) => {
     const navigation = useNavigation()
     const route = useRoute()
     const {user} = useContext(UserContext)
-    //On utilise la version la plus a jour du produit!!!!
+    //On utilise la version la plus a jour du produit!!!! 
+    const [showPriceDetails, setShowPriceDetails] = useState(false)
     const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
     const modifiedProduct = modifiedProducts.filter(product => product?._id === route.params.productDetails._id)
     const [data, setData] = useState(modifiedProduct.length>0?modifiedProduct[0]:route.params.productDetails);
@@ -203,7 +204,7 @@ useEffect(()=>{
         setLikeIcon(prevLike => {
             const newLike = !prevLike;
             setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
-            newLike ? setLikeAdders([user, ...likeAdders]) : setLikeAdders(likeAdders.filter(item=>item._id!=user._id))
+            newLike ? setLikeAdders(!likeAdders.some(item=>item._id===user._id)?[user, ...likeAdders]:likeAdders) : setLikeAdders(likeAdders.filter(item=>item._id!=user._id))
             //newLike ? data.likes++ : data.likes--
             return newLike;
         });
@@ -414,11 +415,17 @@ useEffect(()=>{
     </TouchableWithoutFeedback>
     
 </KeyboardAwareScrollView>    
+        {showPriceDetails &&
+            <View style={[productDetailsStyles]}>
+                <PriceDetails product={data} title="Informations Sur La Vente"/>
+            </View>
+        }
 
             <View style={[productDetailsStyles.bottom]}>
-                <View style={[productDetailsStyles.button, productDetailsStyles.price]}>
+                <Pressable style={[productDetailsStyles.button, productDetailsStyles.price]} onPress={()=>{setShowPriceDetails(!showPriceDetails)}}>
+                    <Icon type='octicon' name="triangle-up" size={24} color={appColors.secondaryColor1} />
                     <Text numberOfLines={2} style={[customText.text, productDetailsStyles.buttonText, { color: appColors.secondaryColor1 }]}>{formatMoney(data.price)} XAF</Text>
-                </View>
+                </Pressable>
 
                 <View style={[productDetailsStyles.panier, ]}>
                        {/* 
@@ -426,12 +433,20 @@ useEffect(()=>{
                                 <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{isBasketPresent(data)[0]? "Aller Au Panier":"Ajouter Au Panier"}</Text>
                             </Pressable>    
                         */}
+                    {
+                    (user._id!=data.seller._id) 
+                           ?
                         <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data}) } }>
                             <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{"Proposer"}</Text>
                         </Pressable>
+                        :
+                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data}) } }>
+                            <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{"Propositons"}</Text>
+                        </Pressable>
+                    }
                 </View>
                 <View style={[productDetailsStyles.acheter]}>
-                    <CustomButton text="Acheter" styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />
+                    <CustomButton text="Acheter" disable={user._id!=data.seller._id?true:false} styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={user._id!=data.seller._id?appColors.secondaryColor1:appColors.secondaryColor3} onPress={() => { }} />
                 </View>
             </View>
 </View>

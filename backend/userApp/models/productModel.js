@@ -5,10 +5,15 @@ const Schema = mongoose.Schema
 const productSchema = new Schema({
     name : { type : String, required : true },
     description : { type : String, required : true },
+
     price : { type : Number, required : true },
     newPrice: { type: Number, default: function() { return this.price; } },
-    minPrice: { type: Number, default: function() { return this.price; } },
-    maxPrice: { type: Number, default: function() { return this.price; } },
+
+    minPrice: { type: Number, default: function() { return this.price - this.price*10/100; } },
+    maxPrice: { type: Number, default: function() { return this.price + this.price*10/100; } },
+
+    kargoPrice: { type: Number, required : false },
+
     condition : { type : String, enum : ['new', 'used', "new used"], default : 'new' },
     seller : { type : Schema.Types.ObjectId, ref : 'User', required : true },
     sellerName : { type : String, required : false, },

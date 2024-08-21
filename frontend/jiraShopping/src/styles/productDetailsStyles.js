@@ -150,8 +150,12 @@ export const productDetailsStyles = StyleSheet.create({
     price :
     {
         flex : 1,
+        //flexWrap : 'wrap',
+        flexDirection : 'row',
         alignItems : "center",
-
+        justifyContent : 'space-evenly',
+        paddingHorizontal : 5,
+        //backgroundColor:'red',
     },
     acheter :
     {

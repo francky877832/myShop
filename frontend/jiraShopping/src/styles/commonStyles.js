@@ -16,6 +16,8 @@ export const appColors = {
     red : "red",
     blue : "rgb(32, 137, 220)",
     green : "green",
+    pink : "pink",
+    voilet : "violet",
     orange : "orange",
     white : "#fff",
     lightBlack : "rgba(0, 0, 0, 0.2)",

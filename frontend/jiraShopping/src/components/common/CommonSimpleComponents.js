@@ -11,6 +11,7 @@ import { CheckBox } from '@rneui/themed';
 
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
+import { formatMoney } from '../../utils/commonAppFonctions';
 
 //contexte
 import { useSelector, useDispatch } from 'react-redux';
@@ -71,7 +72,7 @@ exports.LikeButton = (props) => {
             onPress={() => handleLikePressed(item)}
         >
             {!hasLikedItem
-                ? <BadgeIcon name="heart-outline" size={24} color={style.color} badgeCount={0} styles={{}} />
+                ? <BadgeIcon name="heart-outline" size={24} color={style.color} badgeCount={0} styles={{zIndex:99}} />
                 : <BadgeIcon name="heart-sharp" size={24} color={appColors.secondaryColor1} badgeCount={0} styles={{}} />
             }
         </Pressable>
@@ -117,14 +118,14 @@ exports.ConditionChoice = (props) => {
 
 
 exports.CustomButton = (props) => {
-    const { text, color, backgroundColor, onPress, styles } = props
+    const { text, color, backgroundColor, onPress, styles, disabled } = props
     
     const styles_ = StyleSheet.create({
         bg:{backgroundColor:(backgroundColor || appColors.blue)},
         color:{color:(color || appColors.white),}
     })
     return(
-       <Pressable style={[{justifyContent:"center",alignItems:"center"},styles.pressable, styles_.bg]} onPress={onPress}>
+       <Pressable style={[{justifyContent:"center",alignItems:"center"},styles.pressable, styles_.bg]} onPress={onPress} disabled={disabled}>
             <Text style={[styles.text, styles_.color]}>{text}</Text>
        </Pressable> 
         )
@@ -147,7 +148,46 @@ exports.TemporaryNotification = (props) => {
             <Text style={[customText, commonSimpleComponentsStyles.temporaryNotification.message]}>{message}</Text>
         </View>
     )
+}
+
+
+exports.PriceDetails = (props) => {
+    const {product, title} = props
+    return (
+        <View style={[commonSimpleComponentsStyles.priceDetails.container]}>
+            <View>
+                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.title]}>{title.toUpperCase()}</Text>
+            </View>
+            <View style={{height:10}}></View>
+
+            <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine]}>
+                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle]}>Prix Réel</Text>
+                <Text style={[customText.text,commonSimpleComponentsStyles.priceDetails.price]}>{formatMoney(product.newPrice)} XAF</Text>
+            </View>
+
+            <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine]}>
+                <View>
+                    <Text  style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle]}>Frais De Transport</Text>
+                    <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle, {fontStyle:'italic', fontSize:11}]}>Payé par {product.feesBy==='seller'?'vous':'acheteur'}</Text>
+                </View>
+                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.price]}>{!!product.kargoPrice?formatMoney(product.kargoPrice):'Non Inclus'} </Text>
+            </View>
+
+            <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine]}>
+                <Text  style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle]}>Commission(-10%)</Text>
+                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.price]}>-{formatMoney(product.newPrice*10/100)}  XAF</Text>
+            </View>
+
+            <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine, commonSimpleComponentsStyles.priceDetails.totalPriceLine]}>
+                <Text  style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle, commonSimpleComponentsStyles.priceDetails.totalPriceText]}>Total - Vos Gain</Text>
+                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.price]}>{formatMoney(product.newPrice-product.newPrice*10/100)}  XAF</Text>
+            </View>
+
+        </View>
+    )
 } 
+
+
 
 
 
