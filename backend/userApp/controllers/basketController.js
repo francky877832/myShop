@@ -229,15 +229,16 @@ exports.getBasketProducts = async (req, res, next) => {
         ]);
     
         if (basketAggregation.length === 0) {
-            return res.status(404).json({ error: 'Basket not found' });
+            console.log("Basket not found")
+            return res.status(200).json({ productDetails : [] });
         }
     
-        console.log(basketAggregation[0]);
+        //console.log(basketAggregation[0]);
         res.status(200).json(basketAggregation[0]);
     
     } catch (error) {
         console.log(error);
-        res.status(400).json({ error: error.message })
+        res.status(400).json({ error: error })
     }
     
 }

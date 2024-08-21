@@ -26,7 +26,7 @@ const username = "Franck"
 //const user = {_id:loggedUserId, username:loggedUser}
 
 const Product = (props) => { 
-    const { item, horizontal, replace, } = props;
+    const { item, horizontal, replace, minified } = props;
     const navigation = useNavigation()
     const {user} = useContext(UserContext)
     const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
@@ -121,47 +121,58 @@ const Product = (props) => {
         }
       }//,[navigation]);
       
+if(minified)
+{
+    return (
+        <View>
+            <Text>OK</Text>
+        </View>
+   )
+}
+else
+{
     return(
-            <View style={[productStyles.container, productStyles.card, horizontal ? productStyles.containerHorizontal : false]} >
-                        <View style={[productStyles.top,] } >
-                            <Pressable style={[productStyles.feesBy, productStyles.card]}  onPress = { ()=>{ } } >
-                                <Ionicons name="cube-sharp" size={24} color={appColors.white} />
-                                 <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{product.feesBy=="seller" ? "Gratuit"  : "Reduction"} </Text>
-                            </Pressable>
+                <View style={[productStyles.container, productStyles.card, horizontal ? productStyles.containerHorizontal : false]} >
+                            <View style={[productStyles.top,] } >
+                                <Pressable style={[productStyles.feesBy, productStyles.card]}  onPress = { ()=>{ } } >
+                                    <Ionicons name="cube-sharp" size={24} color={appColors.white} />
+                                    <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{product.feesBy=="seller" ? "Gratuit"  : "Reduction"} </Text>
+                                </Pressable>
 
-                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user}  synchro={false} item={product} isCard={false} styles={{color:appColors.white}}/>
+                                <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user}  synchro={false} item={product} isCard={false} styles={{color:appColors.white}}/>
 
-                        </View>
-                    
-                <Pressable style={ productStyles.pressable } onPress = {handlePress} >
-                    <Image source={{uri: product.images[0]}}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
-                    <View style={ productStyles.text }>
-                        <View style={{ flexDirection:"column", justifyContent:"flex-start", }}>
-                            <Text numberOfLines={1} style={[customText.text, productStyles.shopName]}> @{product.seller.username} | </Text>
-                            <Text numberOfLines={2} style={[customText.text, productStyles.productName]}>{product.name}</Text>
-                        </View>
+                            </View>
+                        
+                    <Pressable style={ productStyles.pressable } onPress = {handlePress} >
+                        <Image source={{uri: product.images[0]}}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
+                        <View style={ productStyles.text }>
+                            <View style={{ flexDirection:"column", justifyContent:"flex-start", }}>
+                                <Text numberOfLines={1} style={[customText.text, productStyles.shopName]}> @{product.seller.username} | </Text>
+                                <Text numberOfLines={2} style={[customText.text, productStyles.productName]}>{product.name}</Text>
+                            </View>
 
-                        <View style={{ }} >
-                            {product.numLikes ? <Text>{product.updateLikes} Likes</Text> : <Text style={{alignSelf:"center"}}>---</Text>}
-                            {product.price == product.newPrice  ? <Text style={[customText.text, productStyles.price,{fontSize:12}]}>{product.price} XAF</Text>
-                                :
-                                <View style={{ flexDirection:"row", justifyContent:"flex-start" }} >
-                                    <Text style={[customText.text, productStyles.price, {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{product.realPrice} </Text>
-                                    <Text style={[customText.text, productStyles.price, {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:12}]}>{product.realPrice} XAF</Text>
-                                </View>
-                            }
-                        </View>
+                            <View style={{ }} >
+                                {product.numLikes ? <Text>{product.updateLikes} Likes</Text> : <Text style={{alignSelf:"center"}}>---</Text>}
+                                {product.price == product.newPrice  ? <Text style={[customText.text, productStyles.price,{fontSize:12}]}>{product.price} XAF</Text>
+                                    :
+                                    <View style={{ flexDirection:"row", justifyContent:"flex-start" }} >
+                                        <Text style={[customText.text, productStyles.price, {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{product.realPrice} </Text>
+                                        <Text style={[customText.text, productStyles.price, {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:12}]}>{product.realPrice} XAF</Text>
+                                    </View>
+                                }
+                            </View>
 
-                       
-                        <View style={[productStyles.bottom, productStyles.card, isBasketPresent?productStyles.isBasketPresent:false] } >
-                            <Pressable onPress = { ()=>{handleBasketPressed(product) } }>
-                                <Text numberOfLines={1} style={[customText.text, productStyles.category, isBasketPresent?productStyles.isBasketPresentText:false]}>{isBasketPresent? "Aller Au Panier":"Ajouter Au Panier"}</Text>
-                            </Pressable>
+                        
+                            <View style={[productStyles.bottom, productStyles.card, isBasketPresent?productStyles.isBasketPresent:false] } >
+                                <Pressable onPress = { ()=>{handleBasketPressed(product) } }>
+                                    <Text numberOfLines={1} style={[customText.text, productStyles.category, isBasketPresent?productStyles.isBasketPresentText:false]}>{isBasketPresent? "Aller Au Panier":"Ajouter Au Panier"}</Text>
+                                </Pressable>
+                            </View>
                         </View>
-                    </View>
-                </Pressable>
-            </View>
-    )
+                    </Pressable>
+                </View>
+        )
+}
 }
 
 export default React.memo(Product)

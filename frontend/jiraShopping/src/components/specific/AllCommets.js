@@ -160,16 +160,16 @@ const addComment = async (item) => {
             setIsLoading(false)
             if(!isResponseTo)
             {
-                await sendNotifications({ user:item.seller._id, source:"app", model:"PRODUCTS", type:"ON_NEW_COMMENT", data:item._id })
+                await sendNotifications({ user:item.seller._id, source:"app", model:"PRODUCTS", type:"ON_NEW_COMMENT", datas:item._id })
             }
             else
             {
-                await sendNotifications({ user:userToResponse._id, source:"app", model:"PRODUCTS", type:"ON_RESPONSE_COMMENT", data:item._id })
+                await sendNotifications({ user:userToResponse._id, source:"app", model:"PRODUCTS", type:"ON_RESPONSE_COMMENT", datas:item._id })
             }
        
         }catch(error){
             console.log(error)
-            Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+            Alert.alert("Erreur", "Une erreur est survenue! "+ error.message)
             setIsLoading(false)
             setOnNewComment(false)
         } finally {

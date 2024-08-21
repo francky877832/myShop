@@ -52,13 +52,27 @@ const RadioProductsList = (props) => {
 
 //UTİLS FONCT
 const handleRemoveFromBasket = useCallback((product) => {
-    dispatch(updateSelectedProducts({itemId:product._id, bool:"remove"}));
-    dispatch(updateLocalBasket({product:product, isAdding:false}));
-
-        timeoutRef.current = setTimeout(() => {
-        //console.log(isBasketPresent)
-        dispatch(removeFromBasket({product:product, user:user})); 
-        }, 1000)
+    Alert.alert(
+        "Supprimer le produit",
+        "Êtes-vous sûr de vouloir supprimer ce produit du panier ?",
+        [
+            {
+                text: "Annuler",
+                style: "cancel"
+            },
+            {
+                text: "Oui", onPress: () => {
+                    dispatch(updateSelectedProducts({itemId:product._id, bool:"remove"}));
+                    dispatch(updateLocalBasket({product:product, isAdding:false}));
+                
+                        timeoutRef.current = setTimeout(() => {
+                        //console.log(isBasketPresent)
+                        dispatch(removeFromBasket({product:product, user:user})); 
+                        }, 1000)
+                }
+            }
+        ]
+    );
     
   },[]);
 
@@ -107,7 +121,7 @@ const handleRemoveFromBasket = useCallback((product) => {
                                                             <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
                                                             <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(product2.price)} XAF{/* prix de la proposition ou real Price*/}</Text>
                                                             <Pressable onPress={()=>{handleRemoveFromBasket(product2);}}>
-                                                                <Icon name="trash-outline" color={appColors.black} size={18} type="ionicon" style={[{alignSelf:"flex-end"}]} />
+                                                                <Icon name="trash-outline" color={appColors.black} size={24} type="ionicon" style={[{alignSelf:"flex-end"}]} />
                                                             </Pressable>
                                                         </View>
                                                     </View> 

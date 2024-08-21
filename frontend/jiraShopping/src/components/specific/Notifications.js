@@ -121,7 +121,7 @@ const getNotif = useCallback(async (username, page, limit) => {
   }
 }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);
 
-const onEndReached = async () => { await getNotif(user.username, page, limit) }
+const onEndReached = async () => { await getNotif(user, page, limit) }
 
 
 useEffect(() => {
@@ -140,7 +140,7 @@ const openNotif = async (user, item) => {
   {
     const response = await updateNotificationsRead({user:user._id, id:item._id})
     //console.log(item)
-    if(item.type == 'product')
+    if(item.type.toLowerCase() == 'products')
     {
       const data = await getProductFromNotifications(item.datas)
       //console.log("data")

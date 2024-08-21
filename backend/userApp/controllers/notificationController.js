@@ -2,64 +2,65 @@ const Notification = require('../models/notificationModel');
 const mongoose = require('../../shared/db').mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
-const addUserNotification = (req, res, next) => {
+
+const createNotificationObject = (req) => ({
+    _id: new ObjectId().toHexString(),
+    source: req.body.source,
+    type: req.body.type.toLowerCase(),
+    message: req.body.message,
+    action: req.body.action,
+    read: req.body.read,
+    datas: req.body.datas,
+});
+
+const addUserNotification = async (req, res) => {
     const notification = new Notification({
-        user : req.params.user,
-        notifications : [{
-            _id : new ObjectId().toHexString(),
-            source : req.body.source,
-            type : req.body.type,
-            message : req.body.message,
-            action : req.body.action,
-            read : req.body.read,
-            datas : req.body.datas
-        }]
-    })
-    notification.save()
-    .then( () => {
-        res.status(200).json({ message: "Notification creer" });
-    })
-    .catch( (error) => {
-        res.status(400).json({ error: error });
+        user: new ObjectId(req.params.user),
+        notifications: [createNotificationObject(req)],
     });
-};
 
-
-exports.updateUserNotifications = (req, res, next) => {
-   
-    const notificaiton = {
-        _id : new ObjectId().toHexString(),
-        source : req.body.source,
-        type : req.body.type,
-        message : req.body.message,
-        action : req.body.action,
-        read : req.body.read,
-        datas : req.body.datas
+    try {
+        await notification.save();
+        res.status(200).json({ message: "Notification créée." });
+    } catch (error) {
+        res.status(400).json({ error });
     }
-    //console.log(notificaiton)
-
-    Notification.find({ user : req.params.user })
-    .then( (notificaitons) => {
-        if(notificaitons.length > 0)
-        {
-            notificaitons[0].notifications.unshift(notificaiton)
-            Notification.updateOne({ user : req.params.user }, ({ notifications : notificaitons[0].notifications}))
-            .then( () => {
-                res.status(200).json({ message : "Notification Ajoutée." });
-            })
-            .catch( (error) => {
-                res.status(400).json({ error: error });
-            });
-        }
-        else
-        {
-            addUserNotification(req, res, next)
-        }
-    })
-    .catch( (error) => {
-        res.status(400).json({ error: error });
-    });
 };
+
+exports.updateUserNotifications = async (req, res) => {
+    //console.log("NOTIF GOT")
+    const newNotification = createNotificationObject(req);
+    //console.log(newNotification)
+
+    try {
+        const existingNotification = await Notification.findOne({
+            user: req.params.user,
+            notifications: {
+                $elemMatch: {
+                    type: req.body.type,
+                    datas: req.body.datas,
+                }
+            }
+        });
+        if (existingNotification) {
+            console.log("Notification already exists for this type and datas.")
+            return res.status(200).json({ message: "Notification already exists for this type and datas." });
+        }
+
+
+        const existingUser = await Notification.findOne({ user: req.params.user });
+        if (existingUser) {
+            existingUser.notifications.unshift(newNotification);
+            await existingUser.save();
+            res.status(200).json({ message: "Notification ajoutée." });
+        } else {
+            await addUserNotification(req, res);
+        }
+    } catch (error) {
+        res.status(400).json({ error });
+    }
+};
+
 
 
 

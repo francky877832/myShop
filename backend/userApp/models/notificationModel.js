@@ -22,6 +22,8 @@ const notificatonSchema = new Schema({
     updatedAt : { type : Date, default : Date.now },
 });
 
+notificatonSchema.index({ user: 1, 'notifications.type': 1, 'notifications.datas': 1 }, { unique: true });
+
 notificatonSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('Notification', notificatonSchema);

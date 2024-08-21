@@ -29,7 +29,7 @@ export const fetchUserBasket = createAsyncThunk(
 
         //console.log(data)
 
-        return data.length>0?data[0].productDetails:[];
+        return data.productDetails.length>0?data.productDetails:[];
       } catch (error) {
         console.error(error)
         return rejectWithValue(error.message);

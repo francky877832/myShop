@@ -5,7 +5,7 @@ import { notifications } from './offersDatas';
 import { server } from '../remote/server';
 
 
-exports.sendNotifications = async ({user, source, model, type, data}) => {
+exports.sendNotifications = async ({user, source, model, type, datas}) => {
     const notif = notifications[model]
     const message = notif[type].message
     const action = notif[type].action
@@ -17,10 +17,10 @@ exports.sendNotifications = async ({user, source, model, type, data}) => {
         message : message,
         action : action,
         read : 0,
-        datas : data
+        datas : datas
     }
     
-        //console.log(comment)
+        console.log(notification.type)
             try{
                 //console.log("Ok")
                 const response = await fetch(`${server}/api/datas/notifications/update/${user}`, {

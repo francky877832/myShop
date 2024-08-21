@@ -35,7 +35,13 @@ export const addFavourite = createAsyncThunk(
           });
 
           //console.log(item.seller)
-          //await sendNotifications({ user:item.seller, source:"app", model:"PRODUCTS", type:"ON_NEW_LIKE", data:item._id })
+          
+          if(!item.favourites.some(el => el._id===user._id))
+          {
+              await sendNotifications({ user:item.seller._id, source:"app", model:"PRODUCTS", type:"ON_NEW_LIKE", datas:item._id })
+          }
+        
+          
 
       } else {
           response = await fetch(`${server}/api/datas/favourites/remove/${user._id}`, {
