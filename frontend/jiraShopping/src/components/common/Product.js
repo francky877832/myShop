@@ -123,9 +123,15 @@ const Product = (props) => {
         }
       }//,[navigation]);
 
-    const handleMofyProduct = () => {
-
-      }
+    const handleMofyProduct = (product) => {
+       navigation.navigate({
+            name: 'AddProduct',
+            params: {
+                product:product
+            },
+          });   
+        
+    }
       
 /*if(!minified)
 {

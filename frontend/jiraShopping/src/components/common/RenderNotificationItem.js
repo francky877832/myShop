@@ -75,7 +75,7 @@ const RenderNotificationItem = (props) =>{
                         </View>
 
                         <View style={[notificationsStyles.message,{flexDirection:'row'}]}>
-                            <View style={{width:20}}></View>
+                            <View style={{width:1}}></View>
                             <Text style={[customText.text, notificationsStyles.messageText, {}]}>{item.message}</Text>
                         </View>
                     </View>

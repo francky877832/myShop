@@ -74,7 +74,7 @@ export const notificationsStyles = StyleSheet.create({
     titleText:
     {
         fontWeight:'bold',
-        fontSize:15,
+        fontSize:16,
         color : appColors.secondaryColor5,
     },
     messageText:

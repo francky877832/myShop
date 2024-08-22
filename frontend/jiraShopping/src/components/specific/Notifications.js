@@ -29,8 +29,12 @@ const initialLayout = { width: Dimensions.get('window').width };
  
 const Notifications = (props) => {
   const route = useRoute()
-    const {key} = route.params
-    const [index, setIndex] = useState(key?key:0);
+  let key = 0
+  if(route.params)
+  {
+    key = route.params.key
+  }
+    const [index, setIndex] = useState(key);
     const [routes] = useState([
       { key: 'all', title: 'Toutes' },
       { key: 'offers', title: 'Offres' }

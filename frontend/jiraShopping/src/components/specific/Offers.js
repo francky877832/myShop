@@ -182,7 +182,7 @@ const checkPrice = (price) => {
 }
 const addOffer = async ()=>{
     //console.log(user)
-    console.log(inputValue)
+    //console.log(inputValue)
 
     setIsPriceLoading(true)
     //console.log(product)
@@ -271,7 +271,7 @@ const setHasGotResponse = async(bool)=>{
         if (!response.ok) {
             throw new Error('Erreur lors de la requête');
         }
-        console.log("ok")
+       // console.log("ok")
         Alert.alert("Ok", "Ajout avec succes ")
         setIsConfirmLoading(false)
         setIsLoading(true)

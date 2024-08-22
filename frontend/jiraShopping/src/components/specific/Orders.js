@@ -27,7 +27,7 @@ import RenderNotificationItem from '../common/RenderNotificationItem';
 
 
 
-const OffersNotifications = (props) => {
+const Orders = (props) => {
     const { user } = useContext(UserContext)
     //const user = {_id : "668fdfc6077f2a5c361dd7fc",}
     const [isLoading, setIsLoading] = useState(false)
@@ -86,7 +86,7 @@ const openOffer = async (user, item) => {
         await getOff(user, page, limit)
       };
       
-        fetchData();
+       // fetchData();
     
   }, []);
 
@@ -95,36 +95,6 @@ const openOffer = async (user, item) => {
     return (
         <View style={[notificationsStyles.sceneContainers]}>
             <FlatList
-                    data={offers}
-                    renderItem={ ({item}) => { 
-                        //console.log(item)
-                        return(
-                            <RenderNotificationItem from="offers" item={{...item,
-                                                    title:user._id===item.seller._id?item.buyer.username:item.seller.username,
-                                                    message : "Vous avez reçu une nouvelle offre. Cliquez pour en savoir plus.",
-                                                }} 
-                                                    
-                                            openNotif={openOffer} user={user} />
-                        ) 
-                    } }
-                    keyExtractor={ (item) => { return item._id.toString(); } }
-                    ItemSeparatorComponent ={ (item) => { return <View style={{height:5,}}></View> }}
-                    contentContainerStyle={[notificationsStyles.flatlist]}
-                    onEndReached={()=>{}}
-                    onEndReachedThreshold={0.5}
-            />
-        </View>
-    )
-}
-
-
-
-
-
-  const Orders = () => {
-        return (
-        <View style={[notificationsStyles.sceneContainers]}>
-        <FlatList
                     data={datas}
                     renderItem={ ({item}) => { return(<RenderNotificationItem item={item} />) } }
                     keyExtractor={ (item) => { return item.id_.toString(); } }
@@ -132,25 +102,10 @@ const openOffer = async (user, item) => {
                     contentContainerStyle={[notificationsStyles.flatlist]}
                     onEndReached={()=>{}}
                     onEndReachedThreshold={0.5}
-                        />
+            />
         </View>
   );
 }
 
-  const Comments = () => {
-    return (
-        <View style={[notificationsStyles.sceneContainers]}>
-        <FlatList
-                    data={datas}
-                    renderItem={ ({item}) => {  } }
-                    keyExtractor={ (item) => { return item.id_.toString(); } }
-                    ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
-                    contentContainerStyle={[notificationsStyles.flatlist]}
-                    onEndReached={()=>{}}
-                    onEndReachedThreshold={0.5}
-                        />
-        </View>
-  );
-}
 
-export default OffersNotifications
+export default Orders

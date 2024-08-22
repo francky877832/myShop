@@ -2,7 +2,7 @@ import { API_BACKEND } from '@env';
 
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
 import { View, Text, Animated, Pressable, ScrollView, FlatList, Image, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
 import { RadioButton, } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -34,24 +34,48 @@ import { requestPermissions, pickImages, takePhoto, resizeImages } from '../../u
 
 const loggedUser = "66731fcb569b492d3ef429ba"
 const AddProduct = (props) => {
-    const [showPriceDetails, setShowPriceDetails] = useState(true)
-
+    const route = useRoute()
+    let product = {
+        name : "",
+        description : "",
+        price : "",
+        newPrice : "",
+        minPrice : "",
+        maxPrice : "",
+        condition : "",
+        seller : "",
+        category : "",
+        brand : "",
+        color : "",
+        feesBy : "",
+        garanti : "",
+        stock : "", 
+        images : [],
+    }
+    const [showPriceDetails, setShowPriceDetails] = useState(false)
+    
     const IMG_MAX_HEIGHT = screenHeight/2
     const IMG_MAX_WIDTH = screenWidth
     const navigation = useNavigation();
     const [allowBack, setAllowBack] = useState(false);
-    const {selectedBrand,selectedColor, setSelectedColor} = useContext(ProductItemContext)
-    const { selectedCategories } = useContext(FilterContext)
+    const {selectedBrand, selectedColor, setSelectedColor, setSelectedBrand} = useContext(ProductItemContext)
+    const { selectedCategories, setSelectedCategories } = useContext(FilterContext)
+    
+
+        if(route.params)
+        {
+            product = route.params.product
+        }
 
 
-    const [valueName, setValueName] = useState("")
-    const [valueDesc, setValueDesc] = useState("")
-    const [valuePrice, setValuePrice] = useState("")
-    const [valueGaranti, setValueGaranti] = useState("")
-    const [valueStock, setValueStock] = useState("")
-    const [valueEtat, setValueEtat] = useState("")
-    const [valueFeesBy, setValueFeesBy] = useState("")
-    const [kargoPrice, setKargoPrice] = useState("")
+    const [valueName, setValueName] = useState(product.name+"")
+    const [valueDesc, setValueDesc] = useState(product.description+"")
+    const [valuePrice, setValuePrice] = useState(product.price+"")
+    const [valueGaranti, setValueGaranti] = useState(product.garanti+"")
+    const [valueStock, setValueStock] = useState(product.stock+"")
+    const [valueEtat, setValueEtat] = useState(product.condition+"")
+    const [valueFeesBy, setValueFeesBy] = useState(product.feesBy+"")
+    const [kargoPrice, setKargoPrice] = useState(product.kargoPrice+"")
 
 //IsFocused pour ls inputText
     const [isNameFocused, setIsNameFocused] = useState(false)
@@ -63,7 +87,7 @@ const AddProduct = (props) => {
     //const [valueBrand, setValueBrand] = useState("")
     //const [valueCategory, setValueCategory] = useState("")
 
-    const [images, setImages] = useState([]);
+    const [images, setImages] = useState(product.images);
     const [cameraOrGalery, setCameraOrGalery] = useState(false)
     const MAX_IMAGES = 6, MIN_IMAGES = 3
 
@@ -145,7 +169,7 @@ const submitProduct = async () => {
     try {
         //console.log(images)
         const images_ = await resizeImages(images,IMG_MAX_HEIGHT,IMG_MAX_WIDTH)
-        console.log(images_)
+        //console.log(images_)
         
         let formData = new FormData()
         const datas = {
@@ -182,7 +206,7 @@ const submitProduct = async () => {
         });
 
 
-            const response = await fetch(`${API_BACKEND}/api/datas/products/add`,{
+            const response = await fetch(`${server}/api/datas/products/add`,{
             method: 'POST',
             body: formData,
             headers: {
@@ -192,7 +216,7 @@ const submitProduct = async () => {
             const responseJson = await response.json();
             console.log(responseJson);
       } catch (error) {
-        console.error(error);
+        console.error(error, "AddProduct");
       }
 };
 //Jai pas encore testé
@@ -225,8 +249,8 @@ const submitProduct = async () => {
                                     <View style={[addProductStyles.imageBox,]}>
                                         { images.length > 0  && item!=undefined &&
                                             <View style={{flex:1,borderWidth:1}}>
-                                                <Image source={{ uri: item.uri }} style={{width:100,height:100,}} />
-                                                <Pressable onPress={()=>{deleteSelectedImage(item.uri);}} style={{width:20,height:20,backgroundColor:appColors.lightBlack,position:"absolute",alignSelf:"flex-end",top:0,}}>
+                                                <Image source={{ uri: item?.uri || item }} style={{width:100,height:100,}} />
+                                                <Pressable onPress={()=>{deleteSelectedImage(item?.uri || item);}} style={{width:20,height:20,backgroundColor:appColors.lightBlack,position:"absolute",alignSelf:"flex-end",top:0,}}>
                                                     <Icon name="close" type="ionicon" size={18} color={appColors.secondaryColor1} />
                                                 </Pressable>
                                             </View>
@@ -235,11 +259,12 @@ const submitProduct = async () => {
                                 )
                              }
                             }
-                            keyExtractor={ (item) => { return Math.random().toString(); } }
+                            keyExtractor={ (item) => { return (Math.random()).toString(); } }
                             horizontal={true}
                             ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
-                            showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={[]}
+                            showsHorizontalScrollIndicator={true}
+                            style={{ flexGrow: 0 }}
+                            contentContainerStyle={{ flexGrow: 0, padding:10,}}
                         />
                     </View>
                 </View>
@@ -330,16 +355,16 @@ const submitProduct = async () => {
                                 <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
                           
                                 {
-                                    selectedCategories.name &&
-                                    <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>{selectedCategories.name} | {selectedCategories.subCategories}</Text>
+                                    (selectedCategories.name || product.category) &&
+                                    <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>{!!product.category?product.category.replace('/', ' | ') : `${selectedCategories.name} | ${selectedCategories.subCategories}`}</Text>
                                 }
                         </Pressable>
                         <Pressable style={[addProductStyles.pressableDetails]} onPress={()=>{navigation.navigate("Categories",{datas:{page:"brand"}})}}>
                             <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Marque</Text>
                             <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
                                 {
-                                    selectedBrand &&
-                                    <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>{selectedBrand}</Text>
+                                    (selectedBrand || product.brand) &&
+                                    <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>{!!product.brand?product.brand:selectedBrand}</Text>
                                 }
                         </Pressable>
                         
@@ -347,8 +372,8 @@ const submitProduct = async () => {
                             <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Couleur</Text>
                             <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
                                 {
-                                    selectedColor &&
-                                    <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>{capitalizeFirstLetter(selectedColor)}</Text>
+                                    (selectedColor || product.color) &&
+                                    <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>{!!product.color?product.color:capitalizeFirstLetter(selectedColor)}</Text>
                                 }
                         </Pressable>
                 </View>
