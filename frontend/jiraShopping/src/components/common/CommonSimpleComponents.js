@@ -152,12 +152,16 @@ exports.TemporaryNotification = (props) => {
 
 
 exports.PriceDetails = (props) => {
-    const {product, title} = props
+    const {product, title, closePriceDetails} = props
     return (
         <View style={[commonSimpleComponentsStyles.priceDetails.container]}>
-            <View>
+            <View style={[{flexDirection:'row', justifyContent:'space-between', paddingRight:10}]}>
                 <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.title]}>{title.toUpperCase()}</Text>
+                <Pressable style={[{}]} onPress={()=>{closePriceDetails(false)}}>
+                    <Icon type='ionicon' name="close-circle" size={24} color={appColors.secondaryColor1} />   
+                </Pressable>            
             </View>
+
             <View style={{height:10}}></View>
 
             <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine]}>

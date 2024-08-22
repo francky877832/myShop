@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 import { LikeButton, } from "./CommonSimpleComponents"
+import BadgeIcon from './BadgeIcon';
 
 import { productStyles } from '../../styles/productStyles';
 import { appColors, customText } from '../../styles/commonStyles';
@@ -158,12 +159,19 @@ else
                             </View>
 
                             <View style={[{flexWrap:'wrap'}]} >
-                                {product.likes ? <Text style={[customText.text, {color:appColors.voilet}]}>{product.likes} Likes</Text> : <Text style={{alignSelf:"center"}}>---</Text>}
-                                {product.price === product.newPrice  ? <Text style={[customText.text, productStyles.price,{fontSize:12}]}>{formatMoney(product.price)} XAF</Text>
+                                {product.likes ? 
+                                <View style={[{flexDirection:'row'}]}>
+                                    <BadgeIcon name="heart-sharp" size={20} color={appColors.red} badgeCount={0} styles={{}} />
+                                        <View style={{width:5,}}></View>
+                                    <Text style={[customText.text, {color:appColors.red}, {fontSize:14,fontWeight:'bold'}]}>{formatMoney(product.likes)} {product.likes>1?"likes":"like"}</Text> 
+                                </View>
+                                : 
+                                <Text style={{alignSelf:"center"}}>---</Text>}
+                                {product.price === product.newPrice  ? <Text style={[customText.text, productStyles.price,{fontSize:14}]}>{formatMoney(product.price)} XAF</Text>
                                     :
                                     <View style={{ flexDirection:"row", justifyContent:"flex-start", flexWrap:'wrap' }} >
                                         <Text style={[customText.text, productStyles.price, {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{formatMoney(product.price)} </Text>
-                                        <Text style={[customText.text, productStyles.price, {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:12}]}>{formatMoney(product.newPrice)} XAF</Text>
+                                        <Text style={[customText.text, productStyles.price, {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:14}]}>{formatMoney(product.newPrice)} XAF</Text>
                                     </View>
                                 }
                             </View>

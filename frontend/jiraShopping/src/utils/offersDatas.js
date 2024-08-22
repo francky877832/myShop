@@ -49,8 +49,9 @@ export const notifications =
 	{
 		USER : {
 			ON_REGISTERED : { 
-				message : "Bienvenue sur l'appli",
-				action : "AllComments",
+				title : "Bienveue!!!",
+				message : "Nous sommes heureux de vous compter parmi nous. Sur jiraShopping, Vendez ce que vous voulez gratuitement.\nTout le monde merite une seconde chance, meme votre produit.",
+				action : "none",
 			},
 		},
 
@@ -91,16 +92,19 @@ export const notifications =
 	},
 
 	PRODUCTS : {
-		ON_NEW_LIKE : { 
-			message : "Votre Produit a reçu un nouveau Like. Précipitez-vous pour faire une propositon.",
+		ON_NEW_LIKE : {
+			title : "Nouveau Like",
+			message : "Un de vos produits a reçu un nouveau Like. Précipitez-vous pour faire une propositon.",
 			action : "ProductDetails",
 		},
 		ON_NEW_COMMENT : { 
-			message : "Votre produit a unnouveau commentaire.",
+			title : "Nouveau Commentaire",
+			message : "Votre produit a un nouveau commentaire. Profitez-en pour séduire le client.",
 			action : "AllComments",
 		},
 		ON_RESPONSE_COMMENT : { 
-			message : "Votre commentaire a reçu a une nouvelle réponse.",
+			title : "Nouveau Commentaire",
+			message : "Votre commentaire a reçu a une nouvelle réponse. Profitez-en pour séduire le client.",
 			action : "AllComments",
 		},
 		ON_NEW_BASKET : { 

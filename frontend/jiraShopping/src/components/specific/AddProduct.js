@@ -385,7 +385,7 @@ const submitProduct = async () => {
 
                 <View style={[addProductStyles.containers]}>
                     <View style={[addProductStyles.contents, {flexDirection:'column'}]}>
-                            <Input placeholder="Estimation des frais de transport. EX : 2500" value={valuePrice} onChangeText={(price)=>{setKargoPrice(formatMoney(price))}}
+                            <Input placeholder="Estimation des frais de transport. EX : 2500" value={kargoPrice} onChangeText={(price)=>{setKargoPrice(formatMoney(price))}}
                                 inputMode='numeric'
                                 multiline={false}
                                 placeholderTextColor={appColors.secondaryColor3}
@@ -445,8 +445,19 @@ const submitProduct = async () => {
 
 
             <View style={[addProductStyles.containers]}>
-                <View style={[addProductStyles.titles]}>
+                <View style={[addProductStyles.titles, {flexDirection:'row',justifyContent:'space-between',paddingRight:20}]}>
                     <Text style={[addProductStyles.titlesText]}>Prix En FCFA</Text>
+                    
+                    <Pressable style={[]} onPress={()=>{setShowPriceDetails(!showPriceDetails)}}>
+                        {
+                            showPriceDetails 
+                            ?
+                                <Icon type='octicon' name="triangle-down" size={24} color={appColors.secondaryColor1} />
+                            :
+                                <Icon type='octicon' name="triangle-up" size={24} color={appColors.secondaryColor1} />
+                        }
+                        <Text style={[{color:appColors.secondaryColor1}]}>Details</Text>
+                    </Pressable>
                 </View>
                 
                 <View style={[addProductStyles.contents]}>
@@ -484,10 +495,13 @@ const submitProduct = async () => {
 
             {showPriceDetails &&
                 <View style={[]}>
-                    <PriceDetails title="Calculatrice De Gains" product={{
-                        newPrice:parseFloat(valuePrice.split('.').join('')),
-                        feesBy:valueFeesBy,
-                        }} />
+                    <PriceDetails title="Calculatrice De Gains" closePriceDetails={setShowPriceDetails} product={
+                        {
+                            newPrice:parseFloat(valuePrice.split('.').join('')),
+                            feesBy:valueFeesBy,
+                            kargoPrice:kargoPrice,
+                        }
+                    } />
                 </View>
             }
         <View style={[addProductStyles.addProductSubmitView,{}]}>

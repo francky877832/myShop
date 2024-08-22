@@ -417,13 +417,20 @@ useEffect(()=>{
 </KeyboardAwareScrollView>    
         {showPriceDetails &&
             <View style={[productDetailsStyles]}>
-                <PriceDetails product={data} title="Informations Sur La Vente"/>
+                <PriceDetails product={data} closePriceDetails={setShowPriceDetails} title="Informations Sur La Vente"/>
             </View>
         }
 
             <View style={[productDetailsStyles.bottom]}>
                 <Pressable style={[productDetailsStyles.button, productDetailsStyles.price]} onPress={()=>{setShowPriceDetails(!showPriceDetails)}}>
-                    <Icon type='octicon' name="triangle-up" size={24} color={appColors.secondaryColor1} />
+                    {
+                        showPriceDetails 
+                            ?
+                                <Icon type='octicon' name="triangle-down" size={24} color={appColors.secondaryColor1} />
+                            :
+                                <Icon type='octicon' name="triangle-up" size={24} color={appColors.secondaryColor1} />
+                    }                    
+                    
                     <Text numberOfLines={2} style={[customText.text, productDetailsStyles.buttonText, { color: appColors.secondaryColor1 }]}>{formatMoney(data.price)} XAF</Text>
                 </Pressable>
 
@@ -440,7 +447,7 @@ useEffect(()=>{
                             <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{"Proposer"}</Text>
                         </Pressable>
                         :
-                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data}) } }>
+                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Notifications", {key:1}) } }>
                             <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{"Propositons"}</Text>
                         </Pressable>
                     }

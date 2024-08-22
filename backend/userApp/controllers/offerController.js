@@ -24,22 +24,9 @@ exports.respondOfferProduct = (req, res, next) => {
     });
 }
 
-exports.getOffersProduct = (req, res, next) => {
-    //console.log("ok")
-    //console.log("ggg")
-    const offer = req.query
-    Offer.find({ seller : offer.seller, buyer : offer.buyer, product : offer.product})
-    .then( (offers) => {
-        //console.log(offers)
-        res.status(200).json(offers);
-    })
-    .catch( (error) => {
-        //console.log(error)
-        res.status(400).json({ error: error, message : "Cette offre nexiste pas entre ces deux users." });
-    });
-};
 
-addOfferProduct = (req, res, next) => {
+
+const addOfferProduct = (req, res, next) => {
    
    // console.log(req.body)
     const offer = new Offer({
@@ -123,6 +110,79 @@ exports.removeOfferPriceProduct = (req, res, next) => {
         res.status(400).json({ error: error, message : "Cette offre nexiste pas entre ces deux users." });
     });
 };
+
+
+exports.getOffersProduct = (req, res, next) => {
+    //console.log("ok")
+    //console.log("ggg")
+    const offer = req.query
+    Offer.find({ seller : offer.seller, buyer : offer.buyer, product : offer.product})
+    .then( (offers) => {
+        //console.log(offers)
+        res.status(200).json(offers);
+    })
+    .catch( (error) => {
+        //console.log(error)
+        res.status(400).json({ error: error, message : "Cette offre nexiste pas entre ces deux users." });
+    });
+};
+
+
+exports.getUserOffers = (req, res, next) => {
+    console.log("OFFERS")
+    const offer = req.query
+    const page = parseInt(offer.page) || 1;
+    const limit = parseInt(offer.limit) || 100;
+    const skip = (page - 1) * limit;
+
+    
+    Offer.find({$or:[{ seller : offer.user}, {buyer : offer.user}]}).skip(skip).limit(limit)
+    .populate({
+        path: 'seller', 
+        populate: [
+          { path: 'followers'},
+          { path: 'followings' }
+        ]
+    })
+    .populate({
+        path: 'buyer', 
+        populate: [
+          { path: 'followers'},    
+          { path: 'followings'}    
+        ]
+    })
+    .populate({
+        path: 'product', 
+        populate: [
+          { path: 'favourites'},    
+        ]
+    })
+    .exec()
+    .then(async (offers) => {
+        //console.log(offers)
+        const totalDatas = await Offer.countDocuments({$or:[{ seller : offer.user, buyer : offer.user}]}).exec();
+        const totalPages = Math.ceil(totalDatas / limit);
+        res.status(200).json({offers:offers, page:page,totalPages:totalPages,totalDatas:totalDatas});
+    })
+    .catch( (error) => {
+        console.log(error)
+        res.status(400).json({ error: error, message : "Cette offre nexiste pas pour cet user." });
+    });
+};
+
+
+exports.updateOfferRead = (req, res, next) => {
+    const offer = req.body
+    console.log(offer)
+    Offer.updateOne({ seller : offer.seller, buyer : offer.buyer, product:offer.product}, {read:1})
+    .then(() => {
+        res.status(200).json({ message: "Notification marquée comme lue." });
+    })
+    .catch((error) => {
+        console.log(error)
+        res.status(400).json({ error: error.message });
+    });
+}
 
 
 

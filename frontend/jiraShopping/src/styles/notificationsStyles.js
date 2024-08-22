@@ -15,11 +15,7 @@ export const notificationsStyles = StyleSheet.create({
     },
     item :
     {
-        
-        paddingHorizontal : 10,
-        paddingVertical : 10,
         width : '100%',
-        backgroundColor : appColors.lightOrange,
         borderTopWidth : 1,
         borderTopColor : appColors.white,
 
@@ -32,32 +28,59 @@ export const notificationsStyles = StyleSheet.create({
     {
         flexDirection : 'row',
         alignItems: 'center',
-        width : '100%',
-        //backgroundColor : appColors.lightOrange,
-
+        //justifyContent : "center",
+        //width : '100%',
+        backgroundColor : appColors.lightOrange,
+        paddingHorizontal : 10,
+        paddingVertical : 20,
     },
     icon :
     {
         justifyContent : 'center',
         alignItems : 'center',
-        width : 50,
-        height : 50,
-        borderRadius : 25,
+        width : 40,
+        height : 40,
+        borderRadius : 20,
         borderWidth : 1,
         borderColor : appColors.secondaryColor1,
-    },
-    content : 
-    {
-        paddingLeft : 20,
     },
     sinceDate :
     {
         left : 70,
+        //backgroundColor : appColors.white,
     },
     textDate :
     {   
         color : appColors.secondaryColor4,
         fontSize : 13,
-    }
+        fontStyle : 'italic',
+    },
+    content : 
+    {
+        flexWrap : 'wrap',
+        left : 15,
+    },
+    message :
+    {
+        //flexWrap : 'wrap',
+        paddingRight : 50,
+        left : 20,
+        //backgroundColor:'red',
+    },
+    title:
+    {
+
+    },
+    titleText:
+    {
+        fontWeight:'bold',
+        fontSize:15,
+        color : appColors.secondaryColor5,
+    },
+    messageText:
+    {
+        
+    },
+
 
 })

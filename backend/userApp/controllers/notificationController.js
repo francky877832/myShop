@@ -11,6 +11,7 @@ const createNotificationObject = (req) => ({
     action: req.body.action,
     read: req.body.read,
     datas: req.body.datas,
+    title : req.body.title,
 });
 
 const addUserNotification = async (req, res) => {

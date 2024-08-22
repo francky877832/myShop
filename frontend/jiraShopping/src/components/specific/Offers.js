@@ -12,6 +12,7 @@ import { formatMoney, checkOfferPrice, serialize } from '../../utils/commonAppFo
 import { offersDatas, defaultOffer } from '../../utils/offersDatas';
 import { useRoute } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
+import { server } from '../../remote/server';
 
 const loggedUser = "Francky"
 const   OffersItem = (props) => {
@@ -235,7 +236,7 @@ const fetchUserOffers = async()=>{
     }
     try{
         //console.log("Ok")
-            const response = await fetch(`${API_BACKEND}/api/datas/offers/offer/get?${serialize(offer)}`);            
+            const response = await fetch(`${server}/api/datas/offers/offer/get?${serialize(offer)}`);            
             const datas = await response.json()
                     //console.log(datas)
             if (!response.ok) {
@@ -286,14 +287,17 @@ useEffect(()=>{
         const fetchData = async () => {
             //setIsLoading(true);
             await fetchUserOffers()
-            setIsLoading(false);
           };
       
-          if (isLoading) {
+          if (route.params.offers) {
+            setOffers(route.params.offers)
+          }
+          else
+          {
             fetchData();
           }
         //console.log("basket")
-    }, [isLoading, fetchUserOffers])
+    }, [fetchUserOffers])
     return (
         <View style={[offersStyles.container]}>
             <FlatList

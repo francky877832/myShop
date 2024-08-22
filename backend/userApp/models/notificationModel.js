@@ -10,6 +10,7 @@ const notificatonSchema = new Schema({
             _id: { type: Schema.Types.ObjectId, required: true},
             source : { type : String, enum: ['app', 'admin'], defualt : "app", required : true },
             type : { type : String, enum: ['normal', 'campagne', 'suggestion', 'modal', 'user', 'products', 'offers', 'orders', 'admin'], default : "normal", required : true },
+            title : { type : String, required : true, default:"Produit" },
             message : { type : String, required : true },
             action : { type : String, required : true },
             datas : { type : Schema.Types.ObjectId, required : false },
