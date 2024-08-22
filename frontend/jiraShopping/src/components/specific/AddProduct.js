@@ -232,8 +232,8 @@ const submitProduct = async () => {
                     <Text style={[addProductStyles.titlesText]}>Photos</Text>
                 </View>
                 
-                <View style={[addProductStyles.contents]}>
-                    <View style={[{flexDirection:"row",}]}>
+                <View style={[addProductStyles.contents, {width: '100%',}]}>
+                    <View style={[{flexDirection:"row", width: '100%', overflow: 'scroll', height:110 }]}>
                         <View style={[addProductStyles.imageBox,]}>
                             <Pressable onPress={()=>{setCameraOrGalery(!cameraOrGalery)}}>
                                 <Icon name="camera-outline" type="ionicon" size={50} color={appColors.secondaryColor1} />
@@ -241,6 +241,7 @@ const submitProduct = async () => {
                             </Pressable>
                         </View>
                             <View style={{width:5,}}></View>
+
                         <FlatList
                             data={images.length > 0 ? images.length < MAX_IMAGES ? [...images, ...new Array(MAX_IMAGES-images.length)] : images : [1,2,3,4,5,6]}
                             nestedScrollEnabled={true}
@@ -259,12 +260,12 @@ const submitProduct = async () => {
                                 )
                              }
                             }
-                            keyExtractor={ (item) => { return (Math.random()).toString(); } }
+                            keyExtractor={ (item) => { return Math.random().toString(); } }
                             horizontal={true}
                             ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                             showsHorizontalScrollIndicator={true}
-                            style={{ flexGrow: 0 }}
-                            contentContainerStyle={{ flexGrow: 0, padding:10,}}
+                            //maxHeight, paddingBottom pour pouvoir scroller
+                            contentContainerStyle={{ maxHeight:100}}
                         />
                     </View>
                 </View>
