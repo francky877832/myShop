@@ -44,10 +44,10 @@ const ProfilShop = (props) => {
     const {user, setUser} = useContext(UserContext)
     const {seller,} = route.params!=undefined ? route.params : {seller:user}
     const [follow, setIsFollow] = useState(seller.followers.some((el)=> el._id===user._id))
-    const [ventes, setVentes] = useState(route.params==undefined ? user.sold : seller.sold)
+    const [ventes, setVentes] = useState(route.params==undefined ? user.ventes : seller.ventes)
     const [numFollowers, setNumFollowers] = useState(seller.followers.length)
     const [numFollowings, setNumFollowings] = useState(seller.followings.length)
-    const [numLikes, setNumLikes] = useState(seller.favourites.length)
+    const [numLikes, setNumLikes] = useState(seller.favourite)
 
     const flatListRef = useRef(null);
     const timeoutRef = useRef(null);
@@ -334,7 +334,7 @@ const setFollowers = async (follower, following) => {
                     
 
                         <View style={{flex:1, paddingBottom:route.params==undefined?40:0}} {...panResponder.panHandlers}>
-                            <ProductsListWithFilters updateProdilLike={setNumLikes} minified={true} isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products.length} ${products.length > 1 ? 'Produits' : 'Produit'}`} />
+                            <ProductsListWithFilters updateProfileLike={setNumLikes} minified={true} isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products.length} ${products.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
 
                     { route.params==undefined &&

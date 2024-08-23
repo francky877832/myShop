@@ -26,7 +26,7 @@ import { ProductContext } from '../../context/ProductContext'
 import { useNavigation } from '@react-navigation/native';
 import { ProductItemContext } from '../../context/ProductItemContext';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
-import {CustomActivityIndicator} from '../common/CommonSimpleComponents'
+import {CustomActivityIndicator, TemporaryNotification} from '../common/CommonSimpleComponents'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserFavourites } from '../../store/favourites/favouritesSlice'; 
@@ -151,6 +151,7 @@ const renderScene = ({ route }) => {
           return (
             <View style={{flex:1,}}>
                 <ProductsListWithFilters name="Preference" onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
+                <TemporaryNotification message="Bien chargé" />
             </View>
           )
         case 'categories':

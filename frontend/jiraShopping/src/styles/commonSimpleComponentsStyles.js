@@ -123,6 +123,25 @@ export const commonSimpleComponentsStyles = StyleSheet.create({
        }
         
     },
+
+    temporaryNotification :
+    {
+        container :
+        {
+            backgroundColor : appColors.clearBlack,
+            position : 'absolute',
+            bottom : 0,
+            left : 0,
+            right : 0,
+            padding : 20,
+            justifyContent : 'center',
+            alignItems : 'center',
+        },
+        message:
+        {
+            color : appColors.white,
+        },
+    },
     
 
 })

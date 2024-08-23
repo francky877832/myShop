@@ -28,7 +28,7 @@ const username = "Franck"
 //const user = {_id:loggedUserId, username:loggedUser}
 
 const Product = (props) => { 
-    const { item, horizontal, replace, minified, updateProdilLike } = props;
+    const { item, horizontal, replace, minified, updateProfileLike } = props;
     const navigation = useNavigation()
     const {user} = useContext(UserContext)
     const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
@@ -71,17 +71,21 @@ const Product = (props) => {
     //hasLikedItem={hasLiked(item)}
 
     const _handleLikePressed = useCallback(() => {
-        //console.log("product.likes")
+        console.log("product.likes")
         //console.log(item.likes)
         //console.log(modifiedProduct.length>0 ? modifiedProduct[0].likes:false)
         //console.log(modifiedProduct)
         setLikeIcon(prevLike => {
             const newLike = !prevLike;
             //setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
-           newLike ? updateProdilLike(preLikes=>preLikes+1) : updateProdilLike(preLikes=>preLikes-1);
             //newLike ? data.likes++ : data.likes--
             return newLike;
         })
+
+            /*if(typeof updateProfileLike === 'function') 
+            {
+               like ? updateProfileLike(preLikes=>preLikes+1) : updateProfileLike(preLikes=>preLikes-1)
+             }*/
     })
 
     const handleBasketPressed = (product) => {
