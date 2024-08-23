@@ -43,7 +43,12 @@ const ProfilShop = (props) => {
 
     const {user, setUser} = useContext(UserContext)
     const {seller,} = route.params!=undefined ? route.params : {seller:user}
-    const [follow, setIsFollow] = useState(!user.followings.some((el)=> el._id == seller._id))
+    const [follow, setIsFollow] = useState(seller.followers.some((el)=> el._id===user._id))
+    const [ventes, setVentes] = useState(route.params==undefined ? user.sold : seller.sold)
+    const [numFollowers, setNumFollowers] = useState(seller.followers.length)
+    const [numFollowings, setNumFollowings] = useState(seller.followings.length)
+    const [numLikes, setNumLikes] = useState(seller.favourites.length)
+
     const flatListRef = useRef(null);
     const timeoutRef = useRef(null);
 
@@ -217,17 +222,19 @@ console.log(reload)
 
 const setFollowers = async (follower, following) => {
     if (follow) {
-        // Remove following
-        const newFollowings = user.followings.filter((el) => el._id !== seller._id);
+        // Remove following = personne qu'il suit
+        const newFollowings = user.followings.filter((el) => el._id != seller._id);
     
-        // Remove follower
-        const newFollowers = seller.followers.filter((el) => el._id !== user._id);
+        // Remove follower = qui le suivent
+        const newFollowers = seller.followers.filter((el) => el._id != user._id);
     
         // Update seller's followers
         seller.followers = newFollowers;
     
         // Update the user state with new followings
         setUser({ ...user, followings: newFollowings });
+        //setNumFollowings(prev => prev-1)
+        setNumFollowers(prev => prev-1)
     } else {
         // Add follower to seller's followers
         const newFollowers = [user, ...seller.followers];
@@ -236,6 +243,8 @@ const setFollowers = async (follower, following) => {
         // Add following to user's followings
         const newFollowings = [seller, ...user.followings];
         setUser({ ...user, followings: newFollowings });
+        //setNumFollowings(prev => prev+1)
+        setNumFollowers(prev => prev+1)
     }
 
     setIsFollow(!follow)
@@ -283,26 +292,26 @@ const setFollowers = async (follower, following) => {
                         <View style={[profilShopStyles.follow]}>
                             <View style={[profilShopStyles.followInformations]}>
                                 <View style={[profilShopStyles.followLeftElements,profilShopStyles.sold,{}]}>
-                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.ventes : seller.ventes}</Text>
+                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{ventes}</Text>
                                     <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Ventes</Text>
                                 </View>
 
                                 <Pressable  style={[profilShopStyles.followLeftElements,profilShopStyles.follower,{}]}
                                     onPress={()=>{seller.followers.length>0 ?navigation.navigate({name:"Followers", params:{seller:seller, who:'followers'}, key:Date.now().toString()}):false}}
                                 >
-                                        <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.followers.length : seller.followers.length}</Text>
+                                        <Text style={[customText.text,{fontWeight:"bold"}]}>{numFollowers}</Text>
                                         <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Followers</Text>
                                 </Pressable>
 
                                 <Pressable  style={[profilShopStyles.followLeftElements, profilShopStyles.following,{}]}
                                     onPress={()=>{seller.followings.length>0 ?navigation.navigate({name:"Followers", params:{seller:seller, who:'followings'}, key:Date.now().toString()}):false}}
                                 >
-                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.followings.length : seller.followings.length}</Text>
+                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{numFollowings}</Text>
                                     <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Following</Text>
                                 </Pressable>
 
                                 <View  style={[profilShopStyles.followLeftElements, profilShopStyles.favourites,{}]}>
-                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{route.params==undefined ? user.favourite : seller.favourite}</Text>
+                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{numLikes}</Text>
                                     <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Likes</Text>
                                 </View>
                             </View>
@@ -325,7 +334,7 @@ const setFollowers = async (follower, following) => {
                     
 
                         <View style={{flex:1, paddingBottom:route.params==undefined?40:0}} {...panResponder.panHandlers}>
-                            <ProductsListWithFilters minified={true} isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products.length} ${products.length > 1 ? 'Produits' : 'Produit'}`} />
+                            <ProductsListWithFilters updateProdilLike={setNumLikes} minified={true} isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products.length} ${products.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
 
                     { route.params==undefined &&

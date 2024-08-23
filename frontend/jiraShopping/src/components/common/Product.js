@@ -28,7 +28,7 @@ const username = "Franck"
 //const user = {_id:loggedUserId, username:loggedUser}
 
 const Product = (props) => { 
-    const { item, horizontal, replace, minified } = props;
+    const { item, horizontal, replace, minified, updateProdilLike } = props;
     const navigation = useNavigation()
     const {user} = useContext(UserContext)
     const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
@@ -78,7 +78,7 @@ const Product = (props) => {
         setLikeIcon(prevLike => {
             const newLike = !prevLike;
             //setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
-           // numLike.current = newLike ? numLike.current + 1 : numLike.current - 1;
+           newLike ? updateProdilLike(preLikes=>preLikes+1) : updateProdilLike(preLikes=>preLikes-1);
             //newLike ? data.likes++ : data.likes--
             return newLike;
         })
@@ -165,7 +165,7 @@ else
                             </View>
 
                             <View style={[{flexWrap:'wrap'}]} >
-                                {product.likes ? 
+                                {product.likes>0 ? 
                                 <View style={[{flexDirection:'row'}]}>
                                     <BadgeIcon name="heart-sharp" size={20} color={appColors.red} badgeCount={0} styles={{}} />
                                         <View style={{width:5,}}></View>

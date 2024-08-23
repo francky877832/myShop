@@ -568,59 +568,86 @@ exports.updateProductNumLikes  = (req, res, next) => {
 
 
 exports.updateProductNumLikes = async (req, res, next) => {
-    try {
-        const { userId, updateLikes } = req.body;
+  try {
+      const { userId, updateLikes } = req.body;
 
-        // 1. Mettre à jour le nombre de likes du produit
-        const product = await Product.findOneAndUpdate(
-            { _id: req.params.id },
-            { $inc: { likes: updateLikes } },
-            { new: true }
-        );
+      if (![1, -1].includes(updateLikes)) {
+          return res.status(400).json({ message: "Valeur invalide pour updateLikes. Utilisez 1 ou -1." });
+      }
 
-        product.likes = product.likes<0?1:product.likes
+      let retries = 3;  // Nombre maximum de tentatives de sauvegarde
+      let success = false;
+      let product, seller;
 
-        if (!product) {
-            return res.status(404).json({ message: "Produit non trouvé." });
-        }
+      while (retries > 0 && !success) {
+          try {
+              // 1. Mettre à jour le nombre de likes du produit
+              product = await Product.findOneAndUpdate(
+                  { _id: req.params.id },
+                  { $inc: { likes: updateLikes } },
+                  { new: true }
+              );
 
-        // 2. Mettre à jour le champ favourites de l'utilisateur
-        const seller = await User.findOne({ _id: product.seller });
-        if (!seller) {
-            return res.status(404).json({ message: "Utilisateur non trouvé." });
-        }
+              if (!product) {
+                  return res.status(404).json({ message: "Produit non trouvé." });
+              }
 
-        seller.favourite += updateLikes; // Incrémente ou décrémente
+              // Empêcher les likes négatifs
+              product.likes = Math.max(1, product.likes);
 
-        // 3. Ajouter ou retirer le vendeur de la liste des utilisateurs qui ont aimé
-        const sellerIndex = product.favourites.findIndex(sellerId => sellerId.equals(userId));
-        
-        if (updateLikes === 1) {
-            if (sellerIndex === -1) {
-              product.favourites.unshift(product.seller); // Ajouter le vendeur si non présent
-            }
-        } else {
-            if (sellerIndex !== -1) {
-              product.favourites.splice(sellerIndex, 1); // Retirer le vendeur si présent
-            }
-        }
+              // 2. Mettre à jour le champ favourites de l'utilisateur
+              seller = await User.findById(product.seller);
+              if (!seller) {
+                  return res.status(404).json({ message: "Utilisateur non trouvé." });
+              }
 
-        // Sauvegarder les changements de l'utilisateur
-        await seller.save();
-        await product.save();
+              seller.favourite += updateLikes;
 
-        // Envoyer une réponse réussie
-        res.status(200).json({ 
-            message: updateLikes === 1 
-                ? "Le produit a reçu un nouveau like et l'utilisateur a été mis à jour."
-                : "Le produit a perdu un like et l'utilisateur a été mis à jour."
-        });
-    } catch (error) {
-      console.log(error)
-        res.status(400).json({ error: error.message });
-    }
+              // 3. Ajouter ou retirer l'utilisateur de la liste des favoris
+              const userIndex = product.favourites.findIndex(likeAdderId => likeAdderId.equals(userId));
+
+              if (updateLikes === 1) {
+                  if (userIndex === -1) {
+                      product.favourites.unshift(userId); // Ajouter l'utilisateur s'il n'est pas déjà dans la liste
+                  }
+              } else {
+                  if (userIndex !== -1) {
+                      product.favourites.splice(userIndex, 1); // Retirer l'utilisateur s'il est dans la liste
+                  }
+              }
+
+              // Sauvegarder les changements
+              await seller.save();
+              await product.save();
+              
+              success = true;
+
+          } catch (error) {
+              if (error.name === 'VersionError' && retries > 0) {
+                  retries--;
+                  console.log(`Conflit de version détecté, tentative de nouvelle sauvegarde. Tentatives restantes: ${retries}`);
+              } else {
+                  throw error;
+              }
+          }
+      }
+
+      if (!success) {
+          return res.status(500).json({ message: "Impossible de sauvegarder les modifications après plusieurs tentatives." });
+      }
+
+      // Envoyer une réponse réussie
+      res.status(200).json({
+          message: updateLikes === 1
+              ? "Le produit a reçu un nouveau like et l'utilisateur a été mis à jour."
+              : "Le produit a perdu un like et l'utilisateur a été mis à jour."
+      });
+
+  } catch (error) {
+      console.log(error);
+      res.status(400).json({ error: error.message });
+  }
 };
-
 
 
 

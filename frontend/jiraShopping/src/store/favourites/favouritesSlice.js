@@ -58,7 +58,7 @@ export const addFavourite = createAsyncThunk(
       }
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la requête aadFavourite');
+        throw new Error('Erreur lors de la requête addFavourite');
       }
 
       //return { item, bool };

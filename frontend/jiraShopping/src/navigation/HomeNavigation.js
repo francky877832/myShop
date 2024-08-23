@@ -47,7 +47,7 @@ const HomeNavigation = () => {
             } else if (route.name === 'Favourites') {
               iconName = focused ? 'heart-sharp' : 'heart-outline';
               badgeCount = 0;
-            } else if (route.name === 'Shop') {
+            } else if (route.name === 'MyShop') {
               iconName = focused ? 'bag-handle' : 'bag-handle-outline';
               badgeCount = 0;
             } else if (route.name === 'Basket') {
@@ -64,7 +64,7 @@ const HomeNavigation = () => {
       >
             <Tab.Screen name="Home" component={Preferences} />
             <Tab.Screen name="Favourites" component={Favourites} />
-            <Tab.Screen name="Shop" component={ProfilShop} />
+            <Tab.Screen name="MyShop" component={ProfilShop} />
             <Tab.Screen name="Basket" component={Basket} options={{ title: 'Mon Panier', headerShown : true, tabBarVisible: false, }} />
             <Tab.Screen name="Account" component={AccountNavigation} />
         </Tab.Navigator>

@@ -79,13 +79,26 @@ const handleRemoveFromBasket = useCallback((product) => {
   const handleSelectedSeller = useCallback((val) => {dispatch(setSelectedSeller(val)) },[]);
   const handleUpdateSelectedProducts  = useCallback((product) => {dispatch(updateSelectedProducts({itemId:product._id}))},[])
 
-    const RadioProduct = (props) => {
-        const {item} = props
+const RadioProduct = (props) => {
+        const {item, user} = props
         let passed_sellers = []
         let passed_product = []
         //console.log(item)
         //const profile = item.productDetails.images[0] || require('../../assets/images/product5.png')
         const inBasket = 3
+
+        const handleSellerBrandPressed = (product) => {
+            //Pas vraiment necesairre parce qun user ne pourra pas ajouter son propre produit a Basket
+            if(user._id!=product.seller._id)
+            {
+                navigation.navigate("Shop", {seller:product.seller}) 
+            }
+            else
+            {
+                navigation.navigate('Preferences', {screen: 'MyShop',params:undefined})
+            }
+        }
+
         return (
             <View styles={[radioProductStyles.container,{}]}>       
                 <RadioButton.Group onValueChange={val => {handleSelectedSeller(val)}} value={selectedSeller} style={[radioProductStyles.radioGroup,radioProductStyles.radioGroup1,]}>
@@ -97,8 +110,10 @@ const handleRemoveFromBasket = useCallback((product) => {
                                 { passed_sellers.includes(product1.seller._id) ? false :
                                     <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer1]} >
                                         <RadioButton value={product1.seller._id} />
-                                        <SellerBrand pub={false} certified={true} username={product1.seller.username} route={route} navigation={navigation} closeNotif={true} /> 
-                                        <Text>{/*A MODIFIER*/}</Text>
+                                        <Pressable onPress={()=>{ handleSellerBrandPressed(product1) }}>
+                                            <SellerBrand pub={false} certified={true} username={product1.seller.username} route={route} navigation={navigation} closeNotif={true} /> 
+                                            <Text>{/*A MODIFIER*/}</Text>
+                                        </Pressable>
                                     </View>
                                 }
                             
@@ -163,7 +178,7 @@ const handleRemoveFromBasket = useCallback((product) => {
                 <View style={radioProductsListtStyles.top}>
                     <FlatList
                         data={products}
-                        renderItem={ ({item}) => { return <RadioProduct item={item}  /> } }
+                        renderItem={ ({item}) => { return <RadioProduct item={item} user={user}  /> } }
                         keyExtractor={ (item) => { return Math.random().toString(); } }
                         horizontal={false}
                         numColumns={ 1 }

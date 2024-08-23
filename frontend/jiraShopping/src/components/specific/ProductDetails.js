@@ -195,7 +195,7 @@ useEffect(()=>{
     const dispatch = useDispatch();
     const isFavourite = useSelector((state) => isProductFavourite(state, data._id))
     const [like, setLikeIcon ] = useState(isFavourite)
-    const [numLike, setNumLike] = useState(data.likes)
+    const [numLike, setNumLike] = useState(data.likes>=0?data.likes:0)
     const [likeAdders, setLikeAdders] = useState(data.favourites)
 //console.log(data.favourites)
     //hasLikedItem={hasLiked(item)}
@@ -203,7 +203,8 @@ useEffect(()=>{
         //data.likes = data.likes+1
         setLikeIcon(prevLike => {
             const newLike = !prevLike;
-            setNumLike(prevNumLike => newLike ? prevNumLike + 1 : prevNumLike - 1);
+            const tmpLike = newLike ? numLike + 1 : numLike - 1
+            tmpLike >=0 ? setNumLike(tmpLike) : setNumLike(0);
             newLike ? setLikeAdders(!likeAdders.some(item=>item._id===user._id)?[user, ...likeAdders]:likeAdders) : setLikeAdders(likeAdders.filter(item=>item._id!=user._id))
             //newLike ? data.likes++ : data.likes--
             return newLike;
@@ -232,6 +233,18 @@ useEffect(()=>{
 
 
 //console.log(data.seller)
+
+const handleSellerBrandPressed = (product) => {
+    if(user._id!=product.seller._id)
+    {
+        navigation.navigate("Shop", {seller:product.seller}) 
+    }
+    else
+    {
+        navigation.navigate('Preferences', {screen: 'MyShop',params:undefined})
+    }
+}
+
     return (
 
   <View style={productDetailsStyles.container}>
@@ -325,7 +338,7 @@ useEffect(()=>{
              
 
                 <View style={[productDetailsStyles.commentsContainer]}>
-                    <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{user._id!=data.seller._id ? navigation.navigate("Shop", {seller:data.seller}) :  navigation.navigate('Preferences', {screen: 'Shop',params:undefined}); }}>
+                    <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{handleSellerBrandPressed(data) }}>
                         <SellerBrand pub={true} onlineDate={data.seller.updatedAt} username={data.seller.username} navigation={navigation} route={route} closeNotif={true} />
                     </Pressable>
                 <View style={{height:20}}></View>
