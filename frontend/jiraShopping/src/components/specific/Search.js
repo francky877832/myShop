@@ -21,8 +21,8 @@ import { screenHeight } from '../../styles/commentsStyles';
 import { server } from '../../remote/server';
 import { useNavigation } from '@react-navigation/native';
 import { FilterContext } from '../../context/FilterContext';
-const loggedUser = "Francky"
-const loggedUserId = "66715deae5f65636347e7f9e"
+import { UserContext } from '../../context/UserContext';
+
 
 const Search = (props) => {
     const [searchText, setSearchText] = useState("")
@@ -32,7 +32,8 @@ const Search = (props) => {
     const searchBarRef = useRef(null)
     const scrollViewRef = useRef(null)
     const navigation = useNavigation()
-    const {resetAllFiltersWithoutFecthingDatas, setSelectedCategories} = useContext(FilterContext)
+    const {resetAllFiltersWithoutFecthingDatas, setSelectedCategories, searchAgainWithoutUpdate} = useContext(FilterContext)
+    const {user} = useContext(UserContext)
     
     //const datas = []
 
@@ -55,8 +56,8 @@ const onChangeText = (val) =>{
 const onSubmitEditing = () =>{
         let response = null;
         const search = {
-            user : loggedUserId,
-            username : loggedUser,
+            user : user._id,
+            username : user.username,
             searchText : searchText,
         }
         //console.log(bool)
@@ -64,7 +65,7 @@ const onSubmitEditing = () =>{
             {
                 navigation.navigate("SearchResults", {searchText:searchText})
                 setTimeout(async() => {
-                    response = await fetch(`${API_BACKEND}/api/datas/search/history/update/${loggedUserId}`, {
+                    response = await fetch(`${server}/api/datas/search/history/update/${user._id}`, {
                         method: 'POST',
                         body: JSON.stringify(search),
                             headers: {
@@ -77,8 +78,7 @@ const onSubmitEditing = () =>{
                         throw new Error("Erreur ",`${response.status}: ${errorData.message}`)
                     }
                     //Alert.alert("", "Historique ajoute avec success")
-
-                        setIsLoading(true)
+                        //setIsLoading(true)
                     }, 0); 
 
             }catch(error)
@@ -86,12 +86,15 @@ const onSubmitEditing = () =>{
                 console.log(error)
                 Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
             }
+            finally{
+                //setIsLoading(false)
+            }
    }
 
 const fetchUserHistorique = async () =>{
     try{
 //console.log("Ok")
-        const response = await fetch(`${API_BACKEND}/api/datas/search/history/get/${loggedUserId}`);            
+        const response = await fetch(`${server}/api/datas/search/history/get/${user._id}`);            
         const datas = await response.json()
         //console.log(datas)
         if (!response.ok) {
@@ -99,7 +102,7 @@ const fetchUserHistorique = async () =>{
         }
         //console.log(datasdatas[0].products)
         
-        setHistorique(datas[0].filters)
+        datas?.length>0?setHistorique(datas[0].filters):setHistorique([])
         //console.log(historique)
     }catch(error){
         Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
@@ -109,14 +112,14 @@ const fetchUserHistorique = async () =>{
 const removeUserHistorique = async (name) => {
     let response = null;
         const search = {
-            user : loggedUserId,
-            username : loggedUser,
+            user : user._id,
+            username : user.username,
             searchText : name,
         }
         //console.log(bool)
             try
             {
-                response = await fetch(`${API_BACKEND}/api/datas/search/history/remove/${loggedUserId}`, {
+                response = await fetch(`${server}/api/datas/search/history/remove/${user._id}`, {
                     method: 'PUT',
                     body: JSON.stringify(search),
                         headers: {
@@ -142,14 +145,14 @@ const removeUserHistorique = async (name) => {
 const removeAllUserHistorique = async (name) => {
     let response = null;
         const search = {
-            user : loggedUserId,
-            username : loggedUser,
+            user : user._id,
+            username : user.username,
             searchText : name,
         }
         //console.log(bool)
             try
             {
-                response = await fetch(`${API_BACKEND}/api/datas/search/history/removeAll/${loggedUserId}`, {
+                response = await fetch(`${server}/api/datas/search/history/removeAll/${user._id}`, {
                     method: 'PUT',
                     body: JSON.stringify(search),
                         headers: {
@@ -171,20 +174,22 @@ const removeAllUserHistorique = async (name) => {
             }
 }
 useEffect(()=>{
-    resetAllFiltersWithoutFecthingDatas()
-    //console.log("Search")
+    //
+        //await searchAgainWithoutUpdate()
+
 }, [])
 useEffect(()=>{
     console.log("fetchUserHistorique")
+
     const fetchData = async () => {
-        
-       if(isLoading)
-       {
-        await fetchUserHistorique()
-        setIsLoading(false);
-       }
+        if(isLoading)
+        { 
+            await fetchUserHistorique()
+        }
+        setIsLoading(false)
     };
 
+   
       fetchData()
     
 }, [isLoading, refreshComponent])

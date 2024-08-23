@@ -254,8 +254,8 @@ const handleOrderby = async (val)=>{
         // Configurer un nouveau timeout
         timeoutRef.current = setTimeout(async () => {
             await loadMoreDataWithFilters({searchText:searchText||" ", selectedCategory:selectedCategories, orderBy:val, 
-                selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions, resetPage:true});
-        }, 100);
+                selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, resetPage:true});
+        }, 500);
         
         //Pas besoin de getSearchedTextWithFilters par ce Filters est dans SearchResults et cela se fait auto.
         //Il ya juste besoin de mettre a jour selectedOrderBy et de re-rendre le component avec un activityIndicator

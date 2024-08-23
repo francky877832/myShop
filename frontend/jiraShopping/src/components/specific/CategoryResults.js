@@ -100,7 +100,7 @@ useEffect(()=>{
         }
 
         async function loadMoreData_(){
-            await loadMoreDataWithFilters({searchText:searchText, selectedCategory:category, selectedModalCategories:selectedModalCategoriesFromContext, selectedBrands:selectedBrandFromContext, conditions:selectedConditionsFromContext, orderBy:selectedOrderBy})
+            await loadMoreDataWithFilters({searchText:searchText, selectedCategory:category, selectedModalCategories:selectedModalCategoriesFromContext, selectedBrands:selectedBrandFromContext, conditions:selectedConditionsFromContext, orderBy:selectedOrderBy, resetPage:false})
         }
   /*  
 useFocusEffect(

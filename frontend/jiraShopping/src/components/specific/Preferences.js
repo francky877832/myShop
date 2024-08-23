@@ -151,7 +151,6 @@ const renderScene = ({ route }) => {
           return (
             <View style={{flex:1,}}>
                 <ProductsListWithFilters name="Preference" onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
-                <TemporaryNotification message="Bien chargé" />
             </View>
           )
         case 'categories':

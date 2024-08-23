@@ -165,7 +165,7 @@ else
                         <View style={ productStyles.text }>
                             <View style={{ flexDirection:"column", justifyContent:"flex-start", }}>
                                 <Text numberOfLines={1} style={[customText.text, productStyles.shopName]}> @{product.seller.username} | </Text>
-                                <Text numberOfLines={2} style={[customText.text, productStyles.productName]}>{product.name}</Text>
+                                <Text numberOfLines={1} style={[customText.text, productStyles.productName]}>{product.name}</Text>
                             </View>
 
                             <View style={[{flexWrap:'wrap'}]} >
@@ -195,7 +195,7 @@ else
                                 </Pressable>
                             </View>
                             :
-                            <View style={[productStyles.bottom, productStyles.card,] } >
+                            <View style={[productStyles.bottom, productStyles.card, {}] } >
                                 <Pressable onPress = { ()=>{handleMofyProduct(product) } }>
                                     <Text numberOfLines={1} style={[customText.text, productStyles.category,]}>Modifier le produit</Text>
                                 </Pressable>

@@ -33,7 +33,7 @@ const SearchResults = (props) => {
     const {searchText, display} = route.params
     const {
         selectedOrderBy,
-       products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
+       searchedProducts, setSearchedProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
         isLoading, setIsLoading , selectedCategories , setSelectedCategories, loadMoreDataWithFilters, selectedModalCategoriesFromContext, 
         selectedBrandFromContext, selectedConditionsFromContext
     } = useContext(FilterContext)
@@ -62,7 +62,7 @@ const SearchResults = (props) => {
                               },});            
                             const datas = await response.json()
                             //console.log(datas)
-                            setProducts(datas)
+                            setSearchedProducts(datas)
                         }catch(error){
                             Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
                         }
@@ -71,29 +71,19 @@ useEffect(()=>{
     //console.log(searchText)
     cat_reminder = selectedCategories
 },[])
-        async function getDatas({searchText, selectedModalCategories, selectedBrands, conditions, orderBy})
+        async function getDatas({searchText, selectedModalCategories, selectedBrands, conditions, orderBy, resetPage})
         {
             //console.log("GETDATAS")
-            console.log({searchText, selectedModalCategories, selectedBrands, conditions, orderBy})
+            console.log({searchText, selectedModalCategories, selectedBrands, conditions, orderBy, resetPage})
             //if(!isLoading)
             //    setIsLoading(true)
 
-            if(!!display && display == "category")
-            {//console.log("GETDATAS2")
-                await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
-                        //{searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})    
-            }
-            else
-            {
-                //console.log("GETDATAS3")
-                //setSelectedCategories({})
-                await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
-            }  
+            await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, resetPage:resetPage})
            // setIsLoading(false)    
         }
 
         async function loadMoreData_(){
-            await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategoriesFromContext, selectedBrands:selectedBrandFromContext, conditions:selectedConditionsFromContext, orderBy:selectedOrderBy})
+            await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategoriesFromContext, selectedBrands:selectedBrandFromContext, conditions:selectedConditionsFromContext, orderBy:selectedOrderBy, resetPage:false})
         }
   /*  
 useFocusEffect(
@@ -107,10 +97,11 @@ useFocusEffect(
 )
 */
 useEffect(()=>{
-    //console.log(selectedCategories);
+    console.log("selectedCategories");
     //if(!isLoading)
     //    setIsLoading(true)
-    getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
+    //searchAgainWithoutUpdate()
+    getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy, resetPage:true})
 
     }, [searchText])
 
@@ -123,16 +114,20 @@ useEffect(() => {
         })
         return beforeRemoveListener;
 }, [navigation]);
+
 const title = `Resultats de recherche "${searchText}"`
+
         return(
                 <View style={preferencesStyles.container}>
-                    {//!(!!display && display == "category") &&
+                    {//!(!!display && display == "category") && 
+                    
                         <View style={preferencesStyles.top}>
                             <Top searchText={searchText} />
                         </View>
+                        
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="SearchResults" getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters name="SearchResults" getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} searchText={searchText} datas={searchedProducts} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )

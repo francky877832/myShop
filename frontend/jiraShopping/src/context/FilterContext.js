@@ -27,6 +27,7 @@ const FilterProvider = ({children}) => {
     const [minPrice, setMinPrice] = useState("")
     const [maxPrice, setMaxPrice] = useState("")
     const [products, setProducts] = useState([])
+    const [searchedProducts, setSearchedProducts] = useState([])
 
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
@@ -92,7 +93,7 @@ const FilterProvider = ({children}) => {
 
     })*/
 
-    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory, selectedBrands, conditions, resetPage}) =>
+    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory, selectedBrands, conditions, resetPage=false}) =>
     {
         if(resetPage){ setPage(1)}
         //console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, selectedCategories})
@@ -225,21 +226,29 @@ const FilterProvider = ({children}) => {
         //console.log("selectedCategory")
         //console.log(selectedCategory)
         console.log("hasMore")
-        console.log(resetPage)
-        if (isLoading || !hasMore) return;
+        console.log(hasMore)
+        console.log(isLoading)
+        if (!resetPage && (isLoading || !hasMore)) return;
         //if (isLoading) return;
     
         setIsLoading(true);
         try {
             console.log("page")
             console.log(page)
-            const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedCategory:selectedCategory, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, resetPage}); //A MODDIFIER
+            const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedCategory:selectedCategory, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, resetPage:resetPage}); //A MODDIFIER
             //console.log(newData)
             if (newData.datas.length > 0) {
                 //setProducts(newData.datas)
                 console.log("gs")
                 //updateProducts(newData.datas);
-                setProducts((prevProducts)=>[...prevProducts, ...newData.datas])
+                if(resetPage)
+                {
+                    setSearchedProducts(newData.datas)
+                }
+                else
+                {
+                    setProducts((prevProducts)=>[...prevProducts, ...newData.datas])
+                }
                 //setProducts(newData.datas)
                 //if(page < totalPages)
                 setPage((prevPage) => prevPage + 1);
@@ -323,8 +332,8 @@ const FilterProvider = ({children}) => {
 
 
 
-    const filterStateVars = {refreshComponent, filtersUpdated, isLoading, setHasMore, selectedCategories, selectedOrderBy, selectedBrandFromContext, selectedModalCategoriesFromContext, selectedConditionsFromContext, isNewFocused, isOldFocused, minPrice, maxPrice, products}
-    const filterStateSetters = {setFiltersUpdated, setSelectedModalCategoriesFromContext, setSelectedBrandFromContext, setSelectedConditionsFromContext, setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
+    const filterStateVars = {searchedProducts, refreshComponent, filtersUpdated, isLoading, setHasMore, selectedCategories, selectedOrderBy, selectedBrandFromContext, selectedModalCategoriesFromContext, selectedConditionsFromContext, isNewFocused, isOldFocused, minPrice, maxPrice, products}
+    const filterStateSetters = {setSearchedProducts, setFiltersUpdated, setSelectedModalCategoriesFromContext, setSelectedBrandFromContext, setSelectedConditionsFromContext, setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
     const utilsFunctions = {_handlePress, searchAgainWithoutUpdate, updateCategories, resetAllFilters, searchAgain, searchCategory, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
