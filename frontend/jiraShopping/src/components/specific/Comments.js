@@ -69,11 +69,11 @@ useEffect(()=>{
         const setShowSubComment = (val) => {
             showSubComment.current = val;
             forceUpdate({}); // Forcer un re-render
-          };
+        };
 
 //console.log(comment)
 const respondTo = (id, user) => {
-    //console.log(id)
+    //console.log(user)
     setIsResponseTo(id);
     setInputValue("@"+user.username+" " +inputValue);
     setUserToResponse(user)
@@ -83,7 +83,7 @@ const respondTo = (id, user) => {
                     <View style={[styles.commentContainer,]} >
                         <View style={{flexDirection:"row", alignItems:"center"}}>
 
-                            <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{user._id!=comment.user._id ? navigation.navigate("Shop", {seller:comment.user}) :  navigation.navigate('Preferences', {screen: 'Shop',params:undefined});}}>
+                            <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{user._id!=comment.user._id ? navigation.navigate("Shop", {seller:comment.user}) :  navigation.navigate('Preferences', {screen: 'MyShop',params:undefined});}}>
                                 <Image source={{uri: comment.user.image||user.image}} style={[commentsStyles.commentProfile, ]} />
                             </Pressable>
 
@@ -143,7 +143,7 @@ const respondTo = (id, user) => {
                                                     <Text style={[commentsStyles.commentText]} >{parseMentions(item.text)}</Text>
                                                 </Pressable>
 
-                                                <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{user._id!=item.user._id ? navigation.navigate("Shop", {seller:item.user}) :  navigation.navigate('Preferences', {screen: 'Shop',params:undefined});}}>
+                                                <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{user._id!=item.user._id ? navigation.navigate("Shop", {seller:item.user}) :  navigation.navigate('Preferences', {screen: 'MyShop',params:undefined});}}>
                                                     <Image source={{uri: item.user.image||user.image}} style={[commentsStyles.commentProfile, ]} />
                                                 </Pressable>
 

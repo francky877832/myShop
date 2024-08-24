@@ -308,16 +308,21 @@ const handleSellerBrandPressed = (product) => {
                             </View>
                             <Text style={[customText.text, { paddingLeft: 5 }]}>{capitalizeFirstLetter(data.condition)}</Text>
                         </View>
-                        {data.color ?
-                            <View style={[{ flexDirection: "row" }]}>
-                                <BadgeIcon name="ellipse-sharp" size={18} color={data.color.toLowerCase()} styles={{}} isCard={false} />
-                                <Text style={[customText.text]}>{capitalizeFirstLetter(data.color)}</Text>
+                        {data.couleur ?
+                            <View style={[{ flexDirection: "row", justifyContent:'space-between' }]}>
+                                <View style={[productDetailsStyles.color, {backgroundColor:data.couleur.toLowerCase(), borderWidth:1, borderColor:data.couleur.toLowerCase()==='white'?appColors.black:data.couleur.toLowerCase()}]}></View>
+                                <View style={{width:5}} ></View>
+                                <Text style={[customText.text]}>{capitalizeFirstLetter(data.couleur)}</Text>
                             </View>
                             : false
                         }
                     </View>
                     <View style={[productDetailsStyles.description]}>
-                        <Text style={[customText.text, { fontWeight: "bold" }]}>Description</Text>
+                        <View style={[{flexDirection:'row', justifyContent:'space-between'}]}>
+                            <Text style={[customText.text, { fontWeight: "bold" }]}>Description</Text>
+                            <Text style={[customText.text, { fontWeight: "bold", color:appColors.gray }]}>{data.garanti>0?`${data.garanti} Mois . Garanti`:false} </Text>
+                        </View>
+
                         <View style={[productDetailsStyles.descriptionBox]}>
                             <Text style={[customText.text]}>{description[0]}</Text>
                             {description[1] == 0 && !description[2] ? true :

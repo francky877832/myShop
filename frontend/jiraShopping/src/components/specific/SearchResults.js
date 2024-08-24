@@ -55,17 +55,18 @@ const SearchResults = (props) => {
         //console.log(serialize(category))
             try{
                 //console.log(user)
-                            const response = await fetch(`${API_BACKEND}/api/datas/products/categories?${serialize(category)}`, {
-                                headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${user.token}`,
-                              },});            
-                            const datas = await response.json()
-                            //console.log(datas)
-                            setSearchedProducts(datas)
-                        }catch(error){
-                            Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
-                        }
+                const response = await fetch(`${API_BACKEND}/api/datas/products/categories?${serialize(category)}`, {
+                headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${user.token}`,
+                    },}); 
+                               
+                const datas = await response.json()
+                //console.log(datas)
+                setSearchedProducts(datas)
+            }catch(error){
+                Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
+            }
         }
 useEffect(()=>{
     //console.log(searchText)

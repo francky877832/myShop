@@ -215,7 +215,13 @@ export const productDetailsStyles = StyleSheet.create({
     someText : 
     {
         fontWeight: "bold", fontSize: 20, color: appColors.black ,paddingLeft:10,
-    }
+    },
+    color:
+    {
+        width : 16,
+        height : 16,
+        borderRadius : 8,
+    },
 
  
     

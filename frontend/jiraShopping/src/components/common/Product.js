@@ -90,9 +90,6 @@ const Product = (props) => {
 
     const handleBasketPressed = (product) => {
         
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
         
         if(isBasketPresent)
         {
@@ -102,9 +99,14 @@ const Product = (props) => {
         {
             setIsBasketPresent(!isBasketPresent)
             const isAdding = true
-            dispatch(updateLocalBasket({product, isAdding}));
+            
             //console.log("BASKET")
+            
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
             timeoutRef.current = setTimeout(() => {
+                dispatch(updateLocalBasket({product, isAdding}));
                 dispatch(addToBasket({product, user})); 
             }, 1000)
         }

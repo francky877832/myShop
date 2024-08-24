@@ -91,7 +91,7 @@ export const commentsStyles = StyleSheet.create({
       //justifyContent : 'flex-end',
       alignSelf : 'flex-end',
       borderWidth : 2,
-      borderColor : appColors.green,
+      borderColor : appColors.secondaryColor1,
       zIndex : 99,
       //bottom : 0,
     },

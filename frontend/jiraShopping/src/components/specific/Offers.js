@@ -230,8 +230,8 @@ const addOffer = async ()=>{
 const fetchUserOffers = async()=>{
     //console.log("Callback")
     const offer = {
-            seller : product.sellerName || product.seller,
-            buyer : user.username,
+            seller : product.seller,
+            buyer : user._id,
             product : product._id,
     }
     try{
@@ -240,12 +240,12 @@ const fetchUserOffers = async()=>{
             const datas = await response.json()
                     //console.log(datas)
             if (!response.ok) {
-                throw new Error('Erreur lors de la requête');
+                throw new Error('Erreur lors de la requête'+await response.text());
             }
                 //console.log(datas[0].offers)
             datas.length>0 ? setOffers(datas[0]) :  setOffers(defaultOffer)
     }catch(error){
-                
+        console.log(error)
         Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
     }
 

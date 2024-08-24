@@ -110,7 +110,7 @@ export const radioProductStyles = StyleSheet.create({
     },
     radioProducts :
     {
-        left : 40,
+        left : 10,
     },
     imageContainer :
     {

@@ -158,13 +158,20 @@ const addComment = async (item) => {
             await loadLastComment(product, user)
             setPage((prevPage) => prevPage - 1);
             setIsLoading(false)
-            if(!isResponseTo)
+            
+            if(!(userToResponse._id)) //!isResponseTo)
             {
-                await sendNotifications({ user:item.seller._id, source:"app", model:"PRODUCTS", type:"ON_NEW_COMMENT", datas:item._id })
+                if(user._id!=item.seller._id)
+                {
+                    await sendNotifications({ user:item.seller._id, source:"app", model:"PRODUCTS", type:"ON_NEW_COMMENT", datas:item._id })
+                }
             }
             else
-            {
-                await sendNotifications({ user:userToResponse._id, source:"app", model:"PRODUCTS", type:"ON_RESPONSE_COMMENT", datas:item._id })
+            {   
+                if(user._id!=userToResponse._id)
+                { 
+                    await sendNotifications({ user:userToResponse._id, source:"app", model:"PRODUCTS", type:"ON_RESPONSE_COMMENT", datas:item._id })
+                }
             }
        
         }catch(error){

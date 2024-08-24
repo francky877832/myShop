@@ -123,29 +123,123 @@ exports.getProductComments = (req, res, next) => {
     });
   };
 
+ 
+
   exports.getUserProductLastComment = (req, res, next) => {
     const productId = req.params.id;
-    const userId = req.query.user; // Assurez-vous que le username est traité comme une chaîne
+    const userId = req.query.user; // Assurez-vous que le userId est traité comme une chaîne
 
     console.log("LAST COMMENT");
     console.log("Product ID:", productId);
     console.log("UserId:", userId);
 
-    // Convertir productId en ObjectId si ce n'est pas déjà le cas
+    // Convertir productId et userId en ObjectId si ce n'est pas déjà le cas
     const productObjectId = mongoose.Types.ObjectId.isValid(productId) ? new mongoose.Types.ObjectId(productId) : null;
     const userObjectId = mongoose.Types.ObjectId.isValid(userId) ? new mongoose.Types.ObjectId(userId) : null;
 
-    // Vérifier si le productObjectId est valide avant d'exécuter la requête
-    if (!productObjectId) {
-        return res.status(400).json({ error: "Invalid product ID" });
+    // Vérifier si les IDs sont valides avant d'exécuter la requête
+    if (!productObjectId || !userObjectId) {
+        return res.status(400).json({ error: "Invalid product ID or user ID" });
     }
 
-    Comment.find({ 
-        product: productObjectId, 
-        user: userObjectId
-    })
-    .sort({ updatedAt: -1 })
+    // Pipeline d'agrégation
+    Comment.aggregate([
+        {
+            $match: {
+                product: productObjectId,
+                user: userObjectId
+            }
+        },
+        {
+            $sort: { updatedAt: -1 } // Trier par date de mise à jour décroissante
+        },
+        {
+            $limit: 1 // Limiter à un seul commentaire (le plus récent)
+        },
+        {
+            $lookup: {
+              from: 'users',
+              localField: 'user',
+              foreignField: '_id',
+              as: 'user'
+            }
+          },
+          { $unwind: '$user' }, // Décomposer le tableau seller en objets individuels
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'user.followers',
+              foreignField: '_id',
+              as: 'user.followers'
+            }
+          },
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'user.followings',
+              foreignField: '_id',
+              as: 'user.followings'
+            }
+          },
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'user.favourites',
+              foreignField: '_id',
+              as: 'user.favourites'
+            }
+          },
+          {
+            $lookup: {
+              from: 'favourites',
+              localField: 'favourites',
+              foreignField: '_id',
+              as: 'favourites'
+            }
+        },
+
+        {
+            $lookup: {
+              from: 'users',
+              localField: 'subComment.user',
+              foreignField: '_id',
+              as: 'subCommentUsers'
+            }
+        },
+
+        {
+            $addFields: {
+              subComment: {
+                $map: {
+                  input: '$subComment',
+                  as: 'sub',
+                  in: {
+                    _id: '$$sub._id',
+                    user: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: '$subCommentUsers',
+                            cond: { $eq: ['$$sub.user', '$$sub.user'] }
+                          }
+                        },
+                        0
+                      ]
+                    },
+                    username: '$$sub.username',
+                    isResponseTo: '$$sub.isResponseTo',
+                    text: '$$sub.text',
+                    visible: '$$sub.visible',
+                    createdAt: '$$sub.createdAt',
+                    updatedAt: '$$sub.updatedAt'
+                  }
+                }
+              }
+            }
+          }
+    ])
     .then(comments => {
+        console.log(comments)
         if (comments.length > 0) {
             res.status(200).json(comments[0]);
         } else {
@@ -157,7 +251,6 @@ exports.getProductComments = (req, res, next) => {
         res.status(400).json({ error: error.message });
     });
 };
-
 
 
 
