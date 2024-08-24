@@ -109,6 +109,7 @@ const CommentsProvider = ({children}) => {
             {
   
                 const comment_ = await fetchProductLastComment(product._id, user._id);
+                console.log(comment_)
                 let updatedComments;
                 setReshapedComments((prevComments)=>{
 
@@ -133,10 +134,9 @@ const CommentsProvider = ({children}) => {
                     }
                     else
                     {
-                            //product.comments.unshift(comment_)
-                            //prevComments[0] = comment_
-                            updatedComments = [comment_, ...prevComments.slice(1)];
-                            
+                        //product.comments.unshift(comment_)
+                        //prevComments[0] = comment_
+                        updatedComments = [comment_, ...prevComments.slice(1)];  
                     }
 
                     const modifiedProduct = {...product, comments:updatedComments}
@@ -208,6 +208,9 @@ const CommentsProvider = ({children}) => {
             {
   
                 const comment_ = await fetchProductLastComment(product._id, user._id);
+                //console.log("comment_")
+                //console.log(comment_)
+                
                 let updatedComments;
                 setReshapedComments((prevComments)=>{
 
@@ -217,12 +220,13 @@ const CommentsProvider = ({children}) => {
 
                     if(!!isResponseTo)
                     {
-                            //console.log("prevComments")
+                        //console.log("prevComments")
                         updatedComments = prevComments.map(cm => {
                             if (cm._id == comment_.isResponseTo) {
+                               // console.log("Imbecile")
                                 return {
                                     ...cm,
-                                    subComment: [...cm.subComment, comment_]
+                                    subComment: [...cm.subComment.slice(0, cm.subComment.length-1), comment_]
                                 };
                             }
                             return cm;
@@ -232,9 +236,10 @@ const CommentsProvider = ({children}) => {
                     }
                     else
                     {
-                            //product.comments.unshift(comment_)
-                            //prevComments[0] = comment_
-                            updatedComments = [comment_, ...prevComments.slice(1)];
+                        //console.log("Okkkkk")
+                        //product.comments.unshift(comment_)
+                        //prevComments[0] = comment_
+                        updatedComments = [comment_, ...prevComments.slice(1)];
                             
                     }
 

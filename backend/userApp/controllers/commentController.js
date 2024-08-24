@@ -143,23 +143,88 @@ exports.getProductComments = (req, res, next) => {
     }
 
     // Pipeline d'agrégation
+  
     Comment.aggregate([
-        {
-            $match: {
-                product: productObjectId,
-                user: userObjectId
+    {
+        $match: {
+            product: productObjectId,
+            $or: [
+                { user: userObjectId },
+                { "subComment.user": userObjectId }
+            ]
+        },
+    },
+    {
+        $facet: {
+            // Pipeline to handle comments
+            mainComments: [
+                {
+                    $project: {
+                        _id: 1,
+                        product: 1,
+                        text: 1,
+                        user: 1,
+                        username: 1,
+                        createdAt: 1,
+                        updatedAt: 1,
+                        isSubComment: { $literal: false }
+                    }
+                }
+            ],
+            // Pipeline to handle subComments
+            subComments: [
+                {
+                    $unwind: "$subComment"
+                },
+                {
+                    $match: {
+                        "subComment.user": userObjectId
+                    }
+                },
+                {
+                    $project: {
+                        _id: "$subComment._id",
+                        product: "$product",
+                        text: "$subComment.text",
+                        user: "$subComment.user",
+                        username: "$subComment.username",
+                        createdAt: "$subComment.createdAt",
+                        updatedAt: "$subComment.updatedAt",
+                        isSubComment: { $literal: true },
+                        isResponseTo :  "$subComment.isResponseTo",
+                    }
+                }
+            ]
+        }
+    },
+    {
+        // Combine both pipelines
+        $project: {
+            allComments: {
+                $concatArrays: ["$mainComments", "$subComments"]
             }
-        },
-        {
-            $sort: { updatedAt: -1 } // Trier par date de mise à jour décroissante
-        },
-        {
-            $limit: 1 // Limiter à un seul commentaire (le plus récent)
-        },
+        }
+    },
+    {
+        // Unwind to treat them as individual documents
+        $unwind: "$allComments"
+    },
+    {
+        // Sort by updatedAt to get the most recent comment/subComment
+        $sort: {
+            "allComments.updatedAt": -1
+        }
+    },
+    {
+        // Limit to get only the most recent one
+        $limit: 1
+    },
+
+
         {
             $lookup: {
               from: 'users',
-              localField: 'user',
+              localField: 'allComments.user',
               foreignField: '_id',
               as: 'user'
             }
@@ -192,7 +257,7 @@ exports.getProductComments = (req, res, next) => {
           {
             $lookup: {
               from: 'favourites',
-              localField: 'favourites',
+              localField: 'user.favourites',
               foreignField: '_id',
               as: 'favourites'
             }
@@ -208,35 +273,25 @@ exports.getProductComments = (req, res, next) => {
         },
 
         {
-            $addFields: {
-              subComment: {
-                $map: {
-                  input: '$subComment',
-                  as: 'sub',
-                  in: {
-                    _id: '$$sub._id',
-                    user: {
-                      $arrayElemAt: [
-                        {
-                          $filter: {
-                            input: '$subCommentUsers',
-                            cond: { $eq: ['$$sub.user', '$$sub.user'] }
-                          }
+                // Project the final structure
+                $project: {
+                    _id: "$allComments._id",
+                    product: "$allComments.product",
+                    text: "$allComments.text",
+                    user: "$user",
+                    username: "$allComments.username",
+                    isSubComment: "$allComments.isSubComment",
+                    isResponseTo: {
+                            $cond: {
+                                if: { $eq: ["$allComments.isSubComment", true] },
+                                then: "$allComments.isResponseTo",
+                                else: null
+                            }
                         },
-                        0
-                      ]
-                    },
-                    username: '$$sub.username',
-                    isResponseTo: '$$sub.isResponseTo',
-                    text: '$$sub.text',
-                    visible: '$$sub.visible',
-                    createdAt: '$$sub.createdAt',
-                    updatedAt: '$$sub.updatedAt'
+                    createdAt: "$allComments.createdAt",
+                    updatedAt: "$allComments.updatedAt"
                   }
-                }
-              }
-            }
-          }
+        }
     ])
     .then(comments => {
         console.log(comments)
@@ -253,4 +308,84 @@ exports.getProductComments = (req, res, next) => {
 };
 
 
+/*
+
+Comment.aggregate([
+        {
+            $match: {
+                product: productObjectId,
+                $or: [
+                    { user: userObjectId },
+                    { "subComment.user": userObjectId }
+                ]
+            },
+        },
+
+        {
+            $facet: {
+                // Pipeline to handle comments
+                mainComments: [
+                    {
+                        $project: {
+                            _id: 1,
+                            product: 1,
+                            text: 1,
+                            user: 1,
+                            username: 1,
+                            createdAt: 1,
+                            updatedAt: 1,
+                            isSubComment: { $literal: false }
+                        }
+                    }
+                ],
+                // Pipeline to handle subComments
+                subComments: [
+                    {
+                        $unwind: "$subComment"
+                    },
+                    {
+                        $match: {
+                            "subComment.user": userObjectId
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: "$subComment._id",
+                            product: "$product",
+                            text: "$subComment.text",
+                            user: "$subComment.user",
+                            username: "$subComment.username",
+                            createdAt: "$subComment.createdAt",
+                            updatedAt: "$subComment.updatedAt",
+                            isSubComment: { $literal: true }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            // Combine both pipelines
+            $project: {
+                allComments: {
+                    $concatArrays: ["$mainComments", "$subComments"]
+                }
+            }
+        },
+        {
+            // Unwind to treat them as individual documents
+            $unwind: "$allComments"
+        },
+        {
+            // Sort by updatedAt to get the most recent comment/subComment
+            $sort: {
+                "allComments.updatedAt": -1
+            }
+        },
+        {
+            // Limit to get only the most recent one
+            $limit: 1
+        },
+    ])
+
+*/
 

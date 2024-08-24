@@ -97,9 +97,13 @@ const respondTo = (id, user) => {
                             }
                         </View>
 
-                        <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>{isNaN(sinceDate(comment.createdAt)[0]) || (sinceDate(comment.createdAt)[0]==0 && 
+                        <View style={[{flexDirection:'row', justifyContent:'flex-start', alignItems:"center"}]}>
+                            <Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>@{ comment.user.username } - </Text>            
+                            <Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>{isNaN(sinceDate(comment.createdAt)[0]) || (sinceDate(comment.createdAt)[0]==0 && 
                                                                                                                                                                                                     (sinceDate(comment.createdAt)[1]=="secondes" || sinceDate(comment.createdAt)[1]=="ans"))
-                                                                                                                                                                      ? "A l'instant" :"Ecrit il y'a " + sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }</Text></View>
+                                                                                                                                                                      ? "A l'instant" :"Ecrit il y'a " + sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }
+                              </Text>
+                        </View>
                         {
                             Object.keys(comment).includes("subComment") && comment.subComment?.length > 0 && all
                             ?
@@ -143,7 +147,10 @@ const respondTo = (id, user) => {
                                                     <Text style={[commentsStyles.commentText]} >{parseMentions(item.text)}</Text>
                                                 </Pressable>
 
-                                                <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{user._id!=item.user._id ? navigation.navigate("Shop", {seller:item.user}) :  navigation.navigate('Preferences', {screen: 'MyShop',params:undefined});}}>
+                                                <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{
+                                                        //console.log(item.user);
+                                                        user._id!=item.user._id ? navigation.navigate("Shop", {seller:item.user}) :  navigation.navigate('Preferences', {screen: 'MyShop',params:undefined});
+                                                    }}>
                                                     <Image source={{uri: item.user.image||user.image}} style={[commentsStyles.commentProfile, ]} />
                                                 </Pressable>
 
@@ -156,7 +163,10 @@ const respondTo = (id, user) => {
                                                 }
                                             </View>
 
-                                            <View style={[{alignItems:"center"}]}><Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>Ecrit il y'a {sinceDate(comment.createdAt)[0] +" "+sinceDate(comment.createdAt)[1]  }</Text></View>
+                                            <View style={[{flexDirection:'row', justifyContent:'flex-end', alignItems:"center"}]}>
+                                                <Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>@{ item.user.username } - </Text>
+                                                <Text style={[customText.text, {fontSize:10,fontStyle:"italic",color:appColors.secondaryColor4}]}>Ecrit il y'a {sinceDate(item.createdAt)[0] +" "+sinceDate(item.createdAt)[1]  }</Text>
+                                            </View>
 
                                         </View>
         

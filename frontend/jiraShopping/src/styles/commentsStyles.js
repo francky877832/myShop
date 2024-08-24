@@ -12,7 +12,7 @@ export const commentsStyles = StyleSheet.create({
     container: 
     {
       backgroundColor : appColors.white,
-      paddingHorizontal:20,
+      paddingHorizontal:10,
       paddingBottom : 0,
     },
     commentContainer: 
@@ -28,6 +28,7 @@ export const commentsStyles = StyleSheet.create({
     flatlistContainer : 
     {
       backgroundColor : appColors.white,
+      paddingRight : 15
     },
     flatlistContainerNotAll :
     {
