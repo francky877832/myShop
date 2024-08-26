@@ -55,6 +55,16 @@ export const addProductStyles = StyleSheet.create({
         borderColor : appColors.secondaryColor4,
         justifyContent : "center",
         alignItems : "center",
+        
+    },
+    imageCloseButton:
+    {
+        width: 20,
+        height: 20,
+        backgroundColor: appColors.lightBlack,
+        position: "absolute",
+        alignSelf: "flex-end",
+        top: 0,
     },
     bottomPicker :
     {

@@ -223,32 +223,12 @@ const submitProduct = async () => {
 //Jai pas encore testé
 
 
-
    return (
 
 <View style={{flex:1}}>
-<KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
-<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView contentContainerStyle={[addProductStyles.container,{}]}>
-            <View style={[addProductStyles.containers]}>
-                <View style={[addProductStyles.titles]}>
-                    <Text style={[addProductStyles.titlesText]}>Photos</Text>
-                </View>
-                
-                <View style={[addProductStyles.contents, {width: '100%',}]}>
-                    <View style={[{flexDirection:"row", width: '100%', overflow: 'scroll', height:110 }]}>
-                        <View style={[addProductStyles.imageBox,]}>
-                            <Pressable onPress={()=>{setCameraOrGalery(!cameraOrGalery)}}>
-                                <Icon name="camera-outline" type="ionicon" size={50} color={appColors.secondaryColor1} />
-                                <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Photos {images.length}/{MAX_IMAGES}</Text>
-                            </Pressable>
-                        </View>
-                            <View style={{width:5,}}></View>
-
-                        
-<View style={{flex:1}}>
+        
 <FlatList
-    data={images.length > 0 ? images.length < MAX_IMAGES ? [...images, ...new Array(MAX_IMAGES-images.length)] : images : [1,2,3,4,5,6]}
+    data={images.length > 0 ? images.length < MAX_IMAGES ? [...images, ...new Array(MAX_IMAGES-images.length)] : images : [null, null, null, null, null, null]}
         renderItem={({ item }) => {
         // Ensure item is defined and handle it properly
          if (!item) return null
@@ -270,20 +250,35 @@ const submitProduct = async () => {
         }
 
 
-    keyExtractor={(item, index) => index.toString()} // Using index as key
-    horizontal={true}
+    keyExtractor={(item, index) => Math.random.toString()} // Using index as key
+    horizontal={false}
+    numColumns={3}
     ItemSeparatorComponent={() => <View style={{ width: 5 }} />}
     showsHorizontalScrollIndicator={true}
-    contentContainerStyle={{ }} // Set a maximum height to allow scrolling
-    //persistentScrollbar={true} // Sur Android, ceci garde le scrollbar toujours visible
-    style={{ flex: 1 }} 
-    scrollEnabled={true}
-/>
-</View>
-
-                    </View>
-                </View>
+    ListHeaderComponent={()=> (
+        <View style={[addProductStyles.containers]}>
+        <View style={[addProductStyles.titles]}>
+            <Text style={[addProductStyles.titlesText]}>Photos</Text>
+        </View>
+    
+    <View style={[addProductStyles.contents, {width: '100%',}]}>
+        <View style={[{flexDirection:"row", width: '100%', overflow: 'scroll', height:110 }]}>
+            <View style={[addProductStyles.imageBox,]}>
+                <Pressable onPress={()=>{setCameraOrGalery(!cameraOrGalery)}}>
+                    <Icon name="camera-outline" type="ionicon" size={50} color={appColors.secondaryColor1} />
+                    <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Photos {images.length}/{MAX_IMAGES}</Text>
+                </Pressable>
             </View>
+                <View style={{width:5,}}></View>
+        </View>
+        </View>
+    </View>
+
+    )}
+    contentContainerStyle={[addProductStyles.container]} // Set a maximum height to allow scrolling
+    ListFooterComponent={()=> (
+
+<View>
 
             <View style={[addProductStyles.containers]}>
                 <View style={[addProductStyles.titles]}>
@@ -515,10 +510,13 @@ const submitProduct = async () => {
                         />
                     </View>
             </View>
+            </View>
 
-            </ScrollView>
-        </TouchableWithoutFeedback>
-</KeyboardAwareScrollView>
+        )}
+        />
+        
+
+
         
         {cameraOrGalery &&
             <View style={[addProductStyles.bottomPicker]}>
@@ -548,6 +546,7 @@ const submitProduct = async () => {
                 <CustomButton text="Publier Le Produit" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={submitProduct} />
         </View>
 </View>
+
     )
 }
 export default AddProduct
