@@ -218,9 +218,25 @@ useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
         </View>
 
         <View style={[allCommetsStyles.inputContainer]}>
-            <View style={[allCommetsStyles.isResponseTo]}>
-                <Text style={[customText.text,{color:appColors.green,}]}>{user.username}</Text>
-            </View>
+            
+            {!!isResponseTo &&
+                <View>
+                    <View style={[{height:20, backgroundColor:appColors.white}]}></View>
+                    <View style={[allCommetsStyles.isResponseTo]}>
+                        <Pressable  View style={[allCommetsStyles.isResponseToClose]}  onPress={()=>{setUserToResponse(null);setIsResponseTo(null)}} >
+                            <Icon name="close" type='ionicon' size={20} color={appColors.white} />
+                        </Pressable>
+                        <View>
+                            <Pressable  onPress={()=>{}}>
+                                <Icon name="arrow-undo-sharp" type='ionicon' size={24} color={appColors.secondaryColor1} />
+                            </Pressable>
+                            <View View style={[allCommetsStyles.isResponseToTextContainer]}>
+                                <Text style={[customText.text,{color:appColors.secondaryColor3,fontWeight:'bold'}]}>Vous répondez a - {user.username}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            }
 
             <Input
                 placeholder="Posez une question"
@@ -277,11 +293,25 @@ const allCommetsStyles = StyleSheet.create({
         backgroundColor : appColors.white,
         borderTopWidth : 1,
         borderColor : appColors.lightWhite,
+        paddingHorizontal : 5,
     },
     isResponseTo:
     {
+        //flexDirection : 'row',
         justifyContent : 'center',
         alignItems : 'center',
+        backgroundColor : appColors.gray,
+        borderLeftWidth : 10,
+        borderLeftColor : appColors.secondaryColor1,
+        borderTopLeftRadius : 10,
+        borderBottomLeftRadius : 10,
     },
+    isResponseToClose:
+    {
+        position : 'absolute',
+        right : 0,
+        top : -2,
+        //backgroundColor : appColors.red,
+    }
 })
 

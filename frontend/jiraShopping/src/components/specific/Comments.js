@@ -92,7 +92,7 @@ const respondTo = (id, user) => {
                             </Pressable>
                             { !!comment._id &&
                                 <Pressable  onPress={()=>{respondTo(comment._id, comment.user)}}>
-                                    <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
+                                    <Icon name="arrow-undo-sharp" type='ionicon' size={24} color={appColors.black} />
                                 </Pressable>
                             }
                         </View>
