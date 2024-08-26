@@ -151,7 +151,7 @@ const takeUpPhoto = async () => {
 
 
 const deleteSelectedImage = (uri) => {
-    Alert.alert("Scroll Addproduct")
+    //Alert.alert("Scroll Addproduct")
     for(let i in images)
     {
         if(images[i].uri == uri)
@@ -236,7 +236,7 @@ const submitProduct = async () => {
                 </View>
                 
                 <View style={[addProductStyles.contents, {width: '100%',}]}>
-                    <View style={[{flexDirection:"row", width: '100%', overflow: 'scroll', height:110 }]}>
+                    <View style={[{flexDirection:"row", width: '100%', height:110 }]}>
                         <View style={[addProductStyles.imageBox,]}>
                             <Pressable onPress={()=>{setCameraOrGalery(!cameraOrGalery)}}>
                                 <Icon name="camera-outline" type="ionicon" size={50} color={appColors.secondaryColor1} />
@@ -246,7 +246,7 @@ const submitProduct = async () => {
                             <View style={{width:5,}}></View>
 
                         
-<View style={{flex:1}}>
+<View style={{width: '100%',}} >
 <FlatList
     data={images.length > 0 ? images.length < MAX_IMAGES ? [...images, ...new Array(MAX_IMAGES-images.length)] : images : [1,2,3,4,5,6]}
         renderItem={({ item }) => {
@@ -274,9 +274,9 @@ const submitProduct = async () => {
     horizontal={true}
     ItemSeparatorComponent={() => <View style={{ width: 5 }} />}
     showsHorizontalScrollIndicator={true}
-    contentContainerStyle={{ }} // Set a maximum height to allow scrolling
+    contentContainerStyle={{ height:100, backgroundColor:'blue'}} // Set a maximum height to allow scrolling
     //persistentScrollbar={true} // Sur Android, ceci garde le scrollbar toujours visible
-    style={{ flex: 1 }} 
+    style={{ backgroundColor:'red', flex: 1  }} 
     scrollEnabled={true}
 />
 </View>
