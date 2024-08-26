@@ -36,8 +36,13 @@ export const settings = [
 		available : true,
 	},
 	{
+		name : "Parrainage",
+		component : "Referral",
+		available : false,
+	},
+	{
 		name : "Devenir Une Boutique Pro",
-		component : "openShop",
+		component : "OpenShop",
 		available : false,
 	},
 ]
@@ -51,7 +56,7 @@ export const notifications =
 			ON_REGISTERED : { 
 				title : "Bienveue!!!",
 				message : "Nous sommes heureux de vous compter parmi nous. Sur jiraShopping, Vendez ce que vous voulez gratuitement.\nTout le monde merite une seconde chance, meme votre produit.",
-				action : "none",
+				action : "Account",
 			},
 		},
 

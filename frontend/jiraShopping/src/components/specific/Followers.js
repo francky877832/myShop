@@ -134,7 +134,7 @@ useEffect(()=>{
         const handleNavigate = (item) => {
             if(item._id === user._id)
             {
-                navigation.navigate('Preferences', {screen: 'Shop',params:undefined,})
+                navigation.navigate('Preferences', {screen: 'MyShop',params:undefined,})
             }
             else
             {

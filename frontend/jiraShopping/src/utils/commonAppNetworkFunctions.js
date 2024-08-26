@@ -59,7 +59,7 @@ exports.getNotifications = async (user, page, limit) => {
         if (!response.ok) {
             throw new Error('Erreur lors de la requête');
         }
-           // console.log(datas.notifications)
+       // console.log(datas.notifications)
         return datas.notifications
     }catch(error){
         console.log(error)
@@ -73,7 +73,7 @@ exports.getNotifications = async (user, page, limit) => {
 
 
 exports.updateNotificationsRead = async ({user, id}) => {
-    //console.log(id)
+    console.log(user, id)
     try{
         
         const response = await fetch(`${server}/api/datas/notifications/read/${user}/${id}`, {

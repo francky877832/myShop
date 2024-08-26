@@ -52,7 +52,7 @@ exports.LikeButton = (props) => {
                 //product.likes++
                 dispatch(addLocalFavourite({product, user}));
             }
-            dispatch(addFavourite({ item:item, bool: !like, user:user }));
+            dispatch(addFavourite({ item:item, bool:!like, user:user }));
         }, 500);
         
 

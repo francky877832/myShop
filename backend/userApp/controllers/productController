@@ -342,7 +342,7 @@ exports.getProductsUser =  (req, res, next) => {
   .exec()
       .then (async(products) => {
             // Étape 2 : Compter le total des produits pour la pagination
-          const totalDatas = await Product.countDocuments().exec();
+          const totalDatas = await Product.countDocuments({seller : new mongoose.Types.ObjectId(req.params.user)}).exec();
           const totalPages = Math.ceil(totalDatas / limit);
 
           // Étape 3 : Récupérer les identifiants des produits de la page actuelle

@@ -17,6 +17,7 @@ import { CommentsContext } from '../../context/CommentsContext';
 import { UserContext } from '../../context/UserContext';
 
 import { sendNotifications } from '../../utils/commonAppNetworkFunctions'
+import { customText } from 'react-native-paper';
 
 /*
 const loggedUserId = "66731fcb569b492d3ef429ba"
@@ -27,8 +28,9 @@ const AllCommets = (props) =>
 {
     const navigation = useNavigation()
     const route = useRoute()
-    const { product, inputFocused } = route.params
+    const { product, inputFocused, comments } = route.params
     const { reshapedComments, setReshapedComments, onNewComment, setOnNewComment, setPage, isResponseTo, setIsResponseTo, loadMoreComments, loadLastComment} = useContext(CommentsContext)
+  
     //const [comments_, setComments_] = useState(reshapedComments)
     //const setIsLoading = route.params.setIsLoading
     const [isFocused, setIsFocused] = useState(false)
@@ -216,6 +218,10 @@ useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
         </View>
 
         <View style={[allCommetsStyles.inputContainer]}>
+            <View style={[allCommetsStyles.isResponseTo]}>
+                <Text style={[customText.text,{color:appColors.green,}]}>{user.username}</Text>
+            </View>
+
             <Input
                 placeholder="Posez une question"
                 onChangeText={handleChangeText}
@@ -271,6 +277,11 @@ const allCommetsStyles = StyleSheet.create({
         backgroundColor : appColors.white,
         borderTopWidth : 1,
         borderColor : appColors.lightWhite,
+    },
+    isResponseTo:
+    {
+        justifyContent : 'center',
+        alignItems : 'center',
     },
 })
 

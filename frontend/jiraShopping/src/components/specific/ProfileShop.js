@@ -48,6 +48,7 @@ const ProfilShop = (props) => {
     const [numFollowers, setNumFollowers] = useState(seller.followers.length)
     const [numFollowings, setNumFollowings] = useState(seller.followings.length)
     const [numLikes, setNumLikes] = useState(seller.favourite)
+    const [numProducts, setNumProducts] = useState(seller.products||0)
 
     const flatListRef = useRef(null);
     const timeoutRef = useRef(null);
@@ -166,7 +167,7 @@ const ProfilShop = (props) => {
     }
 
     const loadMoreShopProducts = useCallback(async () => {
-        console.log("ook")
+        //console.log("ook")
         console.log(hasMore)
         if (isLoading || !hasMore) return;
     
@@ -176,7 +177,8 @@ const ProfilShop = (props) => {
           const datas = await getShopProducts(seller._id, page);
           const products = datas.products
           if (products.length > 0) {
-            console.log("pk")
+            //console.log("pk")
+            setNumProducts(datas.totalDatas)
             setProducts((prevProducts)=>[...prevProducts, ...products])
             setPage((prevPage) => prevPage + 1);
           } else {
@@ -311,8 +313,8 @@ const setFollowers = async (follower, following) => {
                                 </Pressable>
 
                                 <View  style={[profilShopStyles.followLeftElements, profilShopStyles.favourites,{}]}>
-                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{numLikes}</Text>
-                                    <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Likes</Text>
+                                    <Text style={[customText.text,{fontWeight:"bold"}]}>{numProducts}</Text>
+                                    <Text style={[customText.text,{color:appColors.secondaryColor5}]}>Produit.s</Text>
                                 </View>
                             </View>
 

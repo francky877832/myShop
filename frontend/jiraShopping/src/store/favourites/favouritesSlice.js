@@ -35,7 +35,7 @@ export const addFavourite = createAsyncThunk(
           });
 
           //console.log(item.seller)
-          
+          //'tem/favour'tes cont'ent les produ'ts brutes de la BDD differencts de ceux de ModifiedProducts
           if(!item.favourites.some(el => el._id===user._id))
           {
               await sendNotifications({ user:item.seller._id, source:"app", model:"PRODUCTS", type:"ON_NEW_LIKE", datas:item._id })

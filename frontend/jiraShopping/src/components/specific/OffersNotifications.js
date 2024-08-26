@@ -64,13 +64,12 @@ const OffersNotifications = (props) => {
   
 const openOffer = async (user, item) => {
     try
-    {console.log('0')
+    {     
+        navigation.navigate("Offers", {product:item.product, offers:item})
         if(item.read==0)
         {
             await updateOfferRead(item)
         }
-            
-        navigation.navigate("Offers", {product:item.product, offers:item})
         
     }
     catch(error)

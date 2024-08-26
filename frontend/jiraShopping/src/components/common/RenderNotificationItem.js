@@ -45,7 +45,7 @@ const RenderNotificationItem = (props) =>{
     const handleOpenNotif = () => {
         if(item.action!='none')
         {
-            openNotif(user.username, item)
+            openNotif(user, item)
         }
         
         setRead(1)

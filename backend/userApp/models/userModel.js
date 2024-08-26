@@ -25,6 +25,7 @@ const userSchema = new Schema({
     follower : { type: Number, default : 0 },
     following : { type: Number, default : 0 },
     favourite : { type: Number, default : 0 },
+    products : { type: Number, default : 0 },
 
     followers : [{ type : Schema.Types.ObjectId, ref : 'User', required : false }],
     followings : [{ type : Schema.Types.ObjectId, ref : 'User', required : false }],

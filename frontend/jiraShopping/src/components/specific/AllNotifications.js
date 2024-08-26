@@ -106,19 +106,30 @@ useEffect(() => {
 const openNotif = async (user, item) => {
   try
   {
-    if(item.read==0)
+
+      switch(item.type.toLowerCase())
       {
-        await updateNotificationsRead({user:user._id, id:item._id})
+        case 'products' :
+          //const data = await getProductFromNotifications(item.datas)
+          //console.log("data")
+          //console.log(data)
+          //{comments:comments,product:product,inputFocused:true}
+          //item.action = 'productDetails
+          navigation.navigate('ProductDetails', {productDetails:item.dataDetails,})
+          break;
+        case 'comments':
+          //navigation.navigate("AllComments",{comments:item.dataDetails.comments,product:item.dataDetails,inputFocused:true, pass:true})
+          //I can also use  {productDetails:item.dataDetails,pass:true} but...
+          navigation.navigate('ProductDetails',{reshapedComments:item.dataDetails.comments,productDetails:item.dataDetails,inputFocused:true, pass:true})
+          break;
+        default : break;
       }
- 
-    if(item.type.toLowerCase() == 'products')
-    {
-      const data = await getProductFromNotifications(item.datas)
-      //console.log("data")
-      //console.log(data)
-      //{comments:comments,product:product,inputFocused:true}
-      navigation.navigate(item.action, {productDetails:data,pass:true})
-    }
+
+      if(item.read==0)
+      {
+          await updateNotificationsRead({user:user._id, id:item._id})
+      }
+   
   }
   catch(error)
   {
