@@ -3,7 +3,7 @@ import { API_BACKEND } from '@env';
 import React, { useState, forwardRef, useRef, useEffect, useCallback, useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, Platform, KeyboardAvoidingView, Alert, InteractionManager  } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Comments from './Comments';
 import { CustomActivityIndicator } from "../common/CommonSimpleComponents";
@@ -61,22 +61,20 @@ useEffect(()=>{
 
 }, [])
 
-//if (inputRef.current) {inputRef.current.focus() }
-useEffect(()=>{
-    //Appel de useCallBack
-       // Ajouter l'écouteur pour l'événement de retour
-    const unsubscribe = navigation.addListener('beforeRemove', ()=>{
-        (e) => {
-            if (e) {
-              e.preventDefault(); // Empêcher le comportement par défaut de la navigation
-            }
-            //setOnNewComment(true)
-            //setIsLoading_(true)
-            navigation.dispatch(e.data.action);
-        }
-    });
-    return unsubscribe;
-}, [navigation])
+useEffect(() => {
+      const onBackPress = (e) => {
+        e.preventDefault();
+  
+        setUserToResponse(null);
+        setIsResponseTo(null);
+  
+        navigation.dispatch(e.data.action);
+      };
+  
+      const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
+  
+      return unsubscribe;
+    }, [navigation])
 
 
 const updateReshapedComments = (comment)=>{
@@ -219,7 +217,7 @@ useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
 
         <View style={[allCommetsStyles.inputContainer]}>
             
-            {!!isResponseTo &&
+            {!!userToResponse &&
                 <View>
                     <View style={[{height:20, backgroundColor:appColors.white}]}></View>
                     <View style={[allCommetsStyles.isResponseTo]}>
@@ -231,7 +229,7 @@ useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
                                 <Icon name="arrow-undo-sharp" type='ionicon' size={24} color={appColors.secondaryColor1} />
                             </Pressable>
                             <View View style={[allCommetsStyles.isResponseToTextContainer]}>
-                                <Text style={[customText.text,{color:appColors.secondaryColor3,fontWeight:'bold'}]}>Vous répondez a - {user.username}</Text>
+                                <Text style={[customText.text,{color:appColors.secondaryColor3,fontWeight:'bold'}]}>Vous répondez a - {userToResponse.username}</Text>
                             </View>
                         </View>
                     </View>

@@ -1,7 +1,7 @@
 import { API_BACKEND } from '@env';
 
 import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, Alert, Pressable, ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, Alert, Pressable, ActivityIndicator, InteractionManager} from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 
 import { offersStyles } from '../../styles/offersStyles';
@@ -163,6 +163,23 @@ const Offers = (props) => {
     const { user } = useContext(UserContext)
 //console.log(user._id)
 //console.log(product.seller)
+
+
+const inputRef = useRef(null)
+    
+useEffect(()=>{
+    
+    const task = InteractionManager.runAfterInteractions(() => {
+        if (inputRef.current && route.params.inputFocused)
+        {
+            inputRef.current.focus()
+        }
+    })
+
+    return () => task.cancel();
+
+}, [])
+
 const checkPrice = (price) => {
     //console.log(price.split('.').join(''))
     let price_ = parseInt(price.split('.').join(''))
@@ -315,6 +332,7 @@ useEffect(()=>{
                     ?
                     <View style={[offersStyles.inputContainer]}>
                         <Input placeholder="Placer une offre" onChangeText={(text)=>{checkPrice(text)}}
+                            ref={inputRef}
                             multiline={false}
                             onSubmitEditing={()=>{addOffer()}}
                             keyboardType='number-pad'
