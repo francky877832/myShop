@@ -18,6 +18,8 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+//console.log('Ok')
+
 app.use('/api/auth', userRoutes);
 
 const imagesPath =  path.join(__dirname, '/assets/images').replace(/\\/g, '/')

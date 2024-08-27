@@ -104,7 +104,7 @@ return unsubscribe;
         const password = "0000000"
         async function singIn(){
             const userCredential = await signInWithEmailAndPassword(email, password)
-            if (userCredential.user.emailVerified && !isEmailVerified)
+            if (userCredential.user.emailVerified && !(user.isEmailVerified))
             {
                 setUser({...user, isEmailVerified:1})
                 //MONGODB

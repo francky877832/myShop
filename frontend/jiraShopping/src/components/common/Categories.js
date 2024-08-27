@@ -213,7 +213,7 @@ const getCategory = async (type, cat, subCat) => {
 
     //navigation.navigate("CategoryResults", {category:selectedCategories_, searchText:"", display:"category"});
 }
-
+//route.params.handleCategory()
     return(
         <View style={[categoriesStyles.container]}>
 

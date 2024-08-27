@@ -14,7 +14,8 @@ exports.sendNotifications = async ({user, source, model, type, datas}) => {
     const notification = {
         user : user,
         source : source,
-        type : model.toLowerCase(),
+        modele : model.toLowerCase(),
+        type : type.toLowerCase(),
         message : message,
         action : action,
         read : 0,

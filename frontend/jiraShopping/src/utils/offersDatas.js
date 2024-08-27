@@ -120,6 +120,11 @@ export const notifications =
 			message : "",
 			action : "",
 		},
+		ON_PRODUCT_UPDATED : { 
+			title : "Produit Mis A Jour",
+			message : "Un produit que vous suivez a ete mis a jour. Consultez-le pour un nouveau deal.",
+			action : "ProductDetails",
+		},
 	},
 
 	ADMIN : {

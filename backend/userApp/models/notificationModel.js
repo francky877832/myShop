@@ -9,9 +9,11 @@ const notificatonSchema = new Schema({
     notifications : [{
             _id: { type: Schema.Types.ObjectId, required: true},
             source : { type : String, enum: ['app', 'admin'], defualt : "app", required : true },
-            type : { type : String, enum: ['normal', 'campagne', 'suggestion', 'modal', 'user', 'products', 'offers', 'orders', 'admin'], default : "normal", required : true },
+            modele : { type : String, enum: ['normal', 'campagne', 'suggestion', 'modal', 'user', 'products', 'offers', 'orders', 'admin'], default : "normal", required : true },
+            
             title : { type : String, required : true, default:"Produit" },
             message : { type : String, required : true },
+            type : { type : String, required : true, default:'ON_NEW_LIKE' },
             action : { type : String, required : true },
             datas : { type : Schema.Types.ObjectId, required : false },
             read : { type : Number, enum: [0, 1], default : 0, required : true },

@@ -146,4 +146,26 @@ export const addProductStyles = StyleSheet.create({
         fontWeight : "bold",
     },
 
+
+    modalContainer: {
+        flex: 1,
+        backgroundColor: appColors.clearBlack,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      fullImage: {
+        width: '90%',
+        height: '70%',
+      },
+      closeButton: {
+        marginTop: 20,
+        padding: 10,
+        backgroundColor: appColors.red,
+        borderRadius: 5,
+      },
+      closeButtonText: {
+        fontSize: 16,
+        color: appColors.white,
+      },
+
 })

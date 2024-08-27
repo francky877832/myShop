@@ -166,6 +166,7 @@ exports.updateUserNotifications = async (req, res) => {
             await addUserNotification(req, res);
         }
     } catch (error) {
+      console.log(error)
         res.status(400).json({ error });
     }
 };

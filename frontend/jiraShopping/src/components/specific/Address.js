@@ -31,7 +31,11 @@ const   CityPicker = (props) => {
             id: city.geonameId.toString(),
             name: city.name
           }));
-          //console.log(cityNames)
+          
+            if(!response.ok)
+            {
+                throw new Error("Erreur lors de la recuperation des addresses", await response.text())
+            }
           setCities(cityNames);
           setLoading(false);
         } catch (error) {

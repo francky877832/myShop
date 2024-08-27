@@ -14,12 +14,13 @@ const mongoose = require('mongoose');
 exports.addProductUser = (req, res, next) => {
  
   const datas = req.body;
-  //console.log(req.files)
+  console.log(req.files)
+  console.log(req.body.images)
   delete datas._id;
  // delete datas.seller;
 
   const imageFiles = req.files
-  let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/userApp/assets/images/products/${file.filename}`})
+  let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/${file.destination}/${file.filename}`})
  
   const product = new Product(
     {
@@ -43,23 +44,44 @@ exports.addProductUser = (req, res, next) => {
 
 
 
-exports.updateProduct = (req, res, next) => {
-  const product = req.file ? {
-        ...JSON.parse(req.body.product),
-        imageUrl: `${req.protocol}://${req.get('host')}/userApp/assets/images/${req.file.filename}`
-     } : { ...req.body };
+exports.updateProduct = async (req, res, next) => {
+  //console.log(req.files)
+  //console.log(JSON.parse(req.body.images))
   const datas = req.body
-  delete datas._id
-  delete datas.seller
+  const imageFiles = req.files || []
+  
+  try
+  {
 
-//if product.seller eq auth.user
-  Product.updateOne({ _id : req.params.id }, product)
-  .then( () => { 
-      res.status(200).json({ message: 'Produit mis a jour avec success' });
-  })
-  .catch( (error) => { 
-      res.status(400).json({error: error});
-   });
+    const oldImages = JSON.parse(datas.images).filter((img)=>{
+            //const isURL = /^(http(s)?:\/\/)?([^\s$.?#].[^\s]*)$/i;
+            return ['http', 'https'].includes(img.split(':')[0])
+        })
+
+    const newImages = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/${file.destination}/${file.filename}`})
+
+    //console.log(oldImages)
+    //console.log(newImages)
+    const product = {...req.body, images : [...oldImages, ...newImages]}
+
+    delete datas._id
+    delete datas.seller
+
+
+    
+        const updatedProduct = await Product.updateOne({ _id : req.params.id }, product)
+
+        if (updatedProduct.nModified === 0) {
+          return res.status(404).json({ message: 'Product not found or no changes made' });
+        }
+        
+        res.status(200).json({ message: 'Produit mis a jour avec success' });
+      }
+      catch(error)
+      { 
+          console.log(error)
+          res.status(400).json({error: error});
+      };
 };
 
 

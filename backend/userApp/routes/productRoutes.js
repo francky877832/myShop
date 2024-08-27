@@ -17,7 +17,7 @@ router.get('/categories', prodCtrl.getProductsFromCategories);
 router.get('/get/:id', prodCtrl.getProduct);
 
 router.post('/add', productsUserApp.array('images', 6), prodCtrl.addProductUser);
-router.put('/update/:id', productsUserApp.array('images', 6), prodCtrl.updateProduct);
+router.put('/update/:id', productsUserApp.array('imagesToUpload', 6), prodCtrl.updateProduct);
 router.put('/likes/update/:id', prodCtrl.updateProductNumLikes);
 router.delete('/remove/:id', prodCtrl.removeProduct);
 
