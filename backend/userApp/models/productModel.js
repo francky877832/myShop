@@ -21,7 +21,7 @@ const productSchema = new Schema({
     //category : { type : Schema.Types.ObjectId, ref : 'Category', required : true  },
     category : { type : String, required : false, default:"Autres/Autres" },
     brand : { type : String, required : false },
-    couleur : { type : String, required : false},
+    color : { type : String, required : false},
     
     images : [{ type : String, required : true}],
     feesBy : { type : String, enum : ['seller', 'buyer'], default : "buyer" },

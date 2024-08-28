@@ -122,7 +122,12 @@ export const notifications =
 		},
 		ON_PRODUCT_UPDATED : { 
 			title : "Produit Mis A Jour",
-			message : "Un produit que vous suivez a ete mis a jour. Consultez-le pour un nouveau deal.",
+			message : "Un produit que vous suivez a ete mis a jour. Précipitez-vous pour placer un nouveau deal.",
+			action : "ProductDetails",
+		},
+		ON_PRODUCT_CREADTED : { 
+			title : "Nouveau Produit",
+			message : "Une boutique que vous suivez vient d'ajouter un nouveau produit. Précipitez-vous pour faire une offre.",
 			action : "ProductDetails",
 		},
 	},

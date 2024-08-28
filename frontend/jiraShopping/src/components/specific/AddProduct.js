@@ -12,7 +12,7 @@ import * as MediaLibrary from 'expo-media-library';
 import * as ImageManipulator from 'expo-image-manipulator';
 
 
-import { appColors, customText } from '../../styles/commonStyles';
+import { appColors, customText, formErrorStyle } from '../../styles/commonStyles';
 import { CustomButton, PriceDetails} from "../common/CommonSimpleComponents"
 import { screenWidth, screenHeight } from '../../styles/commonStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
@@ -33,7 +33,10 @@ import { sendNotifications } from '../../utils/commonAppNetworkFunctions'
 
 import { requestPermissions, pickImages, takePhoto, resizeImages } from '../../utils/utilsFunctions';
 import { UserContext } from '../../context/UserContext';
+import { asyncThunkCreator } from '@reduxjs/toolkit';
 
+import productValidationSchema from '../forms/validations/productValidation';
+import * as Yup from 'yup';
 
 const AddProduct = (props) => {
     const route = useRoute()
@@ -93,6 +96,8 @@ const AddProduct = (props) => {
     const [images, setImages] = useState(product.images.map(img=>({uri:img})));
     const [cameraOrGalery, setCameraOrGalery] = useState(false)
     const MAX_IMAGES = 6, MIN_IMAGES = 3
+
+    const [errors, setErrors] = useState({});
 
 
 //Traitement des donnees et envoie au serveur
@@ -178,6 +183,7 @@ const handleCategory = () => {
 
 const submitProduct = async () => {
     try {
+        setErrors({});
         //console.log(images)
         const images_ = await resizeImages(images,IMG_MAX_HEIGHT,IMG_MAX_WIDTH)
         //console.log(images_)
@@ -197,7 +203,7 @@ const submitProduct = async () => {
             seller : user._id,
             category : !!selectedCategories.name ? `${selectedCategories.name}/${selectedCategories.subCategories}`: product.category,
             brand : selectedBrand?selectedBrand:product.brand,
-            color : selectedColor?selectedColor:product.couleur,
+            color : selectedColor?selectedColor:product.color,
             feesBy : valueFeesBy,
             garanti : valueGaranti,
             stock : valueStock, 
@@ -205,6 +211,10 @@ const submitProduct = async () => {
         }
         //Gestion des images
         //console.log(images)
+        const form = { datas, images}
+        await productValidationSchema.validate(form, { abortEarly: false });
+
+/*
         images.forEach(async (image, index) => {
             if(image.fileName)
             {
@@ -227,7 +237,7 @@ const submitProduct = async () => {
         
         //console.log(formData._parts)
 
-        if(!product)
+        if(!product.name)
         {
             const response = await fetch(`${server}/api/datas/products/add`,{
                 method: 'POST',
@@ -243,12 +253,19 @@ const submitProduct = async () => {
                 const errorData = await response.json();
                 throw new Error(`Server error: ${errorData.message || 'Unknown error'}`);
             }
+
+                if(user.followers.length>0)
+                {
+                    user.followers.forEach(async (follower)=>{
+                        await sendNotifications({ user:follower._id, source:"app", model:"PRODUCTS", type:"ON_PRODUCT_CREADTED", datas:product._id })
+                    })
+                }
         }
         else
         {
             //console.log("MODIFIED")
             //console.log(product._id)
-            formData.append('images',  JSON.stringify(images.map(img=>(img.uri))))
+           formData.append('images',  JSON.stringify(images.map(img=>(img.uri))))
             //console.log(formData._parts)
             const response = await fetch(`${server}/api/datas/products/update/${product._id}`,{
                 method: 'PUT',
@@ -259,8 +276,12 @@ const submitProduct = async () => {
                 },
             });
 
-            
-            await sendNotifications({ user:product.seller._id, source:"app", model:"PRODUCTS", type:"ON_PRODUCT_UPDATED", datas:product._id })
+            if(product.favourites.length>0)
+            {
+                product.favourites.forEach(async (likeAdder)=>{
+                    await sendNotifications({ user:likeAdder._id, source:"app", model:"PRODUCTS", type:"ON_PRODUCT_UPDATED", datas:product._id })
+                })
+            }
         
 
             if (!response.ok) {
@@ -268,13 +289,21 @@ const submitProduct = async () => {
                 const errorData = await response.json();
                 throw new Error(`Server error: ${errorData.message || 'Unknown error'}`);
             }
+           
         }
             
            // const responseJson = await response.json();
-
+*/
             
     } catch (error) {
-        console.error("AddProduct", error);
+        //console.error("AddProduct", error);
+        if (error instanceof Yup.ValidationError) {
+            const formErrors = {};
+            error.inner.forEach(err => {
+              formErrors[err.path] = err.message;
+            });
+            setErrors(formErrors);
+        }
     }
 
 };
@@ -380,10 +409,10 @@ const handleImagePress = (image) => {
     </Modal>
 </ScrollView>
 
-
-                    </View>
-                </View>
+                        {errors.images && <Text style={[formErrorStyle.text]}>{errors.images}</Text>}
+                </View>  
             </View>
+        </View>
 
             <View style={[addProductStyles.containers]}>
                 <View style={[addProductStyles.titles]}>
@@ -392,6 +421,7 @@ const handleImagePress = (image) => {
                 
                 <View style={[addProductStyles.contents]}>
                     <View style={{width:10,}}></View>
+                    <View>
                         <Input placeholder="EX : Samsung Galaxy Z-Fold" value={valueName} onChangeText={(name)=>{setValueName(name)}}
                             inputMode='text'
                             multiline={false}
@@ -404,7 +434,9 @@ const handleImagePress = (image) => {
                             containerStyle={ [searchBarStyles.containerBox,]}
                             inputContainerStyle = {[searchBarStyles.inputContainer, isNameFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
                         />
+                        {errors.name && <Text style={[formErrorStyle.text]}>{errors.name}</Text>}
                     </View>
+                </View>
             </View>
 
             
@@ -415,18 +447,21 @@ const handleImagePress = (image) => {
                 
                 <View style={[addProductStyles.contents]}>
                     <View style={{width:10,}}></View>
-                        <Input placeholder="EX : Téléphone neuf, je l!ai juste utilisé 2 fois. 128 Go et 8 Go de Ram..." value={valueDesc} onChangeText={(desc)=>{setValueDesc(desc)}}
-                            inputMode='text'
-                            multiline={true}
-                            maxLength={500}
-                            placeholderTextColor={appColors.secondaryColor3}
-                            inputStyle = {[searchBarStyles.inputText, ]}
-                            onFocus={() => setIsDescFocused(true)}
-                            onBlur={() => setIsDescFocused(false)}
-                            underlineColorAndroid='transparent'
-                            containerStyle={ [searchBarStyles.containerBox,]}
-                            inputContainerStyle = {[searchBarStyles.inputContainer, isDescFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
-                        />
+                        <View>
+                            <Input placeholder="EX : Téléphone neuf, je l!ai juste utilisé 2 fois. 128 Go et 8 Go de Ram..." value={valueDesc} onChangeText={(desc)=>{setValueDesc(desc)}}
+                                inputMode='text'
+                                multiline={true}
+                                maxLength={500}
+                                placeholderTextColor={appColors.secondaryColor3}
+                                inputStyle = {[searchBarStyles.inputText, ]}
+                                onFocus={() => setIsDescFocused(true)}
+                                onBlur={() => setIsDescFocused(false)}
+                                underlineColorAndroid='transparent'
+                                containerStyle={ [searchBarStyles.containerBox,]}
+                                inputContainerStyle = {[searchBarStyles.inputContainer, isDescFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
+                            />
+                            {errors.description && <Text style={[formErrorStyle.text]}>{errors.description}</Text>}
+                        </View>
                     </View>
             </View>
 
@@ -437,24 +472,28 @@ const handleImagePress = (image) => {
                 
                 <View style={[addProductStyles.contents,]}>
                     <View style={{width:10,}}></View>
-                        <RadioButton.Group onValueChange={val => {setValueEtat(val)}} value={valueEtat} style={[addProductStyles.radioGroup,{backgroundColor:"red",}]}>
-                            <View style={[addProductStyles.radioBox,]}>
-                                <View style={addProductStyles.radioContainer}>
-                                    <RadioButton value="new" />
-                                    <Text>Neuf</Text>
+                        <View>
+                            <RadioButton.Group onValueChange={val => {setValueEtat(val)}} value={valueEtat} style={[addProductStyles.radioGroup,{backgroundColor:"red",}]}>
+                                <View style={[addProductStyles.radioBox,]}>
+                                    <View style={addProductStyles.radioContainer}>
+                                        <RadioButton value="new" />
+                                        <Text>Neuf</Text>
+                                    </View>
+                                    
+                                    <View style={addProductStyles.radioContainer}>
+                                        <RadioButton value="used" />
+                                        <Text>Utilisé</Text>
+                                    </View>
+                                    
+                                    <View style={addProductStyles.radioContainer}>
+                                        <RadioButton value="new used" />
+                                        <Text>Peu Utilisé</Text>
+                                    </View>
                                 </View>
-                                
-                                <View style={addProductStyles.radioContainer}>
-                                    <RadioButton value="used" />
-                                    <Text>Utilisé</Text>
-                                </View>
-                                
-                                <View style={addProductStyles.radioContainer}>
-                                    <RadioButton value="new used" />
-                                    <Text>Peu Utilisé</Text>
-                                </View>
-                            </View>
-                        </RadioButton.Group>
+                            </RadioButton.Group>
+
+                            {errors.condition && <Text style={[formErrorStyle.text]}>{errors.condition}</Text>}
+                        </View>
                 </View>
             </View>
 
@@ -487,10 +526,16 @@ const handleImagePress = (image) => {
                             <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>Couleur</Text>
                             <Icon name="chevron-forward" type="ionicon" color={appColors.secondaryColor1} />
                                 {
-                                    (selectedColor || product.couleur) &&
-                                    <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>{!selectedColor?product.couleur:capitalizeFirstLetter(selectedColor)}</Text>
+                                    (selectedColor || product.color) &&
+                                    <Text style={[addProductStyles.normalText,{fontWeight:"bold",}]}>{!selectedColor?product.color:capitalizeFirstLetter(selectedColor)}</Text>
                                 }
                         </Pressable>
+                        
+                        <View style={{padding:5, paddingHorizontal:10}}>
+                            {errors.category && <Text style={[formErrorStyle.text]}>{errors.category}</Text>}
+                            {errors.brand && <Text style={[formErrorStyle.text]}>{errors.brand}</Text>}
+                            {errors.color && <Text style={[formErrorStyle.text]}>{errors.color}</Text>}
+                        </View>
                 </View>
 
             </View>
@@ -503,22 +548,24 @@ const handleImagePress = (image) => {
                 
                 <View style={[addProductStyles.contents,]}>
                     <View style={{width:10,}}></View>
-                        <RadioButton.Group onValueChange={val => {setValueFeesBy(val)}} value={valueFeesBy} style={[addProductStyles.radioGroup,{backgroundColor:"red",}]}>
-                            <View style={[addProductStyles.radioBox,]}>
-                                <View style={addProductStyles.radioContainer}>
-                                    <RadioButton value="seller" />
-                                    <Text>Moi</Text>
+                        <View>
+                            <RadioButton.Group onValueChange={val => {setValueFeesBy(val)}} value={valueFeesBy} style={[addProductStyles.radioGroup,{backgroundColor:"red",}]}>
+                                <View style={[addProductStyles.radioBox,]}>
+                                    <View style={addProductStyles.radioContainer}>
+                                        <RadioButton value="seller" />
+                                        <Text>Moi</Text>
+                                    </View>
+                                    
+                                    <View style={addProductStyles.radioContainer}>
+                                        <RadioButton value="buyer" />
+                                        <Text>L'acheteur</Text>
+                                    </View>
+                                    
                                 </View>
-                                
-                                <View style={addProductStyles.radioContainer}>
-                                    <RadioButton value="buyer" />
-                                    <Text>L'acheteur</Text>
-                                </View>
-                                
-                            </View>
+                            </RadioButton.Group>
 
-                        </RadioButton.Group>
- 
+                            {errors.feesBy && <Text style={[formErrorStyle.text]}>{errors.feesBy}</Text>}
+                        </View>
                 </View>
 
 
@@ -537,12 +584,13 @@ const handleImagePress = (image) => {
                                 inputContainerStyle = {[searchBarStyles.inputContainer, isKargoPrice && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
                             />
 
-                    <View style={{}}>
-                    <Text style={[customText.text,{fontStyle:'italic'}]}>Ce detail n'est pas obligatoire. Mais s'il est renseigné, nous aidera dans une estimation plus nette de vos gains </Text>
-                </View>
+                        <View style={{}}>
+                            <Text style={[customText.text,{fontStyle:'italic'}]}>Ce detail n'est pas obligatoire. Mais s'il est renseigné, nous aidera dans une estimation plus nette de vos gains </Text>
+                            {errors.kargoPrice && <Text style={[formErrorStyle.text]}>{errors.kargoPrice}</Text>}
+                        </View>
 
-    </View>
-</View>
+                    </View>
+                </View>
 
             </View>
 
@@ -556,6 +604,7 @@ const handleImagePress = (image) => {
                 
                 <View style={[addProductStyles.contents]}>
                     <View style={{width:10,}}></View>
+
                         <Input placeholder="Garanti en Mois" value={valueGaranti} onChangeText={(garanti)=>{setValueGaranti(garanti)}}
                             inputMode='numeric'
                             multiline={false}
@@ -567,8 +616,9 @@ const handleImagePress = (image) => {
                             containerStyle={ [searchBarStyles.containerBox,]}
                             inputContainerStyle = {[searchBarStyles.inputContainer, isGarantiFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
                         />
+                        
 
-                    <Input placeholder="Nombre de ce produit. Ex : 1" value={valueStock} onChangeText={(stock)=>{setValueStock(stock)}}
+                        <Input placeholder="Quantité. Ex : 1" value={valueStock} onChangeText={(stock)=>{setValueStock(stock)}}
                             inputMode='numeric'
                             multiline={false}
                             placeholderTextColor={appColors.secondaryColor3}
@@ -579,7 +629,14 @@ const handleImagePress = (image) => {
                             containerStyle={ [searchBarStyles.containerBox,]}
                             inputContainerStyle = {[searchBarStyles.inputContainer, isStockFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
                         />
-                    </View>
+                           
+                </View>
+
+                <View style={{backgroundColor:appColors.white, paddingHorizontal:20}}>
+                    {errors.garanti && <Text style={[formErrorStyle.text]}>{errors.garanti}</Text>}
+                    {errors.stock && <Text style={[formErrorStyle.text]}>{errors.stock}</Text>}
+                    <View style={{height:10,}}></View>
+                </View>
             </View>
 
 
@@ -617,7 +674,7 @@ const handleImagePress = (image) => {
                         />
                     }
 
-                        <Input placeholder="Nouveau prix" value={formatMoney(valuePrice)} onChangeText={(price)=>{setValuePrice(formatMoney(price))}}
+                        <Input placeholder={product.price?"Nouveau prix":"Prix produit"} value={formatMoney(valuePrice)} onChangeText={(price)=>{setValuePrice(formatMoney(price))}}
                             inputMode='numeric'
                             multiline={false}
                             placeholderTextColor={appColors.secondaryColor3}
@@ -628,7 +685,12 @@ const handleImagePress = (image) => {
                             containerStyle={ [searchBarStyles.containerBox,]}
                             inputContainerStyle = {[searchBarStyles.inputContainer, isPriceFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
                         />
+                         
                     </View>
+                    <View style={{backgroundColor:appColors.white, paddingHorizontal:20}}>
+                        {errors.price && <Text style={[formErrorStyle.text]}>{errors.price}</Text>}
+                    <View style={{height:10,}}></View>
+                </View>
             </View>
 
             </ScrollView>

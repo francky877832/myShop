@@ -142,6 +142,7 @@ export const commonSimpleComponentsStyles = StyleSheet.create({
             color : appColors.white,
         },
     },
+
     
 
 })

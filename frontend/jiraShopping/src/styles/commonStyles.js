@@ -59,3 +59,11 @@ export const inputTextStyle = {
     fontWeight : "bold",
 
 }
+
+export const formErrorStyle = {
+    text :
+    {
+        color : appColors.red,
+    }
+    
+}

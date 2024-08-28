@@ -308,11 +308,11 @@ const handleSellerBrandPressed = (product) => {
                             </View>
                             <Text style={[customText.text, { paddingLeft: 5 }]}>{capitalizeFirstLetter(data.condition)}</Text>
                         </View>
-                        {data.couleur ?
+                        {data.color ?
                             <View style={[{ flexDirection: "row", justifyContent:'space-between' }]}>
-                                <View style={[productDetailsStyles.color, {backgroundColor:data.couleur.toLowerCase(), borderWidth:1, borderColor:data.couleur.toLowerCase()==='white'?appColors.black:data.couleur.toLowerCase()}]}></View>
+                                <View style={[productDetailsStyles.color, {backgroundColor:data.color.toLowerCase(), borderWidth:1, borderColor:data.color.toLowerCase()==='white'?appColors.black:data.color.toLowerCase()}]}></View>
                                 <View style={{width:5}} ></View>
-                                <Text style={[customText.text]}>{capitalizeFirstLetter(data.couleur)}</Text>
+                                <Text style={[customText.text]}>{capitalizeFirstLetter(data.color)}</Text>
                             </View>
                             : false
                         }
