@@ -181,14 +181,16 @@ const handleCategory = () => {
     console.log('Its ok')
 }
 
-const submitProduct = async () => {
+const submitProduct = async () => { 
+    
     try {
-        setErrors({});
+       setErrors({});
         //console.log(images)
         const images_ = await resizeImages(images,IMG_MAX_HEIGHT,IMG_MAX_WIDTH)
         //console.log(images_)
         
         let formData = new FormData()
+        
         const datas = {
             name : valueName,
             description : valueDesc,
@@ -211,7 +213,9 @@ const submitProduct = async () => {
         }
         //Gestion des images
         //console.log(images)
-        const form = { datas, images}
+        console.log(errors)
+        const form = { ...datas, images}
+        console.log(form)
         await productValidationSchema.validate(form, { abortEarly: false });
 
 /*
@@ -302,6 +306,7 @@ const submitProduct = async () => {
             error.inner.forEach(err => {
               formErrors[err.path] = err.message;
             });
+            //console.log(formErrors)
             setErrors(formErrors);
         }
     }

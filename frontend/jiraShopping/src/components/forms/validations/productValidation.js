@@ -26,7 +26,6 @@ const productValidationSchema = Yup.object().shape({
 
     maxPrice: Yup.number()
         .typeError('Le prix maximum doit être un nombre')
-        .moreThan(Yup.ref('minPrice'), 'Le prix maximum doit être supérieur au prix minimum')
         .required('Le prix maximum est requis'),
 
     condition: Yup.string()
@@ -48,8 +47,10 @@ const productValidationSchema = Yup.object().shape({
     feesBy: Yup.string()
         .required('Le mode de frais est requis'),
 
-    garanti: Yup.string()
-        .nullable(), // Garanti pourrait être facultatif
+    garanti: Yup.number()
+        .typeError('La garanti doit être un nombre')
+        .integer('La garanti doit être un entier')
+        .required('La garanti est requis'),
 
     stock: Yup.number()
         .typeError('Le stock doit être un nombre')
