@@ -32,7 +32,7 @@ import { BasketProvider } from '../context/BasketContext';
 import { UserProvider } from '../context/UserContext';
 import { ProductProvider } from '../context/ProductContext';
 import { CommentsProvider } from '../context/CommentsContext';
-
+import { OrdersProvider } from '../context/OrdersContext';
 
 import { annimatedStackTransition } from './commonNavigationFonctions'
 
@@ -50,6 +50,7 @@ export default function MainNavigation() {
   <ProductProvider>
     <ProductItemProvider>
           <FilterProvider>
+            <OrdersProvider>
             <CommentsProvider>
             <Stack.Navigator
               initialRouteName="UserLogin"
@@ -72,6 +73,7 @@ export default function MainNavigation() {
                 <Stack.Screen name="PhoneAuth" component={PhoneAuth}  options={{ title: <HeaderNavigation title="PhoneAuth"/>, headerShown : true, tabBarVisible: false, }} />
               </Stack.Navigator>
             </CommentsProvider>
+            </OrdersProvider>
           </FilterProvider>
       </ProductItemProvider>
       </ProductProvider>

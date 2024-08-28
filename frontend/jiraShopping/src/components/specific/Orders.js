@@ -31,65 +31,10 @@ const Orders = (props) => {
     const { user } = useContext(UserContext)
     //const user = {_id : "668fdfc6077f2a5c361dd7fc",}
     const [isLoading, setIsLoading] = useState(false)
-    const [page, setPage] = useState(1);
-    const limit = 50
-    const [hasMore, setHasMore] = useState(true);
-    const [offers, setOffers] = useState([])
+
     const navigation = useNavigation()
-
-
-  const getOff = useCallback(async (user, page, limit) => {
-    if (isLoading || !hasMore) return;
-  
-    setIsLoading(true);
-    try {
-  
-      const newData = await getOffers(user, page, limit);
-      if (newData.length > 0) {
-        setOffers((prevOffers)=>[...prevOffers, ...newData])
-        setPage((prevPage) => prevPage + 1);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error('Erreur lors du chargement des données :', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);
-  
-  
-  const onEndReached = async () => { await getOff(user, page, limit) }
-
-  
-const openOffer = async (user, item) => {
-    try
-    {
-        if(item.read==0)
-        {
-            await updateOfferRead(item)
-        }
-            
-        navigation.navigate("Offers", {product:item.product, offers:item})
-    }
-    catch(error)
-    {
-      Alert.alert('openOffer', 'Verifier votre connexion internet.')
-      console.log(error)
-    }
-}
-
-  
-  useEffect(() => {
-    const fetchData = async () => {  
-        //console.log("isLoading")
-        await getOff(user, page, limit)
-      };
-      
-       // fetchData();
-    
-  }, []);
-
+    const route = useRoute()
+    const {order } = route.params
 
 
     return (

@@ -22,6 +22,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 import OffersNotifications from './OffersNotifications';
 import AllNotifications from './AllNotifications';
+import OrdersNotifications from './OrdersNotifications';
 
 const initialLayout = { width: Dimensions.get('window').width };
 
@@ -29,7 +30,7 @@ const initialLayout = { width: Dimensions.get('window').width };
  
 const Notifications = (props) => {
   const route = useRoute()
-  let key = 0
+  let key = 2
   if(route.params)
   {
     key = route.params.key
@@ -37,8 +38,9 @@ const Notifications = (props) => {
     const [index, setIndex] = useState(key);
     const [routes] = useState([
       { key: 'all', title: 'Toutes' },
-      { key: 'offers', title: 'Offres' }
-     
+      { key: 'offers', title: 'Offres' },
+      { key: 'orders', title: 'Commandes' }
+
     ]);
   
   /*
@@ -50,7 +52,8 @@ const Notifications = (props) => {
   */
     const renderScene = SceneMap({
       all: AllNotifications,
-      offers : OffersNotifications
+      offers : OffersNotifications,
+      orders : OrdersNotifications
     });
   
    

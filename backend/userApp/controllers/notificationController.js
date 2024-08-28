@@ -14,113 +14,6 @@ const createNotificationObject = (req) => ({
     title : req.body.title,
 });
 
-const productPipeline = (req, res, next) => {
-    const pipeline = [
-        {
-        $lookup: {
-            from: 'users',
-            localField: 'seller',
-            foreignField: '_id',
-            as: 'seller'
-        }
-        },
-        { $unwind: '$seller' }, // Décomposer le tableau seller en objets individuels
-        {
-        $lookup: {
-            from: 'users',
-            localField: 'seller.followers',
-            foreignField: '_id',
-            as: 'seller.followers'
-        }
-        },
-        {
-        $lookup: {
-            from: 'users',
-            localField: 'seller.followings',
-            foreignField: '_id',
-            as: 'seller.followings'
-        }
-        },
-        {
-        $lookup: {
-            from: 'users',
-            localField: 'seller.favourites',
-            foreignField: '_id',
-            as: 'seller.favourites'
-        }
-        },
-        {
-        $lookup: {
-            from: 'favourites',
-            localField: 'favourites',
-            foreignField: '_id',
-            as: 'favourites'
-        }
-        },
-        {
-        $lookup: {
-            from: 'comments',
-            let: { productId: '$_id' },
-            pipeline: [
-            { $match: { $expr: { $eq: ['$product', '$$productId'] } } },
-            { $sort: { _id: -1 } },
-            {
-                $lookup: {
-                from: 'users',
-                localField: 'user',
-                foreignField: '_id',
-                as: 'user'
-                }
-            },
-            {
-                $unwind: '$user' // Décomposer le tableau user en objets individuels
-            },
-            {
-                $lookup: {
-                from: 'users',
-                localField: 'subComment.user',
-                foreignField: '_id',
-                as: 'subCommentUsers'
-                }
-            },
-            {
-                $addFields: {
-                subComment: {
-                    $map: {
-                    input: '$subComment',
-                    as: 'sub',
-                    in: {
-                        _id: '$$sub._id',
-                        user: {
-                        $arrayElemAt: [
-                            {
-                            $filter: {
-                                input: '$subCommentUsers',
-                                cond: { $eq: ['$$sub.user', '$$sub.user'] }
-                            }
-                            },
-                            0
-                        ]
-                        },
-                        username: '$$sub.username',
-                        isResponseTo: '$$sub.isResponseTo',
-                        text: '$$sub.text',
-                        visible: '$$sub.visible',
-                        createdAt: '$$sub.createdAt',
-                        updatedAt: '$$sub.updatedAt'
-                    }
-                    }
-                }
-                }
-            }
-            ],
-            as: 'comments'
-        }
-        }
-    ];
-    return pipeline
-}
-
 
 const addUserNotification = async (req, res) => {
     const notification = new Notification({
@@ -408,9 +301,6 @@ exports.getUserNotifications = async (req, res, next) => {
     {
         const results = await Notification.aggregate(pipeline).exec();
 
-        results.map(result => {
-            
-        })
 
         const totalDatas = await Notification.countDocuments({ user: new mongoose.Types.ObjectId(req.params.user) }).exec();
         const totalPages = Math.ceil(totalDatas / limit);

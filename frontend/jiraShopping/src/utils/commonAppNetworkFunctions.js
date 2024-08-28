@@ -166,13 +166,89 @@ exports.updateOfferRead = async (item) => {
 
 
 
+//ORDERS
+
+exports.getOrders = async (user, page, limit) => {
+    console.log("data.orders")
+    try{
+        
+        const response = await fetch(`${server}/api/datas/orders/get/${user._id}?page=${page}&limit=${limit}`);            
+        const data = await response.json()
+       
+        if (!response.ok) {
+            throw new Error('Erreur lors de la requête');
+        }
+        
+        return data.orders
+    }catch(error){
+        console.log(error)
+        console.log("Get Offers", "Une erreur est survenue! "+ error,)
+        return []
+    }
+}
+
+exports.updateOrderRead = async (itemId, productId) => {
+    const order = {
+        product : productId
+    }
+
+    try{
+        
+        const response = await fetch(`${server}/api/datas/orders/offer/update/read/${itemId}`, {
+            method: 'PUT',
+            body: JSON.stringify(order),
+            headers: {
+                'Content-Type': 'application/json',
+        },})          
+        //const datas = await response.json()
+                //console.log(datas)
+        if (!response.ok) {
+            throw new Error('Erreur lors de la requête');
+        }
+            //console.log(datas)
+            return true
+    }catch(error){
+        console.log(error)
+        Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+        return false
+    }
+}
+
+exports.updateOrderStatus = async (itemId, productId, status) => {
+    //console.log(item)
+    const order = {
+        product : productId,
+        status : status
+    }
+    try{
+        
+        const response = await fetch(`${server}/api/datas/orders/offer/update/status/${itemId}`, {
+            method: 'PUT',
+            body: JSON.stringify(order),
+            headers: {
+                'Content-Type': 'application/json',
+        },})          
+        //const datas = await response.json()
+                //console.log(datas)
+        if (!response.ok) {
+            throw new Error('Erreur lors de la requête');
+        }
+            //console.log(datas)
+            return true
+    }catch(error){
+        console.log(error)
+        Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+        return false
+    }
+}
+
 
 
 exports.addOder = async (user, product, price) =>{
     
 }
 
-exports.getOrders = async (type) => {
+exports.getLocalOrders = async (type) => {
     switch(type)
     {
         case "delivered" : //acheve
