@@ -59,7 +59,7 @@ exports.updateOrderStatus  = async (req, res, next) => {
 
 exports.updateOrderRead = async (req, res, next) => {
     const { product } = req.body; // Les données envoyées dans la requête
-  
+  console.log("product")
     try {
   
       const order = await Order.findOneAndUpdate(

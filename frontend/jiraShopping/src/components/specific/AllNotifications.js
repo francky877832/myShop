@@ -107,7 +107,7 @@ const openNotif = async (user, item) => {
   try
   {
 
-      switch(item.type.toLowerCase())
+      switch(item.model.toLowerCase())
       {
         case 'products' :
           //const data = await getProductFromNotifications(item.datas)

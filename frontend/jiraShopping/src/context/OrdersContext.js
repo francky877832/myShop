@@ -22,9 +22,10 @@ const OrdersProvider = ({children}) => {
     const limit = 100
     const [hasMore, setHasMore] = useState(true);
     const [orders, setOrders] = useState([])
+    const [isNewDatas, setIsNewDatas] = useState(false)
 
 const fetchUserOrders = async (user, page, limit) => {
-        console.log("data.orders")
+        //console.log("data.orders")
         try{
             
             const response = await fetch(`${server}/api/datas/orders/get/${user._id}?page=${page}&limit=${limit}`);            
@@ -49,7 +50,7 @@ const updateOrderRead = async (itemId, productId) => {
     
         try{
             
-            const response = await fetch(`${server}/api/datas/orders/offer/update/read/${itemId}`, {
+            const response = await fetch(`${server}/api/datas/orders/update/read/${itemId}`, {
                 method: 'PUT',
                 body: JSON.stringify(order),
                 headers: {
@@ -57,14 +58,16 @@ const updateOrderRead = async (itemId, productId) => {
             },})          
             //const datas = await response.json()
                     //console.log(datas)
-            if (!response.ok) {
-                throw new Error('Erreur lors de la requête');
-            }
+            
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+                }
                 //console.log(datas)
                 return true
         }catch(error){
             console.log(error)
-            Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+            Alert.alert("Erreur", "Une erreur est survenue! "+ error.message)
             return false
         }
     }
@@ -108,7 +111,7 @@ const updateOrderStatus = async (itemId, productId, status) => {
       const newData = await fetchUserOrders(user, page, limit);
       //console.log(getOrders)
       if (newData?.length > 0) {
-        setOrders((prevOrders)=>[...prevOrders, ...newData])
+        !isNewDatas ? setOrders((prevOrders)=>[...prevOrders, ...newData]) : setOrders(newData)
         setPage((prevPage) => prevPage + 1);
       } else {
         setHasMore(false);
@@ -122,8 +125,8 @@ const updateOrderStatus = async (itemId, productId, status) => {
 
    
     const favouritesStateVars = { orders, isLoading, hasMore, page}
-    const favouritesStateStters = { setIsLoading}
-    const utilsFunctions = {getOrders,  }
+    const favouritesStateStters = { setIsLoading,  setHasMore, setPage, setOrders, setIsNewDatas }
+    const utilsFunctions = { getOrders, updateOrderRead, updateOrderStatus  }
     return (
         <OrdersContext.Provider value={{...favouritesStateVars, ...favouritesStateStters, ...utilsFunctions}}>
             {children}

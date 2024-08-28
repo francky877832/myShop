@@ -6,19 +6,16 @@ import { Icon } from 'react-native-elements';
 
 
 //custom styles
-import { notificationsStyles } from '../../styles/notificationsStyles';
-
+import { ordersStyle } from '../../styles/ordersStyles';
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
 import { appColors, customText } from '../../styles/commonStyles';
 
-//
-import { getOffers, updateOfferRead } from '../../utils/commonAppNetworkFunctions'
 
 import { sinceDate } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 
 import RenderNotificationItem from '../common/RenderNotificationItem';
@@ -38,19 +35,11 @@ const Orders = (props) => {
 
 
     return (
-        <View style={[notificationsStyles.sceneContainers]}>
-            <FlatList
-                    data={datas}
-                    renderItem={ ({item}) => { return(<RenderNotificationItem item={item} />) } }
-                    keyExtractor={ (item) => { return item.id_.toString(); } }
-                    ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
-                    contentContainerStyle={[notificationsStyles.flatlist]}
-                    onEndReached={()=>{}}
-                    onEndReachedThreshold={0.5}
-            />
+        <View style={[ordersStyle.container]}>
+            <Text>Ok</Text>
         </View>
-  );
-}
+    );
+} 
 
 
 export default Orders

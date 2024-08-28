@@ -13,16 +13,16 @@ import { datas } from '../../utils/sampleDatas';
 import { appColors, customText } from '../../styles/commonStyles';
 
 //
-import { getOrders, updateOrderRead, updateOrderStatus } from '../../utils/commonAppNetworkFunctions'
 
 import { sinceDate } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 
 import RenderNotificationItem from '../common/RenderNotificationItem';
 import { OrdersContext } from '../../context/OrdersContext';
+import { setIsLoading } from '../../store/favourites/favouritesSlice';
 
 
 
@@ -36,7 +36,7 @@ const OrdersNotifications = (props) => {
 
  //[isLoading, hasMore, page]);
   
-    const {orders, isLoading, getOrders, hasMore, page} = useContext(OrdersContext)
+    const {orders, isLoading, getOrders, hasMore, page, updateOrderRead, updateOrderStatus, setHasMore, setPage, setOrders, setIsNewDatas } = useContext(OrdersContext)
   const onEndReached = async () => { await getOrders(user, page) }
 
   
@@ -57,26 +57,42 @@ const openOrder = async (user, item) => {
     }
 }
 
+const timeoutRef = useRef(null)
 useEffect(() => {
+
     const fetchData = async () => {  
         await getOrders(user, page)
       };
       
        fetchData();
+      
+       if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+    }
+
+    // Configurer un nouveau timeout
+    timeoutRef.current = setTimeout(() => {
+        setHasMore(true)
+        setIsLoading(false)
+        setPage(1)
+        setIsNewDatas(true)
+    }, 500);
+
     
   }, []);
 
   
 
-
-
+  const [read, setRead] = useState(0)
+//console.log(orders[1]?.products.read)
 
     return (
         <View style={[notificationsStyles.sceneContainers]}>
             <FlatList
                     data={orders}
-                    renderItem={ ({item}) => { return(<RenderNotificationItem from="offers" 
+                    renderItem={ ({item}) => { return(<RenderNotificationItem from="offers" setRead={setRead}
                             item={{...item,
+                                read : item.products.read,
                             title:"Nouvelle Commande",
                             message : user._id===item.products.productDetails.seller._id ?
                                     "Félicitations!! Votre produit vient d'etre acheté. PréCipitez-vous vers l'agence la plus proche afin de l'expedier.\n Cliquez pour plus d\'informations."

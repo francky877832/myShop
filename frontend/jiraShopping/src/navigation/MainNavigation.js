@@ -20,6 +20,7 @@ import UserLogin from '../components/user/UserLogin';
 import UserSignup from '../components/user/UserSignup';
 import PhoneAuth from '../components/specific/PhoneAuth';
 import Followers from '../components/specific/Followers';
+import Orders from '../components/specific/Orders';
 import HeaderNavigation from '../components/common/HeaderNavigation';
 
 import HomeNavigation from '../navigation/HomeNavigation';
@@ -61,6 +62,7 @@ export default function MainNavigation() {
                 <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="Followers" component={Followers}  options={{ title: 'Account Informations', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Offers" component={Offers}  options={{ title: 'Propositions', headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="Orders" component={Orders}  options={{ title: 'Commandes', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="AllComments" component={AllCommets}  options={{title: 'Tous Les Commentaires', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="Notifications" component={Notifications}  options={{ title: 'Notifications', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="AddProduct" component={AddProduct}  options={{ title: 'Ajouter Un Produit', headerShown : true, tabBarVisible: false, }} />
