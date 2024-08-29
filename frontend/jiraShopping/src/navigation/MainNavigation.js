@@ -54,7 +54,7 @@ export default function MainNavigation() {
             <OrdersProvider>
             <CommentsProvider>
             <Stack.Navigator
-              initialRouteName="UserLogin"
+              initialRouteName="Orders"
               screenOptions={annimatedStackTransition(0.9, 250, 200)}
       >
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />

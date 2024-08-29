@@ -23,6 +23,19 @@ const OrdersProvider = ({children}) => {
     const [hasMore, setHasMore] = useState(true);
     const [orders, setOrders] = useState([])
     const [isNewDatas, setIsNewDatas] = useState(false)
+    const [sold, setSold] = useState([])
+    const [bought, setBought] = useState([])
+
+    const reshapeOrders = (orders) => {
+        const o1 = orders.map((el1) => {
+            const o2 = orders.filter((el2) => {
+                return el1.products.productDetails.no===el2.products.productDetails.no
+            })
+            return [...o2]
+        })
+    console.log({...orders, products:o1})
+        return {...orders, products:o1}
+    }
 
 const fetchUserOrders = async (user, page, limit) => {
         //console.log("data.orders")
@@ -30,12 +43,14 @@ const fetchUserOrders = async (user, page, limit) => {
             
             const response = await fetch(`${server}/api/datas/orders/get/${user._id}?page=${page}&limit=${limit}`);            
             const data = await response.json()
+
+           
            
             if (!response.ok) {
                 throw new Error('Erreur lors de la requête');
             }
-            
-            return data.orders
+       
+            return data
         }catch(error){
             console.log(error)
             console.log("Get Offers", "Une erreur est survenue! "+ error,)
@@ -69,6 +84,8 @@ const updateOrderRead = async (itemId, productId) => {
             console.log(error)
             Alert.alert("Erreur", "Une erreur est survenue! "+ error.message)
             return false
+        } finally {
+            setIsLoading(false);
         }
     }
     
@@ -100,8 +117,25 @@ const updateOrderStatus = async (itemId, productId, status) => {
         }
     }
     
-    
-    
+const getOrders = useCallback(async (user, page, limit) => {
+    try 
+    {
+        const newData = await fetchUserOrders(user, page, limit);
+        
+        
+            setOrders(newData.orders)
+            setSold(newData.sold)
+            setBought(newData.bought)
+
+    } catch (error) {
+        console.error('Erreur lors du chargement des données :', error);
+    } finally {
+        setIsLoading(false);
+    }
+
+}, [isLoading, hasMore, page]) 
+   
+/*
   const getOrders = useCallback(async (user, page, limit) => {
     
     if (isLoading || !hasMore) return;
@@ -111,7 +145,25 @@ const updateOrderStatus = async (itemId, productId, status) => {
       const newData = await fetchUserOrders(user, page, limit);
       //console.log(getOrders)
       if (newData?.length > 0) {
-        !isNewDatas ? setOrders((prevOrders)=>[...prevOrders, ...newData]) : setOrders(newData)
+
+            const sold_products = newData.filter((item)=> (user._id===item.products.productDetails.seller._id))
+            const bought_products = newData.filter((item)=> (user._id!=item.products.productDetails.seller._id))
+
+        if(isNewDatas)
+        {
+            setOrders((prevOrders)=>[...prevOrders, ...newData])
+           
+            setSold((prevSold)=>[...prevSold, ...sold_products])
+            setBought((prevSold)=>[...prevSold, ...bought_products])
+        }
+        else
+        {
+            setOrders(newData)
+            setSold(sold_products)
+            setBought(bought_products)
+        }
+
+        
         setPage((prevPage) => prevPage + 1);
       } else {
         setHasMore(false);
@@ -122,9 +174,20 @@ const updateOrderStatus = async (itemId, productId, status) => {
       setIsLoading(false);
     }
   }, [isLoading, hasMore, page])
+*/
+
+const separateSoldAndBought = () => {
+    const sold_products = orders.filter((item)=> (user._id===item.products.productDetails.seller._id))
+    const bought_products = orders.filter((item)=> (user._id!=item.products.productDetails.seller._id))
+
+    setSold(sold_products)
+    setBought(bought_products)
+}
+
+
 
    
-    const favouritesStateVars = { orders, isLoading, hasMore, page}
+    const favouritesStateVars = { orders, sold, bought, isLoading, hasMore, page,}
     const favouritesStateStters = { setIsLoading,  setHasMore, setPage, setOrders, setIsNewDatas }
     const utilsFunctions = { getOrders, updateOrderRead, updateOrderStatus  }
     return (
@@ -137,3 +200,4 @@ const updateOrderStatus = async (itemId, productId, status) => {
 
 
 export {OrdersContext, OrdersProvider}
+

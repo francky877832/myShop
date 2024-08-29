@@ -149,6 +149,22 @@ exports.getOrdersUser = async (req, res, next) => {
 
       {
         $lookup: {
+          from: 'groupOrders',
+          localField: 'products.groupId',
+          foreignField: '_id',
+          as: 'group'
+        }
+      },
+      {
+        $addFields: {
+                'products.groupOrders':  {
+                $arrayElemAt: [`$group`, 0]
+            }
+        }
+      },
+
+      {
+        $lookup: {
           from: 'users',
           localField: 'seller',
           foreignField: '_id',
@@ -347,9 +363,51 @@ exports.getOrdersUser = async (req, res, next) => {
       ] }).exec();
 
         const totalPages = Math.ceil(totalDatas / limit);
+
+        const groupedOrders = orders.reduce((acc, order) => {
+            const productNo = order.products.no;
+                  if (!acc[productNo]) {
+                acc[productNo] = [];
+            }
+            acc[productNo].push(order);
         
-        res.status(200).json({
-          orders: orders,
+            return acc;
+        }, {});
+        
+      
+        
+
+      const sold_products = orders.filter((item)=> (userId==item.products.productDetails?.seller?._id))
+      const bought_products = orders.filter((item)=> (userId!=item.products.productDetails?.seller?._id))
+//REGROUPER LES PRDUIT SUIVANT DES GROUPORDERS
+      const groupedSold= sold_products.reduce((acc, order) => {
+        const productNo = order.products.no;
+              if (!acc[productNo]) {
+            acc[productNo] = [];
+        }
+        acc[productNo].push(order);
+    
+        return acc;
+      }, {});
+
+      const groupedBought= bought_products.reduce((acc, order) => {
+        const productNo = order.products.no;
+              if (!acc[productNo]) {
+            acc[productNo] = [];
+        }
+        acc[productNo].push(order);
+    
+        return acc;
+    }, {});
+    const results = Object.values(groupedOrders);
+    const sold = Object.values(groupedSold);
+    const bought = Object.values(groupedBought);
+      //console.log(sold_products.length)
+      //res.status(200).json(orders)
+       res.status(200).json({
+          orders: bought, //{...orders[0], products:results},
+          sold : sold,
+          bought : bought,
           page: page,
           totalPages: totalPages,
           totalDatas: totalDatas

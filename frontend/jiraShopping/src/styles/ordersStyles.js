@@ -4,7 +4,7 @@ import { appColors, appFont } from "./commonStyles";
 
 
 
-export const ordersStyle = StyleSheet.create({
+export const ordersStyles = StyleSheet.create({
     container : 
     {
         flex : 1,

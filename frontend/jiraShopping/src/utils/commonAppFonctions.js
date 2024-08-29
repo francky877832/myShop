@@ -309,6 +309,21 @@ export const checkOfferPrice = (realPrice, offerPrice)=>
 }
 
 
+export const formatDateToLitteral = (dateString) =>  {
+    const mois = [
+        'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+        'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+    ];
+
+    const date = new Date(dateString);
+    const jour = date.getDate();
+    const moisNom = mois[date.getMonth()];
+    const annee = date.getFullYear();
+
+    return `${jour}/${date.getMonth()}/${annee}`;
+}
+
+
 
 
 

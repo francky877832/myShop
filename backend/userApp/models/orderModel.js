@@ -1,6 +1,12 @@
 const mongoose = require('../../shared/db').mongoose;
 const Schema = mongoose.Schema
 
+function generateUniqueDeliveryNumber() {
+    const datePart = Date.now().toString(36);
+    const randomPart = Math.random().toString(36).substr(2, 5);
+    return `${datePart}-${randomPart}`.toUpperCase(); 
+}
+
 const orderSchema = new  Schema({
     seller : { type : Schema.Types.ObjectId, ref : 'User', required : true },
     buyer: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -9,21 +15,10 @@ const orderSchema = new  Schema({
                     _id : { type: Schema.Types.ObjectId, required: true },
                     product : {type: Schema.Types.ObjectId, ref: 'Product', required: true },
                     status: {type: String, enum: ['pending', 'shipped', 'delivered'], default: 'pending' },
-                    
-                    read : { type: Number, enum : [0, 1], default : 0, required : true },
-                    shippingAddress: {
-                        street: { type: String },
-                        city: { type: String, required : true },
-                        country: { type: String, required : true, default : "Cameroon" }
-                    },
-                    
-                    createdAt : { type : Date, default : Date.now },
-                    updatedAt : { type : Date, default : Date.now },
+                    groupId: { type: Schema.Types.ObjectId, ref: 'GroupOrder', required: true },
                 }
-            ], //Un docu pour par order et non par user
+            ],
 
-    totalPrice: { type: Number, required: true },
-    quantity: { type: Number, required: true, default: 1 },
    
     createdAt : { type : Date, default : Date.now },
     updatedAt : { type : Date, default : Date.now }
