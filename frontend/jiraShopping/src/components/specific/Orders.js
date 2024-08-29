@@ -37,46 +37,51 @@ const Orders = (props) => {
  
 
     const RenderOrder = (props) => {
-        const { order  } = props
+        const { group  } = props
        //console.log(order.length)
-       const group = order[0]
+       const order = group[0]
        const statusItem = {
         'pending' : {color:appColors.red, iconName:'', iconType:''},
         'shipping' : {color:appColors.secondaryColor1, iconName:'', iconType:''},
         'delivered' : {color:appColors.green, iconName:'', iconType:''},
         'canceled' : {color:appColors.red, iconName:'', iconType:''},
        }
+//console.log(group)
+        const handleNavigation = () => {
+            console.log("ok")
+            navigation.navigate("OrdersDetails", {ordersDetails:group})
+       }
         return(
-            <View style={[ordersStyles.orderContainer]}>
+            <Pressable style={[ordersStyles.orderContainer]} onPress={()=>{handleNavigation()}}>
                 <View style={[ordersStyles.orderTop]}>
                         <View style={[ordersStyles.date]}>
                             <View>
-                                <Text style={[customText.text, ordersStyles.text]}>{formatDateToLitteral(group.products.groupOrders.createdAt)}</Text>
+                                <Text style={[customText.text, ordersStyles.text]}>{formatDateToLitteral(order.products.groupOrders.createdAt)}</Text>
                             </View>
                             <View style={{flexDirection:'row',}}>
                                 <Text style={[customText.text, ordersStyles.text]}>Total : </Text>
-                                <Text style={[customText.text, ordersStyles.text, {color:appColors.secondaryColor1}]}>{formatMoney(group.products.groupOrders.totalPrice)} XAF</Text>
+                                <Text style={[customText.text, ordersStyles.text, {color:appColors.secondaryColor1}]}>{formatMoney(order.products.groupOrders.totalPrice)} XAF</Text>
                             </View>
                         </View>
 
-                        <Pressable style={[ordersStyles.shipping]}>
+                        <Pressable style={[ordersStyles.shipping]} onPress={()=>{handleNavigation()}}>
                             <Text style={[customText.text, ordersStyles.text, {color:appColors.secondaryColor1}]}>Details</Text>
                             <Icon name="caret-forward" type="ionicon" size={18} color={appColors.secondaryColor1} />
                         </Pressable>
                 </View>
 
                 <View style={[ordersStyles.orderBody]}>
-                        <Pressable style={[ordersStyles.details]}>
-                            <Icon name={statusItem[group.products.groupOrders.status].iconName} type={statusItem[group.products.groupOrders.status].iconType} size={18} color={appColors.green} />
-                            <Text style={[customText.text, ordersStyles.text, {color:statusItem[group.products.groupOrders.status].color}]}>{group.products.groupOrders.status}</Text>
+                        <Pressable style={[ordersStyles.status]}>
+                            <Icon name={statusItem[order.products.groupOrders.status].iconName} type={statusItem[order.products.groupOrders.status].iconType} size={18} color={appColors.green} />
+                            <Text style={[customText.text, ordersStyles.text, {color:statusItem[order.products.groupOrders.status].color}]}>{order.products.groupOrders.status}</Text>
                         </Pressable>
 
                     <FlatList
-                        data={order}
+                        data={group}
                         renderItem={ ({item}) => { return(
-                                <View style={[ordersStyles.orderImg]}>
-                                    <Image source={{uri: item.products.productDetails.images[0]}} style={[ordersStyles.images]} />
-                                </View>
+                                <Pressable style={[ordersStyles.orderImg]}>
+                                    <Image source={{uri: item.products.productDetails.images[0]}} style={[ordersStyles.images,{width:25,height:25}]} />
+                                </Pressable>
 
                         ) } }
                         keyExtractor={ (item) => { return Math.random().toString(); } }
@@ -87,14 +92,14 @@ const Orders = (props) => {
                         ListFooterComponent={()=>{
                             return(
                                 <View style={[ordersStyles.footer]}>
-                                    <Text style={[customText.text, ordersStyles.text, {color:appColors.gray}]}>{`${order.length} ${order.length>1?"produits":"produit"}`}</Text>
+                                    <Text style={[customText.text, ordersStyles.text, {color:appColors.gray}]}>{`${group.length} ${group.length>1?"produits":"produit"}`}</Text>
                                 </View>
                             )
                         }}
                     />
                     
                 </View>
-            </View>
+            </Pressable>
         )
     }
 
@@ -111,7 +116,7 @@ const Orders = (props) => {
         <View style={[ordersStyles.container]}>
             <FlatList
                     data={bought}
-                    renderItem={ ({item}) => { return(<RenderOrder order={item} user={user} />
+                    renderItem={ ({item}) => { return(<RenderOrder group={item} user={user} />
                 ) } }
                     keyExtractor={ (item) => { return Math.random().toString(); } }
                     ItemSeparatorComponent ={ (item) => { return <View style={{height:5,}}></View> }}

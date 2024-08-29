@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 
 const groupOrderSchema = new  Schema({
 
-        no : { type: Number, enum : [0, 1], required : true, default : 0 },
+        no : { type: String, required : true, default : 0 },
         read : { type: Number, enum : [0, 1], default : 0, required : true },
         status: {type: String, enum: ['pending', 'shipped', 'delivered'], default: 'pending' },
         phone: { type: String },

@@ -37,8 +37,12 @@ const userSchema = new Schema({
     code : { type: String },
     slogan : { type: String },
 
-
-
+    notes : [
+        {
+            user : { type : Schema.Types.ObjectId, ref : 'User', required : false },
+            star : { type: Number, default : 0 },
+        }
+    ],
     createdAt : { type : Date, default : Date.now },
     updatedAt : { type : Date, default : Date.now }
 });
