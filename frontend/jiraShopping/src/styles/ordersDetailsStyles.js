@@ -10,7 +10,29 @@ export const ordersDetailsStyles = StyleSheet.create({
       
     },
 
+    top:
+    {
+
+    },
+    seller:
+    {
+
+    },
+
+    line:
+    {
+
+    },
+
     text :
+    {
+        fontWeight : 'bold',
+    },
+    textLeft :
+    {
+        fontWeight : 'bold',
+    },
+    textRight :
     {
         fontWeight : 'bold',
     },

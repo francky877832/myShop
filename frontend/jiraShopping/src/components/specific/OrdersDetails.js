@@ -10,6 +10,7 @@ import { ordersDetailsStyles } from '../../styles/ordersDetailsStyles';
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
 import { appColors, customText } from '../../styles/commonStyles';
+import { CustomButton } from '../common/CommonSimpleComponents'
 
 
 import { sinceDate, formatMoney, formatDateToLitteral } from '../../utils/commonAppFonctions'
@@ -50,12 +51,12 @@ const OrdersDetails = (props) => {
         return (
             <View style={[ordersDetailsStyles.container]}>
                 <View style={[ordersDetailsStyles.top]}>
-                    <View style={{flexDirection:'row',}}>
+                    <View style={[ordersDetailsStyles.line]}>
                         <Text style={[customText.text, ordersDetailsStyles.text,  {color:appColors.gray}]}>Date De Livraison : </Text>
                         <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>{formatDateToLitteral(order.products.groupOrders.createdAt)}</Text>
                     </View>
 
-                    <View style={{flexDirection:'row',}}>
+                    <View style={[ordersDetailsStyles.line]}>
                         <Text style={[customText.text, ordersDetailsStyles.text,  {color:appColors.gray}]}>Numero De Livraion : </Text>
                         <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>{order.products.groupOrders.no}</Text>
                     </View>
@@ -64,7 +65,7 @@ const OrdersDetails = (props) => {
 
                 <View style={[ordersDetailsStyles.seller]}>
                     
-                    <View style={{flexDirection:'row',}}>
+                    <View style={[ordersDetailsStyles.line]}>
                         <Text style={[customText.text, ordersDetailsStyles.text,  {color:appColors.gray}]}>Boutique : </Text>
                         <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>{order.products.groupOrders.no + '>'}</Text>
                     </View>
@@ -99,7 +100,7 @@ const OrdersDetails = (props) => {
                             </View>
 
                             <View>
-                                <CustomButton text="Noter"  styles={{ pressable: ordersDetailsStyles.button, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />
+                                <CustomButton text="Boutique"  styles={{ pressable: ordersDetailsStyles.button, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />
                             </View>
 
                         </View>

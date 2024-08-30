@@ -1,7 +1,7 @@
 import nlp from "compromise";
 const Fuse = require('fuse.js');
 
-exports.capitalizeFirstLetter = str => str ? str[0].toUpperCase() + str.slice(1).toLowerCase() : str;
+export const capitalizeFirstLetter = str => str ? str[0].toUpperCase() + str.slice(1).toLowerCase() : str;
 
 exports.sinceDate = (_date) => {
     const date2 = new Date(_date)
@@ -320,7 +320,7 @@ export const formatDateToLitteral = (dateString) =>  {
     const moisNom = mois[date.getMonth()];
     const annee = date.getFullYear();
 
-    return `${jour}/${date.getMonth()}/${annee}`;
+    return `${jour} ${capitalizeFirstLetter(mois[date.getMonth()])} ${annee}`;
 }
 
 
