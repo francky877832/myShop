@@ -56,6 +56,7 @@ export const ordersDetailsStyles = StyleSheet.create({
         flexDirection : 'row',
         alignItems : 'center',
         //justifyContent : 'center',
+        paddingHorizontal : 20,
     },
     productDetails :
     {
@@ -63,17 +64,43 @@ export const ordersDetailsStyles = StyleSheet.create({
     },
     orderImg :
     {
-        width : 100,
-        height : 50,
+        width : 80,
+        height : 100,
     },
     image :
     {
         flex:1,
         ...card,
     },
+    productDetails :
+    {
+        paddingLeft : 20,
+    },
     ordersDetails:
     {
-
+        
+    },
+    address :
+    {
+        backgroundColor : appColors.white,
+        paddingVertical : 20,
+        paddingHorizontal : 20,
+        ...card,
+    },
+    addressDetails :
+    {
+        paddingHorizontal : 25,
+    },
+    payment :
+    {
+        backgroundColor : appColors.white,
+        paddingVertical : 20,
+        paddingHorizontal : 20,
+        ...card,
+    },
+    paymentDetails :
+    {
+        paddingHorizontal : 25,
     },
     line:
     {

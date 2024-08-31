@@ -184,63 +184,65 @@ function flatlistFooter(){
         <View>
             
             <View style={{height:20}}></View>
+
         <View style={[ordersStyles.ordersDetails]}>
             <View style={[ordersDetailsStyles.address]}>
                 <View style={[ordersDetailsStyles.line, ordersDetailsStyles.location]}>
-                    <Icon name='close' type='ionicon' size={18} color={appColors.secondaryColor1} />
-                    <View style={{width:5}}></View>
+                    <Icon name='location' type='ionicon' size={18} color={appColors.secondaryColor1} />
+                    <View style={{width:10}}></View>
                     <Text style={[customText.text, ordersDetailsStyles.textRight,]}>Adresse De Livraison</Text>
                 </View>
                 
                 <View style={{height:20}}></View>
 
-                <View style={[ordersDetailsStyles.line]}>
-                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Acheteur : </Text>
-                    <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Francky Ronsard SAAH</Text>
+                <View style={[ordersDetailsStyles.addressDetails]}>
+                    <View style={[ordersDetailsStyles.line]}>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Acheteur : </Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Francky Ronsard SAAH</Text>
+                    </View>
+                    
+                    <View style={{height:10}}></View>
+
+                    <View style={[ordersDetailsStyles.line]}>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Ville :  </Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Douala</Text>
+                    </View>
+
+                    <View style={{height:10}}></View>
+
+                    <View style={[ordersDetailsStyles.line]}>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Rue : </Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Rue de la joie</Text>
+                    </View>
+
+                    <View style={{height:10}}></View>
+
+                    <View style={[ordersDetailsStyles.line]}>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Address : </Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Rue de la joie</Text>
+                    </View>
+
+                    <View style={{height:10}}></View>
+
+                    <View style={[ordersDetailsStyles.line]}>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Tél : </Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>+237 677127907</Text>
+                    </View>
                 </View>
-                
-                <View style={{height:5}}></View>
-
-                <View style={[ordersDetailsStyles.line]}>
-                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Ville :  </Text>
-                    <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Douala</Text>
-                </View>
-
-                <View style={{height:5}}></View>
-
-                <View style={[ordersDetailsStyles.line]}>
-                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Rue : </Text>
-                    <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Rue de la joie</Text>
-                </View>
-
-                <View style={{height:5}}></View>
-
-                <View style={[ordersDetailsStyles.line]}>
-                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Address : </Text>
-                    <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Rue de la joie</Text>
-                </View>
-
-                <View style={{height:5}}></View>
-
-                <View style={[ordersDetailsStyles.line]}>
-                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Tél : </Text>
-                    <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>+237 677127907</Text>
-                </View>
-
             </View>
 
             <View style={{height:20}}></View>
 
-            <View style={[ordersDetailsStyles.bill]}>
+            <View style={[ordersDetailsStyles.payment]}>
                 <Pressable style={[ordersDetailsStyles.line, ordersDetailsStyles.location]}>
-                    <Icon name='close' type='ionicon' size={18} color={appColors.secondaryColor1} />
+                    <Icon name='newspaper-sharp' type='ionicon' size={18} color={appColors.secondaryColor1} />
                     <View style={{width:5}}></View>
-                    <Text style={[customText.text, ordersDetailsStyles.textRight,]}>Adresse De Livraison</Text>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight,]}>Informations De Payement</Text>
                 </Pressable>
                 
                 <View style={{height:20}}></View>
 
-                <View>
+                <View  style={[ordersDetailsStyles.paymentDetails]}>
                     <View style={[ordersDetailsStyles.line]}>
                         <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Sous-total : </Text>
                         <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>10000 XAF</Text>
@@ -248,7 +250,7 @@ function flatlistFooter(){
                     
                     <View style={{height:5}}></View>
 
-                    <View style={[ordersDetailsStyles.line]}>
+                    <View style={[ordersDetailsStyles.line, {borderBottomWidth:1,borderColor:appColors.lightWhite,paddingBottom:10,}]}>
                         <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Extra : </Text>
                         <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>0 XAF</Text>
                     </View>
@@ -257,7 +259,7 @@ function flatlistFooter(){
 
                     <View style={[ordersDetailsStyles.line]}>
                         <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Total : </Text>
-                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>10000 XAF</Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {color:appColors.secondaryColor1}]}>10000 XAF</Text>
                     </View>
 
 

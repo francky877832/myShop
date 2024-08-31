@@ -12,6 +12,8 @@ export const card  = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 8,
         elevation: 5,
+        borderWidth : 1,
+        borderColor : appColors.secondaryColor3,
     })
 
 export const ordersStyles = StyleSheet.create({
