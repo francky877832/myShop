@@ -223,10 +223,14 @@ const CommentsProvider = ({children}) => {
                         //console.log("prevComments")
                         updatedComments = prevComments.map(cm => {
                             if (cm._id == comment_.isResponseTo) {
-                               // console.log("Imbecile")
+                               //updatedComments[i].subComment.push(comment)
+                                let subComment = []
+                                if (Array.isArray(cm.subComment)) {
+                                    subComment = [...cm.subComment];
+                                }
                                 return {
                                     ...cm,
-                                    subComment: [...cm.subComment.slice(0, cm.subComment.length-1), comment_]
+                                    subComment: [...subComment.slice(0, subComment.length-1), comment_]
                                 };
                             }
                             return cm;

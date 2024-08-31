@@ -81,7 +81,7 @@ const updateReshapedComments = (comment)=>{
     //console.log("isResponseTo")
     setReshapedComments((prevComments)=>{
         //console.log(isResponseTo)
-        console.log(prevComments)
+        //console.log(prevComments)
         if (!Array.isArray(prevComments)) {
             prevComments = [];
         }
@@ -99,7 +99,11 @@ const updateReshapedComments = (comment)=>{
                     }*/
                     //console.log( updatedComments[i].subComment)
                     //updatedComments[i].subComment.push(comment)
-                    return {...item, subComment:[...item.subComment, comment]}
+                    let subComment = []
+                    if (Array.isArray(item.subComment)) {
+                        subComment = [...item.subComment];
+                    }
+                    return {...item, subComment:[...subComment, comment]}
                 }
                 return item
             })
@@ -158,8 +162,8 @@ const addComment = async (item) => {
             await loadLastComment(product, user)
             setPage((prevPage) => prevPage - 1);
             setIsLoading(false)
-            
-            if(!(userToResponse._id)) //!isResponseTo)
+            //console.log(item.seller)
+            if(!isResponseTo) //!isResponseTo)
             {
                 if(user._id!=item.seller._id)
                 {
@@ -168,9 +172,9 @@ const addComment = async (item) => {
             }
             else
             {   
-                if(user._id!=userToResponse._id)
+                if(user._id!=userToResponse?._id)
                 { 
-                    await sendNotifications({ user:userToResponse._id, source:"app", model:"PRODUCTS", type:"ON_RESPONSE_COMMENT", datas:item._id })
+                    await sendNotifications({ user:userToResponse?._id, source:"app", model:"PRODUCTS", type:"ON_RESPONSE_COMMENT", datas:item._id })
                 }
             }
        
