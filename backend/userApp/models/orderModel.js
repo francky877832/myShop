@@ -20,7 +20,9 @@ const orderSchema = new  Schema({
                     deliveryNo: { type: String, required : true, default : 0 },
                     deliveryDate: { type : Date, default : Date.now },
                     createdAt : { type : Date, default : Date.now },
-                    updatedAt : { type : Date, default : Date.now }
+                    updatedAt : { type : Date, default : Date.now },
+                    paymentMethod : {type: String, enum: ['MTN Money', 'Orange Money']}, //require:true
+                    paymentDetails : {type: String,  }, //require:true
                 }
             ],
 

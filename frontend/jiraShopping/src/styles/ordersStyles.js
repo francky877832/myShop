@@ -20,6 +20,7 @@ export const ordersStyles = StyleSheet.create({
         flex : 1,
         backgroundColor : appColors.lightWhite,
         paddingHorizontal : 5,
+        paddingBottom : 20,
     },
     orderContainer:
     {

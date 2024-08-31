@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback  } from 'react';
-import { View, Text, StyleSheet,  Dimensions, FlatList, Pressable, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet,  Dimensions, FlatList, Pressable, Alert, Image, ScrollView } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Icon } from 'react-native-elements';
 //custom component
@@ -21,6 +21,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 import RenderNotificationItem from '../common/RenderNotificationItem';
 import { OrdersContext } from '../../context/OrdersContext';
+import { ordersStyles } from '../../styles/ordersStyles';
 
 
 
@@ -49,59 +50,83 @@ const OrdersDetails = (props) => {
     const RenderOrderDetails = (props) => {
         const { order } = props
         return (
-            <View style={[ordersDetailsStyles.container]}>
+            <View style={[ordersDetailsStyles.orderContainer]}>
                 <View style={[ordersDetailsStyles.top]}>
                     <View style={[ordersDetailsStyles.line]}>
-                        <Text style={[customText.text, ordersDetailsStyles.text,  {color:appColors.gray}]}>Date De Livraison : </Text>
-                        <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>{formatDateToLitteral(order.products.groupOrders.createdAt)}</Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft,  {}]}>Date De Livraison : </Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>{formatDateToLitteral(order.products.groupOrders.createdAt)}</Text>
                     </View>
 
+                    <View style={{height:5}}></View>
+
                     <View style={[ordersDetailsStyles.line]}>
-                        <Text style={[customText.text, ordersDetailsStyles.text,  {color:appColors.gray}]}>Numero De Livraion : </Text>
-                        <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>{order.products.groupOrders.no}</Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft,  {}]}>Numero De Livraion : </Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>{order.products.groupOrders.no}</Text>
                     </View>
                 </View>
 
+                <View style={{height:20}}></View>
 
                 <View style={[ordersDetailsStyles.seller]}>
                     
                     <View style={[ordersDetailsStyles.line]}>
-                        <Text style={[customText.text, ordersDetailsStyles.text,  {color:appColors.gray}]}>Boutique : </Text>
-                        <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>{order.products.groupOrders.no + '>'}</Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft,  {}]}>Boutique : </Text>
+                        <View style={{flexDirection:'row'}}>
+                            <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>{order.products.groupOrders.no}</Text>
+                            <View style={{height:3}}></View>
+                            <Icon name="caret-forward" type="ionicon" size={20} color={appColors.gray} />
+                        </View>
                     </View>
-                 
-
-                </View>
-
-                <View style={[ordersDetailsStyles.seller]}>
-                    <Pressable style={[ordersDetailsStyles.status]}>
-                        <Icon name={statusItem[order.products.groupOrders.status]?.iconName} type={statusItem[order.products.groupOrders.status]?.iconType} size={18} color={appColors.green} />
-                        <Text style={[customText.text, ordersDetailsStyles.text, {color:statusItem[order.products.groupOrders.status]?.color}]}>{order.products.groupOrders.status}</Text>
-                    </Pressable>
+                    
+                    <View style={{height:10}}></View>
 
                     <View>
-                        <View>
+                        <CustomButton text="Visiter La Boutique"  styles={{ pressable: ordersDetailsStyles.button, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />
+                    </View>
+                 
+                </View>
+
+                <View style={[ordersDetailsStyles.product]}>
+                    <Pressable style={[ordersDetailsStyles.status]}>
+                        <Icon name={statusItem[order.products.groupOrders.status]?.iconName} type={statusItem[order.products.groupOrders.status]?.iconType} size={18} color={appColors.green} />
                         
-                        </View>
+                        <View style={{width:5}}></View>
 
-                        <View>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {color:statusItem[order.products.groupOrders.status]?.color}]}>{order.products.groupOrders.status}</Text>
+                    </Pressable>
+
+                    <View style={[ordersDetailsStyles.orderBody]}>
+                        <Pressable style={[ordersDetailsStyles.orderImg]}>
+                            <Image source={{uri: "item.products.productDetails.images[0]"}} style={[ordersDetailsStyles.image]} />
+                        </Pressable>
+         
+
+                        <View style={[ordersDetailsStyles.productDetails]}>
                             <View>
-                                <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>Seller</Text>
-                                <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>Nom Produit</Text>
+                                <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Seller</Text>
+                                <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Nom Produit</Text>
                             </View>
 
-                            <View>
-                                <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>Quantité : </Text>
-                                <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>1</Text>
+                            <View style={{height:10}}></View>
+
+                            <View style={[ordersDetailsStyles.line]}>
+                                <Text style={[customText.text, ordersDetailsStyles.textLeft, {color:appColors.black}]}>Quantité : </Text>
+                                <Text style={[customText.text, ordersDetailsStyles.textRight, {color:appColors.black}]}>1</Text>
                             </View>
 
-                            <View>
-                                <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.secondaryColor1}]}>2000</Text>
-                            </View>
+                            <View style={{height:10}}></View>
 
                             <View>
-                                <CustomButton text="Boutique"  styles={{ pressable: ordersDetailsStyles.button, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />
+                                <Text style={[customText.text, ordersDetailsStyles.textRight, {color:appColors.secondaryColor1}]}>2000</Text>
                             </View>
+
+                            <View style={{height:10}}></View>
+
+                            <View>
+                                <CustomButton text="Aller Au Produit"  styles={{ pressable: ordersDetailsStyles.button, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />
+                            </View>
+
+                            <View style={{height:10}}></View>
 
                         </View>
 
@@ -114,31 +139,139 @@ const OrdersDetails = (props) => {
         )
     }
 
+function flatlistHeader(){
+    return(
+        <View style={{top:5}}>
+            <View style={[ordersDetailsStyles.topContainer]}>
+                <View style={[ordersDetailsStyles.line]}>
+                    <Text style={[customText.text, ordersDetailsStyles.textLeft,  {}]}>Numero De Commande : </Text>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>{order.products.groupOrders.no}</Text>
+                </View>
+
+                <View style={{height:5}}></View>
+
+                <View style={[ordersDetailsStyles.line]}>
+                    <Text style={[customText.text, ordersDetailsStyles.textLeft,  {}]}>Date De Commande : </Text>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>{formatDateToLitteral(order.products.groupOrders.createdAt)}</Text>
+                </View>
+
+                <View style={{height:5}}></View>
+
+                <View style={[ordersDetailsStyles.line]}>
+                    <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Nombre De Produits : </Text>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight, {color:appColors.clearGreen}]}>{`${ordersDetails.length} ${ordersDetails.length>1?"Produits":"Produit"}`}</Text>
+                </View>
+
+                <View style={{height:5}}></View>
+
+                <View style={[ordersDetailsStyles.line]}>
+                    <Text style={[customText.text, ordersDetailsStyles.textLeft,  {color:appColors.gray}]}>Total : </Text>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight, {color:appColors.secondaryColor1}]}>{order.products.groupOrders.totalPrice} XAF</Text>
+                </View>
+
+                <View style={{height:5}}></View>
+
+        </View>
+         
+         <View style={{height:20}}></View>
+
+        </View>
+    )
+}
+
+function flatlistFooter(){
     return (
-        <View style={[ordersDetailsStyles.container]}>
-            <View style={[ordersDetailsStyles.container]}>
-                <View style={{flexDirection:'row',}}>
-                    <Text style={[customText.text, ordersDetailsStyles.text,  {color:appColors.gray}]}>Numero De Commande : </Text>
-                    <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>{order.products.groupOrders.no}</Text>
+        <View>
+            
+            <View style={{height:20}}></View>
+        <View style={[ordersStyles.ordersDetails]}>
+            <View style={[ordersDetailsStyles.address]}>
+                <View style={[ordersDetailsStyles.line, ordersDetailsStyles.location]}>
+                    <Icon name='close' type='ionicon' size={18} color={appColors.secondaryColor1} />
+                    <View style={{width:5}}></View>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight,]}>Adresse De Livraison</Text>
+                </View>
+                
+                <View style={{height:20}}></View>
+
+                <View style={[ordersDetailsStyles.line]}>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Acheteur : </Text>
+                    <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Francky Ronsard SAAH</Text>
+                </View>
+                
+                <View style={{height:5}}></View>
+
+                <View style={[ordersDetailsStyles.line]}>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Ville :  </Text>
+                    <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Douala</Text>
                 </View>
 
-                <View style={{flexDirection:'row',}}>
-                    <Text style={[customText.text, ordersDetailsStyles.text,  {color:appColors.gray}]}>Date De Commande : </Text>
-                    <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>{formatDateToLitteral(order.products.groupOrders.createdAt)}</Text>
+                <View style={{height:5}}></View>
+
+                <View style={[ordersDetailsStyles.line]}>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Rue : </Text>
+                    <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Rue de la joie</Text>
                 </View>
 
-                <View style={{flexDirection:'row',}}>
-                    <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.gray}]}>Nombre De Produits : </Text>
-                    <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.black}]}>{`${ordersDetails.length} ${ordersDetails.length>1?"produits":"produit"}`}</Text>
+                <View style={{height:5}}></View>
+
+                <View style={[ordersDetailsStyles.line]}>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Address : </Text>
+                    <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>Rue de la joie</Text>
                 </View>
 
-                <View style={{flexDirection:'row',}}>
-                    <Text style={[customText.text, ordersDetailsStyles.text,  {color:appColors.gray}]}>Total : </Text>
-                    <Text style={[customText.text, ordersDetailsStyles.text, {color:appColors.secondaryColor1}]}>{order.products.groupOrders.totalPrice}</Text>
+                <View style={{height:5}}></View>
+
+                <View style={[ordersDetailsStyles.line]}>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Tél : </Text>
+                    <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>+237 677127907</Text>
                 </View>
 
             </View>
 
+            <View style={{height:20}}></View>
+
+            <View style={[ordersDetailsStyles.bill]}>
+                <Pressable style={[ordersDetailsStyles.line, ordersDetailsStyles.location]}>
+                    <Icon name='close' type='ionicon' size={18} color={appColors.secondaryColor1} />
+                    <View style={{width:5}}></View>
+                    <Text style={[customText.text, ordersDetailsStyles.textRight,]}>Adresse De Livraison</Text>
+                </Pressable>
+                
+                <View style={{height:20}}></View>
+
+                <View>
+                    <View style={[ordersDetailsStyles.line]}>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Sous-total : </Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>10000 XAF</Text>
+                    </View>
+                    
+                    <View style={{height:5}}></View>
+
+                    <View style={[ordersDetailsStyles.line]}>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Extra : </Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>0 XAF</Text>
+                    </View>
+
+                    <View style={{height:5}}></View>
+
+                    <View style={[ordersDetailsStyles.line]}>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Total : </Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>10000 XAF</Text>
+                    </View>
+
+
+
+                </View>
+
+            </View>
+        </View>
+    </View>
+    )
+}
+
+    return (
+        <View contentContainerStyle={[ordersDetailsStyles.container]}>
            <FlatList
                     data={ordersDetails}
                     renderItem={ ({item}) => { return(<RenderOrderDetails order={item} user={user} />
@@ -148,6 +281,9 @@ const OrdersDetails = (props) => {
                     contentContainerStyle={[ordersDetailsStyles.flatlist]}
                     onEndReached={()=>{}}
                     onEndReachedThreshold={0.5}
+                    ListHeaderComponent={flatlistHeader}
+                    ListFooterComponent={flatlistFooter}
+                    style={[ordersDetailsStyles.flatlist]}
             />
         </View>
     );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback  } from 'react';
-import { View, Text, StyleSheet,  Dimensions, FlatList, Pressable, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet,  Dimensions, FlatList, Pressable, Alert, Image, ScrollView } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Icon } from 'react-native-elements';
 //custom component
@@ -140,7 +140,7 @@ const handleSellerBrandPressed = (product) => {
 }
 
     return (
-        <View style={[ordersStyles.container]}>
+        <ScrollView style={[ordersStyles.container]}>
             <FlatList
                     data={bought}
                     renderItem={ ({item}) => { return(<RenderOrder group={item} user={user} />
@@ -161,7 +161,7 @@ const handleSellerBrandPressed = (product) => {
                         )
                     }}
             />
-        </View>
+        </ScrollView>
     );
 } 
 
