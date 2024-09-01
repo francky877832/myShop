@@ -38,7 +38,7 @@ export const settings = [
 	{
 		name : "Parrainage",
 		component : "Referral",
-		available : false,
+		available : true,
 	},
 	{
 		name : "Devenir Une Boutique Pro",
