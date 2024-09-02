@@ -12,21 +12,17 @@ import { UserContext } from '../../context/UserContext';
 
 import { referralDatas } from '../../utils/referralDatas';
 
-import PointsHistoryRenderItem from '../common/PointsHistoryRenderItem';
-import MonthlyRankingRenderItem from '../common/MonthlyRankingRenderItem';
-import ReferredRenderItem from '../common/ReferredRenderItem';
-import GiftHistoryRenderItem from '../common/GiftHistoryRenderItem';
 
 
 const loggedUser = "Francky"
 
-const   ReferralDetails = (props) => {
+const   ReferredRenderItem = (props) => {
     const navigation = useNavigation()
     const { user } = useContext(UserContext)
   
     console.log(user)
 
-
+    
 
     return(
         <View style={[referralStyles.container]}>
@@ -62,4 +58,4 @@ const   ReferralDetails = (props) => {
         </View>
     )
 }
-export default ReferralDetails
+export default ReferredRenderItem

@@ -1,4 +1,6 @@
 const User = require('../models/userModel');
+const PointsHistory = require('../models/pointsHistoryModel');
+
 const Session = require('../models/sessionModel');
 
 const bcrypt = require('bcrypt');
@@ -124,6 +126,4 @@ exports.getUser = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
 }
-
-
 
