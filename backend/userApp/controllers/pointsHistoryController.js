@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 exports.getMonthlyLeaderboard = async (req, res) => {
     const { month } = req.query;
   
+    // Définir le début et la fin du mois sélectionné
     const startOfMonth = new Date(month);
     const endOfMonth = new Date(startOfMonth);
     endOfMonth.setMonth(startOfMonth.getMonth() + 1);
@@ -13,8 +14,11 @@ exports.getMonthlyLeaderboard = async (req, res) => {
     try {
         const leaderboard = await PointsHistory.aggregate([
             {
+                $unwind: "$pointsHistory" // Séparer chaque élément du tableau pointsHistory
+            },
+            {
                 $match: {
-                    date: {
+                    "pointsHistory.date": {
                         $gte: startOfMonth,
                         $lt: endOfMonth
                     }
@@ -23,7 +27,7 @@ exports.getMonthlyLeaderboard = async (req, res) => {
             {
                 $group: {
                     _id: "$user",
-                    total_points: { $sum: "$points" }
+                    total_points: { $sum: "$pointsHistory.points" }
                 }
             },
             {
@@ -41,21 +45,22 @@ exports.getMonthlyLeaderboard = async (req, res) => {
                 $sort: { total_points: -1 }
             }
         ]);
-  
+
         res.status(200).json(leaderboard);
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la récupération du classement', error });
     }
-  };
+};
 
-  exports.getUserPointsHistory = async (req, res) => {
+
+  // Récupérer l'historique des points d'un utilisateur
+exports.getUserPointsHistory = async (req, res) => {
     const { userId } = req.params;
 
     try {
-        // Rechercher tous les enregistrements de points pour cet utilisateur
-        const pointsHistory = await PointsHistory.find({ user: userId }).sort({ date: -1 });
+        const pointsHistory = await PointsHistory.findOne({ user: userId }).sort({ 'pointsHistory.date': -1 });
 
-        if (!pointsHistory.length) {
+        if (!pointsHistory) {
             return res.status(404).json({ message: "Aucun historique de points trouvé pour cet utilisateur." });
         }
 
@@ -65,34 +70,34 @@ exports.getMonthlyLeaderboard = async (req, res) => {
     }
 };
 
-exports.addPoints = async (req, res) => {
+
+
+// Ajouter une nouvelle entrée dans l'historique des points d'un utilisateur
+exports.addPointsHistory = async (req, res) => {
     const { userId, points, reason } = req.body;
 
     try {
-        const now = new Date();
+        let pointsHistory = await PointsHistory.findOne({ user: userId });
 
-        const existingEntry = await PointsHistory.findOne({
-            user: userId,
-        });
-
-        if (existingEntry) {
-            existingEntry.points += points;
-            await existingEntry.save();
-            res.status(200).json({ message: "Points ajoutés avec succès", data: existingEntry });
-        } else {
-            const newEntry = new PointsHistory({
+        if (!pointsHistory) {
+            // Si aucun historique n'existe pour cet utilisateur, créer un nouvel enregistrement
+            pointsHistory = new PointsHistory({
                 user: userId,
-                points,
-                reason,
-                date: now
+                pointsHistory: [{ points, reason }]
             });
-            await newEntry.save();
-            res.status(201).json({ message: "Points ajoutés avec succès", data: newEntry });
+        } else {
+            // Sinon, ajouter une nouvelle entrée dans le tableau pointsHistory
+            pointsHistory.pointsHistory.push({ points, reason });
         }
+
+        await pointsHistory.save();
+
+        res.status(201).json({ message: "Historique des points mis à jour avec succès", data: pointsHistory });
     } catch (error) {
-        res.status(500).json({ message: 'Erreur lors de l\'ajout des points', error });
+        res.status(500).json({ message: "Erreur lors de l'ajout à l'historique des points", error });
     }
 };
+
 
   
   

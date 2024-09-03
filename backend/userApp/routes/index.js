@@ -15,7 +15,7 @@ const searchRoutes = require('./searchRoutes');
 const orderRoutes = require('./orderRoutes');
 const categoryRoutes = require('./categoryRoutes');
 const brandRoutes = require('./brandRoutes');
-const pointsRoutes = require('./pointsRoutes')
+const pointsRoutes = require('./pointsHistoryRoutes')
 const giftHistoryRoutes = require('./giftHistoryRoutes')
 
 //router.use('/products', auth,  productRoutes);

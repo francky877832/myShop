@@ -10,18 +10,13 @@ const pointsHistorySchema = new Schema({
         ref: 'User',
         required: true
     },
-    points: {
-        type: Number,
-        required: true
-    },
-    reason: {
-        type: String,
-        required: true
-    },
-    date: {
-        type: Date,
-        default: Date.now
-    }
+    pointsHistory : [{   
+
+        points: {type: Number, required: true},
+        reason: { type: String, required: true},
+        date: {type: Date, default: Date.now }
+    }],
+    
 }, {
     timestamps: true // Pour avoir createdAt et updatedAt automatiquement
 });

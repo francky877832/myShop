@@ -12,7 +12,7 @@ import { UserContext } from '../../context/UserContext';
 
 import { referralDatas } from '../../utils/referralDatas';
 
-import PointsHistoryRenderItem from '../common/PointsHistoryRenderItem';
+import PointsHistoryRenderItem from '../common/PointsHistoryRenderItem'
 import MonthlyRankingRenderItem from '../common/MonthlyRankingRenderItem';
 import ReferredRenderItem from '../common/ReferredRenderItem';
 import GiftHistoryRenderItem from '../common/GiftHistoryRenderItem';
@@ -40,18 +40,17 @@ const   ReferralDetails = (props) => {
                     <Text  style={[referralStyles.buttonText]}>Convertir Mes Points</Text>
                 </Pressable>
 
+                <PointsHistoryRenderItem />
+
             </View>
 
             <View style={[referralStyles.menu]}>
                 <FlatList
                     data={referralDatas}
-                    renderItem={ ({item}) => { return(
-                                <Pressable style={[referralStyles.referralElement, !item.available?referralStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`)}} disabled={!item.available}> 
-                                    <Icon type={item.iconType} name={item.iconName} size={30} color={appColors.orange} />
-                                    <Text style={[referralStyles.text,!item.available?referralStyles.unavailable:false]}>{item.name}</Text>
-                                </Pressable>
-                                )
-                             } }
+                    renderItem={ ({item}) => { 
+                        return <PointsHistoryRenderItem />
+                        
+                    } }
                     keyExtractor={ (item) => { return item.name.toString(); } }
                     key={Math.random}
                     numColumns={2}

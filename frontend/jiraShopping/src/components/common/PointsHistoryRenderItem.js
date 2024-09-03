@@ -28,7 +28,6 @@ const   PointsHistoryRenderItem = (props) => {
         <View style={[referralStyles.container]}>
             <View  style={[referralStyles.topContainer]}>
                 <View style={[referralStyles.points]}>
-                    <Text style={[referralStyles.text]}>Total Points Gagnés</Text>
                     <Text style={[referralStyles.text]}>235</Text>
                 </View>
 
