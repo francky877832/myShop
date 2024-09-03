@@ -35,12 +35,13 @@ const   ReferralDetails = (props) => {
         let response;
         try
         {
+            
             switch(page.toLowerCase())
             {
-                case 'pointshistory':
+                case 'PointsHistoryRenderItem'.toLowerCase():
                     response = await fetch(`${server}/api/datas/points/user/${user._id}`);
                     break;
-                case 'monthlyrankingrenderitem': //console.log('ok')
+                case 'MonthlyRankingRenderItem'.toLowerCase(): //console.log('ok')
                     response = await fetch(`${server}/api/datas/points/leaderboard`);
                     break;
                 default : 
@@ -54,14 +55,14 @@ const   ReferralDetails = (props) => {
                 throw new Error('Erreur lors de la requête');
             }
 
-            
+            //console.log(datas)
 
             switch(page.toLowerCase())
             {
-                case 'pointshistory':
+                case 'PointsHistoryRenderItem'.toLowerCase():
                     setDatas(datas)
                     break;
-                case 'monthlyrankingrenderitem': //console.log('ok')
+                case 'MonthlyRankingRenderItem'.toLowerCase(): //console.log('ok')
                     setDatas(datas)
                     break;
                 case 'GiftHistoryRenderItem'.toLocaleLowerCase(): //console.log('ok')
@@ -89,32 +90,56 @@ useEffect(()=>{
     }
 }, [isLoading])
 
+//PointsHistoryRenderItem
+//MonthlyRankingRenderItem
+const headerTitle = () => {
+    switch(page.toLowerCase())
+            {
+                case 'PointsHistoryRenderItem'.toLowerCase():
+                    return 'Historique De Vos Points'
+                    break;
+                case 'MonthlyRankingRenderItem'.toLowerCase(): //console.log('ok')
+                    return 'Classement Mensuel'
+                    break;
+                case 'GiftHistoryRenderItem'.toLocaleLowerCase(): //console.log('ok')
+                    return 'Historique De Vos Recompanses'
+                    break;
+                default : 
+                    
+                    break;
+            }
+}
+const sample = [...datas, ...datas, ...datas, ...datas, ...datas, ...datas, ...datas, ...datas, ...datas, ...datas]
     return(
-        <View style={[referralStyles.container]}>
+        <View style={[referralDetailsStyles.container]}>
             <View  style={[referralStyles.topContainer]}>
                 <View style={[referralStyles.points]}>
-                    <Text style={[referralStyles.text]}>Total Points Gagnés</Text>
-                    <Text style={[referralStyles.text]}>235</Text>
+                    <Text style={[referralStyles.text, referralStyles.title]}>Total Points Gagnés</Text>
+                    <Text style={[referralStyles.text, referralStyles.pointsText]}>235</Text>
                 </View>
 
                 <Pressable style={[referralStyles.button]}>
                     <Text  style={[referralStyles.buttonText]}>Convertir Mes Points</Text>
                 </Pressable>
-
-
             </View>
 
-            <View style={[referralStyles.menu]}>
+            <View style={[referralDetailsStyles.menu]}>
+                <View style={[referralDetailsStyles.renderTitleBox]}>
+                    <Text style={[referralDetailsStyles.text, referralDetailsStyles.renderTitle]}>{headerTitle()}</Text>
+                </View>
+
                 <FlatList
-                    data={datas}
-                    renderItem={ ({item}) => { 
-                        return <GiftHistoryRenderItem reward={{}} />    
+                    data={sample}
+                    renderItem={ ({item, index}) => { 
+                        return <MonthlyRankingRenderItem ranking={item} index={index}/>    
                     } }
                     keyExtractor={ (item) => { return item._id.toString(); } }
                     key={Math.random}
                     numColumns={1}
-                    ItemSeparatorComponent={ (item) => { return <View style={{height:20,}}></View> }}
-                    contentContainerStyle={{}}
+                    ItemSeparatorComponent={ (item) => { return <View style={{height:0,}}></View> }}
+                    ListHeaderComponent={()=>{}}
+                    contentContainerStyle={[referralDetailsStyles.flatlist]}
+                    style={[]}
                 />
             </View>      
         </View>

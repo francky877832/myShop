@@ -27,7 +27,7 @@ exports.getMonthlyLeaderboard = async (req, res) => {
             {
                 $group: {
                     _id: "$user",
-                    points: { $sum: "$pointsHistory.points" }
+                    points: { $sum: "$pointsHistory.points" },
                 }
             },
             {
@@ -42,12 +42,12 @@ exports.getMonthlyLeaderboard = async (req, res) => {
                 $unwind: "$user"
             },
             {
-                $sort: { total_points: -1 }
+                $sort: { points: -1 }
             },
            
         ]);
 
-        res.status(200).json(leaderboard.pointsHistory);
+        res.status(200).json(leaderboard);
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la récupération du classement', error });
     }
@@ -65,7 +65,7 @@ exports.getUserPointsHistory = async (req, res) => {
             return res.status(404).json({ message: "Aucun historique de points trouvé pour cet utilisateur." });
         }
 
-        res.status(200).json(pointsHistory);
+        res.status(200).json(pointsHistory.pointsHistory);
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la récupération de l'historique des points", error });
     }

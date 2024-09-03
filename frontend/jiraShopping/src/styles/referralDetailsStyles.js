@@ -9,6 +9,26 @@ export const referralDetailsStyles = StyleSheet.create({
     container : 
     {
         flex : 1,
+        //backgroundColor : appColors.lightOrange,
+    },
+    menu :
+    {
+        top : 50,
+    },
+    flatlist :
+    {
+        backgroundColor : appColors.white,
+        //paddingBottom : 500,
+    },
+    renderTitleBox :
+    {
+        backgroundColor : appColors.secondaryColor1,
+    },
+    renderTitle :
+    {
+        fontSize : 20,
+        color : appColors.white,
+        fontWeight : 'bold',
     },
     text :
     {

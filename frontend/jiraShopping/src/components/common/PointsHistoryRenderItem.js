@@ -5,7 +5,7 @@ import { Input, Icon } from 'react-native-elements';
 
 import { appColors, customText, appFont } from '../../styles/commonStyles';
 import {CustomButton} from '../common/CommonSimpleComponents'
-
+import { convertISOToCustomDateFormat } from '../../utils/commonAppFonctions';
 import { referralStyles } from '../../styles/referralStyles';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
@@ -29,7 +29,7 @@ const   PointsHistoryRenderItem = (props) => {
         <Pressable style={[styles.container]}>
             <View style={[styles.reason]}>
                 <Text style={[customText.text, styles.reasonText]}>{capitalizeFirstLetter(point.reason)}</Text>
-                <Text style={[customText.text, styles.dateText]}>{point.date}</Text>
+                <Text style={[customText.text, styles.dateText]}>{convertISOToCustomDateFormat(point.date)}</Text>
             </View>
 
             <View style={[styles.points]}>
@@ -44,11 +44,20 @@ export default PointsHistoryRenderItem
 const styles = StyleSheet.create({
     container :
     {
-
+        width : '100%',
+        paddingHorizontal : 30,
+        height : 60,
+        flexDirection : 'row',
+        justifyContent : 'space-between',
+        alignItems : 'center',
+        borderBottomWidth : 1,
+        borderColor : appColors.secondaryColor4,
+        
     },
     reason :
     {
-
+        justifyContent : 'space-between',
+        alignItems : 'center',
     },
     points :
     {
@@ -56,15 +65,17 @@ const styles = StyleSheet.create({
     },
     pointsText :
     {
-
+        fontWeight : 'bold',
+        fontSize : 16,
     },
     reasonText :
     {
-
+        fontWeight : 'bold',
+        fontSize : 16,
     },
     dateText :
     {
-
+        fontStyle : 'italic',
     },
 
 })

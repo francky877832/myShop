@@ -30,8 +30,8 @@ const   Referral = (props) => {
         <View style={[referralStyles.container]}>
             <View  style={[referralStyles.topContainer]}>
                 <View style={[referralStyles.points]}>
-                    <Text style={[referralStyles.text]}>Total Points Gagnés</Text>
-                    <Text style={[referralStyles.text]}>235</Text>
+                    <Text style={[referralStyles.text, referralStyles.title]}>Total Points Gagnés</Text>
+                    <Text style={[referralStyles.text, referralStyles.pointsText]}>235</Text>
                 </View>
 
                 <Pressable style={[referralStyles.button]}>
@@ -45,8 +45,8 @@ const   Referral = (props) => {
                     data={referralDatas}
                     renderItem={ ({item}) => { return(
                                 <Pressable style={[referralStyles.referralElement, !item.available?referralStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`, {page:`${item.renderItem}`})}} disabled={!item.available}> 
-                                    <Icon type={item.iconType} name={item.iconName} size={30} color={appColors.orange} />
-                                    <Text style={[referralStyles.text,!item.available?referralStyles.unavailable:false]}>{item.name}</Text>
+                                    <Icon type={item.iconType} name={item.iconName} size={40} color={appColors.secondaryColor1} />
+                                    <Text style={[referralStyles.text, referralStyles.menuText, !item.available?referralStyles.unavailable:false]} numberOfLines={2}>{item.name.replace(/ /g, '\n')}</Text>
                                 </Pressable>
                                 )
                              } }

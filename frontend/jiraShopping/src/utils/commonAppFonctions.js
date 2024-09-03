@@ -323,6 +323,17 @@ export const formatDateToLitteral = (dateString) =>  {
     return `${jour} ${capitalizeFirstLetter(mois[date.getMonth()])} ${annee}`;
 }
 
+export const convertISOToCustomDateFormat = (isoDateString) => {
+    const date = new Date(isoDateString);
+
+    // Extraire le jour, le mois et l'année
+    const day = String(date.getDate()).padStart(2, '0'); // Ajoute un zéro au début si nécessaire
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Les mois commencent à 0, donc on ajoute 1
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+}
+
 
 
 
