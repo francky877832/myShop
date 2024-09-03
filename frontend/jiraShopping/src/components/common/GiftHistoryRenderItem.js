@@ -19,43 +19,47 @@ const loggedUser = "Francky"
 const   GiftHistoryRenderItem = (props) => {
     const navigation = useNavigation()
     const { user } = useContext(UserContext)
-  
-    console.log(user)
+    const {reward} = props
 
     
 
     return(
-        <View style={[referralStyles.container]}>
-            <View  style={[referralStyles.topContainer]}>
-                <View style={[referralStyles.points]}>
-                    <Text style={[referralStyles.text]}>Total Points Gagnés</Text>
-                    <Text style={[referralStyles.text]}>235</Text>
-                </View>
-
-                <Pressable style={[referralStyles.button]}>
-                    <Text  style={[referralStyles.buttonText]}>Convertir Mes Points</Text>
-                </Pressable>
-
+        <Pressable style={[styles.container]}>
+            <View style={[styles.reward]}>
+                <Icon name='close' type='ionicon' size={24} color={appColors} />
+                <Text style={[customText.text, styles.rewardText]}>{reward.reward}</Text>
             </View>
 
-            <View style={[referralStyles.menu]}>
-                <FlatList
-                    data={referralDatas}
-                    renderItem={ ({item}) => { return(
-                                <Pressable style={[referralStyles.referralElement, !item.available?referralStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`)}} disabled={!item.available}> 
-                                    <Icon type={item.iconType} name={item.iconName} size={30} color={appColors.orange} />
-                                    <Text style={[referralStyles.text,!item.available?referralStyles.unavailable:false]}>{item.name}</Text>
-                                </Pressable>
-                                )
-                             } }
-                    keyExtractor={ (item) => { return item.name.toString(); } }
-                    key={Math.random}
-                    numColumns={2}
-                    ItemSeparatorComponent={ (item) => { return <View style={{height:20,}}></View> }}
-                    contentContainerStyle={{}}
-                />
-            </View>      
-        </View>
+            <View style={[styles.points]}>
+                <Text style={[customText.text, styles.pointsText]}>{reward.pointsSpent}</Text>
+            </View>
+        </Pressable>
     )
 }
 export default GiftHistoryRenderItem
+
+
+const styles = StyleSheet.create({
+    container :
+    {
+
+    },
+    reward :
+    {
+
+    },
+    points :
+    {
+
+    },
+    pointsText :
+    {
+
+    },
+    rewardText :
+    {
+
+    },
+
+
+})

@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
 
 import { referralDatas } from '../../utils/referralDatas';
+import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
 
 
 
@@ -20,41 +21,50 @@ const   PointsHistoryRenderItem = (props) => {
     const navigation = useNavigation()
     const { user } = useContext(UserContext)
   
-    console.log(user)
+    const {point} = props
 
     
 
     return(
-        <View style={[referralStyles.container]}>
-            <View  style={[referralStyles.topContainer]}>
-                <View style={[referralStyles.points]}>
-                    <Text style={[referralStyles.text]}>235</Text>
-                </View>
-
-                <Pressable style={[referralStyles.button]}>
-                    <Text  style={[referralStyles.buttonText]}>Convertir Mes Points</Text>
-                </Pressable>
-
+        <Pressable style={[styles.container]}>
+            <View style={[styles.reason]}>
+                <Text style={[customText.text, styles.reasonText]}>{capitalizeFirstLetter(point.reason)}</Text>
+                <Text style={[customText.text, styles.dateText]}>{point.date}</Text>
             </View>
 
-            <View style={[referralStyles.menu]}>
-                <FlatList
-                    data={referralDatas}
-                    renderItem={ ({item}) => { return(
-                                <Pressable style={[referralStyles.referralElement, !item.available?referralStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`)}} disabled={!item.available}> 
-                                    <Icon type={item.iconType} name={item.iconName} size={30} color={appColors.orange} />
-                                    <Text style={[referralStyles.text,!item.available?referralStyles.unavailable:false]}>{item.name}</Text>
-                                </Pressable>
-                                )
-                             } }
-                    keyExtractor={ (item) => { return item.name.toString(); } }
-                    key={Math.random}
-                    numColumns={2}
-                    ItemSeparatorComponent={ (item) => { return <View style={{height:20,}}></View> }}
-                    contentContainerStyle={{}}
-                />
-            </View>      
-        </View>
+            <View style={[styles.points]}>
+                <Text style={[customText.text, styles.pointsText]}>{point.points}</Text>
+            </View>
+        </Pressable>
     )
 }
 export default PointsHistoryRenderItem
+
+
+const styles = StyleSheet.create({
+    container :
+    {
+
+    },
+    reason :
+    {
+
+    },
+    points :
+    {
+
+    },
+    pointsText :
+    {
+
+    },
+    reasonText :
+    {
+
+    },
+    dateText :
+    {
+
+    },
+
+})

@@ -7,6 +7,6 @@ const giftHistoryCtrl = require('../controllers/giftHistoryController');
 
 router.get('/user/:userId', giftHistoryCtrl.getUserGiftHistory);
 
-router.post('/add', giftHistoryCtrl.addGift);
+router.post('/user/add', giftHistoryCtrl.addGift);
 
 module.exports = router;

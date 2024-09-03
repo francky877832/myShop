@@ -20,7 +20,11 @@ const   Referral = (props) => {
     const navigation = useNavigation()
     const { user } = useContext(UserContext)
   
-    console.log(user)
+    //console.log(user)
+
+    useEffect(()=>{
+        
+    }, [])
 
     return(
         <View style={[referralStyles.container]}>
@@ -40,7 +44,7 @@ const   Referral = (props) => {
                 <FlatList
                     data={referralDatas}
                     renderItem={ ({item}) => { return(
-                                <Pressable style={[referralStyles.referralElement, !item.available?referralStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`)}} disabled={!item.available}> 
+                                <Pressable style={[referralStyles.referralElement, !item.available?referralStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`, {page:`${item.renderItem}`})}} disabled={!item.available}> 
                                     <Icon type={item.iconType} name={item.iconName} size={30} color={appColors.orange} />
                                     <Text style={[referralStyles.text,!item.available?referralStyles.unavailable:false]}>{item.name}</Text>
                                 </Pressable>

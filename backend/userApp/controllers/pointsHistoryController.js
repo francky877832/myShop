@@ -2,12 +2,12 @@ const PointsHistory = require('../models/pointsHistoryModel');
 
 const mongoose = require('mongoose');
 
-
 exports.getMonthlyLeaderboard = async (req, res) => {
     const { month } = req.query;
   
     // Définir le début et la fin du mois sélectionné
     const startOfMonth = new Date(month);
+    startOfMonth.setHours(0, 0, 0, 0); // Pour être sûr de commencer au début du jour
     const endOfMonth = new Date(startOfMonth);
     endOfMonth.setMonth(startOfMonth.getMonth() + 1);
   
@@ -16,24 +16,24 @@ exports.getMonthlyLeaderboard = async (req, res) => {
             {
                 $unwind: "$pointsHistory" // Séparer chaque élément du tableau pointsHistory
             },
-            {
+           /*{
                 $match: {
                     "pointsHistory.date": {
                         $gte: startOfMonth,
                         $lt: endOfMonth
                     }
                 }
-            },
+            },*/
             {
                 $group: {
                     _id: "$user",
-                    total_points: { $sum: "$pointsHistory.points" }
+                    points: { $sum: "$pointsHistory.points" }
                 }
             },
             {
                 $lookup: {
                     from: "users",
-                    localField: "_id",
+                    localField: "_id", // Utilisation de l'ID de l'utilisateur (résultat du group)
                     foreignField: "_id",
                     as: "user"
                 }
@@ -43,10 +43,11 @@ exports.getMonthlyLeaderboard = async (req, res) => {
             },
             {
                 $sort: { total_points: -1 }
-            }
+            },
+           
         ]);
 
-        res.status(200).json(leaderboard);
+        res.status(200).json(leaderboard.pointsHistory);
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la récupération du classement', error });
     }

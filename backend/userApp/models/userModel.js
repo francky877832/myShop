@@ -47,6 +47,8 @@ const userSchema = new Schema({
     referralCode: { type: String, unique: true },
     referredBy: { type : Schema.Types.ObjectId, ref : 'User', required : false },
 
+    points : { type: Number, default : 0 },
+
     createdAt : { type : Date, default : Date.now },
     updatedAt : { type : Date, default : Date.now }
 });

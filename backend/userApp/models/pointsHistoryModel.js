@@ -11,7 +11,7 @@ const pointsHistorySchema = new Schema({
         required: true
     },
     pointsHistory : [{   
-
+        _id : { type: Schema.Types.ObjectId, required: true },
         points: {type: Number, required: true},
         reason: { type: String, required: true},
         date: {type: Date, default: Date.now }

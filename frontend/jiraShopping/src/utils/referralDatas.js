@@ -5,6 +5,7 @@ export const referralDatas = [
         iconName : 'close',
         iconType : 'ionicon',
 		component : "ReferralDetails",
+		renderItem : 'MonthlyRankingRenderItem',
 		available : true,
 	},
 	{
@@ -12,6 +13,7 @@ export const referralDatas = [
         iconName : 'close',
         iconType : 'ionicon',
 		component : "ReferralDetails",
+		renderItem : 'GiftHistoryRenderItem',
 		available : true,
 	},
 	{
@@ -19,6 +21,7 @@ export const referralDatas = [
         iconName : 'close',
         iconType : 'ionicon',
 		component : "ReferralDetails",
+		renderItem : 'PointsHistoryRenderItem',
 		available : true,
 	},
     {
@@ -26,6 +29,7 @@ export const referralDatas = [
         iconName : 'close',
         iconType : 'ionicon',
 		component : "ReferralDetails",
+		renderItem : 'ReferredRenderItem',
 		available : true,
 	},
 	

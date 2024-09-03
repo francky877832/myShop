@@ -1,5 +1,5 @@
-import React, { useState, useEffect, createContext, useContext, useRef, useCallback} from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Pressable, ActivityIndicator, Alert} from 'react-native';
+import React, { useState, useContext,} from 'react';
+import { View, Text, StyleSheet, Pressable, Image} from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 
 
@@ -19,43 +19,51 @@ const loggedUser = "Francky"
 const   MonthlyRankingRenderItem = (props) => {
     const navigation = useNavigation()
     const { user } = useContext(UserContext)
+    const { ranking } = props
   
-    console.log(user)
+    //console.log(ranking)
 
     
 
     return(
-        <View style={[referralStyles.container]}>
-            <View  style={[referralStyles.topContainer]}>
-                <View style={[referralStyles.points]}>
-                    <Text style={[referralStyles.text]}>Total Points Gagnés</Text>
-                    <Text style={[referralStyles.text]}>235</Text>
+        <Pressable style={[styles.container]}>
+            <View>
+                <View style={[styles.imageContainer]}>
+                    <Image source={{uri: ranking?.user.image}} style={styles.image} />
                 </View>
 
-                <Pressable style={[referralStyles.button]}>
-                    <Text  style={[referralStyles.buttonText]}>Convertir Mes Points</Text>
-                </Pressable>
-
+                <View style={[styles.user]}>
+                    <Text style={[customText.text, styles.usernameText]}>{ranking?.user.username}</Text>
+                </View>
             </View>
 
-            <View style={[referralStyles.menu]}>
-                <FlatList
-                    data={referralDatas}
-                    renderItem={ ({item}) => { return(
-                                <Pressable style={[referralStyles.referralElement, !item.available?referralStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`)}} disabled={!item.available}> 
-                                    <Icon type={item.iconType} name={item.iconName} size={30} color={appColors.orange} />
-                                    <Text style={[referralStyles.text,!item.available?referralStyles.unavailable:false]}>{item.name}</Text>
-                                </Pressable>
-                                )
-                             } }
-                    keyExtractor={ (item) => { return item.name.toString(); } }
-                    key={Math.random}
-                    numColumns={2}
-                    ItemSeparatorComponent={ (item) => { return <View style={{height:20,}}></View> }}
-                    contentContainerStyle={{}}
-                />
-            </View>      
-        </View>
+            <View style={[styles.points]}>
+                <Text style={[customText.text, styles.pointsText]}>{ranking.points}</Text>
+            </View>
+        </Pressable>
     )
 }
 export default MonthlyRankingRenderItem
+
+const styles = StyleSheet.create({
+    container :
+    {
+
+    },
+    imageContainer :
+    {
+
+    },
+    image :
+    {
+
+    },
+    user :
+    {
+        
+    },
+    usernameText :
+    {
+
+    },
+})
