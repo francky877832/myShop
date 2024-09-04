@@ -119,6 +119,7 @@ exports.getOffersProduct = async (req, res, next) => {
     {
     //console.log("ok")
         const offer = req.query
+        //console.log(offer)
         const pipeline = getPipeLineForOffers(offer.seller, offer.buyer, offer.product)
         const offersWithProduct = await Offer.aggregate(pipeline).exec();
         res.status(200).json(offersWithProduct);

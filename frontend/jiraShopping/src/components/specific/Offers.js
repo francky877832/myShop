@@ -222,7 +222,7 @@ const addOffer = async ()=>{
         
         try
         {
-            response = await fetch(`${API_BACKEND}/api/datas/offers/offer/update`, {
+            response = await fetch(`${server}/api/datas/offers/offer/update`, {
             method: 'POST',
             body: JSON.stringify(offer),
             headers: {
@@ -247,7 +247,7 @@ const addOffer = async ()=>{
 const fetchUserOffers = async()=>{
     //console.log("Callback")
     const offer = {
-            seller : product.seller,
+            seller : product.seller._id,
             buyer : user._id,
             product : product._id,
     }

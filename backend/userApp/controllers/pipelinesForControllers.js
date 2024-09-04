@@ -101,7 +101,7 @@ exports.getPipeLineForProducts = ( userId=undefined, skip, limit, sort={_id:1} )
       },
     
 
-      
+
     {
       $lookup: {
         from: 'comments',
@@ -172,7 +172,7 @@ exports.getPipeLineForOffers = ( seller, buyer, product ) => {
     const pipeline = [
 
         {
-                $match: {
+            $match: {
                 seller: new mongoose.Types.ObjectId(seller),
                 buyer: new mongoose.Types.ObjectId(buyer),
                 product: new mongoose.Types.ObjectId(product),
