@@ -100,7 +100,7 @@ const FilterProvider = ({children}) => {
         //setIsLoading(true)
         //setSelectedOrderBy(orderBy);
         //selectedCategories
-        console.log(selectedCategory)
+        //console.log(selectedCategory)
         selectedModalCategories = selectedModalCategories || {}
         let categories;
         if(Object.keys(selectedModalCategories).length>0 || searchText.trim().length>0)
@@ -221,33 +221,40 @@ const FilterProvider = ({children}) => {
     })
 
     
-    const loadMoreDataWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory={}, selectedBrands, conditions, resetPage=false}) =>
+    const loadMoreDataWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory={}, selectedBrands, conditions, resetPage=false, search=false}) =>
     {
         //console.log("selectedCategory")
         //console.log(selectedCategory)
-        console.log("hasMore")
-        console.log(hasMore)
-        console.log(isLoading)
+        //console.log("hasMore")
+        //console.log(hasMore)
+        //console.log(isLoading)
         if (!resetPage && (isLoading || !hasMore)) return;
         //if (isLoading) return;
     
         setIsLoading(true);
         try {
-            console.log("page")
-            console.log(page)
+            //console.log("page")
+            //console.log(page)
+            
             const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedCategory:selectedCategory, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, resetPage:resetPage}); //A MODDIFIER
             //console.log(newData)
             if (newData.datas.length > 0) {
                 //setProducts(newData.datas)
-                console.log("gs")
+                //console.log(products)
                 //updateProducts(newData.datas);
+                console.log("*****")
+                console.log(resetPage)
                 if(resetPage)
                 {
-                    setSearchedProducts(newData.datas)
+                    search ? setSearchedProducts(newData.datas) :  setProducts(newData.datas)
                 }
                 else
                 {
-                    setProducts((prevProducts)=>[...prevProducts, ...newData.datas])
+                    search 
+                    ?
+                        setSearchedProducts((prevProducts)=>[...prevProducts, ...newData.datas])
+                    :
+                        setProducts((prevProducts)=>[...prevProducts, ...newData.datas])
                 }
                 //setProducts(newData.datas)
                 //if(page < totalPages)
@@ -267,8 +274,9 @@ const FilterProvider = ({children}) => {
 
 
     useEffect(()=>{
-
-    }, [selectedOrderBy])
+        console.log("MY PRODUCTS")
+        console.log(products.length)
+    }, [products])
 
     const resetAllFiltersWithoutFecthingDatas = () => {
         //setIsLoading(false)

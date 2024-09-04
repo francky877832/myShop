@@ -48,7 +48,7 @@ const Filters = (props) => {
 //console.log(categories)
     const { suggestion, searchText,  getDatas, display, notDisplayFilters, onExit, setOnExit } = props
     const [showSuggestion, setShowSuggestion] = useState(suggestion)
-    
+    let replacedFilter;
 
 
 useEffect(() => {
@@ -70,7 +70,10 @@ useEffect(() => {
 
         
 }, [onExit]);
-
+useEffect(()=>{
+    if(notDisplayFilters)
+        replacedFilter = new String(selectedCategories.name)
+}, [])
 
 
 
@@ -276,6 +279,7 @@ useEffect(()=>{
     loadDatas()
 
 }, [filtersUpdated])
+
 const validateFilters = async () => {
     await searchAgain()
     
@@ -323,7 +327,7 @@ const validateFilters = async () => {
                                 <Pressable style={[filtersStyles.pressableFilter, functionsCatalog[item.name.toLowerCase()][0] ? filtersStyles.pressableFilterFocused : false,
                                 notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersStyles.pressableFilterDisabled:null
                                 ]} onPress={()=>{showFilters(item.name)}} disabled={notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?true:false} >
-                                    <Text style={[customText.text, notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersStyles.pressableFilterTextDisabled:null]}>{notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?selectedCategories.name:item.name}</Text>
+                                    <Text style={[customText.text, notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersStyles.pressableFilterTextDisabled:null]}>{notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?replacedFilter:item.name}</Text>
                                 </Pressable>
                             )
                     }}

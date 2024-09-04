@@ -46,12 +46,13 @@ export default function MainNavigation() {
 
   return ( 
 <SafeAreaView style={{ flex: 1 }}>
-  
+ <UserProvider>
+  <FilterProvider>
   <NavigationContainer> 
-  <UserProvider>
+ 
   <ProductProvider>
     <ProductItemProvider>
-          <FilterProvider>
+          
             <OrdersProvider>
             <CommentsProvider>
             <Stack.Navigator
@@ -78,11 +79,13 @@ export default function MainNavigation() {
               </Stack.Navigator>
             </CommentsProvider>
             </OrdersProvider>
-          </FilterProvider>
+          
       </ProductItemProvider>
       </ProductProvider>
-      </UserProvider>
+      
     </NavigationContainer> 
+    </FilterProvider>
+    </UserProvider>
   </SafeAreaView>
   );
 

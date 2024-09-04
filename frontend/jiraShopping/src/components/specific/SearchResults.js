@@ -55,7 +55,7 @@ const SearchResults = (props) => {
         //console.log(serialize(category))
             try{
                 //console.log(user)
-                const response = await fetch(`${API_BACKEND}/api/datas/products/categories?${serialize(category)}`, {
+                const response = await fetch(`${server}/api/datas/products/categories?${serialize(category)}`, {
                 headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${user.token}`,
@@ -68,23 +68,20 @@ const SearchResults = (props) => {
                 Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
             }
         }
-useEffect(()=>{
-    //console.log(searchText)
-    cat_reminder = selectedCategories
-},[])
-        async function getDatas({searchText, selectedModalCategories, selectedBrands, conditions, orderBy, resetPage})
+
+        async function getDatas({searchText, selectedModalCategories, selectedBrands, conditions, orderBy, resetPage, search})
         {
             //console.log("GETDATAS")
-            console.log({searchText, selectedModalCategories, selectedBrands, conditions, orderBy, resetPage})
+            //console.log({searchText, selectedModalCategories, selectedBrands, conditions, orderBy, resetPage})
             //if(!isLoading)
             //    setIsLoading(true)
 
-            await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, resetPage:resetPage})
+            await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, resetPage:resetPage, search:search})
            // setIsLoading(false)    
         }
 
         async function loadMoreData_(){
-            await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategoriesFromContext, selectedBrands:selectedBrandFromContext, conditions:selectedConditionsFromContext, orderBy:selectedOrderBy, resetPage:false})
+            await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategoriesFromContext, selectedBrands:selectedBrandFromContext, conditions:selectedConditionsFromContext, orderBy:selectedOrderBy, resetPage:false, search:true})
         }
   /*  
 useFocusEffect(
@@ -102,19 +99,11 @@ useEffect(()=>{
     //if(!isLoading)
     //    setIsLoading(true)
     //searchAgainWithoutUpdate()
-    getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy, resetPage:true})
+    getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy, resetPage:true, search:true})
 
     }, [searchText])
 
-useEffect(() => {
-    const cat_reminder = selectedCategories
-        const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
-            e.preventDefault();
-            setSelectedCategories(cat_reminder)
-            navigation.dispatch(e.data.action)
-        })
-        return beforeRemoveListener;
-}, [navigation]);
+
 
 const title = `Resultats de recherche "${searchText}"`
 

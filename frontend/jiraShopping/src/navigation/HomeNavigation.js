@@ -28,7 +28,7 @@ const Test = ()=>{
 const HomeNavigation = () => {
  
   return (
-    <Tab.Navigator initialRouteName='Account'
+    <Tab.Navigator initialRouteName='Home'
         screenOptions={({ route }) => ({
           lazy : true,
           headerShown : false,
@@ -40,6 +40,7 @@ const HomeNavigation = () => {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             let badgeCount = 0;
+            //let focused = false
 
             if (route.name === 'Home') {
               iconName = focused ? "home" : "home-outline";
@@ -57,7 +58,7 @@ const HomeNavigation = () => {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
               badgeCount = 0;
             }
-            return <BadgeIcon name={iconName} size={size} color={color} badgeCount={badgeCount} styles={badgeIconStyles} />
+            return <BadgeIcon focused={focused} name={iconName} bottomTab={true} size={size} color={color} badgeCount={badgeCount} styles={badgeIconStyles} />
           },
         })}
         

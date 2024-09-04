@@ -9,7 +9,7 @@ import { radioProductsListtStyles } from '../../styles/radioProductsListStyles';
 import { numProduct } from '../../styles/productStyles';
 import { radioProductStyles } from '../../styles/radioProductsListStyles';
 import SellerBrand from '../common/SellerBrand';
-import { appColors, customText } from '../../styles/commonStyles';
+import { appColors, customText, screenWidth } from '../../styles/commonStyles';
 //Contexte
 import { FavouritesContext } from '../../context/FavouritesContext';
 import { Icon } from 'react-native-elements';
@@ -123,21 +123,21 @@ const RadioProduct = (props) => {
                             { 
                                 passed_product.push(product2._id)
                                 return(
-                                    <View style={[radioProductStyles.radioProducts,{}]} key={key}>
-                                            <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer2]} >
+                                    <View style={[radioProductStyles.radioProducts,{flexWrap:'wrap' }]} key={key}>
+                                            <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer2, {  }]} >
                                                     <CheckBox title=
                                                     {
-                                                    <Pressable style={[radioProductStyles.productInfos,{}]} onPress={()=>{navigation.navigate('ProductDetails', {productDetails:product2})}}>
+                                                    <Pressable style={[radioProductStyles.productInfos,{ }]} onPress={()=>{navigation.navigate('ProductDetails', {productDetails:product2})}}>
                                                         <View style={{width:10}}></View>
                                                         <View style={[radioProductStyles.imageContainer,{}]}>
                                                             <Image source={{uri: product2.images[0]}} style={[radioProductStyles.productImage,{}]} />
                                                         </View>
-                                                        <View style={[{left : 10, flexWrap:'wrap'}]}>
+                                                        <View style={[{left : 10, flexWrap:'wrap', width:'100%', }]}>
                                                             <Text style={[customText.text, ]} numberOfLines={2} >{product2.name.length>25?product2.name.substring(0,25)+'...':product2.name}</Text>
                                                             <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
                                                             <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(product2.price)} XAF{/* prix de la proposition ou real Price*/}</Text>
-                                                            <Pressable onPress={()=>{handleRemoveFromBasket(product2);}}>
-                                                                <Icon name="trash-outline" color={appColors.black} size={24} type="ionicon" style={[{alignSelf:"flex-end"}]} />
+                                                            <Pressable onPress={()=>{handleRemoveFromBasket(product2);}} style={[{ top:10, width:'100%', alignItems:'flex-end', paddingRight:350}]}>
+                                                                <Icon name="trash-outline" color={appColors.black} size={24} type="ionicon" style={[{/*alignSelf:"flex-end"*/}]} />
                                                             </Pressable>
                                                         </View>
                                                     </Pressable> 

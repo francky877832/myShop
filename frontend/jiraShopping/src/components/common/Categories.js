@@ -38,8 +38,8 @@ const Categories = (props) => {
 
         const updateCategories_ = useCallback((id, path) => {
             setSelectedCategories_((prevSelectedCategory) => {
-                console.log("path")
-                console.log(path)
+                //console.log("path")
+                //console.log(path)
                 if(path==undefined)
                 {        //console.log(id)
                     if(prevSelectedCategory["name"] == id)

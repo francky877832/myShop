@@ -11,10 +11,20 @@ import { appColors, appFont } from '../../styles/commonStyles';
 
 const Top = (props) => {
     const navigation = useNavigation()
-    const {searchText} = props
+    const {searchText, replaceNavigation} = props
+    const handleNavigation = () => {
+        if(replaceNavigation)
+        {
+            navigation.replace("Search");
+        }
+        else
+        {
+            navigation.navigate("Search");
+        }
+    }
     return(
         <View style={[topStyles.container, ]} >
-            <Pressable  style={[topStyles.pressableBar, ]} pointerEvents='box-only' onPress={() => {navigation.navigate("Search");}}>
+            <Pressable  style={[topStyles.pressableBar, ]} pointerEvents='box-only' onPress={() => { handleNavigation() }}>
                 <SearchBar placeholder={ searchText ? `${searchText} | resultats` : "Rechercher un produit" } styles={topStyles} isPrev={false} />
             </Pressable>
 

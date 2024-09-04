@@ -45,24 +45,6 @@ const CategoryResults = (props) => {
         const navigation = useNavigation()
 
 
-        const onBackPress = useCallback((e) => {
-            if (e) {
-              e.preventDefault(); // Empêcher le comportement par défaut de la navigation
-            }
-        
-            setOnExit(true)
-           
-            navigation.dispatch(e.data.action);
-          }, [navigation]);
-    
-    
-    useEffect(()=>{
-        //Appel de useCallBack
-           // Ajouter l'écouteur pour l'événement de retour
-        const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
-        return unsubscribe;
-    }, [navigation, onBackPress])
-
 
         const getProductsFromCategories = async () =>{
             //console.log(selectedCategories)
@@ -74,7 +56,7 @@ const CategoryResults = (props) => {
         //console.log(serialize(category))
             try{
                 //console.log(user)
-                            const response = await fetch(`${API_BACKEND}/api/datas/products/categories?${serialize(category)}`, {
+                            const response = await fetch(`${server}/api/datas/products/categories?${serialize(category)}`, {
                                 headers: {
                                 'Content-Type': 'application/json',
                                 'Authorization': `Bearer ${user.token}`,
@@ -86,6 +68,8 @@ const CategoryResults = (props) => {
                             Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
                         }
         }
+
+        
 useEffect(()=>{
     //console.log(searchText)
     cat_reminder = selectedCategories
@@ -118,6 +102,7 @@ useEffect(()=>{
     //console.log(category);
     //if(!isLoading)
     //    setIsLoading(true)
+    
     getDatas({searchText:" ", selectedCategory:category, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
 
     }, [searchText])
@@ -127,6 +112,7 @@ useEffect(() => {
         const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
             e.preventDefault();
             setSelectedCategories(cat_reminder)
+            setOnExit(true)
             navigation.dispatch(e.data.action)
         })
         return beforeRemoveListener;
@@ -136,11 +122,11 @@ const title = `Resultats de recherche "${searchText}"`
                 <View style={preferencesStyles.container}>
                     {//!(!!display && display == "category") &&
                         <View style={preferencesStyles.top}>
-                            <Top searchText={searchText} />
+                            <Top searchText={searchText} replaceNavigation={true} />
                         </View>
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="CategoryResults" onExit={onExit} setOnExit={setOnExit} selectedCategory={category} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false}} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters name="CategoryResults" onExit={onExit} setOnExit={setOnExit} selectedCategory={category} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false,}} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )
