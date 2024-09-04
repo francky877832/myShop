@@ -327,7 +327,7 @@ const validateFilters = async () => {
                                 <Pressable style={[filtersStyles.pressableFilter, functionsCatalog[item.name.toLowerCase()][0] ? filtersStyles.pressableFilterFocused : false,
                                 notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersStyles.pressableFilterDisabled:null
                                 ]} onPress={()=>{showFilters(item.name)}} disabled={notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?true:false} >
-                                    <Text style={[customText.text, notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersStyles.pressableFilterTextDisabled:null]}>{notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?replacedFilter:item.name}</Text>
+                                    <Text style={[customText.text, notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersStyles.pressableFilterTextDisabled:null]}>{notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?selectedCategories.name:item.name}</Text>
                                 </Pressable>
                             )
                     }}

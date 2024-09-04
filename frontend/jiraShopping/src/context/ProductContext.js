@@ -35,7 +35,7 @@ const ProductProvider = ({children}) => {
                      'Authorization': `Bearer ${user.token}`, //Vue protege
                 },});
                 const responseJson = await response.json();
-                //console.log(responseJson)
+                //console.log(responseJson.datas[0].favourites)
                 if(!response.ok){
                   throw new Error("Erreur lors de la recuperation des produits")
                 }

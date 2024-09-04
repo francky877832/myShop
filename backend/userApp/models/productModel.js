@@ -35,6 +35,7 @@ const productSchema = new Schema({
     inBasket : { type : Number, default : 0 },
     sold : { type : Number, enum : [0, 1, 2], default : 0 }, // 2 = orders
     visibility : { type : Number, enum : [0, 1], default : 1  },
+    updated : { type : Number, enum : [0, 1], default : 0  },
 
     favourites : [{ type : Schema.Types.ObjectId, ref : 'User', required : false }],
 

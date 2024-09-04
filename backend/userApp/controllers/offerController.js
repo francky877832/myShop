@@ -1,5 +1,7 @@
 const Offer = require('../models/offerModel');
 const mongoose = require('../../shared/db').mongoose;
+const { getPipeLineForOffers } = require('./pipelinesForControllers')
+
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.respondOfferProduct = (req, res, next) => {
@@ -112,19 +114,20 @@ exports.removeOfferPriceProduct = (req, res, next) => {
 };
 
 
-exports.getOffersProduct = (req, res, next) => {
+exports.getOffersProduct = async (req, res, next) => {
+    try
+    {
     //console.log("ok")
-    //console.log("ggg")
-    const offer = req.query
-    Offer.find({ seller : offer.seller, buyer : offer.buyer, product : offer.product})
-    .then( (offers) => {
-        //console.log(offers)
-        res.status(200).json(offers);
-    })
-    .catch( (error) => {
-        //console.log(error)
+        const offer = req.query
+        const pipeline = getPipeLineForOffers(offer.seller, offer.buyer, offer.product)
+        const offersWithProduct = await Offer.aggregate(pipeline).exec();
+        res.status(200).json(offersWithProduct);
+    }
+    catch(error)
+    {
+        console.log(error)
         res.status(400).json({ error: error, message : "Cette offre nexiste pas entre ces deux users." });
-    });
+    };
 };
 
 

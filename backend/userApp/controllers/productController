@@ -4,11 +4,8 @@ const Product = require('../models/productModel');
 const Comment = require('../models/commentModel');
 const User = require('../models/userModel');
 const Fuse = require('fuse.js');
+const { getPipeLineForProducts } = require('./pipelinesForControllers')
 const mongoose = require('mongoose');
-
-
-
-
 
 
 exports.addProductUser = (req, res, next) => {
@@ -152,116 +149,11 @@ exports.getProducts = async (req, res, next) => {
     const skip = (page - 1) * limit;
 
     // Étape 1 : Pipeline d'agrégation pour les produits
-    const pipeline = [
-      { $sort: { _id: -1 } }, // Tri des produits par _id décroissant
-      { $skip: skip }, // Sauter les produits précédents
-      { $limit: limit }, // Limiter le nombre de produits
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'seller',
-          foreignField: '_id',
-          as: 'seller'
-        }
-      },
-      { $unwind: '$seller' }, // Décomposer le tableau seller en objets individuels
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'seller.followers',
-          foreignField: '_id',
-          as: 'seller.followers'
-        }
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'seller.followings',
-          foreignField: '_id',
-          as: 'seller.followings'
-        }
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'seller.favourites',
-          foreignField: '_id',
-          as: 'seller.favourites'
-        }
-      },
-      {
-        $lookup: {
-          from: 'favourites',
-          localField: 'favourites',
-          foreignField: '_id',
-          as: 'favourites'
-        }
-      },
-      {
-        $lookup: {
-          from: 'comments',
-          let: { productId: '$_id' },
-          pipeline: [
-            { $match: { $expr: { $eq: ['$product', '$$productId'] } } },
-            { $sort: { _id: -1 } },
-            {
-              $lookup: {
-                from: 'users',
-                localField: 'user',
-                foreignField: '_id',
-                as: 'user'
-              }
-            },
-            {
-              $unwind: '$user' // Décomposer le tableau user en objets individuels
-            },
-            {
-              $lookup: {
-                from: 'users',
-                localField: 'subComment.user',
-                foreignField: '_id',
-                as: 'subCommentUsers'
-              }
-            },
-            {
-              $addFields: {
-                subComment: {
-                  $map: {
-                    input: '$subComment',
-                    as: 'sub',
-                    in: {
-                      _id: '$$sub._id',
-                      user: {
-                        $arrayElemAt: [
-                          {
-                            $filter: {
-                              input: '$subCommentUsers',
-                              cond: { $eq: ['$$sub.user', '$$sub.user'] }
-                            }
-                          },
-                          0
-                        ]
-                      },
-                      username: '$$sub.username',
-                      isResponseTo: '$$sub.isResponseTo',
-                      text: '$$sub.text',
-                      visible: '$$sub.visible',
-                      createdAt: '$$sub.createdAt',
-                      updatedAt: '$$sub.updatedAt'
-                    }
-                  }
-                }
-              }
-            }
-          ],
-          as: 'comments'
-        }
-      }
-    ];
-
+   
+    const pipeline = getPipeLineForProducts(undefined, skip, limit, { _id: -1 })
     // Étape 2 : Exécuter le pipeline d'agrégation pour obtenir les produits avec commentaires
     const productsWithComments = await Product.aggregate(pipeline).exec();
-
+//console.log(productsWithComments[0].favourites)
     // Étape 3 : Compter le total des produits pour la pagination
     const totalDatas = await Product.countDocuments().exec();
     const totalPages = Math.ceil(totalDatas / limit);
@@ -344,59 +236,28 @@ exports.getProductsUser  = (req, res, next) => {
 };
 */
 
-exports.getProductsUser =  (req, res, next) => {
-  const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
-  const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
-  const skip = (page - 1) * limit;
+exports.getProductsUser =  async (req, res, next) => {
+  try
+  {
+    const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+    const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
+    const skip = (page - 1) * limit;
 
-      //console.log(page,skip,limit)
-      //console.log(products)
-  Product.find({seller : new mongoose.Types.ObjectId(req.params.user)})
-  .sort({_id:-1})
-  .skip(skip)
-  .limit(limit)
-  .populate({path: 'seller', populate: [
-        { path: 'followers' },
-        { path: 'followings' },
-        { path: 'favourites' },
-      ]
-    }).populate('favourites')
-  .exec()
-      .then (async(products) => {
-            // Étape 2 : Compter le total des produits pour la pagination
-          const totalDatas = await Product.countDocuments({seller : new mongoose.Types.ObjectId(req.params.user)}).exec();
-          const totalPages = Math.ceil(totalDatas / limit);
 
-          // Étape 3 : Récupérer les identifiants des produits de la page actuelle
-          const productIds = products.map(product => product._id);
+    const pipeline = getPipeLineForProducts(req.params.user, skip, limit, { _id: -1 })
+    const productsWithComments = await Product.aggregate(pipeline).exec();
+    const totalDatas = await Product.countDocuments({seller : new mongoose.Types.ObjectId(req.params.user)}).exec();
+    const totalPages = Math.ceil(totalDatas / limit);
 
-          // Étape 4 : Récupérer les commentaires pour les produits de la page actuelle
-          const comments = await Comment.find({ product: { $in: productIds } }).sort({_id:-1})
-            .populate('user', 'username') // Joindre les détails de l'utilisateur (optionnel)
-            .exec();
+  
+    res.status(200).json({ products: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
 
-            
-          // Étape 5 : Joindre les commentaires aux produits
-          const productsWithComments = products.map(product => {
-            return {
-              ...product.toObject(),
-              comments: comments.filter(comment => comment.product.toString() === product._id.toString()),
-              seller: {
-                ...product.seller.toObject(),
-                followers: product.seller.followers.map(follower => follower.toObject()),
-                followings: product.seller.followings.map(following => following.toObject())
-              }
-            };
-          });
-
-          // Retourner la réponse
-          res.status(200).json({ products: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
-        })
-
-    .catch((error)=> {
+  }
+  catch(error)
+  {
         console.log(error);
         res.status(400).json({ error: error.message });
-    })
+  }
 };
 
 
@@ -451,35 +312,27 @@ exports.getSearchedProducts = async (req, res, next) => {
         let products = []
         if(customFilters.hasOwnProperty("orderBy"))
         {
-          let filed = Object.keys(customFilters.orderBy)[0]
-          let sortValue = {[filed]:parseInt(customFilters.orderBy[filed])}
-          //console.log(sortValue)
-          products  = await Product.find().populate({path: 'seller', populate: [
-            { path: 'followers' },
-            { path: 'followings' },
-            { path: 'favourites' },
-          ]
-      }).populate('favourites')
-        .sort(sortValue).exec() //.skip(skip).limit(limit).exec()
+            let filed = Object.keys(customFilters.orderBy)[0]
+            let sortValue = {[filed]:parseInt(customFilters.orderBy[filed])}
+            //console.log(sortValue)
+
+            const pipeline = getPipeLineForProducts(undefined, 0, 0, sortValue)
+            products = await Product.aggregate(pipeline).exec();
+            //conserver l'ordre de sortValue
+            products.forEach((product, index) => {
+              product.sortIndex = index;
+            });
         }
         else
         {
-          products  = await Product.find().populate({path: 'seller', populate: [
-        { path: 'followers' },
-        { path: 'followings' },
-        { path: 'favourites' },
-      ]
-    }).populate('favourites')
-      .sort({updatedAt:-1}).exec() //.skip(skip).limit(limit).exec()
-          
+          const pipeline = getPipeLineForProducts(undefined, 0, 0, {updatedAt:-1})
+          products = await Product.aggregate(pipeline).exec()
         }
+
       const totalDatas = await Product.countDocuments().exec();
       const totalPages = Math.ceil(totalDatas / limit);
-//console.log(products.length)
-     //Introduire un champ comme memoire mour le tri   
-        products.forEach((product, index) => {
-          product.sortIndex = index;
-        });
+
+       
 
     if(!name)
     {
@@ -538,7 +391,7 @@ exports.getSearchedProducts = async (req, res, next) => {
     //console.log(skip, skip+limit)
     //console.log(filteredResult.slice(skip, skip+limit).length)
 
-
+    /*
     const productIds = filteredResult.map(product => product._id);
     const comments = await Comment.find({ product: { $in: productIds } }).sort({_id:-1})
       .populate('user', 'username')
@@ -550,10 +403,10 @@ exports.getSearchedProducts = async (req, res, next) => {
         comments: comments.filter(comment => comment.product.toString() === product._id.toString()),
       };
     });
-
+*/
     // Étape 6 : Appliquer la pagination
-    const paginatedResult = productsWithComments.slice(skip, skip + limit);
-
+    const paginatedResult = filteredResult.slice(skip, skip + limit);
+    
 
     res.status(200).json({ datas: paginatedResult, page: page, totalPages: totalPages, totalDatas: totalDatas });
   } catch (err) {

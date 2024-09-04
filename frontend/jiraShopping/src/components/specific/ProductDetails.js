@@ -168,10 +168,11 @@ const ProductDetails = (props) => {
     {...panResponder.panHandlers}
    */ 
 
-
+   
 useEffect(()=>{
     //console.log("product")
     //console.log(data.comments)
+    //console.log(data.favourites)
     setReshapedComments(data.comments)
     //console.log(data.favourites)
 }, [])

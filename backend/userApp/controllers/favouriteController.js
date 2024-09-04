@@ -10,8 +10,16 @@ exports.getUserLikedProducts  =  (req, res, next) => {
     const userId = req.params.user
     console.log(userId)
     Favourite.aggregate([
-      { $match: { user: new ObjectId(userId) } },
-      { $unwind: '$products' }, // Décompose le tableau de produits likés
+      {
+        $match: {
+          user: new ObjectId(userId)
+        }
+      },
+      // 2. Décomposer le tableau des produits favoris
+      {
+        $unwind: '$products'
+      },
+      // 3. Joindre avec la collection 'products' pour obtenir les détails des produits
       {
         $lookup: {
           from: 'products',
@@ -20,23 +28,105 @@ exports.getUserLikedProducts  =  (req, res, next) => {
           as: 'productDetails'
         }
       },
-      { $unwind: '$productDetails' }, // Décompose le tableau résultant de la jointure
+      // 4. Décomposer le tableau de détails des produits pour chaque produit
+      {
+        $unwind: '$productDetails'
+      },
+      // 5. Joindre avec la collection 'favourites' pour trouver les utilisateurs qui ont aimé ces produits
+      {
+        $lookup: {
+          from: 'favourites',
+          localField: 'productDetails._id',
+          foreignField: 'products',
+          as: 'productFavourites'
+        }
+      },
+      // 6. Joindre avec la collection 'users' pour obtenir les détails des utilisateurs qui ont aimé les produits
       {
         $lookup: {
           from: 'users',
-          localField: 'productDetails.favourites',
+          localField: 'productFavourites.user',
           foreignField: '_id',
-          as: 'favouriteUserDetails'
+          as: 'favouriteUsers'
         }
       },
+      // 7. Décomposer le tableau des utilisateurs qui ont aimé les produits
+      {
+        $unwind: '$favouriteUsers'
+      },
+      // 8. Joindre avec la collection 'users' pour obtenir les followers des utilisateurs qui ont aimé les produits
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'favouriteUsers.followers',
+          foreignField: '_id',
+          as: 'favouriteUsersFollowers'
+        }
+      },
+     
+      // 9. Joindre avec la collection 'users' pour obtenir les détails du vendeur (seller) du produit
       {
         $lookup: {
           from: 'users',
           localField: 'productDetails.seller',
           foreignField: '_id',
-          as: 'sellerDetails'
+          as: 'productSeller'
         }
       },
+      // 10. Décomposer le tableau des vendeurs pour chaque produit
+      {
+        $unwind: '$productSeller'
+      },
+      // 11. Joindre avec la collection 'users' pour obtenir les followers des vendeurs
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'productSeller.followers',
+          foreignField: '_id',
+          as: 'productSellerFollowers'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'productSeller.followings',
+          foreignField: '_id',
+          as: 'productSellerFollowings'
+        }
+      },
+
+      
+      {
+        $unwind: '$productDetails.favourites'
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'productDetails.favourites',
+          foreignField: '_id',
+          as: 'favourites'
+        }
+      },
+      
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'favourites.followers',
+          foreignField: '_id',
+          as: 'favouritesFollowers'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'favourites.followings',
+          foreignField: '_id',
+          as: 'favouritesFollowings'
+        }
+      },
+      
+         
+
       {
         $lookup: {
           from: 'comments',
@@ -105,14 +195,66 @@ exports.getUserLikedProducts  =  (req, res, next) => {
             $push: {
               $mergeObjects: [
                 '$productDetails',
-                { favourites: '$favouriteUserDetails' },
-                { seller: { $arrayElemAt: ['$sellerDetails', 0] } },
+                {
+                  favourites: {
+                    $map: {
+                      input: '$favourites',
+                      as: 'fav',
+                      in: {
+                        $mergeObjects: [
+                          '$$fav',
+                          {
+                            followers: {
+                              $filter: {
+                                input: '$favouritesFollowers',
+                                as: 'follower',
+                                cond: { $in: ['$$follower._id', '$$fav.followers'] }
+                              }
+                            },
+                            followings: {
+                              $filter: {
+                                input: '$favouritesFollowings',
+                                as: 'following',
+                                cond: { $in: ['$$following._id', '$$fav.followings'] }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+
+                  seller: {
+                    $mergeObjects: [
+                      '$productSeller',
+                      {
+                        followers: {
+                          $filter: {
+                            input: '$productSellerFollowers',
+                            as: 'follower',
+                            cond: { $in: ['$$follower._id', '$productSeller.followers'] }
+                          }
+                        },
+                        followings: {
+                          $filter: {
+                            input: '$productSellerFollowings',
+                            as: 'following',
+                            cond: { $in: ['$$following._id', '$productSeller.followings'] }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+            
+
                 { comments: '$comments' }
               ]
             }
           }
         }
-      }
+      },
+      
     ])
     
     .then(async (favourites) => { 
