@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback} from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Pressable, ActivityIndicator, Alert} from 'react-native';
+import { View, Text, StyleSheet, Pressable, Image} from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 
 
@@ -18,44 +18,73 @@ const loggedUser = "Francky"
 
 const   ReferredRenderItem = (props) => {
     const navigation = useNavigation()
-    const { user } = useContext(UserContext)
-  
-    console.log(user)
+    const {member, index, user} = props
+    //const 
+    //console.log(user)
 
     
 
     return(
-        <View style={[referralStyles.container]}>
-            <View  style={[referralStyles.topContainer]}>
-                <View style={[referralStyles.points]}>
-                    <Text style={[referralStyles.text]}>Total Points Gagnés</Text>
-                    <Text style={[referralStyles.text]}>235</Text>
+        <Pressable style={[styles.container]}>
+            <View style={[styles.imageAndName]}>
+                <View style={[styles.imageContainer]}>
+                    <Image source={{uri: member.image}} style={styles.image} />
                 </View>
 
-                <Pressable style={[referralStyles.button]}>
-                    <Text  style={[referralStyles.buttonText]}>Convertir Mes Points</Text>
-                </Pressable>
-
+                    <View style={{width:10}}></View>
+                <View style={[styles.user]}>
+                    <Text style={[customText.text, styles.usernameText,]}>{member.username}</Text>
+                </View>
             </View>
 
-            <View style={[referralStyles.menu]}>
-                <FlatList
-                    data={referralDatas}
-                    renderItem={ ({item}) => { return(
-                                <Pressable style={[referralStyles.referralElement, !item.available?referralStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`)}} disabled={!item.available}> 
-                                    <Icon type={item.iconType} name={item.iconName} size={30} color={appColors.orange} />
-                                    <Text style={[referralStyles.text,!item.available?referralStyles.unavailable:false]}>{item.name}</Text>
-                                </Pressable>
-                                )
-                             } }
-                    keyExtractor={ (item) => { return item.name.toString(); } }
-                    key={Math.random}
-                    numColumns={2}
-                    ItemSeparatorComponent={ (item) => { return <View style={{height:20,}}></View> }}
-                    contentContainerStyle={{}}
-                />
-            </View>      
-        </View>
+        </Pressable>
     )
 }
 export default ReferredRenderItem
+
+const styles = StyleSheet.create({
+    container :
+    {
+        flex : 1,
+        flexDirection : 'row',
+        justifyContent : 'space-between',
+        alignItems : 'center',
+        paddingHorizontal : 20,
+        paddingVertical : 10,
+        backgroundColor : appColors.white,
+        borderBottomWidth : 1,
+        borderColor : appColors.secondaryColor4,
+
+    },
+    imageAndName :
+    {
+        flexDirection : 'row',
+        justifyContent : 'space-between',
+        alignItems : 'center',
+    },
+    imageContainer :
+    {
+        width : 50,
+        height : 50,
+        borderRadius : 25,
+    },
+    image :
+    {
+        width : 50,
+        height : 50,
+        borderRadius : 25,
+    },
+    user :
+    {
+        
+    },
+    usernameText :
+    {  
+        fontSize : 16,
+    },
+    pointsText :
+    {
+        fontSize : 16,
+    }
+})
+

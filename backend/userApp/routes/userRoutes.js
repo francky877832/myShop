@@ -9,6 +9,8 @@ router.post('/signup', userCtrl.signupUser);
 router.get('/login', userCtrl.loginUser);
 router.get('/users/get/:id', userCtrl.getUser);
 router.get('/users/followers/:id', userCtrl.getUserFollowers);
+router.get('/users/referred/:userId', userCtrl.getReferredUsers);
+
 router.post('/users/setFollowers/:user', userCtrl.setUserFollowers);
 
 module.exports = router;

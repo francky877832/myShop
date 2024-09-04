@@ -35,7 +35,7 @@ const   ReferralDetails = (props) => {
         let response;
         try
         {
-            
+            //ReferredRenderItem
             switch(page.toLowerCase())
             {
                 case 'PointsHistoryRenderItem'.toLowerCase():
@@ -44,9 +44,13 @@ const   ReferralDetails = (props) => {
                 case 'MonthlyRankingRenderItem'.toLowerCase(): //console.log('ok')
                     response = await fetch(`${server}/api/datas/points/leaderboard`);
                     break;
-                default : 
+                case 'GiftHistoryRenderItem'.toLowerCase():
                     response = await fetch(`${server}/api/datas/gift/user/${user._id}`);
                     break;
+                case 'ReferredRenderItem'.toLowerCase():
+                    response = await fetch(`${server}/api/auth/users/referred/${user._id}`);
+                    break;
+                default :  break;
             }
             
             
@@ -68,8 +72,11 @@ const   ReferralDetails = (props) => {
                 case 'GiftHistoryRenderItem'.toLocaleLowerCase(): //console.log('ok')
                     setDatas(datas)
                     break;
+                    case 'ReferredRenderItem'.toLocaleLowerCase(): //console.log('ok')
+                    setDatas(datas)
+                    break;
                 default : 
-                    response = await fetch(`${server}/api/datas/points/leaderboard`);
+                    setDatas([])
                     break;
             }
         }catch(error){
@@ -92,7 +99,7 @@ useEffect(()=>{
 
 //PointsHistoryRenderItem
 //MonthlyRankingRenderItem
-const headerTitle = () => {
+const headerTitle = (count) => {
     switch(page.toLowerCase())
             {
                 case 'PointsHistoryRenderItem'.toLowerCase():
@@ -104,8 +111,10 @@ const headerTitle = () => {
                 case 'GiftHistoryRenderItem'.toLocaleLowerCase(): //console.log('ok')
                     return 'Historique De Vos Recompanses'
                     break;
+                    case 'ReferredRenderItem'.toLocaleLowerCase(): //console.log('ok')
+                    return `Membres Parrainnés (${count})`
+                    break;
                 default : 
-                    
                     break;
             }
 }
@@ -125,13 +134,13 @@ const sample = [...datas, ...datas, ...datas, ...datas, ...datas, ...datas, ...d
 
             <View style={[referralDetailsStyles.menu]}>
                 <View style={[referralDetailsStyles.renderTitleBox]}>
-                    <Text style={[referralDetailsStyles.text, referralDetailsStyles.renderTitle]}>{headerTitle()}</Text>
+                    <Text style={[referralDetailsStyles.text, referralDetailsStyles.renderTitle]}>{headerTitle(datas.length)}</Text>
                 </View>
 
                 <FlatList
                     data={sample}
                     renderItem={ ({item, index}) => { 
-                        return <MonthlyRankingRenderItem ranking={item} index={index}/>    
+                        return <ReferredRenderItem member={item} index={index} user={user} />    
                     } }
                     keyExtractor={ (item) => { return item._id.toString(); } }
                     key={Math.random}

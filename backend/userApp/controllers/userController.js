@@ -127,3 +127,48 @@ exports.getUser = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 }
 
+exports.getReferredUsers = async (req, res) => {
+  const { userId } = req.params;
+//console.log("éokk")
+  try {
+      const referredUsers = await User.aggregate([
+          {
+              $match: {
+                  referredBy: new mongoose.Types.ObjectId(userId)
+              }
+          },
+          {
+              $lookup: {
+                  from: 'users', 
+                  localField: 'followers', 
+                  foreignField: '_id', 
+                  as: 'followers'
+              }
+          },
+          {
+            $lookup: {
+                from: 'users', 
+                localField: 'followings', 
+                foreignField: '_id', 
+                as: 'followings'
+            }
+        },
+        {
+          $lookup: {
+              from: 'users', 
+              localField: 'favourites', 
+              foreignField: '_id', 
+              as: 'favourites'
+          }
+      }
+         
+      ]);
+
+      res.status(200).json(referredUsers);
+  } catch (error) {
+    //console.log(error)
+      res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs référencés", error });
+  }
+};
+
+

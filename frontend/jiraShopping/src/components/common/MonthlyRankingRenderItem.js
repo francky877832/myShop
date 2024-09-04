@@ -18,27 +18,28 @@ const loggedUser = "Francky"
 
 const   MonthlyRankingRenderItem = (props) => {
     const navigation = useNavigation()
-    const { user } = useContext(UserContext)
-    const { ranking, index } = props
+    const { ranking, index, user } = props
   
     //console.log(ranking)
 
-    
+    //console.log(ranking?.user._id)
+    //console.log(user._id)
 
     return(
-        <Pressable style={[styles.container, index<5?styles.firstRank:false]}>
+        <Pressable style={[styles.container, index<5?styles.firstRank:null, ranking.user._id==user._id ? styles.me:null ]}>
             <View style={[styles.imageAndName]}>
                 <View style={[styles.imageContainer]}>
                     <Image source={{uri: ranking?.user.image}} style={styles.image} />
                 </View>
 
+                    <View style={{width:10}}></View>
                 <View style={[styles.user]}>
-                    <Text style={[customText.text, styles.usernameText]}>{ranking?.user.username}</Text>
+                    <Text style={[customText.text, styles.usernameText, ranking.user._id==user._id ? styles.me:null]}>{ranking?.user.username}</Text>
                 </View>
             </View>
 
             <View style={[styles.points]}>
-                <Text style={[customText.text, styles.pointsText]}>{ranking.points}</Text>
+                <Text style={[customText.text, styles.pointsText, ranking.user._id==user._id ? styles.me:null]}>{ranking.points}</Text>
             </View>
         </Pressable>
     )
@@ -55,18 +56,23 @@ const styles = StyleSheet.create({
         paddingHorizontal : 20,
         paddingVertical : 10,
         backgroundColor : appColors.white,
-        borderBottomWidth : 1,
-        borderColor : appColors.secondaryColor4,
+        borderBottomWidth : 2,
+        borderColor : appColors.white,
 
     },
     firstRank :
     {
         backgroundColor : appColors.lightOrange,
     },
+    me :
+    {
+        backgroundColor : appColors.secondaryColor1,
+        color : appColors.white,
+    },
     imageAndName :
     {
         flexDirection : 'row',
-        justifyContent : 'center',
+        justifyContent : 'space-between',
         alignItems : 'center',
     },
     imageContainer :
@@ -86,7 +92,11 @@ const styles = StyleSheet.create({
         
     },
     usernameText :
-    {
-
+    {  
+        fontSize : 16,
     },
+    pointsText :
+    {
+        fontSize : 16,
+    }
 })
