@@ -1,7 +1,7 @@
 const mongoose = require('../../shared/db').mongoose;
 
 const Basket = require('../models/basketModel');
-
+const Product = require('../models/productModel');
 const ObjectId = mongoose.Types.ObjectId;
 
 const addBasketProduct = (req, res, next) => {
@@ -21,68 +21,82 @@ const addBasketProduct = (req, res, next) => {
 };
 
 
-exports.updateBasketProduct = (req, res, next) => {
-    Basket.find({ user : req.params.user })
-    .then((baskets) => {
-        
-            let isProductPresent = false
-            if(baskets.length > 0)
-            {
-                for(let el of baskets[0].products)
-                {
-                    if(el == req.body.product)
-                    {
-                        isProductPresent = true;
-                        break; 
-                    }
+
+exports.updateBasketProduct = async (req, res, next) => {
+    console.log(req.body);
+
+    try {
+        const baskets = await Basket.find({ user: req.params.user });
+
+        let isProductPresent = false;
+
+        if (baskets.length > 0) {
+            for (let el of baskets[0].products) {
+                if (el == req.body.product) {
+                    isProductPresent = true;
+                    break;
                 }
-                if(!isProductPresent)
-                {
-                    let bask = baskets
-                    bask[0].products.push(req.body.product)
-                    
-                    Basket.updateOne({ user : req.params.user },  { products : bask[0].products })
-                        .then(
-                            () => {
-                                res.status(200).json({message : "Nouveau Produit ajouter au panier pour cet user."});
-                        })
-                        .catch((error) => { res.status(400).json({error : error}); });     
-                }
-                else
-                {
-                    res.status(200).json({message : "Ce produt est deja dans votre panier."});
-                }
-            }else{
-                addBasketProduct(req, res, next)
             }
 
-              
-        })
-        .catch((error) => { res.status(400).json({error : error}); });
-}
+            if (!isProductPresent) {
+                let bask = baskets;
+                bask[0].products.push(req.body.product);
 
-exports.removeBasketProduct  = (req, res, next) => {
-    Basket.find({ user : req.params.user })
-    .then( (baskets) => {
-        let newBasket = []
-        for (let i in baskets[0].products)
-        {
-            let el = baskets[0].products[i]
-            if(el != req.body.product)
-            {
-               newBasket.push(el)
+                try {
+                    await Basket.updateOne({ user: req.params.user }, { products: bask[0].products });
+
+                    await Product.findOneAndUpdate(
+                        { _id: req.body.product },
+                        { $inc: { inBasket: 1 } },
+                        { new: true }
+                    );
+
+                    res.status(200).json({ message: "Nouveau Produit ajouté au panier pour cet utilisateur." });
+                } catch (error) {
+                    res.status(400).json({ error });
+                }
+            } else {
+                res.status(200).json({ message: "Ce produit est déjà dans votre panier." });
+            }
+        } else {
+            addBasketProduct(req, res, next);
+        }
+    } catch (error) {
+        res.status(400).json({ error });
+    }
+};
+
+
+
+exports.removeBasketProduct = async (req, res, next) => {
+    try {
+        const baskets = await Basket.find({ user: req.params.user });
+
+        let newBasket = [];
+        for (let i in baskets[0].products) {
+            let el = baskets[0].products[i];
+            if (el != req.body.product) {
+                newBasket.push(el);
             }
         }
-        Basket.updateOne({ user : req.params.user },  { products : newBasket })
-            .then(() => {
-                    res.status(200).json({ message: 'Product removed from user basket.'});
-            })
-            .catch((error) => { res.status(400).json({error : error}); }); 
-     })
-    .catch( (error) => { 
+
+        try {
+            await Basket.updateOne({ user: req.params.user }, { products: newBasket });
+
+            await Product.findOneAndUpdate(
+                { _id: req.body.product },
+                { $inc: { inBasket: -1 } },
+                { new: true }
+            );
+
+            res.status(200).json({ message: 'Product removed from user basket.' });
+        } catch (error) {
+            res.status(400).json({ error: error });
+        }
+    } catch (error) {
         res.status(400).json({ error: error });
-     });
-  };
+    }
+};
 
 
 exports.getBasketProducts = async (req, res, next) => {

@@ -482,7 +482,13 @@ const handleSellerBrandPressed = (product) => {
                     }
                 </View>
                 <View style={[productDetailsStyles.acheter]}>
-                    <CustomButton text="Acheter" disable={user._id!=data.seller._id?true:false} styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={user._id!=data.seller._id?appColors.secondaryColor1:appColors.secondaryColor3} onPress={() => { }} />
+                    {
+                       (user._id==data.seller._id || data.sold===1)
+                        ?
+                        <CustomButton text="Acheter" disable={true} styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor3} onPress={() => { }} />
+                        :
+                        <CustomButton text="Acheter" disable={false} styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />
+                    }
                 </View>
             </View>
 </View>

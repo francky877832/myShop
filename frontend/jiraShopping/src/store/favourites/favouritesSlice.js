@@ -144,6 +144,7 @@ const favouritesSlice = createSlice({
         state.addLike = state.addLike-1
     },
     addModifiedProduct(state, action) {
+      //console.log("addModifiedProduct")
       const product = action.payload
       const isModifiedProduct = state.modifiedProducts.some(item => item._id === product._id);
       if(isModifiedProduct)

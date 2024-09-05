@@ -66,7 +66,7 @@ exports.updateProduct = async (req, res, next) => {
 
 
     
-        const updatedProduct = await Product.updateOne({ _id : req.params.id }, product)
+        const updatedProduct = await Product.updateOne({ _id : req.params.id },{...product, updated:1})
 
         if (updatedProduct.nModified === 0) {
           return res.status(404).json({ message: 'Product not found or no changes made' });
@@ -244,7 +244,7 @@ exports.getProductsUser =  async (req, res, next) => {
     const skip = (page - 1) * limit;
 
 
-    const pipeline = getPipeLineForProducts(req.params.user, skip, limit, { _id: -1 })
+    const pipeline = getPipeLineForProducts(req.params.user, skip, limit, { sold:1, visibility:-1, _id: -1 })
     const productsWithComments = await Product.aggregate(pipeline).exec();
     const totalDatas = await Product.countDocuments({seller : new mongoose.Types.ObjectId(req.params.user)}).exec();
     const totalPages = Math.ceil(totalDatas / limit);
@@ -277,6 +277,31 @@ exports.getUserProductsFromCategory  = (req, res, next) => {
       res.status(400).json({ error: error });
    });
 };
+
+
+exports.productHasBeenSold = async (req, res, next) => {
+  console.log("productHasBeenSold")
+  try {
+    const {product, sold, visibility} = req.body;
+
+    // Trouver le produit et mettre à jour le champ "sold" à 1
+    const updatedProduct = await Product.findOneAndUpdate(
+      { _id: product },    // Condition de recherche
+      { sold: sold, visibility: visibility },  
+      { new: true }          // Retourne le document mis à jour
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Produit non trouvé.' });
+    }
+
+    res.status(200).json({ message: 'Le produit a été marqué comme vendu.', product: updatedProduct });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la mise à jour du produit.' });
+  }
+};
+
 
 
 

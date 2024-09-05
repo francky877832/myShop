@@ -21,6 +21,8 @@ import {shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { isProductFavourite } from '../../store/favourites/favouritesSlice';
 import { addToBasket, removeFromBasket, fetchUserBasket, updateSelectedProducts, setSelectedSeller, isProductBasket, updateLocalBasket } from '../../store/baskets/basketsSlice';
 import { Icon } from 'react-native-elements';
+import { ProductContext } from '../../context/ProductContext';
+import { addModifiedProduct } from '../../store/favourites/favouritesSlice';
 
 
 const loggedUser = "Francky"
@@ -35,6 +37,8 @@ const Product = (props) => {
     const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
     const modifiedProduct = modifiedProducts.filter(product => product._id?.toString() === item._id?.toString())
     const [product, setProduct] = useState(modifiedProduct.length>0?modifiedProduct[0]:{...item})
+
+    const {productHasBeenSold} = useContext(ProductContext)
 
     //console.log("*********==============={...item}")
     //console.log(product)
@@ -56,6 +60,8 @@ const Product = (props) => {
 //console.log(isFavourite)
     const [like, setLikeIcon ] = useState(isFavourite)
     const [numLike, setNumLike] = useState(product.likes)
+    const [forceUpdate, setForceUpdate] = useState(false)
+
     //const numLike = useRef(product.likes)
     const timeoutRef = useRef(null);
     
@@ -203,6 +209,34 @@ const printBottomIcon = (product) => {
     })
 }
 
+const showConfirmationRenewProduct = (product) => {
+    const sold=0, visibility=1
+    Alert.alert(
+        "Confirmation", // Titre de l'alerte
+        "Ce produit a deja ete vendu, mais si vous en disposez encore en stock vous pouvez le reposter automatiquement.", // Message de l'alerte
+        [
+          {
+            text: "Annuler", // Bouton d'annulation
+            onPress: () => console.log("Annulation"),
+            style: "cancel", // Style du bouton (optionnel)
+          },
+          {
+            text: "Confirmer", // Bouton de confirmation
+            onPress: () =>{ 
+                const updatedProduct = {
+                    ...product,
+                    sold : sold,
+                    visibility : visibility
+                  };
+                dispatch(addModifiedProduct(updatedProduct));
+                setForceUpdate(!forceUpdate)
+                productHasBeenSold(product, sold, visibility)
+            },
+          },
+        ],
+        { cancelable: false } // Empêche la fermeture en cliquant en dehors de l'alerte
+      );
+}
 function displayGrille(origin, product){
     return origin==="profileShop" && <View style={[productStyles.containerVisibility]}></View>
 }
@@ -211,14 +245,15 @@ function displayGrilleBttom(origin, product){
    
     return (
         origin==="profileShop" &&
-        <Pressable style={[productStyles.containerVisibilityInfo]}>
-            <Text style={[{color:appColors.white,fontSize:12}]}>
+        <Pressable style={[productStyles.containerVisibilityInfo, {backgroundColor:product.sold==1?appColors.green:appColors.secondaryColor5}]} onPress={()=>{ product.sold==1?showConfirmationRenewProduct(product):null}}>
+            <Text style={[{color:appColors.white,fontSize:12,fontWeight:'bold'}]}>
                 {
-                    product.visibility==0 
+                    product.sold==1 
                     ?
-                    "Ce produit n'est pas encore visible. Si vous pensez que c'est une erreur, consulter le service client sur WhatsApp."
+                        'Cliquer pour plus d\'options.'
                     :
-                    'Vendu'
+                        "Ce produit n'est pas encore visible. Si vous pensez que c'est une erreur, consulter le service client sur WhatsApp."
+
                 }
             </Text>
         </Pressable>

@@ -3,7 +3,8 @@ import React, { useState, createContext, useRef, useContext, useEffect, useCallb
 import { Alert } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native';
-
+import { addModifiedProduct } from '../store/favourites/favouritesSlice';
+import { useDispatch } from 'react-redux';
 
 import { datas } from "../utils/sampleDatas";
 import { server } from "../remote/server";
@@ -22,6 +23,7 @@ const ProductProvider = ({children}) => {
     const [totalPages, setTotalPages] = useState(1)
     const {user} = useContext(UserContext)
     const [refreshKey, setRefreshKey] = useState(0);
+    const dispatch = useDispatch()
 
 
      const getProducts = async (page)=> {
@@ -105,10 +107,39 @@ const ProductProvider = ({children}) => {
     }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);
 
     
+    const productHasBeenSold = async (product, sold, visibility)=> {
+      const datas = {
+        product : product._id,
+        sold : sold,
+        visibility:visibility
+      }
+        try
+        {
+            const response = await fetch(`${server}/api/datas/products/product-sold`,{
+                method: 'POST',
+                body : JSON.stringify(datas),
+                headers: {
+                    'Content-Type': 'Application/json',
+                     'Authorization': `Bearer ${user.token}`, //Vue protege
+                },});
+                const responseJson = await response.json();
+                //console.log(responseJson.datas[0].favourites)
+                if(!response.ok){
+                  throw new Error("Erreur lors de la recuperation des produits")
+                }
+               
+
+                
+                return responseJson
+        } catch (error) {
+            console.error(error);
+            return false
+      }
+    }
 
     const productStateVars = {products, isLoading, refreshKey}
     const productStateStters = {setIsLoading}
-    const utilsFunctions = {getProducts, loadMoreData}
+    const utilsFunctions = {getProducts, loadMoreData, productHasBeenSold}
     return (
         <ProductContext.Provider value={{...productStateVars, ...productStateStters, ...utilsFunctions}}>
             {children}

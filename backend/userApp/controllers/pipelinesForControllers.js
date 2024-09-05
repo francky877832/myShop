@@ -2,12 +2,18 @@ const mongoose = require('../../shared/db').mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getPipeLineForProducts = ( userId=undefined, skip, limit, sort={_id:1} ) => {
-    
+    let match;
+    if(userId) 
+    {
+      match = { seller: new mongoose.Types.ObjectId(userId)}
+    }
+    else
+    {
+      match = { sold : 0, visibility : 1} //on recupere les produit non vendu et visible
+    }
   const pipeline = [
     ...(userId ? [{
-        $match: {
-            seller: new mongoose.Types.ObjectId(userId),
-        }
+        $match: match
     }] : []),
     { $sort: sort }, 
     { $skip: skip }, 
