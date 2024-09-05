@@ -11,6 +11,7 @@ import CarouselImage from '../common/CarouselImages';
 import { PrevButton, ShareButton, LikeButton, CustomButton, CustomActivityIndicator, PriceDetails } from "../common/CommonSimpleComponents";
 import Comments from './Comments';
 import { productDetailsStyles } from '../../styles/productDetailsStyles';
+import { productStyles } from '../../styles/productStyles';
 import { appColors, customText } from '../../styles/commonStyles';
 import { formatMoney, sinceDate, truncateText } from '../../utils/commonAppFonctions';
 import { datas } from '../../utils/sampleDatas';
@@ -450,7 +451,16 @@ const handleSellerBrandPressed = (product) => {
                                 <Icon type='octicon' name="triangle-up" size={24} color={appColors.secondaryColor1} />
                     }                    
                     
-                    <Text numberOfLines={2} style={[customText.text, productDetailsStyles.buttonText, { color: appColors.secondaryColor1 }]}>{formatMoney(data.price)} XAF</Text>
+                    
+                    {data.price <= data.newPrice  
+                                    ? 
+                                        <Text numberOfLines={2} style={[customText.text, productStyles.price, productDetailsStyles.buttonText,]}>{formatMoney(data.price)} XAF</Text>
+                                    :
+                                        <View style={{ flexDirection:"column", justifyContent:"flex-start", flexWrap:'wrap' }} >
+                                            <Text numberOfLines={2} style={[customText.text, productStyles.price, productDetailsStyles.buttonText,  {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{formatMoney(data.price)} </Text>
+                                            <Text numberOfLines={2} style={[customText.text, productStyles.price, productDetailsStyles.buttonText,  {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:14}]}>{formatMoney(data.newPrice)} XAF</Text>
+                                        </View>
+                                }
                 </Pressable>
 
                 <View style={[productDetailsStyles.panier, ]}>

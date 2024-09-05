@@ -17,7 +17,9 @@ import { server } from '../../remote/server';
 import { appColors } from '../../styles/commonStyles';
 
 const ProductsList = React.forwardRef((props, ref) => {
-    const { datas, horizontal, styles, onEndReached, onScroll, name, isLoading, replace, hasMore, onEndReachedThreshold, minified, updateProfileLike} = props;
+    const { datas, horizontal, styles, onEndReached, onScroll, name, isLoading, replace, hasMore, onEndReachedThreshold,
+         minified, updateProfileLike, origin
+        } = props;
     //console.log(datas[0].product)
     
     useEffect(()=>{
@@ -30,7 +32,7 @@ const ProductsList = React.forwardRef((props, ref) => {
                     <FlatList
                         data={datas}
                         nestedScrollEnabled={true}
-                        renderItem={ ({item}) => { return <Product updateProfileLike={updateProfileLike} minified={minified} name={name} item={item} replace={replace} styles={productsListStyles.listItem} horizontal={horizontal}/> } }
+                        renderItem={ ({item}) => { return <Product origin={origin} updateProfileLike={updateProfileLike} minified={minified} name={name} item={item} replace={replace} styles={productsListStyles.listItem} horizontal={horizontal}/> } }
                         keyExtractor={ (item) => { return Math.random().toString(); } }
                         horizontal={horizontal}
                         numColumns={ horizontal ? 1 : numProduct }

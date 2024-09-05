@@ -23,7 +23,7 @@ const notificatonSchema = new Schema({
     
     createdAt : { type : Date, default : Date.now },
     updatedAt : { type : Date, default : Date.now },
-});
+},  { versionKey: false });
 
 notificatonSchema.index({ user: 1, 'notifications.type': 1, 'notifications.datas': 1 }, { unique: true });
 

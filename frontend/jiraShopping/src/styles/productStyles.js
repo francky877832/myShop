@@ -19,6 +19,30 @@ export const productStyles = StyleSheet.create({
         marginVertical : marginVertical,
         paddingBottom : 5,
     },
+    containerVisibility :
+    {
+        position : 'absolute',
+        width : '100%',
+        height : '100%',
+        justifyContent : 'center',
+        alignItems : 'center',
+        backgroundColor : appColors.gray,
+        opacity : 0.5,
+        zIndex : 999,
+    },
+    containerVisibilityInfo :
+    {
+        justifyContent : 'center',
+        alignItems : 'center',
+        position : 'absolute',
+        left : 0,
+        right : 0,
+        bottom : 0,
+        padding : 10,
+        zIndex : 9999+1,
+        backgroundColor : appColors.secondaryColor5,
+        opacity : 1,
+    },
     containerHorizontal : //Horizontal container ?
     {
         backgroundColor : appColors.secondaryColor2,
@@ -113,9 +137,24 @@ export const productStyles = StyleSheet.create({
     feesBy : 
     {
         flexDirection : "row",
-        backgroundColor : "gray",
-        color : "white",
-        top : 3,
+        justifyContent : 'center',
+        alignItems : 'center',
+        backgroundColor : appColors.secondaryColor5,
+        paddingRight : 4,
+    },
+    bottomIcons :
+    {
+        flexDirection : "row",
+        justifyContent : 'center',
+        alignItems : 'center',
+    },
+    bottomIconsButton :
+    {
+        justifyContent : 'center',
+        alignItems : 'center',
+        paddingHorizontal : 2,
+        flexWrap:'wrap',
+        width : 52,
     },
 
 

@@ -10,7 +10,7 @@ import { productStyles } from '../../styles/productStyles';
 import { appColors, customText } from '../../styles/commonStyles';
 //import { Image } from 'expo-image';
 
-import { formatMoney } from '../../utils/commonAppFonctions'
+import { capitalizeFirstLetter, formatMoney } from '../../utils/commonAppFonctions'
 //CONTEXTE
 import { FavouritesContext } from '../../context/FavouritesContext';
 import { BasketContext } from '../../context/BasketContext';
@@ -20,6 +20,7 @@ import { server } from '../../remote/server';
 import {shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { isProductFavourite } from '../../store/favourites/favouritesSlice';
 import { addToBasket, removeFromBasket, fetchUserBasket, updateSelectedProducts, setSelectedSeller, isProductBasket, updateLocalBasket } from '../../store/baskets/basketsSlice';
+import { Icon } from 'react-native-elements';
 
 
 const loggedUser = "Francky"
@@ -28,7 +29,7 @@ const username = "Franck"
 //const user = {_id:loggedUserId, username:loggedUser}
 
 const Product = (props) => { 
-    const { item, horizontal, replace, minified, updateProfileLike } = props;
+    const { item, horizontal, replace, minified, updateProfileLike, origin} = props;
     const navigation = useNavigation()
     const {user} = useContext(UserContext)
     const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
@@ -149,26 +150,112 @@ const Product = (props) => {
 }
 else
 {*/
+
+const topIcons = {
+    gratuit : {name:'cube-sharp', type:'ionicon', color:appColors.green},
+    reduction : {name:'gift', type:'ionicon', color:appColors.red},
+    proposition : {name:'pricetag', type:'ionicon', color:appColors.blue},
+}
+const printTopIcon = (product) => {
+    let icon = ''
+    if(product.newPrice < product.price)
+    {
+        icon = 'reduction'
+    }
+    else if(product.feesBy=="seller")
+    {
+        icon = 'gratuit'
+    }
+    else
+    {
+        icon = 'proposition'
+    }
+    
+    return (
+        <Pressable style={[/*productStyles.card,*/ productStyles.feesBy,]}  onPress = { ()=>{ } } >
+            <Icon name={topIcons[icon].name} type={topIcons[icon].type} size={18} color={appColors.white} />
+            <View style={{width:2}}></View>
+            <Text style={[customText.text, {color:appColors.white, fontSize:12,}]}>{capitalizeFirstLetter(icon)}</Text>
+        </Pressable>
+    )
+}
+
+const printBottomIcon = (product) => {
+    let icon = ['proposition']
+    if(product.newPrice < product.price)
+    {
+        icon.unshift('reduction')
+    }
+    if(product.feesBy=="seller")
+    {
+        icon.unshift('gratuit')
+    }
+    
+    return icon.map((item, key) => {
+
+        return (
+            <Pressable style={[productStyles.bottomIconsButton,]}  onPress = { ()=>{ } } key={key}>
+                <Icon name={topIcons[item].name} type={topIcons[item].type} size={18} color={topIcons[item].color} />
+                <View style={{height:2}}></View>
+                <Text numberOfLines={2} style={[customText.text, {color:appColors.clearBlack, fontSize:9,fontWeight:'bold'}]}>{capitalizeFirstLetter(item)}</Text>
+            </Pressable>
+        )
+    })
+}
+
+function displayGrille(origin, product){
+    return origin==="profileShop" && <View style={[productStyles.containerVisibility]}></View>
+}
+
+function displayGrilleBttom(origin, product){
+   
+    return (
+        origin==="profileShop" &&
+        <Pressable style={[productStyles.containerVisibilityInfo]}>
+            <Text style={[{color:appColors.white,fontSize:12}]}>
+                {
+                    product.visibility==0 
+                    ?
+                    "Ce produit n'est pas encore visible. Si vous pensez que c'est une erreur, consulter le service client sur WhatsApp."
+                    :
+                    'Vendu'
+                }
+            </Text>
+        </Pressable>
+    )
+} 
     return(
-                <View style={[productStyles.container, productStyles.card, horizontal ? productStyles.containerHorizontal : false]} >
-                            <View style={[productStyles.top,] } >
-                                <Pressable style={[productStyles.feesBy, productStyles.card]}  onPress = { ()=>{ } } >
-                                    <Ionicons name="cube-sharp" size={24} color={appColors.white} />
-                                    <Text style={[customText.text, {color:appColors.white, fontSize:12, top:3,}]}>{product.feesBy=="seller" ? "Gratuit"  : "Reduction"} </Text>
-                                </Pressable>
+                <View style={[productStyles.container, productStyles.card, horizontal ? productStyles.containerHorizontal : false,]} >
+                  
+                       {
+                        product.visibility==0 &&
+                            displayGrille(origin, product)
+                        }
+                        {
+                            (product.visibility==0 || product.sold==1) &&
+                            displayGrilleBttom(origin, product)
+                        }
+                    
+                    <View style={[productStyles.top, /*{justifyContent:(product.feesBy=="seller" || product.newPrice < product.price)?'space-between':'flex-end'}*/ ] } >
+                        {
+                            printTopIcon(product)
+                        }
                         {
                             (!minified || user._id!=product.seller._id) &&
                                 <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user}  synchro={false} item={product} isCard={false} styles={{color:appColors.white}}/>
                         }
-                            </View>
+                    </View>
                         
                     <Pressable style={ productStyles.pressable } onPress = {handlePress} >
                         <Image source={{uri: product.images[0]}}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
                         <View style={ productStyles.text }>
-                            <View style={{ flexDirection:"column", justifyContent:"flex-start", }}>
-                                <Text numberOfLines={1} style={[customText.text, productStyles.shopName]}> @{product.seller.username} | </Text>
-                                <Text numberOfLines={1} style={[customText.text, productStyles.productName]}>{product.name}</Text>
+                            <View style={{ flexDirection:"column", justifyContent:"flex-start", height:50, }}>
+                               { /*</Text><Text numberOfLines={1} style={[customText.text, productStyles.shopName]}> @{product.seller.username} | </Text>*/}
+                                <Text numberOfLines={2} style={[customText.text, productStyles.productName]}>{product.name}</Text>
+
                             </View>
+
+                    <View style={{height:10,}}></View>
 
                             <View style={[{flexWrap:'wrap'}]} >
                                 {product.likes>0 ? 
@@ -178,13 +265,24 @@ else
                                     <Text style={[customText.text, {color:appColors.red}, {fontSize:14,fontWeight:'bold'}]}>{formatMoney(product.likes)} {product.likes>1?"likes":"like"}</Text> 
                                 </View>
                                 : 
-                                <Text style={{alignSelf:"center"}}>---</Text>}
-                                {product.price === product.newPrice  ? <Text style={[customText.text, productStyles.price,{fontSize:14}]}>{formatMoney(product.price)} XAF</Text>
+                                <Text style={{alignSelf:"center"}}>---</Text>
+                                }
+
+                                {product.price <= product.newPrice  
+                                    ? 
+                                        <Text style={[customText.text, productStyles.price,{fontSize:14}]}>{formatMoney(product.price)} XAF</Text>
                                     :
-                                    <View style={{ flexDirection:"row", justifyContent:"flex-start", flexWrap:'wrap' }} >
-                                        <Text style={[customText.text, productStyles.price, {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{formatMoney(product.price)} </Text>
-                                        <Text style={[customText.text, productStyles.price, {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:14}]}>{formatMoney(product.newPrice)} XAF</Text>
-                                    </View>
+                                        <View style={{ flexDirection:"row", justifyContent:"flex-start", flexWrap:'wrap' }} >
+                                            <Text numberOfLines={2} style={[customText.text, productStyles.price, {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{formatMoney(product.price)} </Text>
+                                            <Text numberOfLines={2} style={[customText.text, productStyles.price, {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:14}]}>{formatMoney(product.newPrice)} XAF</Text>
+                                        </View>
+                                }
+
+                            </View>
+             <View style={{height:10,}}></View>
+                            <View style={productStyles.bottomIcons}>
+                                {
+                                    printBottomIcon(product)
                                 }
                             </View>
 

@@ -24,14 +24,15 @@ const productSchema = new Schema({
     color : { type : String, required : false},
     
     images : [{ type : String, required : true}],
-    feesBy : { type : String, enum : ['seller', 'buyer'], default : "buyer" },
     garanti : { type : Number, default : 0 }, //en jour
-    stock : { type : Number, default : 1 },
     likes : { type : Number, default : 0, validate: {validator: function(v) {
         return v >= 0;
         },
         message: 'Les likes doit être au moins 1.'
     }},
+
+    stock : { type : Number, default : 1 },
+    feesBy : { type : String, enum : ['seller', 'buyer'], default : "buyer" },
     inBasket : { type : Number, default : 0 },
     sold : { type : Number, enum : [0, 1, 2], default : 0 }, // 2 = orders
     visibility : { type : Number, enum : [0, 1], default : 1  },

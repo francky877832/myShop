@@ -281,7 +281,7 @@ const setFollowers = async (follower, following) => {
 
 
     return(
-                <View style={profilShopStyles.container}>
+                <View style={[profilShopStyles.container]}>
                     <Animated.View style={[profilShopStyles.topContainer, {height:animatedTop}]}>
                         <View style={[profilShopStyles.topTop]}>
                             <View style={[profilShopStyles.prevButton,{}]}>
@@ -336,7 +336,7 @@ const setFollowers = async (follower, following) => {
                     
 
                         <View style={{flex:1, paddingBottom:route.params==undefined?40:0}} {...panResponder.panHandlers}>
-                            <ProductsListWithFilters updateProfileLike={setNumLikes} minified={true} isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products?.length} ${products?.length > 1 ? 'Produits' : 'Produit'}`} />
+                            <ProductsListWithFilters origin="profileShop" updateProfileLike={setNumLikes} minified={true} isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products?.length} ${products?.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
 
                     { route.params==undefined &&

@@ -143,7 +143,13 @@ const respondTo = (id, user) => {
                                     return (
                                         <View style={[{flex:0}]}  key={key}>
                                             <View style={{flexDirection:"row-reverse",alignItems:"center"}}>
-                                                <Pressable onPress={()=>{console.log(comment._id)}} style={[styles.comment, styles.subComment]} >
+
+                                            {
+                                                <Pressable onPress={()=>{setInputValue("@"+comment.username+" " +inputValue)}}>
+                                                    <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
+                                                </Pressable>
+                                            }
+                                                <Pressable onPress={()=>{ }} style={[styles.comment, styles.subComment]} >
                                                     <Text style={[commentsStyles.commentText]} >{parseMentions(item.text)}</Text>
                                                 </Pressable>
 
@@ -153,14 +159,6 @@ const respondTo = (id, user) => {
                                                     }}>
                                                     <Image source={{uri: item.user.image||user.image}} style={[commentsStyles.commentProfile, ]} />
                                                 </Pressable>
-
-                                                {
-                                                /*
-                                                    <Pressable onPress={()=>{setIsResponseTo(comment._id);setInputValue("@"+comment.username+" " +inputValue)}}>
-                                                        <Icon name="arrow-undo-sharp" type='ionicon' size={18} color={appColors.black} />
-                                                    </Pressable>
-                                                */
-                                                }
                                             </View>
 
                                             <View style={[{flexDirection:'row', justifyContent:'flex-end', alignItems:"center"}]}>

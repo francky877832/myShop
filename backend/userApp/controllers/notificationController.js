@@ -122,7 +122,7 @@ const productPipeline = (req, res, next) => {
 }
 
 
-const addUserNotification = async (req, res) => {
+const addUserNotification = async (req, res, next) => {
     const notification = new Notification({
         user: new ObjectId(req.params.user),
         notifications: [createNotificationObject(req)],
@@ -136,7 +136,7 @@ const addUserNotification = async (req, res) => {
     }
 };
 
-exports.updateUserNotifications = async (req, res) => {
+exports.updateUserNotifications = async (req, res, next) => {
     //console.log("NOTIF GOT")
     const newNotification = createNotificationObject(req);
     //console.log(newNotification)
