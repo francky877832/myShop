@@ -137,9 +137,33 @@ const ProductProvider = ({children}) => {
       }
     }
 
+    const updateProductViews = async (product)=> {
+      const datas = {
+        product : product._id,
+      }
+        try
+        {
+            const response = await fetch(`${server}/api/datas/products/update-views`,{
+                method: 'POST',
+                body : JSON.stringify(datas),
+                headers: {
+                    'Content-Type': 'Application/json',
+                     'Authorization': `Bearer ${user.token}`, //Vue protege
+                },});
+                const responseJson = await response.json();
+                if(!response.ok){
+                  throw new Error("Erreur lors de la recuperation des produits")
+                }
+                return responseJson
+        } catch (error) {
+            console.error(error);
+            return false
+      }
+    }
+
     const productStateVars = {products, isLoading, refreshKey}
     const productStateStters = {setIsLoading}
-    const utilsFunctions = {getProducts, loadMoreData, productHasBeenSold}
+    const utilsFunctions = {getProducts, loadMoreData, productHasBeenSold, updateProductViews}
     return (
         <ProductContext.Provider value={{...productStateVars, ...productStateStters, ...utilsFunctions}}>
             {children}

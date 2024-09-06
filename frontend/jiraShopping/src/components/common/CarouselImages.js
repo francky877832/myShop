@@ -1,5 +1,7 @@
-import React, { useState, forwardRef, useRef } from 'react';
+import React, { useState, forwardRef, useRef, useEffect } from 'react';
 import { View, Text, Pressable, StyleSheet, Dimensions, Image, Modal } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+
 import Carousel from 'react-native-reanimated-carousel';
 
 
@@ -7,18 +9,24 @@ import { caourselImageStyles } from '../../styles/carouselImageStyles';
 import { productStyles } from '../../styles/productStyles';
 import { datas } from '../../utils/sampleDatas';
 import { appColors } from '../../styles/commonStyles';
-
+import { pluralize } from '../../utils/commonAppFonctions';
 
 const { width: screenWidth } = Dimensions.get('window');
 
+
+import { LeftToRightViewBox } from './AnimatedComponent';
+
 const CarouselImage = (props) =>
 {
-  const {styles, images} = props
+  const {styles, product, images} = props
     const carouselRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [showViews, setShowViews] = useState(true)
+    const [showInBasket, setShowInBasket] = useState(false)
     //const image = "../../assets/images/product5.png"
+    const intervalRef = useRef(null);
 
     const handleImagePress = (image) => {
       setSelectedImage(image);
@@ -31,7 +39,20 @@ const CarouselImage = (props) =>
     </Pressable> 
   )
 
+useEffect(()=>{
+  intervalRef.current = setInterval(() => {
+    setShowInBasket(prev => !prev);
+    setShowViews(prev => !prev);
+    //console.log('ok')
+  }, 5000);
+  return () => {
+    clearInterval(intervalRef.current);
+  };
+}, [])
 
+useEffect(() => {
+
+}, [showViews, showInBasket]);
   return (
     <View style={[caourselImageStyles.container,styles]}>
       <Carousel loop={true} width={screenWidth} height={screenWidth*1.2} 
@@ -45,6 +66,24 @@ const CarouselImage = (props) =>
             {currentIndex + 1}/{images.length}
           </Text>
         </View>
+
+        {
+          (showViews && product.views>=0) &&
+            <LeftToRightViewBox show={showViews} duration={1000} styles={paginationStyles.viewsBox}>
+              <Text style={paginationStyles.viewsText}>
+                {product.views} {pluralize(product.views, 'vue')}
+              </Text>
+            </LeftToRightViewBox>
+        }
+
+       {
+        (showInBasket && product.inBasket>=0) &&
+          <LeftToRightViewBox show={showInBasket} duration={1000} styles={paginationStyles.viewsBox}>
+              <Text style={paginationStyles.viewsText}>
+                  Ce produit est deja dans le panier de {product.inBasket} {pluralize(product.inBasket, 'personne')}!
+              </Text>
+          </LeftToRightViewBox>
+        }
 
 
         <Modal
@@ -103,6 +142,37 @@ const paginationStyles = StyleSheet.create({
     fontSize: 16,
     color: appColors.white,
   },
+
+  viewsBox :
+  {
+    alignSelf : "flex-start",
+    alignItems : 'flex-start',
+    backgroundColor : appColors.white,
+    left : 5,
+    top : 20,
+    paddingHorizontal : 10,
+    borderWidth : 2,
+    borderColor : appColors.yellow,
+    borderRadius : 10,
+  },
+  inBasketBox :
+  {
+    alignSelf : "flex-start",
+    alignItems : 'flex-start',
+    backgroundColor : appColors.white,
+    left : 5,
+    top : 20,
+    paddingHorizontal : 10,
+    borderWidth : 2,
+    borderColor : appColors.yellow,
+    borderRadius : 10,
+  },
+  viewsText :
+  {
+    fontSize: 11,
+    color: appColors.clearBlack,
+    fontWeight : 'bold',
+  }
 })
 
 

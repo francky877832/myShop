@@ -28,6 +28,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { isProductFavourite } from '../../store/favourites/favouritesSlice'; 
 import { ActivityIndicator } from 'react-native-paper';
 import { UserContext } from '../../context/UserContext';
+import { ProductContext } from '../../context/ProductContext';
 
 const loggedUserId = "668fdfc6077f2a5c361dd7fc"
 const loggedUser = "Francky"
@@ -52,6 +53,8 @@ const ProductDetails = (props) => {
     //const {favourites, addFavourite, removeFavourite, hasLiked} = useContext(FavouritesContext)
     //const favourites = useSelector((state) => state.favourites.favourites);
     const favourites = []
+    const timeoutRef = useRef(null);
+
     //const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
 
 
@@ -75,7 +78,8 @@ const ProductDetails = (props) => {
 
 
     const { reshapedComments, setReshapedComments, loadMoreComments, page, hasMore, isLoading, setIsLoading, filtersUpdated, searchAgain, searchAgain_, setPage, onNewComment, setOnNewComment, setHasMore } = useContext(CommentsContext)
- 
+    const { updateProductViews } = useContext(ProductContext)
+
         const initialNumberOfComments = 2
         const loadMoreComments_ = async () => { await loadMoreComments(data._id) ;}
         
@@ -175,7 +179,16 @@ useEffect(()=>{
     //console.log(data.comments)
     //console.log(data.favourites)
     setReshapedComments(data.comments)
-    //console.log(data.favourites)
+    
+
+    
+    if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(async () => {
+        await updateProductViews(data)
+    }, 1000);
+
 }, [])
 
     
@@ -272,7 +285,7 @@ const handleSellerBrandPressed = (product) => {
                     </Animated.View>
                 */}
                 <View style={[productDetailsStyles.carousselIamge, {height:screenHeight/2,}]}>
-                    <CarouselImage images={data.images} styles={{ }} />
+                    <CarouselImage images={data.images} product={data} styles={{ }} />
                 </View>
                 
 

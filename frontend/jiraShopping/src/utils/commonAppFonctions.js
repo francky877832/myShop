@@ -334,6 +334,43 @@ export const convertISOToCustomDateFormat = (isoDateString) => {
     return `${day}/${month}/${year}`;
 }
 
+export const pluralize = (nombre, nom) => {
+    if (typeof nombre !== 'number') {
+        throw new Error('Le premier argument doit être un nombre.');
+    }
+    
+    const exceptions = {
+        "oeil": "yeux",
+        "ciel": "cieux",
+        "monsieur": "messieurs",
+        "madame": "mesdames",
+        "mademoiselle": "mesdemoiselles",
+    };
+
+    // Si le mot fait partie des exceptions
+    if (exceptions[nom]) {
+        return nombre > 1 ? exceptions[nom] : nom;
+    }
+
+    // Règle générale : ajouter 's' au pluriel
+    if (nombre > 1) {
+        // Mots en 'al' deviennent 'aux'
+        if (nom.endsWith('al') && !nom.endsWith('bal') && !nom.endsWith('carnaval')) {
+            return nom.slice(0, -2) + 'aux';
+        }
+
+        // Mots en 'eau', 'eu' prennent un 'x'
+        if (nom.endsWith('eau') || nom.endsWith('eu')) {
+            return nom + 'x';
+        }
+
+        // Sinon ajouter un 's'
+        return nom + 's';
+    }
+
+    // Retourne au singulier
+    return nom;
+}
 
 
 

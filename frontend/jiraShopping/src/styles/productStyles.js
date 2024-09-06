@@ -170,7 +170,7 @@ export const productStyles = StyleSheet.create({
 
     isBasketPresent : 
     {
-        backgroundColor : appColors.secondaryColor3,
+        backgroundColor : appColors.secondaryColor5,
         borderColor : appColors.lightBlack,
     },
     isBasketPresentText :

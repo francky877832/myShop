@@ -37,6 +37,7 @@ const productSchema = new Schema({
     sold : { type : Number, enum : [0, 1, 2], default : 0 }, // 2 = orders
     visibility : { type : Number, enum : [0, 1], default : 1  },
     updated : { type : Number, enum : [0, 1], default : 0  },
+    views : { type : Number, default : 1 },
 
     favourites : [{ type : Schema.Types.ObjectId, ref : 'User', required : false }],
 
