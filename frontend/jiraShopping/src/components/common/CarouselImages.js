@@ -14,7 +14,7 @@ import { pluralize } from '../../utils/commonAppFonctions';
 const { width: screenWidth } = Dimensions.get('window');
 
 
-import { LeftToRightViewBox } from './AnimatedComponent';
+import { LeftToRightViewBox } from './AnimatedComponents';
 
 const CarouselImage = (props) =>
 {
