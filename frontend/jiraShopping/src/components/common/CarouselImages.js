@@ -10,6 +10,7 @@ import { productStyles } from '../../styles/productStyles';
 import { datas } from '../../utils/sampleDatas';
 import { appColors } from '../../styles/commonStyles';
 import { pluralize } from '../../utils/commonAppFonctions';
+import { formatMoney, sinceDate, truncateText } from '../../utils/commonAppFonctions';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -50,6 +51,7 @@ useEffect(()=>{
   };
 }, [])
 
+
 useEffect(() => {
 
 }, [showViews, showInBasket]);
@@ -71,7 +73,7 @@ useEffect(() => {
           (showViews && product.views>=0) &&
             <LeftToRightViewBox show={showViews} duration={1000} styles={paginationStyles.viewsBox}>
               <Text style={paginationStyles.viewsText}>
-                {product.views} {pluralize(product.views, 'vue')}
+                {formatMoney(product.views)} {pluralize(product.views, 'vue')}
               </Text>
             </LeftToRightViewBox>
         }
@@ -80,7 +82,7 @@ useEffect(() => {
         (showInBasket && product.inBasket>=0) &&
           <LeftToRightViewBox show={showInBasket} duration={1000} styles={paginationStyles.viewsBox}>
               <Text style={paginationStyles.viewsText}>
-                  Ce produit est deja dans le panier de {product.inBasket} {pluralize(product.inBasket, 'personne')}!
+                  Ce produit est deja dans le panier de {formatMoney(product.inBasket)} {pluralize(product.inBasket, 'personne')}!
               </Text>
           </LeftToRightViewBox>
         }

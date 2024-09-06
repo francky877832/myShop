@@ -2,6 +2,13 @@ import { API_BACKEND } from '@env';
 
 import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView, FlatList, Image, Animated, PanResponder, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
+
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { GestureDetector, PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
+
+
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -29,6 +36,7 @@ import { isProductFavourite } from '../../store/favourites/favouritesSlice';
 import { ActivityIndicator } from 'react-native-paper';
 import { UserContext } from '../../context/UserContext';
 import { ProductContext } from '../../context/ProductContext';
+import { addModifiedProduct } from '../../store/favourites/favouritesSlice';
 
 const loggedUserId = "668fdfc6077f2a5c361dd7fc"
 const loggedUser = "Francky"
@@ -38,6 +46,7 @@ const ProductDetails = (props) => {
     //console.log(props)
     const navigation = useNavigation()
     const route = useRoute()
+    const dispatch = useDispatch();
     const {user} = useContext(UserContext)
     //On utilise la version la plus a jour du produit!!!! 
     const [showPriceDetails, setShowPriceDetails] = useState(false)
@@ -59,21 +68,6 @@ const ProductDetails = (props) => {
 
 
    
-    const minHeight = 0;
-    const maxHeight = screenHeight / 2;
-    const halfHeight = maxHeight / 2;
-    const initialHeight = maxHeight;
-
-    
-    const pan = useRef(new Animated.Value(initialHeight)).current;
-    const [lastValidHeight, setLastValidHeight] = useState(initialHeight);
-    const animatedHeight = pan.interpolate({
-        inputRange: [minHeight, maxHeight],
-        outputRange: [minHeight, maxHeight],
-        extrapolate: 'clamp',
-    });
-
-    const scrollViewRef = useRef(null);
 
 
 
@@ -83,95 +77,6 @@ const ProductDetails = (props) => {
         const initialNumberOfComments = 2
         const loadMoreComments_ = async () => { await loadMoreComments(data._id) ;}
         
-
-       
-        //let data_ = [...comments] ; data_ = !all ? data_.slice(0, initialNumberOfComments+1) : comments
-        //const comments_ = {comments : [...data_], count:2, total : 3} //format de retourn cote server Express
-        //let  reshapedComments = reshapeComments(comments_.comments)
-    
-    
-
-/* //Bloquer le scroll au debut onScroll={handleScroll}
-    const handleScroll = (event) => {
-      const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-  
-      // Calcul de la position actuelle dans la ScrollView
-      const scrollY = contentOffset.y;
-      const screenHeight = layoutMeasurement.height;
-      const contentHeight = contentSize.height;
-  
-      // Vérification si la fin du scroll est atteinte
-      if (scrollY == 0) { //A la fin scrollY +screenHeight >= contentHeight 
-        // Désactiver le scrolling en utilisant la référence à la ScrollView
-        if (scrollViewRef.current) {
-          scrollViewRef.current.setNativeProps({ scrollEnabled: false });
-        }
-      }
-    };
-  */
-
-    /*
-    const panResponder = useRef(
-      PanResponder.create({
-        onMoveShouldSetPanResponder: () => true,
-        onPanResponderMove: (ev, gestureState) => 
-            {
-                 // Désactiver le scrolling en utilisant la référence à la ScrollView
-                if (scrollViewRef.current) {
-                    scrollViewRef.current.setNativeProps({ scrollEnabled: false });
-                }
-                //setLastValidHeight(pan._value);
-
-                Animated.event(
-                [
-                    null,
-                    { dy: pan }
-                ],
-                { useNativeDriver: false }
-        )},
-        onPanResponderRelease: (evt, gestureState) => {
-                let finalValue;
-
-                if (gestureState.dy < 0) {
-                    // Si le geste va vers le haut (vers le haut de l'écran)
-                    finalValue = lastValidHeight //+ gestureState.dy;
-                    //Alert.alert("",`${gestureState.dy}Ok`)
-                    if (gestureState.dy < -20) {
-                        finalValue = minHeight ; // Revenir à la hauteur initiale si moins de la moitié
-                    } /*else {
-                        finalValue = initialHeight; // Aller à la hauteur minimale sinon
-                    }*//*
-                } else {
-                    // Si le geste va vers le bas (vers le bas de l'écran)
-                    finalValue = lastValidHeight + gestureState.dy;
-                    if (gestureState.dy > 20) {
-                        finalValue = initialHeight; // Revenir à la hauteur initiale si moins de la moitié
-                    } /*else {
-                        finalValue = minHeight; // Aller à la hauteur minimale sinon
-                    }*//*
-                    //finalValue = initialHeight; // Revenir à la hauteur initiale
-                    
-                }
-
-          Animated.spring(pan, {
-            toValue: finalValue,
-            useNativeDriver: false,
-            friction: 7,
-            tension: 50,
-          }).start();
-
-          if (scrollViewRef.current) {
-            scrollViewRef.current.setNativeProps({ scrollEnabled: true });
-          }
-
-        }
-      })
-    ).current;
-*/
-
-   /*
-    {...panResponder.panHandlers}
-   */ 
 
    
 useEffect(()=>{
@@ -187,6 +92,11 @@ useEffect(()=>{
     }
     timeoutRef.current = setTimeout(async () => {
         await updateProductViews(data)
+        /*const updatedProduct = {
+            ...data,
+            views : data.views+1
+          };
+        dispatch(addModifiedProduct(updatedProduct));*/
     }, 1000);
 
 }, [])
@@ -207,7 +117,6 @@ useEffect(()=>{
     //const [likeClicked, setLikeClicked] = useState(data.liked)
     
 //console.log("data")
-    const dispatch = useDispatch();
     const isFavourite = useSelector((state) => isProductFavourite(state, data._id))
     const [like, setLikeIcon ] = useState(isFavourite)
     const [numLike, setNumLike] = useState(data.likes>=0?data.likes:0)
@@ -260,33 +169,67 @@ const handleSellerBrandPressed = (product) => {
     }
 }
 
+
+ const MIN_HEIGHT = 0;
+    const MAX_HEIGHT = screenHeight / 2;
+    const HALF_HEIGHT = MAX_HEIGHT / 2;
+    const INITIAL_HEIGHT = MAX_HEIGHT;
+
+
+    let height = useRef(null)
+    const offset = useRef(new Animated.Value(0)).current;
+    //HEADER
+    const insets = useSafeAreaInsets();
+
+     height.current = offset.interpolate({
+      inputRange: [0, MAX_HEIGHT + insets.top],
+      outputRange: [MAX_HEIGHT + insets.top, insets.top + 44],
+      extrapolate: 'clamp'
+    });
+
+    const scrollViewRef = useRef(null);
+
+
     return (
 
   <View style={productDetailsStyles.container}>
-<KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
-<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    {
+    <>
+        <View style={productDetailsStyles.buttonContainer}>
+            <PrevButton styles={productDetailsStyles.prevButton} />
+            <View style={productDetailsStyles.buttonContainerLeft}>
+                <ShareButton styles={productDetailsStyles.shareButton} />
+                <View style={{ width: 10 }}></View>
+                        
+                <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user} synchro={true} item={data} styles={{ color: appColors.white }} isCard={false} />
+            </View>
+        </View>
+        
+        <Animated.View style={[productDetailsStyles.carousselIamge, {height:height.current,},]}>
+            <CarouselImage images={data.images} product={data} styles={{ }} />
+        </Animated.View>
+        
+    </>
+    }
 
-        <ScrollView style={[productDetailsStyles.scrollView,]} ref={scrollViewRef} horizontal={false} nestedScrollEnabled={true} >
+
+        <ScrollView onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: offset } } }],
+            { useNativeDriver: false }
+          )}
+           scrollEventThrottle={16} style={[productDetailsStyles.scrollView, {zIndex:9999}]} ref={scrollViewRef} horizontal={false} nestedScrollEnabled={true} >
 
             <View contentContainerStyle={[productDetailsStyles.getBackPosition, {}]}>
-                <View style={productDetailsStyles.buttonContainer}>
-                    <PrevButton styles={productDetailsStyles.prevButton} />
-                    <View style={productDetailsStyles.buttonContainerLeft}>
-                        <ShareButton styles={productDetailsStyles.shareButton} />
-                        <View style={{ width: 10 }}></View>
-                        
-                            <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user} synchro={true} item={data} styles={{ color: appColors.white }} isCard={false} />
+                
+                   
+               
+                {
+                    /*
+                    <View style={[productDetailsStyles.carousselIamge, {height:screenHeight/2,}]}>
+                        <CarouselImage images={data.images} product={data} styles={{ }} />
                     </View>
-                </View>
-
-                {/*
-                    <Animated.View style={[productDetailsStyles.carousselIamge, { height: animatedHeight }]}>
-                        <CarouselImage images={data.images} styles={{ }} />
-                    </Animated.View>
-                */}
-                <View style={[productDetailsStyles.carousselIamge, {height:screenHeight/2,}]}>
-                    <CarouselImage images={data.images} product={data} styles={{ }} />
-                </View>
+                    */
+                }
                 
 
 <View style={[productDetailsStyles.underCaroussel,{borderTopWidth:1,borderColor:appColors.lightWhite}]}>
@@ -445,9 +388,9 @@ const handleSellerBrandPressed = (product) => {
 
         
         </ScrollView>
-    </TouchableWithoutFeedback>
+
+
     
-</KeyboardAwareScrollView>    
         {showPriceDetails &&
             <View style={[productDetailsStyles]}>
                 <PriceDetails product={data} closePriceDetails={setShowPriceDetails} title="Informations Sur La Vente"/>

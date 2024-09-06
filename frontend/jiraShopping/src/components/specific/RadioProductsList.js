@@ -18,7 +18,7 @@ import { CheckBox } from 'react-native-elements';
 
 import { BasketContext } from '../../context/BasketContext';
 
-import { formatMoney } from '../../utils/commonAppFonctions';
+import { formatMoney, pluralize } from '../../utils/commonAppFonctions';
 
 import { useSelector, useDispatch } from 'react-redux';
 import  {
@@ -137,7 +137,7 @@ const RadioProduct = (props) => {
                                                             <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
                                                             <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(product2.price)} XAF{/* prix de la proposition ou real Price*/}</Text>
                                                             <Pressable onPress={()=>{handleRemoveFromBasket(product2);}} style={[{ top:10, width:'100%', alignItems:'flex-end', paddingRight:350}]}>
-                                                                <Icon name="trash-outline" color={appColors.black} size={24} type="ionicon" style={[{/*alignSelf:"flex-end"*/}]} />
+                                                                <Icon name="trash-outline" color={appColors.red} size={24} type="ionicon" style={[{/*alignSelf:"flex-end"*/}]} />
                                                             </Pressable>
                                                         </View>
                                                     </Pressable> 
@@ -154,7 +154,7 @@ const RadioProduct = (props) => {
                                                 </View> 
                                             {product2.inBasket>0 &&
                                                 <View style={radioProductStyles.inBasket}>
-                                                    <Text style={[customText.text, {fontSize:10,}]}>{`Dans le panier de ${product2.inBasket} ${product2.inBasket>1?"personnes":"personne"}!`}</Text>
+                                                    <Text style={[customText.text, {fontSize:10,}]}>{`Dans le panier de ${product2.inBasket} autres ${pluralize(product2.inBasket, 'personne')}`}</Text>
                                                 </View>
                                             }
                                             <View style={{height:10,}}></View>
