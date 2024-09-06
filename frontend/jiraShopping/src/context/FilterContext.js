@@ -37,8 +37,8 @@ const FilterProvider = ({children}) => {
     const {user} = useContext(UserContext)
 
 
-    const _handlePress = useCallback((id) => {
-        setSelectedCategories((prevSlectedCategories)=>{
+    const updateModalCategories = useCallback((id) => {
+        setSelectedModalCategoriesFromContext((prevSlectedCategories)=>{
             //console.log(prevSlectedCategories)
             return ({
                 ...prevSlectedCategories,
@@ -107,6 +107,7 @@ const FilterProvider = ({children}) => {
         {
             
             categories = Object.keys(selectedModalCategories).filter((key)=>{ return selectedModalCategories[key]===true})
+
             if(!!selectedCategory.subCategories)
                 categories.push(`${categories.name}/${categories.subCategories}`)
             setSelectedCategories({})
@@ -274,8 +275,8 @@ const FilterProvider = ({children}) => {
 
 
     useEffect(()=>{
-        console.log("MY PRODUCTS")
-        console.log(products.length)
+        //console.log("MY PRODUCTS")
+        //console.log(products.length)
     }, [products])
 
     const resetAllFiltersWithoutFecthingDatas = () => {
@@ -289,6 +290,8 @@ const FilterProvider = ({children}) => {
         setHasMore(true)
         setPage(1)
         setProducts([])
+        setSearchedProducts([])
+
         
         //setRefreshComponent(!refreshComponent)
         //console.log("resetAllFiltersWithoutFecthingDatas")
@@ -307,6 +310,8 @@ const FilterProvider = ({children}) => {
         setHasMore(true)
         setPage(1)
         setProducts([])
+        setSearchedProducts([])
+
         //setRefreshComponent(!refreshComponent)
         
         //getSearchedTextWithFilters({searchText:searchText})
@@ -318,6 +323,7 @@ const FilterProvider = ({children}) => {
           setFiltersUpdated(true);
           setPage(1);
           setProducts([]);
+          setSearchedProducts([])
     }
 
 //These 2 functiopn are important : used in Search, SR, Cat   
@@ -326,6 +332,8 @@ const FilterProvider = ({children}) => {
         setHasMore(true);
         setPage(1);
         setProducts([]);
+        setSearchedProducts([])
+
   }
 
       const searchCategory = async (selectedCategories_) => {
@@ -334,6 +342,8 @@ const FilterProvider = ({children}) => {
         setPage(1);
         setProducts([]);
         setSelectedCategories(selectedCategories_);
+        setSearchedProducts([])
+
     }
 
     
@@ -342,7 +352,7 @@ const FilterProvider = ({children}) => {
 
     const filterStateVars = {searchedProducts, refreshComponent, filtersUpdated, isLoading, setHasMore, selectedCategories, selectedOrderBy, selectedBrandFromContext, selectedModalCategoriesFromContext, selectedConditionsFromContext, isNewFocused, isOldFocused, minPrice, maxPrice, products}
     const filterStateSetters = {setSearchedProducts, setFiltersUpdated, setSelectedModalCategoriesFromContext, setSelectedBrandFromContext, setSelectedConditionsFromContext, setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
-    const utilsFunctions = {_handlePress, searchAgainWithoutUpdate, updateCategories, resetAllFilters, searchAgain, searchCategory, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
+    const utilsFunctions = {updateModalCategories, searchAgainWithoutUpdate, updateCategories, resetAllFilters, searchAgain, searchCategory, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

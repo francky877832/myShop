@@ -184,6 +184,8 @@ const handleSellerBrandPressed = (product) => {
      height.current = offset.interpolate({
       inputRange: [0, MAX_HEIGHT + insets.top],
       outputRange: [MAX_HEIGHT + insets.top, insets.top + 44],
+      //inputRange: [0, MAX_HEIGHT],
+      //outputRange: [MAX_HEIGHT, 0],
       extrapolate: 'clamp'
     });
 
@@ -194,22 +196,22 @@ const handleSellerBrandPressed = (product) => {
 
   <View style={productDetailsStyles.container}>
     {
-    <>
-        <View style={productDetailsStyles.buttonContainer}>
-            <PrevButton styles={productDetailsStyles.prevButton} />
-            <View style={productDetailsStyles.buttonContainerLeft}>
-                <ShareButton styles={productDetailsStyles.shareButton} />
-                <View style={{ width: 10 }}></View>
-                        
-                <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user} synchro={true} item={data} styles={{ color: appColors.white }} isCard={false} />
+        <>
+            <View style={productDetailsStyles.buttonContainer}>
+                <PrevButton styles={productDetailsStyles.prevButton} />
+                <View style={productDetailsStyles.buttonContainerLeft}>
+                    <ShareButton styles={productDetailsStyles.shareButton} />
+                    <View style={{ width: 10 }}></View>
+                            
+                    <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user} synchro={true} item={data} styles={{ color: appColors.white }} isCard={false} />
+                </View>
             </View>
-        </View>
-        
-        <Animated.View style={[productDetailsStyles.carousselIamge, {height:height.current,},]}>
-            <CarouselImage images={data.images} product={data} styles={{ }} />
-        </Animated.View>
-        
-    </>
+            
+            <Animated.View style={[productDetailsStyles.carousselIamge, {height:height.current,},]}>
+                <CarouselImage images={data.images} product={data} styles={{ }} />
+            </Animated.View>
+            
+        </>
     }
 
 

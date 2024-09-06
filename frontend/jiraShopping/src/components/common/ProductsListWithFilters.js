@@ -11,7 +11,7 @@ import { FilterContext } from '../../context/FilterContext';
 
 const ProductsListWithFilters = React.forwardRef((props, ref) => {
     const { datas, horizontal, title, onEndReached, onEndReachedThreshold, onScroll, filters, notDisplayFilters, name, searchText, isLoading, 
-        getDatas, display, onExit, setOnExit, minified, updateProfileLike, origin
+        getDatas, display, onExit, setOnExit, minified, updateProfileLike, origin, search
     } = props;
     //const {selectedCategories} = useContext(FilterContext)
 
@@ -44,7 +44,7 @@ const ProductsListWithFilters = React.forwardRef((props, ref) => {
 
                 <View style={{flex:1,flexDirection:"column",}}>
                     {filters &&
-                        <Filters  onExit={onExit} setOnExit={setOnExit} getDatas={getDatas} notDisplayFilters={notDisplayFilters || {}} suggestion={false} searchText={searchText} display={display}/>
+                        <Filters search={search}  onExit={onExit} setOnExit={setOnExit} getDatas={getDatas} notDisplayFilters={notDisplayFilters || {}} suggestion={false} searchText={searchText} display={display}/>
                     }
                         <ProductsList origin={origin} updateProfileLike={updateProfileLike}  minified={minified} name={name} onScroll={onScroll || function(){}} isLoading={isLoading} onEndReached={onEndReached||function(){}} onEndReachedThreshold={onEndReachedThreshold} ref={ref} datas={datas} horizontal={false} styles={preferencesStyles} />
                 </View>

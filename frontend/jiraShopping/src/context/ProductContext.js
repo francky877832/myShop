@@ -75,6 +75,31 @@ const ProductProvider = ({children}) => {
     return bool
 }
 
+const getProductsFromCategories = async () =>{
+  //console.log(selectedCategories)
+  const category = {
+      category : selectedCategories.name,
+      subCategory : JSON.stringify([selectedCategories.subCategories])
+
+  }
+//console.log(serialize(category))
+  try{
+      //console.log(user)
+      const response = await fetch(`${server}/api/datas/products/categories?${serialize(category)}`, {
+      headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`,
+          },}); 
+                     
+      const datas = await response.json()
+      //console.log(datas)
+      setSearchedProducts(datas)
+  }catch(error){
+      Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
+  }
+}
+
+
   
     const loadMoreData = useCallback(async () => {
       console.log("ook")

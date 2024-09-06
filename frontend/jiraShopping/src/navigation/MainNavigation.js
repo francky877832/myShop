@@ -22,6 +22,9 @@ import PhoneAuth from '../components/specific/PhoneAuth';
 import Followers from '../components/specific/Followers';
 import Orders from '../components/specific/Orders';
 import OrdersDetails from '../components/specific/OrdersDetails';
+import FiltersSearch from '../components/specific/FiltersSearch';
+import ChooseSearchFilters from '../components/common/ChooseSearchFilters';
+import SSubCategories from '../components/paths/search/SSubCategories';
 import HeaderNavigation from '../components/common/HeaderNavigation';
 
 import HomeNavigation from '../navigation/HomeNavigation';
@@ -56,7 +59,7 @@ export default function MainNavigation() {
             <OrdersProvider>
             <CommentsProvider>
             <Stack.Navigator
-              initialRouteName="UserLogin"
+              initialRouteName="FiltersSearch"
               screenOptions={annimatedStackTransition(0.9, 250, 200)}
       >
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
@@ -73,6 +76,11 @@ export default function MainNavigation() {
                 <Stack.Screen name="Shop" component={ProfilShop}  options={{ title: 'Choisir Une Categorie', headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="SearchResults" component={SearchResults}  options={{ unmountOnBlur: true, title: 'Resultats De Recherche', headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="CategoryResults" component={CategoryResults}  options={{ unmountOnBlur: true, title: 'Categories', headerShown : false, tabBarVisible: false, }} />
+                <Stack.Screen name="FiltersSearch" component={FiltersSearch}  options={{ unmountOnBlur: true, title: 'Filtres', headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="ChooseSearchFilters" component={ChooseSearchFilters}  options={{ unmountOnBlur: true, title: 'Categories', headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="SSubCategories" component={SSubCategories}  options={{ unmountOnBlur: true, title: 'Sous-Categories', headerShown : true, tabBarVisible: false, }} />
+
+                
                 <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="UserSignup" component={UserSignup}  options={{ title: <HeaderNavigation title="Sign Up"/>, headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="PhoneAuth" component={PhoneAuth}  options={{ title: <HeaderNavigation title="PhoneAuth"/>, headerShown : true, tabBarVisible: false, }} />

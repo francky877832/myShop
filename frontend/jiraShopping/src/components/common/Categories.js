@@ -21,11 +21,13 @@ import { FilterContext } from '../../context/FilterContext';
 import { server } from '../../remote/server';
 import { colors } from '../../utils/sampleDatas';
 import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
+import FiltersSearch from '../specific/FiltersSearch';
 
 const Categories = (props) => {
     const { params } = props.route
     const {page,} = props
-    const goBackTo = params?.datas?.goBackTo || props.goBackTo
+    const goBackTo = params?.datas?.goBackTo || props?.goBackTo
+    const goBackOptions = ['AddProduct', 'FiltersSearch']
 //console.log(page)
     const {setSelectedBrand, selectedColor, setSelectedColor, categories, brands, isLoading} = useContext(ProductItemContext)
     const { selectedCategories, updateCategories, setSelectedCategories, resetAllFilters,
@@ -186,7 +188,7 @@ const getCategory = async (type, cat, subCat) => {
         {
             case "category" :    
                 updateCategories(selectedCategories_.name, "complete_category");
-                if(!(params?.datas?.goBackTo==="AddProduct"))
+                if(!(goBackOptions.includes(goBackTo)))
                 {
                     navigation.navigate("CategoryResults", {category:selectedCategories_, searchText:"", display:"category"});
                 }
@@ -198,7 +200,7 @@ const getCategory = async (type, cat, subCat) => {
             case "subCategory" :
                 updateCategories(cat, subCat)
                 //{[id] : true, name:id, subCategories:path}
-                if(!(params?.datas?.goBackTo==="AddProduct"))
+                if(!(goBackOptions.includes(goBackTo)))
                 {
                     navigation.navigate("CategoryResults", {category:{[cat] : true, name:cat, subCategories:subCat}, searchText:"", display:"category"});
                 }
@@ -266,7 +268,7 @@ const getCategory = async (type, cat, subCat) => {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={[categoriesStyles.flatlist,{flex:1,}]}
                     ListFooterComponent={ (item) => { 
-                        if(!(params?.datas?.goBackTo==="AddProduct")){ 
+                        if(!(goBackOptions.includes(goBackTo))){ 
                             return (
                                 <View style={{height:50,top:10, alignSelf:"center"}}>
                                     <Text>{/* searchText:`***${selectedCategories.name}/${selectedCategories.subCategories}***` */}</Text>

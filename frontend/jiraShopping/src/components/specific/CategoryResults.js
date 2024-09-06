@@ -126,7 +126,7 @@ const title = `Resultats de recherche "${searchText}"`
                         </View>
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="CategoryResults" onExit={onExit} setOnExit={setOnExit} selectedCategory={category} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false,}} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters name="CategoryResults" search={false} onExit={onExit} setOnExit={setOnExit} selectedCategory={category} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false,}} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )

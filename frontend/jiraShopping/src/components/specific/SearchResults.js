@@ -35,7 +35,7 @@ const SearchResults = (props) => {
         selectedOrderBy,
        searchedProducts, setSearchedProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
         isLoading, setIsLoading , selectedCategories , setSelectedCategories, loadMoreDataWithFilters, selectedModalCategoriesFromContext, 
-        selectedBrandFromContext, selectedConditionsFromContext
+        selectedBrandFromContext, selectedConditionsFromContext,
     } = useContext(FilterContext)
 
     
@@ -45,39 +45,19 @@ const SearchResults = (props) => {
         const navigation = useNavigation()
 
 
-        const getProductsFromCategories = async () =>{
-            //console.log(selectedCategories)
-            const category = {
-                category : selectedCategories.name,
-                subCategory : JSON.stringify([selectedCategories.subCategories])
-
-            }
-        //console.log(serialize(category))
-            try{
-                //console.log(user)
-                const response = await fetch(`${server}/api/datas/products/categories?${serialize(category)}`, {
-                headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${user.token}`,
-                    },}); 
-                               
-                const datas = await response.json()
-                //console.log(datas)
-                setSearchedProducts(datas)
-            }catch(error){
-                Alert.alert("Erreur", "Une erreur est survenue! "+ error,[{text:"Ok", onPress:()=>navigation.goBack()}])
-            }
-        }
+     
+        useEffect(() => {
+                const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
+                    e.preventDefault();
+                    //setSearchedProducts([])
+                    navigation.dispatch(e.data.action)
+                })
+                return beforeRemoveListener;
+        }, [navigation]);
 
         async function getDatas({searchText, selectedModalCategories, selectedBrands, conditions, orderBy, resetPage, search})
         {
-            //console.log("GETDATAS")
-            //console.log({searchText, selectedModalCategories, selectedBrands, conditions, orderBy, resetPage})
-            //if(!isLoading)
-            //    setIsLoading(true)
-
             await loadMoreDataWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, resetPage:resetPage, search:search})
-           // setIsLoading(false)    
         }
 
         async function loadMoreData_(){
@@ -99,6 +79,7 @@ useEffect(()=>{
     //if(!isLoading)
     //    setIsLoading(true)
     //searchAgainWithoutUpdate()
+    setSearchedProducts([])
     getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy, resetPage:true, search:true})
 
     }, [searchText])
@@ -117,7 +98,7 @@ const title = `Resultats de recherche "${searchText}"`
                         
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="SearchResults" getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} searchText={searchText} datas={searchedProducts} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters name="SearchResults" search={true} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} searchText={searchText} datas={searchedProducts} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )
