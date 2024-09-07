@@ -33,19 +33,19 @@ exports.getUserLikedProducts  =  (req, res, next) => {
         $unwind: '$productDetails'
       },
       // 5. Joindre avec la collection 'favourites' pour trouver les utilisateurs qui ont aimé ces produits
-      {
+      /*{
         $lookup: {
           from: 'favourites',
           localField: 'productDetails._id',
           foreignField: 'products',
           as: 'productFavourites'
         }
-      },
+      },*/
       // 6. Joindre avec la collection 'users' pour obtenir les détails des utilisateurs qui ont aimé les produits
       {
         $lookup: {
           from: 'users',
-          localField: 'productFavourites.user',
+          localField: 'productDetails.favourites',
           foreignField: '_id',
           as: 'favouriteUsers'
         }
@@ -266,7 +266,7 @@ exports.getUserLikedProducts  =  (req, res, next) => {
             {
                 throw new Error('No-favourite-found')
             }*/
-            const totalDatas = await Favourite.countDocuments({ user: new ObjectId(userId) }).exec();
+            const totalDatas = favourites[0].productDetails.length
             const totalPages = Math.ceil(totalDatas / limit);
             favourites[0]?.productDetails.reverse()
             res.status(200).json({datas:favourites.slice(skip, skip+limit), page:page,totalPages:totalPages,totalDatas:totalDatas});
