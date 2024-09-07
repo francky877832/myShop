@@ -110,12 +110,17 @@ const fetchUserHistorique = async () =>{
 }
 
 const removeUserHistorique = async (name) => {
+    setHistorique(prev => {
+        return prev.filter(el=> el!=name)
+    })
+
     let response = null;
         const search = {
             user : user._id,
             username : user.username,
             searchText : name,
         }
+        
         //console.log(bool)
             try
             {
@@ -143,6 +148,7 @@ const removeUserHistorique = async (name) => {
 }
 
 const removeAllUserHistorique = async (name) => {
+    setHistorique([])
     let response = null;
         const search = {
             user : user._id,

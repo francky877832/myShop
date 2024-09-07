@@ -20,7 +20,7 @@ const FilterProvider = ({children}) => {
     const [filtersUpdated, setFiltersUpdated] = useState(false);
 
 
-     const [selectedOrderBy, setSelectedOrderBy] = useState("")
+     const [selectedOrderBy, setSelectedOrderBy] = useState("pertinence")
 
     const [searchText, setSearchText] = useState("")
 
@@ -207,27 +207,32 @@ const FilterProvider = ({children}) => {
         //console.log(orderBy)
         switch(orderBy?.toLowerCase())
         {
-            case "prix asc" :
+            case "prix-asc" :
                 order_by = {price : 1}
                 filters["customFilters"]["orderBy"] = order_by
                 break;
-            case "prix desc" :
+            case "prix-desc" :
                 order_by = {price : -1}
                 filters["customFilters"]["orderBy"] = order_by
                 break
-            case "plus recents" :
+            case "newer" :
                 order_by = {updatedAt : -1}
                 filters["customFilters"]["orderBy"] = order_by
                 break
-            case "plus anciens" :
+            case "older" :
                 order_by = {updatedAt : 1}
                 filters["customFilters"]["orderBy"] = order_by
                 break
-            case "nom asc" :
-                order_by = {name : 1}
+
+            case "more-liked" :
+                order_by = {likes : -1}
                 filters["customFilters"]["orderBy"] = order_by
-            case  "nom desc" :
-                order_by = {name : -1}
+            case  "more-viewed" :
+                order_by = {views : -1}
+                filters["customFilters"]["orderBy"] = order_by  
+                break
+            case  "pertinence" :
+                order_by = {likes:-1, views:-1, updatedAt:-1} //critere de pertinence
                 filters["customFilters"]["orderBy"] = order_by  
                 break
             default : break;
@@ -359,7 +364,7 @@ const FilterProvider = ({children}) => {
         //setSelectedCategories({})
         //setSelectedBrands([])
         setSelectedOrderBy("")
-        
+
         setMinPrice("")
         setMaxPrice("")
         setMaxPriceFromContext(null)

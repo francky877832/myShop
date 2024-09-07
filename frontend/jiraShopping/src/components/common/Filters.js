@@ -143,7 +143,11 @@ useEffect(()=>{
         },
      
     ]*/
-    const orderByItem = [{id:1,name:"Prix DESC"},{id:2, name:"Prix ASC"}, {id:3,name:"Nom ASC"},{id:4, name:"Nom DESC"}, {id:5,name:"Plus Recents"} ,{id:6,name:"Plus Anciens"}]
+    const orderByItem = [{id:1,name:"Pertinence", attribut:"pertinence"}, 
+                        {id:2,name:"Plus Cher", attribut:"prix-desc"},{id:3, name:"Moins Cher", attribut:"prix-asc"}, 
+                        {id:4,name:"Les Plus Aimés", attribut:"more-liked"},
+                        {id:5, name:"Les Plus Consultés", attribut:"more-viewed"}, 
+                        {id:6,name:"Plus Recents", attribut:"newer"} ,{id:7,name:"Plus Anciens", attribut:"older"}]
     const orderByItems = useMemo(()=>(orderByItem),[])
     
     useEffect(() => {
@@ -242,22 +246,28 @@ const setOtherModalToFalse = useCallback((modal)=>{
 
 const handleOrderby = async (val)=>{
     //PEUT-ETRE FAIT EN LOCAL
-        setSelectedOrderBy(val)
+       
         //console.log(selectedOrderBy)
         //await searchAgain()
         //console.log(selectedBrands)
+    setModalOrderByVisible(false)
+    if(val != selectedOrderBy)
+    {
+        setSelectedOrderBy(val)
         await searchAgainWithoutUpdate()
-
-
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
 
         // Configurer un nouveau timeout
         timeoutRef.current = setTimeout(async () => {
-            await loadMoreDataWithFilters({searchText:searchText||" ", selectedCategory:selectedCategories, orderBy:val, 
-                selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, resetPage:true, search:search});
-        }, 500);
+           
+                await loadMoreDataWithFilters({searchText:searchText||" ", selectedCategory:selectedCategories, orderBy:val, 
+                    selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, resetPage:true, search:search});
+            
+            
+        }, 100);
+    }
         
         //Pas besoin de getSearchedTextWithFilters par ce Filters est dans SearchResults et cela se fait auto.
         //Il ya juste besoin de mettre a jour selectedOrderBy et de re-rendre le component avec un activityIndicator
@@ -273,6 +283,7 @@ useEffect(()=>{
             await loadMoreDataWithFilters({searchText:searchText||" ", selectedCategory:selectedCategories, selectedModalCategories:selectedModalCategories,selectedBrands:selectedBrands,conditions:conditions,orderBy:selectedOrderBy, resetPage:true, search:search})
         }
         setFiltersUpdated(false);
+        setSelectedOrderBy('pertinence')
     }
 
     loadDatas()
@@ -294,6 +305,8 @@ const validateFilters = async () => {
     }, 100);
     
 }
+
+
     return (
     
         <View style={[filtersStyles.contentContainerStyle,{height : modalFiltersVisible?totalTopHeight:topHeight}]}>
@@ -345,16 +358,16 @@ const validateFilters = async () => {
 
     <Modal visible={modalOrderByVisible} transparent={true}  onRequestClose={() => setModalOrderByVisible(false)}>
         <View style={[filtersStyles.orderByContainer]}>
-            <View style={[filtersStyles.modalHeader]}>
-                <Text style={[customText.text,filtersStyles.modalHeaderText]}>Trier Par...</Text>
-            </View>
             <View style={[filtersStyles.radioBox]}>
+                    <View style={[filtersStyles.modalHeader]}>
+                        <Text style={[customText.text,filtersStyles.modalHeaderText]}>Trier Par...</Text>
+                    </View>
                         <RadioButton.Group onValueChange={val => {handleOrderby(val); return val}} value={selectedOrderBy} style={[filtersStyles.radioGroup,]}>
                             {
                                 orderByItems.map((item) => {
                                     return(
                                         <View style={filtersStyles.radioContainer} key={item.id}>
-                                            <RadioButton value={item.name} />
+                                            <RadioButton value={item.attribut} />
                                                 <Text>{item.name}</Text>
                                         </View>
                                     )

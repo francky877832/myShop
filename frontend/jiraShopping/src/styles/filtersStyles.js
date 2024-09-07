@@ -1,7 +1,19 @@
 import { StyleSheet, } from "react-native";
 import { appColors, appFont, screenWidth, customText, inputTextStyle} from "./commonStyles";
 import { screenHeight } from "./commentsStyles";
-import { card } from "./ordersStyles";
+
+
+export const card  = StyleSheet.create({
+    borderRadius: 8,
+    shadowColor: appColors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+    borderWidth : 1,
+    borderColor : appColors.secondaryColor3,
+})
+
 
 export const topHeight = 55
 export const subTopHeight = 55
@@ -125,7 +137,15 @@ export const filtersStyles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 10,
     },
-  
+    modalHeader :
+    {
+        paddingVertical : 20,
+    },  
+    modalHeaderText :
+    {
+        fontSize : 20,
+        fontWeight : 'bold',
+    },
 
     similarContainer : 
     {

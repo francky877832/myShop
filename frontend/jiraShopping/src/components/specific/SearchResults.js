@@ -35,7 +35,7 @@ const SearchResults = (props) => {
         selectedOrderBy,
        searchedProducts, setSearchedProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
         isLoading, setIsLoading , selectedCategories , setSelectedCategories, loadMoreDataWithFilters, selectedModalCategoriesFromContext, 
-        selectedBrandFromContext, selectedConditionsFromContext, filterUpdated
+        selectedBrandFromContext, selectedConditionsFromContext, filterUpdated, resetAllFilters,
     } = useContext(FilterContext)
 
     

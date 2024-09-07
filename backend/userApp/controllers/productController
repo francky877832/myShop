@@ -422,14 +422,17 @@ exports.getSearchedProducts = async (req, res, next) => {
     if (customFilters.brands?.length > 0) {
       filteredResult = filteredResult.filter(product => customFilters.brands.includes(product.brand));
     }
+    if (customFilters.colors?.length > 0) {
+      filteredResult = filteredResult.filter(product => {return customFilters.colors.includes(product.color.toLowerCase())});
+    }
     if (customFilters.condition?.length > 0) {
       filteredResult = filteredResult.filter(product => customFilters.condition.includes(product.condition));
     }
     if (customFilters.minPrice) {
-      filteredResult = filteredResult.filter(product => customFilters.minPrice <= product.price);
+      filteredResult = filteredResult.filter(product => customFilters.minPrice <= product.newPrice);
     }
     if (customFilters.maxPrice) {
-      filteredResult = filteredResult.filter(product => customFilters.maxPrice >= product.price);
+      filteredResult = filteredResult.filter(product => customFilters.maxPrice >= product.newPrice);
     }
       //comme FUSE JS ne conserve pas l'ordre, utiliser la memoire de tri
       filteredResult.sort((a, b) => a.sortIndex - b.sortIndex);
