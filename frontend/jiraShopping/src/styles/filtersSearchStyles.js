@@ -73,4 +73,11 @@ export const filtersSearchStyles = StyleSheet.create({
        color : appColors.red,
     },
 
+
+    selectedFilters :
+    {
+        fontSize : 11,
+        color : appColors.gray,
+        fontStyle : 'italic',
+    }
 })

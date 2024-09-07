@@ -23,29 +23,55 @@ const SSubCategories = (props) => {
     const route = useRoute()
     const navigation = useNavigation()
     const { category, subCategories } = route.params
-    const { selectedCategories, updateCategories, setSelectedCategories, resetAllFilters, updateModalCategories, 
-        selectedModalCategoriesFromContext
+    const { selectedCategories, updateCategories, setSelectedCategories, resetAllFilters,  updateModalCategories,
+        selectedModalCategoriesFromContext, setSelectedModalCategoriesFromContext, allCategoriesSelected, setAllCategoriesSelected
     } = useContext(FilterContext)
     //const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
-    const [all, setAll] = useState(false)
-    useEffect(()=>{
-        resetAllFilters()
-    }, [])
+    const catPath = subCategories.map((el) => category+'/'+el.name)
+    //console.log(catPath)
+    const [all, setAll] = useState(!catPath.some((el)=> !!selectedModalCategoriesFromContext[el]==false))
+    
+    const timeoutRef = useRef(null)
+
+    const [selectedLocalModalCategories, setSelectedLocalModalCategories] = useState(selectedModalCategoriesFromContext)
     
 
+    const updateLocalModalCategories = useCallback((id) => {
+        console.log("selectedLocalModalCategories")
         
+        setSelectedLocalModalCategories((prevSlectedCategories)=>{
+            const selectedCat = {
+                ...prevSlectedCategories,
+                [id] : !prevSlectedCategories[id], 
+            }
+ 
+            all && !!prevSlectedCategories[id] ? setAll(false) : null
+            !all && !catPath.some((el)=> !!selectedCat[el]==false) ? setAll(true) : null
 
+            return selectedCat
+        })
+    })
 
-const getCategory = async (cat, subCat) => {
-    updateModalCategories(cat+"/"+subCat);
-}
+    const applyAllUserChoices = () => {
+        setSelectedModalCategoriesFromContext(prev => { return {...prev, ...selectedLocalModalCategories} })
+        allCategoriesSelected ? setAllCategoriesSelected(false) : null
+        navigation.goBack()
+    }
+
+    const handleUserChoice = async (cat, subCat) => {
+        /* Je met a jour le local et le contexte */
+        updateLocalModalCategories(cat+"/"+subCat)
+        //updateModalCategories(cat+"/"+subCat)
+    }
 const getAllSubCategories = () => {
     setAll(prev=>!prev)
 
-    navigation.reset({
-        index: 0, // Réinitialiser la pile à la première route
-        routes: [{ name: 'FiltersSearch' }], // Nom de la page spécifique
+   let allSubCat = {}
+   subCategories.forEach((el)=> {
+        allSubCat = {...allSubCat, [`${category}/${el.name}`] : !all }
     })
+    setSelectedLocalModalCategories(allSubCat)
+
 }
 
 
@@ -54,23 +80,23 @@ const toggleCheckBox = () => {
 }
 
     return(
-        <View style={[sCategoriesStyles.container]}>
-                        <Pressable style={[sCategoriesStyles.checkBoxPressable, {height:60} ]} onPress={()=>{ getAllSubCategories() }}>
-                            <CheckBox title='Tous Les Categories' containerStyle={[sCategoriesStyles.checkBoxContainer,]} textStyle={[customText.text, sCategoriesStyles.checkBoxText, {color:appColors.secondaryColor1}]} 
+        <View style={[subCategoriesItemStyles.container]}>
+                        <Pressable style={[subCategoriesItemStyles.itemContainer,]}>
+                            <CheckBox title='Tout Sélectionner' containerStyle={[subCategoriesItemStyles.contentContainer, subCategoriesItemStyles.contentContainerTop]} textStyle={[customText.text, subCategoriesItemStyles.checkBoxText, {color:appColors.secondaryColor1, fontWeight:'bold', fontSize:16}]} 
                                 checked={all}
                                     onPress={() => { getAllSubCategories() }} 
                             />
                         </Pressable>
 
-                    <View style={[{paddingLeft:0}]}>
+                    <View style={[{top:5}]}>
                         <FlatList
                                 data={subCategories}
                                 nestedScrollEnabled={true}
                                 renderItem={ ({item}) => { return (
-                                        <Pressable style={[sCategoriesStyles.checkBoxPressable, ]} onPress={()=>{getCategory(category, item.name)}}>
-                                            <CheckBox title={capitalizeFirstLetter(item.name)} containerStyle={[sCategoriesStyles.checkBoxContainer,]} textStyle={[customText.text, sCategoriesStyles.checkBoxText]} 
-                                                checked={ selectedModalCategoriesFromContext[category+"/"+item.name] }
-                                                onPress={() => {getCategory(category, item.name) }} 
+                                        <Pressable style={[subCategoriesItemStyles.itemContainer,]}>
+                                            <CheckBox title={capitalizeFirstLetter(item.name)} containerStyle={[subCategoriesItemStyles.contentContainer,]} textStyle={[customText.text, subCategoriesItemStyles.checkBoxText]} 
+                                                checked={ Object.keys(selectedLocalModalCategories).length>0 ?  selectedLocalModalCategories[category+"/"+item.name] :  selectedModalCategoriesFromContext[category+"/"+item.name] }
+                                                onPress={() => {handleUserChoice(category, item.name) }} 
                                             />
                                         </Pressable>
                                         )
@@ -83,10 +109,59 @@ const toggleCheckBox = () => {
                                 contentContainerStyle={[sCategoriesStyles.flatlist,]}
                                 scrollEventThrottle={16}
                             />   
-                    </View>         
+                    </View> 
+
+                    <View style={[sCategoriesStyles.bottomButtonContainer]}>
+                        <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : sCategoriesStyles.pressable}} onPress={()=>{applyAllUserChoices()}} />
+                    </View>        
         </View>
     )
 }
 
 export default SSubCategories
 
+const subCategoriesItemStyles =  StyleSheet.create({
+    container :
+    {
+        flex:1, 
+        backgroundColor:appColors.lightWhite,
+        top : 2,
+        paddingBottom : 95,
+    },
+    checkBox :
+    {
+        width : screenWidth/2.5,
+        paddingLeft : 20
+    },
+    itemContainer :
+    {
+        borderWidth : 1,
+        borderColor : appColors.lightWhite,
+        paddingVertical : 20,
+        paddingHorizontal : 10,
+        flexDirection : "row",
+        justifyContent : "space-between",
+        alignItems : 'center',
+        width : '100%',
+        backgroundColor : appColors.white,
+        //height : 100,
+    },  
+    contentContainer :
+    {
+        borderWidth:0, 
+        //margin:1,
+        padding:0, 
+        backgroundColor:appColors.white,
+    },
+
+
+   
+    checkBoxText :
+    {
+        marginLeft: 20,
+        color:appColors.secondaryColor5,
+        fontWeight:"normal",
+    },
+
+
+})

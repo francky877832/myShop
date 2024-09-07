@@ -12,6 +12,11 @@ const FilterProvider = ({children}) => {
     const [selectedModalCategoriesFromContext, setSelectedModalCategoriesFromContext] = useState({})
     const [selectedBrandFromContext, setSelectedBrandFromContext] = useState({})
     const [selectedConditionsFromContext, setSelectedConditionsFromContext] = useState({})
+    const [selectedColorFromContext, setSelectedColorFromContext] = useState({})
+    const [minPriceFromContext, setMinPriceFromContext] = useState(null)
+    const [maxPriceFromContext, setMaxPriceFromContext] = useState(null)
+
+    const [allCategoriesSelected, setAllCategoriesSelected] = useState(Object.keys(selectedModalCategoriesFromContext).some((el)=>selectedModalCategoriesFromContext[el]===false))
     const [filtersUpdated, setFiltersUpdated] = useState(false);
 
 
@@ -37,6 +42,21 @@ const FilterProvider = ({children}) => {
     const {user} = useContext(UserContext)
 
 
+    const updateAllCategoriesSelected = useCallback((categories) => {
+        //setAllCategoriesSelected(!Object.keys(selectedModalCategoriesFromContext).some((el)=> el.split('/')[0]===category && selectedModalCategoriesFromContext[el]===false))
+        setAllCategoriesSelected(prev => {
+        let allCategoriesChecked = {}
+           categories.forEach((cat)=>{
+                cat.subCategories.forEach((subCat)=> {
+                    allCategoriesChecked = {...allCategoriesChecked, [`${cat.name}/${subCat.name}`] : !prev }
+                })
+           })
+           
+           setSelectedModalCategoriesFromContext(allCategoriesChecked)
+           return !prev 
+        })
+    })
+
     const updateModalCategories = useCallback((id) => {
         setSelectedModalCategoriesFromContext((prevSlectedCategories)=>{
             //console.log(prevSlectedCategories)
@@ -46,6 +66,19 @@ const FilterProvider = ({children}) => {
             })
         })
     })
+
+    const updateSelectedBrands = useCallback((name) => {
+        setSelectedBrandFromContext((prevSlectedBrands)=>{
+                //console.log(prevSlectedCategories)
+        
+                return ({
+                    ...prevSlectedBrands,
+                    [name] : !prevSlectedBrands[name], 
+                })
+            })
+
+    })
+
 
    /* const updateModalCategories = useCallback((id) => {
         setSelectedModalCategories((prevSelectedCategories) => {
@@ -350,9 +383,9 @@ const FilterProvider = ({children}) => {
 
 
 
-    const filterStateVars = {searchedProducts, refreshComponent, filtersUpdated, isLoading, setHasMore, selectedCategories, selectedOrderBy, selectedBrandFromContext, selectedModalCategoriesFromContext, selectedConditionsFromContext, isNewFocused, isOldFocused, minPrice, maxPrice, products}
-    const filterStateSetters = {setSearchedProducts, setFiltersUpdated, setSelectedModalCategoriesFromContext, setSelectedBrandFromContext, setSelectedConditionsFromContext, setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
-    const utilsFunctions = {updateModalCategories, searchAgainWithoutUpdate, updateCategories, resetAllFilters, searchAgain, searchCategory, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
+    const filterStateVars = {selectedColorFromContext, minPriceFromContext, maxPriceFromContext, allCategoriesSelected, searchedProducts, refreshComponent, filtersUpdated, isLoading, setHasMore, selectedCategories, selectedOrderBy, selectedBrandFromContext, selectedModalCategoriesFromContext, selectedConditionsFromContext, isNewFocused, isOldFocused, minPrice, maxPrice, products}
+    const filterStateSetters = {setSelectedColorFromContext, setMinPriceFromContext, setMaxPriceFromContext, setAllCategoriesSelected, setSearchedProducts, setFiltersUpdated, setSelectedModalCategoriesFromContext, setSelectedBrandFromContext, setSelectedConditionsFromContext, setRefreshComponent, setIsLoading, setSelectedCategories, setSelectedOrderBy, setIsNewFocused,setIsNewOldFocused, isNewOldFocused, setIsOldFocused, setMinPrice, setMaxPrice, setProducts}
+    const utilsFunctions = {updateAllCategoriesSelected, updateSelectedBrands, updateModalCategories, searchAgainWithoutUpdate, updateCategories, resetAllFilters, searchAgain, searchCategory, getSearchedTextWithFilters, resetAllFiltersWithoutFecthingDatas, loadMoreDataWithFilters }
     return (
         <FilterContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

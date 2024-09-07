@@ -105,13 +105,21 @@ exports.ShareButton = (props) => {
 
 
 exports.ConditionChoice = (props) => {
-    const { updateConditions, conditions } = props
+    const {styles, updateConditions, conditions } = props
     
     return(
         <View style={commonSimpleComponentsStyles.conditionChoice.checkBox}>
-            <CheckBox title='Neuf' checked={conditions["new"]} onPress={() => { updateConditions("new")  }} />
-            <CheckBox title='Utilisé' checked={conditions["old"]} onPress={() => { updateConditions("old"); }} />
-            <CheckBox title='Peu Utilisé' checked={conditions["new used"]} onPress={() => { updateConditions("new used");  }} />
+             <Pressable style={[styles.itemContainer,]}>
+                <CheckBox title='Neuf' checked={conditions["new"]} onPress={() => { updateConditions("new")  }} containerStyle={[styles.contentContainer,{}]} textStyle={[customText.text,styles.checkBoxText]}/>
+            </Pressable>
+
+            <Pressable style={[styles.itemContainer,]}>
+                <CheckBox title='Utilisé' checked={conditions["old"]} onPress={() => { updateConditions("old"); }} containerStyle={[styles.contentContainer,{}]} textStyle={[customText.text,styles.checkBoxText]} />
+            </Pressable>
+
+            <Pressable style={[styles.itemContainer,]}>
+                <CheckBox title='Peu Utilisé' checked={conditions["new used"]} onPress={() => { updateConditions("new used");  }} containerStyle={[styles.contentContainer,{}]} textStyle={[customText.text,styles.checkBoxText]} />
+            </Pressable>
         </View>    
         )
 }

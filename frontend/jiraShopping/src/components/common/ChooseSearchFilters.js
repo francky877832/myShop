@@ -1,18 +1,13 @@
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
 import { View, Text, Animated, StyleSheet, Pressable, ScrollView, FlatList, Image, TextInput} from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-
-
-import { Input } from 'react-native-elements';
-
-
+import { Icon, CheckBox, } from 'react-native-elements';
 
 import { appColors, customText, screenHeight } from '../../styles/commonStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
 import { sCategoriesStyles } from '../../styles/paths/search/sCategoriesStyles';
+import { filtersSearchStyles } from '../../styles/filtersSearchStyles';
 import { CustomButton, CustomActivityIndicator, ConditionChoice,} from "../common/CommonSimpleComponents"
-
-import { Icon, CheckBox, } from 'react-native-elements';
 
 import { formatMoney } from '../../utils/commonAppFonctions';
 import { ProductItemContext } from '../../context/ProductItemContext';
@@ -23,6 +18,10 @@ import { colors } from '../../utils/sampleDatas';
 import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
 import FiltersSearch from '../specific/FiltersSearch';
 import { screenWidth } from '../../styles/commonStyles';
+import SColors from '../paths/search/SColors';
+import SConditions from '../paths/search/SConditions';
+import SPrices from '../paths/search/SPrices';
+import SBrands from '../paths/search/SBrands';
 
 const ChooseSearchFilters = (props) => {
     const { params } = props.route
@@ -34,24 +33,18 @@ const ChooseSearchFilters = (props) => {
     const { selectedCategories, updateCategories, setSelectedCategories, resetAllFilters,
         searchCategory,  minPrice, maxPrice, setMinPrice, setMaxPrice,
     } = useContext(FilterContext)
-    const [isMinPriceFocused, setIsMinPriceFocused] = useState(false)
-    const [isMaxPriceFocused, setIsMaxPriceFocused] = useState(false)
+    
     //const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
 
     const navigation = useNavigation()
     const [selectedCategories_, setSelectedCategories_] = useState({"Vetements": true, "name": "Vetements"})
-    const [isNewFocused, setIsNewFocused] = useState(true)
-    const [isOldFocused, setIsOldFocused] = useState(true)
-    const [isNewOldFocused, setIsNewOldFocused] = useState(true)
-    const [conditions, setConditions] = useState({"old":true, "new":true, "new used":true})
+   
+   
 
-  const handleNavigationSubCat = (category) => {
-    navigation.navigate('SSubCategories', {category:category.name, subCategories:category.subCategories})
-  }
     
    
 
-const getCategory = async (type, cat, subCat) => {
+const showSubCategories = async (type, cat, subCat) => {
     await searchCategory(selectedCategories_) //important pour orderBy(val) 
                                             //mais ici cest selectedCategories_ passe en parametre
                                             //de navigate() qui sera utilisé puisque les setters sont asynchrones
@@ -73,45 +66,82 @@ const getCategory = async (type, cat, subCat) => {
     //navigation.navigate("CategoryResults", {category:selectedCategories_, searchText:"", display:"category"});
 }
 
-const updateConditions = useCallback((name) =>
-    {
-        setConditions((prevSelectedConditions)=>{
-            switch(name){
-                case "new":
-                    setIsNewFocused(!isNewFocused)
-                    return {...prevSelectedConditions, [name]:isNewFocused}
-                    break
-                case "old":
-                    setIsOldFocused(!isOldFocused)
-                    return {...prevSelectedConditions, [name]:isOldFocused}
-                    break
-                case "new used":
-                    setIsNewOldFocused(!isNewOldFocused)
-                    return {...prevSelectedConditions, [name]:isNewOldFocused}
-                    break
-                default : return{...prevSelectedConditions}
-            }
-            
-        })
-    })
-//route.params.handleCategory()
-    return(
-        <View style={[sCategoriesStyles.container]}>
 
-        {
-            (page=="category" || params?.datas?.page==="category") &&
+//route.params.handleCategory()
+
+
+        
+    if(page=="category" || params?.datas?.page==="category")
+    {
+        const { selectedModalCategoriesFromContext, setSelectedModalCategoriesFromContext, updateAllCategoriesSelected, allCategoriesSelected} = useContext(FilterContext)
+        //const [all, setAll] = useState(!Object.keys(selectedModalCategoriesFromContext).some((el)=>selectedModalCategoriesFromContext[el]===false))
+        
+        
+        const handleNavigationSubCat = (category) => {
+            navigation.navigate('SSubCategories', {category:category.name, subCategories:category.subCategories})
+        }
+
+        const CategoriesSearchItem = (props) => {
+            const { item } = props
+            let selectedFilters = ''
+
+            function splitSelectedFilters(text){
+                    if(text.length > 20)
+                    {
+                            return text.substring(0,20)+'...'
+                    }
+                    return text
+            }
+            const choices = Object.keys(selectedModalCategoriesFromContext).filter((key)=>{ return selectedModalCategoriesFromContext[key]===true})
+            const catAcc = choices.map((el)=>{ return {category:el.split('/')[0], subCategory:el.split('/')[1] } })
+            //console.log(selectedModalCategoriesFromContext)
+//console.log(choices)
+            selectedFilters = catAcc.reduce((acc, item) => {
+                  if (!acc[item.category]) {
+                    acc[item.category] = []; 
+                  }
+              
+                  acc[item.category].push(item.subCategory);
+                  return acc; 
+                }, {});
+        
+                
+            return (
+                    <Pressable style={[filtersSearchStyles.pressableFilter,]}  onPress={()=>{handleNavigationSubCat(item)}}  >
+                            <View style={[{}]}>
+                                    <Text style={[customText.text, filtersSearchStyles.itemText,]}>{item.name}</Text>
+                            </View>
                             
+                            <View style={[{justifyContent:'center'}]}>
+                                    <View style={[{alignItems:'flex-end'}]}>
+                                            <Icon name="chevron-right" type="font-awesome" size={16}  color={appColors.secondaryColor1} />
+                                    </View>
+                                    { selectedFilters[item.name] &&
+                                            <Text style={[customText.text, filtersSearchStyles.selectedFilters,]}>{splitSelectedFilters(selectedFilters[item.name]?.join(', '))}</Text>
+                                    }
+                            </View>
+                    </Pressable>
+            )
+        }
+
+        const getAllSubCategories = () => {
+            //setAll(prev=>!prev)
+            updateAllCategoriesSelected(categories)
+        }
+
+        return (
+             <View style={[sCategoriesStyles.container]}>     
+                        <Pressable style={[subCategoriesItemStyles.itemContainer,]}>
+                            <CheckBox title='Tout Sélectionner' containerStyle={[subCategoriesItemStyles.contentContainer, subCategoriesItemStyles.contentContainerTop]} textStyle={[customText.text, subCategoriesItemStyles.checkBoxText, {color:appColors.secondaryColor1, fontWeight:'bold', fontSize:16}]} 
+                                checked={allCategoriesSelected}
+                                    onPress={() => { getAllSubCategories() }} 
+                            />
+                        </Pressable>        
                 <View style={[sCategoriesStyles.categoriesContainer]}>
                     <FlatList
                             data={categories}
                             nestedScrollEnabled={true}
-                            renderItem={ ({item}) => { return (
-                                    <Pressable style={[sCategoriesStyles.pressableCat, ]} onPress={()=>{handleNavigationSubCat(item) }}>
-                                        <Text style={[customText.text, sCategoriesStyles.itemText ]}>{item.name}</Text>
-                                        <Icon name="chevron-right" type="font-awesome" size={16}  color={appColors.secondaryColor1} />
-                                    </Pressable>
-                                    )
-                                }}
+                            renderItem={ ({item}) => { return (<CategoriesSearchItem item={item} /> ) }}
                             keyExtractor={ (item) => { return item._id.toString(); } }
                             horizontal={false}
                             numColumns={ 1 }
@@ -121,167 +151,89 @@ const updateConditions = useCallback((name) =>
                             scrollEventThrottle={16}
                         />
                 </View>
+            </View>
+           )         
+        }
+        else if(params?.datas?.page==="brand")
+        {
+            return (
+                <View style={[sCategoriesStyles.container]}>             
+                    <SBrands brands={brands} setSelectedBrand={setSelectedBrand} />
+                </View>
+            )
+        }
+        else if(params?.datas?.page=="color")
+        {
+            return (
+                <View style={[sCategoriesStyles.container]}>             
+                    <SColors colors={colors} />
+                </View>
+            )
+        }
+        else if(params?.datas?.page=="condition")
+        {
+            return(
+                <View style={[sCategoriesStyles.container]}>             
+                    <SConditions />
+                </View>
+            )
+        }
+        else if(params.datas.page==='price')
+        {
+            return(
+                <View style={[sCategoriesStyles.container]}>             
+                    <SPrices/>
+                </View>
+            )
+        }
             
-                    
-        }
-
-{
-            params?.datas?.page=="brand" &&
-            <View style={[sCategoriesStyles.categoriesContainer]}>
-                <FlatList
-                        data={brands}
-                        nestedScrollEnabled={true}
-                        renderItem={ ({item}) => { return(
-                                <View style={{flex:1}}>
-                                    <Pressable style={[sCategoriesStyles.pressableCat]} onPress={()=>{setSelectedBrand(item.name);navigation.goBack();}}>
-                                        <Text style={[customText.text, sCategoriesStyles.itemText]}>{item.name}</Text>
-                                    </Pressable>
-                                </View>
-                                )
-                           
-                        } }
-                        keyExtractor={ (item) => { return item._id.toString(); } }
-                        horizontal={false}
-                        numColumns={ 1 }
-                        ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={[sCategoriesStyles.flatlist,]}
-                    />
-            </View>
-        }
-
-{
-            params?.datas?.page=="color" &&
-        <>
-            <View style={[sCategoriesStyles.categoriesContainer,{}]}>
-                <FlatList
-                        data={colors}
-                        nestedScrollEnabled={true}
-                        renderItem={ ({item}) => { 
-                            if(item.name!="multicolor")
-                            {
-                                  return (
-                                    <View style={{}}>
-                                        <Pressable style={[sCategoriesStyles.pressableColor,]} onPress={()=>{setSelectedColor(item.name);navigation.goBack();}}>
-                                            <View style={[{width:50,height:50,borderRadius:25,backgroundColor:item.name,}]}></View>
-                                            <Text style={[addProductStyles.normalText,]}>{capitalizeFirstLetter(item.name)}</Text>
-                                        </Pressable>
-                                    </View>
-                                  )
-
-                            }else{
-                                    return(
-                                        <View style={{flex:1}}>
-                                            <Pressable style={{}}  onPress={()=>{setSelectedColor(item.name);navigation.goBack();}}>
-                                                <Image source={require('../../assets/images/multicolor.png')} style={[{width:50,height:50,borderRadius:25,backgroundColor:item.name,}]} />
-                                                <Text style={[addProductStyles.normalText,]}>{capitalizeFirstLetter(item.name)}</Text>
-                                            </Pressable>
-                                        </View>
-                                        )
-                             }
-                        
-                        } }
-                        keyExtractor={ (item) => { return item._id.toString(); } }
-                        horizontal={false}
-                        numColumns={ 5 }
-                        ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={[{}]}
-                    />
-
-            </View>
-
-            <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:10}}>
-                <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setConditions({})}} />
-                <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{validateFilters()}} />
-            </View>            
-        </>
-        }
-
-
-{
-     params?.datas?.page=="condition" &&
-            <View style={sCategoriesStyles.conditionContainer}>
-                        <View style={{alignSelf : "center",}}>
-                            <Text style={[customText.text, sCategoriesStyles.label]}>Condition</Text>
-                        </View>
-                        <ConditionChoice styles={{}} updateConditions={updateConditions} conditions={conditions} />
-                    
-                        <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0}}>
-                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setConditions({})}} />
-                            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{validateFilters()}} />
-                        </View>
-            </View>
-}
-
-{
-    params.datas.page==='price' &&
-    <View style={[sCategoriesStyles.priceContainer]} >
-    <View style={{height:10,}}></View>
-        
-       
-
-        <View style={[sCategoriesStyles.price,{}]}>
-            <View style = {[sCategoriesStyles.pricesContainer]}>
-                <TextInput placeholder="Prix minimal en XAF"
-                    placeholderTextColor={appColors.secondaryColor5}
-                    inputMode='numeric'
-                    style = {[sCategoriesStyles.priceInput, isMinPriceFocused && sCategoriesStyles.priceInputFocused]}
-                    onFocus={() => setIsMinPriceFocused(true)}
-                    onBlur={() => setIsMinPriceFocused(false)}
-                    value={minPrice}
-                    onChangeText={(price) => setMinPrice(formatMoney(price, 'XAF'))}
-                    
-                />
-            </View>
-
-            
-
-        <View style = {[sCategoriesStyles.pricesContainer, {borderTopWidth:1,borderColor:appColors.lightWhite}]}>
-            <TextInput placeholder="Prix maximal en XAF"
-                placeholderTextColor={appColors.secondaryColor5}
-                inputMode='numeric'
-                style = {[sCategoriesStyles.priceInput, isMaxPriceFocused && sCategoriesStyles.priceInputFocused]}
-                onFocus={() => setIsMaxPriceFocused(true)}
-                onBlur={() => setIsMaxPriceFocused(false)}
-                value={maxPrice}
-                onChangeText={(price) => setMaxPrice(formatMoney(price, 'XAF'))}
-            />
-        </View>
-    </View>
-
-    <View style={{height:20,}}></View>
-        <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0}}>
-            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{setMaxPrice("");setMinPrice("");}} />
-            <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"40%",}}} onPress={()=>{validateFilters()}} />
-        </View>
-</View>
-
-}
-
-            {isLoading && 
-                <CustomActivityIndicator styles={{}} /> 
-            }
-        </View>
-    )
 }
 
 
-const styles = StyleSheet.create({
-    scrollIndicator: 
+const subCategoriesItemStyles =  StyleSheet.create({
+    container :
     {
-        zIndex : 100,
-        alignItems: 'center',
-        paddingVertical: 20,
-        //borderTopWidth: 1,
-        //borderTopColor: appColors.black,
-        position : "absolute",
-        top : -20,
-        //bottom : 0,
-        left : 70,
-        right : 0,
-        //backgroundColor:"red",
-      },
+        flex:1, 
+        backgroundColor:appColors.lightWhite,
+        top : 2,
+        paddingBottom : 95,
+    },
+    checkBox :
+    {
+        width : screenWidth/2.5,
+        paddingLeft : 20
+    },
+    itemContainer :
+    {
+        borderWidth : 1,
+        borderColor : appColors.lightWhite,
+        paddingVertical : 20,
+        paddingHorizontal : 10,
+        flexDirection : "row",
+        justifyContent : "space-between",
+        alignItems : 'center',
+        width : '100%',
+        backgroundColor : appColors.white,
+        //height : 100,
+    },  
+    contentContainer :
+    {
+        borderWidth:0, 
+        //margin:1,
+        padding:0, 
+        backgroundColor:appColors.white,
+    },
+
+
+   
+    checkBoxText :
+    {
+        marginLeft: 20,
+        color:appColors.secondaryColor5,
+        fontWeight:"normal",
+    },
+
+
 })
 export default ChooseSearchFilters
     

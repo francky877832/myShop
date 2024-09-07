@@ -37,14 +37,7 @@ export const sCategoriesStyles = StyleSheet.create({
         alignItems : 'center',
         width : '100%',
     },
-    pressableColor :
-    {
-       padding : 5,
-       width : "100%",
-       justifyContent : "center",
-      alignItems : "center",
-
-    },
+   
     checkBoxPressable :
     {
 
@@ -61,24 +54,7 @@ export const sCategoriesStyles = StyleSheet.create({
 
 
     //CONDITION
-    conditionContainer :
-    {
-        flexDirection:"column", 
-        justifyContent:"space-around",
-        marginTop : 10,
-        width: screenWidth,
-        /*position:"absolute",
-        top:0,
-        left:0,right:0,
-        zIndex : 100,*/
-    },
-    label :
-    {
-        ...customText.text,
-       fontFamily : appFont.secondaryFontFamily3,
-       fontWeight : "bold",
-       color : appColors.secondaryColor5,
-    },
+    
 
     
 
@@ -91,6 +67,7 @@ export const sCategoriesStyles = StyleSheet.create({
         marginTop : 10,
         width: screenWidth,
         backgroundColor : appColors.lightWhite,
+        flex : 1,
     },
     price : 
     {
@@ -119,5 +96,63 @@ export const sCategoriesStyles = StyleSheet.create({
     {
         borderWidth : 1,
         borderColor : appColors.secondaryColor1,
-    }
+    },
+
+    //Boutton Appliquer
+    bottomButtonContainer :
+    {
+        padding : 20,
+        backgroundColor : appColors.white,
+        position : 'absolute',
+        left : 0,
+        right : 0,
+        bottom : 0,
+    },
+    pressable : 
+    {
+        paddingVertical:15,
+        borderRadius:50,
+        width:"100%",
+    },
+
+    //COLORS
+    colorsContainer : 
+    {
+        //flex : 1,
+        backgroundColor : appColors.lightWhite,
+
+        paddingVertical : 20,
+        paddingHorizontal : 5,
+        justifyContent : "center",
+        alignItems : "center",
+    },
+
+    pressableColor :
+    {
+        paddingHorizontal : 5,
+        justifyContent : "center",
+        alignItems : "center",
+
+    },
+    colorMulticolor :
+    {
+        width:40,
+        height:40,
+        borderRadius:20,
+        justifyContent : "center",
+        alignItems : "center",
+    },
+    pressableColorContainer :
+    {
+        paddingBottom : 10,
+        paddingHorizontal : 15,
+
+    },
+    iconCheck :
+    {
+        position: 'relative',
+        zIndex: 99, 
+    },
+
+    
 })
