@@ -129,7 +129,7 @@ const Product = (props) => {
         console.log("favouritesState.addLike")
         console.log(favouritesState.addLike)
         */
-        if (replace) {
+        if (replace) {//replace for ...?
           navigation.replace({name:"ProductDetails", params:{ productDetails: product, },  key: Date.now().toString()});
         } else {
           navigation.navigate({name:"ProductDetails", params:{ productDetails: product, },  key: Date.now().toString()});

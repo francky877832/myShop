@@ -4,6 +4,9 @@ import { appColors, appFont, screenWidth, customText, inputTextStyle, screenHeig
 
 import { commentsStyles } from "./commentsStyles";
 import { productStyles } from "./productStyles";
+import { card } from "./filtersSearchStyles";
+import { shadow } from "react-native-paper";
+import { color } from "@rneui/base";
 
 export const offersStyles = StyleSheet.create({
     container :
@@ -117,5 +120,35 @@ export const offersStyles = StyleSheet.create({
         borderWidth:1,
         padding:20,
         borderColor:appColors.lightWhite
+    },
+
+    //FOR PRODUCT
+    product : {
+        productContainer :
+        {
+            ...card,
+            borderRadius : 0,
+            width : '100%',
+            borderColor : appColors.lightWhite,
+            shadowColor : appColors.lightWhite,
+            flexDirection : 'row',
+            justifyContent : 'center',
+            alignItems : 'center',
+            backgroundColor : appColors.clearBlack,
+            padding : 10,
+            
+        },
+        productImages :
+        {
+            ...card,
+            width : 40,
+            height : 40,
+        },
+        productName :
+        {
+            color : appColors.white,
+            fontSize : 16,
+            fontStyle : 'italic',
+        }
     }
 })

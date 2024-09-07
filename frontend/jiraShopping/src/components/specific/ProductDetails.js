@@ -53,7 +53,7 @@ const ProductDetails = (props) => {
     const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
     const modifiedProduct = modifiedProducts.filter(product => product?._id === route.params.productDetails._id)
     const [data, setData] = useState(modifiedProduct.length>0?modifiedProduct[0]:route.params.productDetails);
-    const pass = route.params.pass;
+    const { pass } = route.params;
     //data.color = "blue";
     const numChars = 150;
     

@@ -143,7 +143,7 @@ const openNotif = async (user, item) => {
             <FlatList
                     data={notificaitons}
                     renderItem={ ({item}) => { return(<RenderNotificationItem from="notifications" item={item} openNotif={openNotif} user={user} />)} }
-                    keyExtractor={ (item) => { return item._id.toString(); } }
+                    keyExtractor={ (item) => { return Math.random().toString(); } }
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     contentContainerStyle={[notificationsStyles.flatlist]}
                     onEndReached={()=>{onEndReached()}}

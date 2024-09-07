@@ -32,12 +32,11 @@ const addOfferProduct = (req, res, next) => {
    
    // console.log(req.body)
     const offer = new Offer({
-        _id : new ObjectId().toHexString(),
         seller : req.body.seller,
         buyer : req.body.buyer,
         product : req.body.product,
         realPrice : req.body.realPrice,
-        offers : new Array(req.body.offers),
+        offers : new Array({_id : new ObjectId().toHexString(), ...req.body.offers}),
         //hasGotResponse : req.body.hasGotResponse
     })
     //console.log("ggg")
@@ -47,7 +46,7 @@ const addOfferProduct = (req, res, next) => {
         res.status(200).json({ message: "Offre ajoute avec succes pour ce produit" });
     })
     .catch( (error) => {
-        //console.log(error)
+        console.log(error)
         res.status(400).json({ error: error });
     });
 };
@@ -120,7 +119,12 @@ exports.getOffersProduct = async (req, res, next) => {
     //console.log("ok")
         const offer = req.query
         //console.log(offer)
-        const pipeline = getPipeLineForOffers(offer.seller, offer.buyer, offer.product)
+        const match = {
+            seller: new mongoose.Types.ObjectId(offer.seller),
+            buyer: new mongoose.Types.ObjectId(offer.buyer),
+            product: new mongoose.Types.ObjectId(offer.product),
+        }
+        const pipeline = getPipeLineForOffers(match)
         const offersWithProduct = await Offer.aggregate(pipeline).exec();
         res.status(200).json(offersWithProduct);
     }
@@ -132,46 +136,28 @@ exports.getOffersProduct = async (req, res, next) => {
 };
 
 
-exports.getUserOffers = (req, res, next) => {
-    console.log("OFFERS")
+exports.getUserOffers = async (req, res, next) => {
+    //console.log("OFFERS")
     const offer = req.query
+    console.log(req.query)
     const page = parseInt(offer.page) || 1;
     const limit = parseInt(offer.limit) || 100;
     const skip = (page - 1) * limit;
+    try 
+    {
+        const match = {$or:[{ seller : new mongoose.Types.ObjectId(offer.user)}, {buyer :  new mongoose.Types.ObjectId(offer.user)}]}
+        const pipeline = getPipeLineForOffers(match, skip, limit)
+        const offers = await Offer.aggregate(pipeline).exec();
+        
+            //console.log(offers)
+            const totalDatas = await Offer.countDocuments({$or:[{ seller :  new mongoose.Types.ObjectId(offer.user), buyer :  new mongoose.Types.ObjectId(offer.user)}]}).exec();
+            const totalPages = Math.ceil(totalDatas / limit);
+            res.status(200).json({offers:offers, page:page,totalPages:totalPages,totalDatas:totalDatas});
 
-    
-    Offer.find({$or:[{ seller : offer.user}, {buyer : offer.user}]}).skip(skip).limit(limit)
-    .populate({
-        path: 'seller', 
-        populate: [
-          { path: 'followers'},
-          { path: 'followings' }
-        ]
-    })
-    .populate({
-        path: 'buyer', 
-        populate: [
-          { path: 'followers'},    
-          { path: 'followings'}    
-        ]
-    })
-    .populate({
-        path: 'product', 
-        populate: [
-          { path: 'favourites'},    
-        ]
-    })
-    .exec()
-    .then(async (offers) => {
-        //console.log(offers)
-        const totalDatas = await Offer.countDocuments({$or:[{ seller : offer.user, buyer : offer.user}]}).exec();
-        const totalPages = Math.ceil(totalDatas / limit);
-        res.status(200).json({offers:offers, page:page,totalPages:totalPages,totalDatas:totalDatas});
-    })
-    .catch( (error) => {
+    }catch(error){
         console.log(error)
         res.status(400).json({ error: error, message : "Cette offre nexiste pas pour cet user." });
-    });
+    }
 };
 
 

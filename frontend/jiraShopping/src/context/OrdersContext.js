@@ -123,7 +123,7 @@ const getOrders = useCallback(async (user, page, limit) => {
         const newData = await fetchUserOrders(user, page, limit);
         
         
-            setOrders(newData.orders)
+            setOrders(newData.orders.products)
             setSold(newData.sold)
             setBought(newData.bought)
 

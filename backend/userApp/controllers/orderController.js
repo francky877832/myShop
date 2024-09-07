@@ -405,7 +405,7 @@ exports.getOrdersUser = async (req, res, next) => {
       //console.log(sold_products.length)
       //res.status(200).json(orders)
        res.status(200).json({
-          orders: bought, //{...orders[0], products:results},
+          orders: {...orders[0], products:results[0]},
           sold : sold,
           bought : bought,
           page: page,

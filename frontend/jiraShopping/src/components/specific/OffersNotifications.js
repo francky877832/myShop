@@ -45,6 +45,7 @@ const OffersNotifications = (props) => {
     try {
   
       const newData = await getOffers(user, page, limit);
+      //console.log(newData[0])
       if (newData.length > 0) {
         setOffers((prevOffers)=>[...prevOffers, ...newData])
         setPage((prevPage) => prevPage + 1);
@@ -65,7 +66,7 @@ const OffersNotifications = (props) => {
 const openOffer = async (user, item) => {
     try
     {     
-        navigation.navigate("Offers", {product:item.product, offers:item})
+        navigation.navigate("Offers", {product:item.product, notificationsOffers:item.offers})
         if(item.read==0)
         {
             await updateOfferRead(item)

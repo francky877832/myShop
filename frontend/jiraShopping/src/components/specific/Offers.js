@@ -10,9 +10,10 @@ import { appColors, customText, appFont } from '../../styles/commonStyles';
 
 import { formatMoney, checkOfferPrice, serialize } from '../../utils/commonAppFonctions';
 import { offersDatas, defaultOffer } from '../../utils/offersDatas';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
 import { server } from '../../remote/server';
+import { MinifyHorizontalProduct } from '../common/CommonSimpleComponents'
 
 const loggedUser = "Francky"
 const   OffersItem = (props) => {
@@ -141,11 +142,13 @@ const   OffersItem = (props) => {
 }
 
 const Offers = (props) => {
-
+    const navigation = useNavigation()
     const route = useRoute()
     const { product } = route.params
     //const _getLastOffers
-    const [offers, setOffers] = useState(defaultOffer)
+    //console.log(product)
+    console.log(route.params.notificationsOffers)
+    const [offers, setOffers] = useState(route.params.notificationsOffers || defaultOffer)
     
 
     const [inputValue, setInputValue] = useState("")
@@ -210,8 +213,8 @@ const addOffer = async ()=>{
         //console.log(price)
         
         const offer = {
-            seller : product.sellerName || product.seller, //A supprime
-            buyer : user.username,
+            seller : product.seller._id, //A supprime
+            buyer : user._id,
             product : product._id,
             realPrice : realPrice,
             offers : { price:price, from:user.username, hasGotResponse:2 },
@@ -229,9 +232,10 @@ const addOffer = async ()=>{
                 'Content-Type': 'application/json',
             },})
             
+            const data = await response.text()
             if(!response.ok)
             {
-                throw new Error('Erreur lors de la requête');
+                throw new Error('Erreur lors de la requête' + data);
             }
 
             Alert.alert("Offre ajouté avec succes")
@@ -271,14 +275,14 @@ const fetchUserOffers = async()=>{
 const setHasGotResponse = async(bool)=>{
     setIsConfirmLoading(true)
     const offer = {
-        seller : product.sellerName || product.seller,
-        buyer : user.username,
+        seller : product.seller._id,
+        buyer : user._id,
         product : product._id,
         hasGotResponse : bool?1:0,
     }
     try
     {
-        response = await fetch(`${API_BACKEND}/api/datas/offers/offer/response`, {
+        response = await fetch(`${server}/api/datas/offers/offer/response`, {
         method: 'PUT',
         body: JSON.stringify(offer),
         headers: {
@@ -286,14 +290,15 @@ const setHasGotResponse = async(bool)=>{
         }});
 
         if (!response.ok) {
-            throw new Error('Erreur lors de la requête');
+            throw new Error('Erreur lors de la requête'+await response.text());
         }
        // console.log("ok")
         Alert.alert("Ok", "Ajout avec succes ")
         setIsConfirmLoading(false)
         setIsLoading(true)
     }catch(error){
-        Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+        console.log(error)
+        Alert.alert("Erreur", "Une erreur est survenue! ")
         setIsConfirmLoading(false)
 
     }
@@ -301,24 +306,32 @@ const setHasGotResponse = async(bool)=>{
 
 
 useEffect(()=>{
+   
         const fetchData = async () => {
             //setIsLoading(true);
             await fetchUserOffers()
           };
       
-          if (route.params.offers) {
-            setOffers(route.params.offers)
+          if (route.params.notificationsOffers) {
+            setOffers(route.params.notificationsOffers)
           }
           else
           {
             fetchData();
           }
-        //console.log("basket")
+        //console.log(offers)
     }, [fetchUserOffers])
+
+    const onPressProduct = (product) => {
+        navigation.navigate({name:"ProductDetails", params:{ productDetails: product, },  key: Date.now().toString()});
+    }
     return (
         <View style={[offersStyles.container]}>
+
+            <MinifyHorizontalProduct product={product} styles={offersStyles.product} onPress={onPressProduct} />
+
             <FlatList
-                    data={offers.offers}
+                    data={offers}
                     renderItem={ ({item}) => { return <OffersItem item={item} seller={offers?.seller} buyer={offers?.buyer} styles={{}} /> } }
                     keyExtractor={ (item) => { return item?._id?.toString(); } }
                     horizontal={false}
@@ -328,7 +341,7 @@ useEffect(()=>{
                 />
     <View style={[offersStyles.bottom]}>
                 {
-                    (offers.offers.at(-1)?.hasGotResponse == 0)
+                    (offers.at(-1)?.hasGotResponse == 0)
                     ?
                     <View style={[offersStyles.inputContainer]}>
                         <Input placeholder="Placer une offre" onChangeText={(text)=>{checkPrice(text)}}
@@ -371,7 +384,7 @@ useEffect(()=>{
         
                     </View>
                     :
-                            offers.offers[offers.offers?.length-1]?.hasGotResponse == 2 && offers.offers[offers.offers.length-1].from != loggedUser
+                            offers[offers?.length-1]?.hasGotResponse == 2 && offers[offers.length-1].from != loggedUser
                             ?
                             <View style={[offersStyles.inputContainer, offersStyles.offerBottom,{flex:1,backgroundColor:appColors.white}]}>
                                 <Pressable onPress={()=>{setHasGotResponse(false)}} style={[offersStyles.offersBottomConfirmationButtom,{}]}>
@@ -396,7 +409,7 @@ useEffect(()=>{
                                 </Pressable>
                             </View>
                             :
-                                    offers.offers[offers.offers.length-1]?.hasGotResponse == 1
+                                   offers[offers.length-1]?.hasGotResponse == 1
                                     ?
                                         <View style={[offersStyles.inputContainer, offersStyles.offerBottom,{flex:1,backgroundColor:appColors.white}]}>
                                             <Pressable style={[offersStyles.offersBottomConfirmationButtom,{}]}>

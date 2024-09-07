@@ -1,7 +1,7 @@
 const mongoose = require('../../shared/db').mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
-exports.getPipeLineForProducts = ( userId=undefined, skip, limit, sort={_id:1} ) => {
+exports.getPipeLineForProducts = ( userId=undefined, skip=0, limit=100, sort={_id:1} ) => {
     let match;
     if(userId) 
     {
@@ -173,17 +173,18 @@ exports.getPipeLineForProducts = ( userId=undefined, skip, limit, sort={_id:1} )
 }
 
 
-exports.getPipeLineForOffers = ( seller, buyer, product ) => {
+exports.getPipeLineForOffers = ( match, skip=0, limit=0 ) => {
     
     const pipeline = [
 
         {
-            $match: {
-                seller: new mongoose.Types.ObjectId(seller),
-                buyer: new mongoose.Types.ObjectId(buyer),
-                product: new mongoose.Types.ObjectId(product),
-            }
+            $match: match
         },
+        { $skip: skip }, 
+
+        ...(limit!=0 ? [
+          { $limit: limit }
+       ] : []),
         {
             $lookup: {
             from: 'users',
@@ -256,6 +257,7 @@ exports.getPipeLineForOffers = ( seller, buyer, product ) => {
   },
 
 
+
       
       {
         $lookup: {
@@ -266,7 +268,7 @@ exports.getPipeLineForOffers = ( seller, buyer, product ) => {
         }
       },
       { $unwind: '$product' },
-      {
+      /*{
         $lookup: {
           from: 'users',
           localField: 'product.favourites',
@@ -274,7 +276,7 @@ exports.getPipeLineForOffers = ( seller, buyer, product ) => {
           as: 'product.favourites'
         }
       },
-      { $unwind: '$product.favourites' },
+      //{ $unwind: {path :'$product.favourites', preserveNullAndEmptyArrays: true} },
       {
         $lookup: {
           from: 'users',
@@ -290,8 +292,70 @@ exports.getPipeLineForOffers = ( seller, buyer, product ) => {
           foreignField: '_id',
           as: 'product.favourites.followings'
         }
+      },*/
+
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'product.favourites',
+          foreignField: '_id',
+          as: 'favourites'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'favourites.followers',
+          foreignField: '_id',
+          as: 'favouritesFollowers'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'favourites.followings',
+          foreignField: '_id',
+          as: 'favouritesFollowings'
+        }
+      },
+      {
+        $addFields: {
+          'product.favourites': {
+            $map: {
+              input: '$favourites',
+              as: 'favourite',
+              in: {
+                $mergeObjects: [
+                  '$$favourite',
+                  {
+                    followers: {
+                      $filter: {
+                        input: '$favouritesFollowers',
+                        as: 'follower',
+                        cond: { $eq: ['$$follower._id', '$$favourite._id'] }
+                      }
+                    },
+                    followings: {
+                      $filter: {
+                        input: '$favouritesFollowings',
+                        as: 'following',
+                        cond: { $eq: ['$$following._id', '$$favourite._id'] }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        
       },
 
+
+
+
+
+      
 
 
       {
@@ -353,7 +417,19 @@ exports.getPipeLineForOffers = ( seller, buyer, product ) => {
           ],
           as: 'comments'
         }
+      },
+
+      {
+        $addFields : {
+          'product.comments' : '$comments',
+          'product.seller' : '$seller',
+        }
       }
+
+      
+    
+
+
     ];
     return pipeline
   }

@@ -11,7 +11,7 @@ export const offersDatas = [
 		],
 	}
 ]
-export const defaultOffer = {offers:[{_id:"100",hasGotResponse:0}]}
+export const defaultOffer = [{_id:"100",hasGotResponse:0}]
 
 
 export const settings = [

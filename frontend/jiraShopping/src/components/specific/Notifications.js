@@ -30,7 +30,7 @@ const initialLayout = { width: Dimensions.get('window').width };
  
 const Notifications = (props) => {
   const route = useRoute()
-  let key = 2
+  let key = 0
   if(route.params)
   {
     key = route.params.key

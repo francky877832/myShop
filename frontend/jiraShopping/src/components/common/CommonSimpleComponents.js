@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ActivityIndicator, Image } from 'react-native';
 
 import BadgeIcon from './BadgeIcon';
 import { Ionicons } from '@expo/vector-icons';
@@ -197,7 +197,23 @@ exports.PriceDetails = (props) => {
 
         </View>
     )
-} 
+}
+
+
+exports.MinifyHorizontalProduct = (props) => {
+    const { product, styles, onPress } = props
+    function formatName(name){
+        if(name.length > 30) return name.substr(0,30)+'...'
+            return name
+    }
+    return (
+        <Pressable style={[styles.productContainer]} onPress={()=>{onPress(product)}}>
+            <Image source={{ uri: product.images[0] }} style={styles.productImages} />
+            <View style={{width:10}}></View>
+            <Text style={[styles.productName]} numberOfLines={2}>{formatName(product.name)}</Text>
+        </Pressable>
+    )
+}
 
 
 

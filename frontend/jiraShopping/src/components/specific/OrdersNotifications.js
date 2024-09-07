@@ -85,7 +85,7 @@ useEffect(() => {
 
   const [read, setRead] = useState(0)
 //console.log(orders[1]?.products.read)
-
+//item.products._id.toString()
     return (
         <View style={[notificationsStyles.sceneContainers]}>
             <FlatList
