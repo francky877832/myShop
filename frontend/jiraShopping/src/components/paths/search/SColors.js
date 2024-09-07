@@ -25,7 +25,7 @@ const SColors = (props) => {
     const { category, subCategories } = route.params
     const { colors } = props
 
-    const {selectedColorFromContext, setSelectedColorFromContext } = useContext(FilterContext)
+    const {selectedColorFromContext, setSelectedColorFromContext, setFiltersUpdated } = useContext(FilterContext)
     const [selectedLocalColors, setSelectedLocalColors] = useState(selectedColorFromContext)
 
     useEffect(()=>{
@@ -53,6 +53,7 @@ const SColors = (props) => {
 
     const applyAllUserChoices = () => {
         setSelectedColorFromContext(selectedLocalColors)
+        //setFiltersUpdated(true)
         navigation.goBack()
     }
 

@@ -35,7 +35,7 @@ const SearchResults = (props) => {
         selectedOrderBy,
        searchedProducts, setSearchedProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
         isLoading, setIsLoading , selectedCategories , setSelectedCategories, loadMoreDataWithFilters, selectedModalCategoriesFromContext, 
-        selectedBrandFromContext, selectedConditionsFromContext,
+        selectedBrandFromContext, selectedConditionsFromContext, filterUpdated
     } = useContext(FilterContext)
 
     
@@ -49,7 +49,7 @@ const SearchResults = (props) => {
         useEffect(() => {
                 const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
                     e.preventDefault();
-                    //setSearchedProducts([])
+                    resetAllFilters()
                     navigation.dispatch(e.data.action)
                 })
                 return beforeRemoveListener;
@@ -82,7 +82,7 @@ useEffect(()=>{
     setSearchedProducts([])
     getDatas({searchText:searchText, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy, resetPage:true, search:true})
 
-    }, [searchText])
+    }, [searchText, filterUpdated,])
 
 
 
@@ -98,7 +98,7 @@ const title = `Resultats de recherche "${searchText}"`
                         
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="SearchResults" search={true} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} searchText={searchText} datas={searchedProducts} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters previousScreen="SearchResults" name="SearchResults" search={true} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} searchText={searchText} datas={searchedProducts} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )

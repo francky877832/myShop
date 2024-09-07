@@ -31,7 +31,7 @@ const ChooseSearchFilters = (props) => {
 //console.log(page)
     const {setSelectedBrand, selectedColor, setSelectedColor, categories, brands, isLoading} = useContext(ProductItemContext)
     const { selectedCategories, updateCategories, setSelectedCategories, resetAllFilters,
-        searchCategory,  minPrice, maxPrice, setMinPrice, setMaxPrice,
+        searchCategory,  minPrice, maxPrice, setMinPrice, setMaxPrice, setFiltersUpdated,
     } = useContext(FilterContext)
     
     //const [selectedCategories, setSelectedCategories] = useState({"Vetements": true, "name": "Vetements"})
@@ -127,6 +127,7 @@ const showSubCategories = async (type, cat, subCat) => {
         const getAllSubCategories = () => {
             //setAll(prev=>!prev)
             updateAllCategoriesSelected(categories)
+            //setFiltersUpdated(true)
         }
 
         return (

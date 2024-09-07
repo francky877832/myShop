@@ -11,26 +11,34 @@ import { RadioButton, } from 'react-native-paper';
 import { appColors, appFont, customText } from '../../styles/commonStyles';
 import { searchResultsStyles } from '../../styles/searchStyles';
 import { preferencesStyles } from '../../styles/preferencesStyles';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { CustomActivityIndicator } from '../common/CommonSimpleComponents'
+import { useNavigation, useRoute, StackActions  } from '@react-navigation/native';
+import { CustomActivityIndicator, CustomButton } from '../common/CommonSimpleComponents'
 
 import { filtersSearchStyles } from '../../styles/filtersSearchStyles';
 import { FilterContext } from '../../context/FilterContext';
 import { ProductItemContext } from '../../context/ProductItemContext';
 import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
 
+import { sCategoriesStyles } from '../../styles/paths/search/sCategoriesStyles';
+
 const FiltersSearch = (props) => {
 
         const route = useRoute()
         const navigation = useNavigation()
-        //const { notDisplayFilters } = route.params
-        const notDisplayFilters = {'categorie':false}
+        const { notDisplayFilters, resetPage, search, previousScreen, searchText, category } = route.params
+
         const {setSelectedBrand,  selectedColor, setSelectedColor, categories, brands, isLoading} = useContext(ProductItemContext)
         const {selectedCategories, selectedModalCategoriesFromContext, selectedBrandFromContext, setSelectedBrandFromContext,
                 selectedConditionsFromContext, setSelectedConditionsFromContext,
-                minPriceFromContext, maxPriceFromContext, selectedColorFromContext
+                minPriceFromContext, maxPriceFromContext, selectedColorFromContext, filtersUpdated, setFiltersUpdated,
+                loadMoreDataWithFilters,
          } = useContext(FilterContext)
         const filters = [{name:"Categories", page:'category'},{name:"Prix", page:'price'},{name:"Conditions", page:'condition'}, {name:"Couleurs", page:'color'}, {name:"Marques", page:'brand'}]
+
+        useEffect(()=>{
+                setFiltersUpdated(false)
+                //console.log('ok')
+        },[])
 
         const showFilters = (page) => {
                 //console.log('ok')
@@ -67,6 +75,8 @@ const FiltersSearch = (props) => {
                         break;
                         default : break;
                 }
+                selectedFilters = notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?selectedCategories.name:selectedFilters
+                
                 return (
                         <Pressable style={[filtersSearchStyles.pressableFilter, 
                                 notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersSearchStyles.pressableFilterDisabled:null
@@ -74,12 +84,16 @@ const FiltersSearch = (props) => {
                                 onPress={()=>{showFilters(item.page)}} disabled={notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?true:false} 
                         >
                                 <View style={[{}]}>
-                                        <Text style={[customText.text, filtersSearchStyles.itemText, notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersSearchStyles.pressableFilterTextDisabled:null]}>{notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?selectedCategories.name:item.name}</Text>
+                                        <Text style={[customText.text, filtersSearchStyles.itemText, notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersSearchStyles.pressableFilterTextDisabled:null]}>{item.name}</Text>
                                 </View>
                                 
                                 <View style={[{justifyContent:'center'}]}>
                                         <View style={[{alignItems:'flex-end'}]}>
-                                                <Icon name="chevron-right" type="font-awesome" size={16}  color={appColors.secondaryColor1} />
+                                                {
+                                                        !notDisplayFilters.hasOwnProperty(item.name.toLowerCase()) &&
+                                                        <Icon name="chevron-right" type="font-awesome" size={16}  color={appColors.secondaryColor1} />
+                                                }
+                                                
                                         </View>
                                         { selectedFilters &&
                                                 <Text style={[customText.text, filtersSearchStyles.selectedFilters, notDisplayFilters.hasOwnProperty(item.name.toLowerCase())?filtersSearchStyles.pressableFilterTextDisabled:null]}>{splitSelectedFilters(selectedFilters)}</Text>
@@ -87,6 +101,14 @@ const FiltersSearch = (props) => {
                                 </View>
                         </Pressable>
                 )
+        }
+
+        const applyAllUserChoices =  () =>{
+                //setFiltersUpdated(prev => !prev)
+                //navigation.navigate(previousScreen, { key: Math.random().toString() });
+                
+                //navigation.reset({index: 0,  routes: [{ name: previousScreen, params:{searchText:searchText} }], });
+                navigation.dispatch(StackActions.replace(previousScreen, {searchText:searchText, category:category}));
         }
         return(
                 <View style={[filtersSearchStyles.container]}>
@@ -102,6 +124,10 @@ const FiltersSearch = (props) => {
                                         showsHorizontalScrollIndicator={false}
                                         contentContainerStyle={{ }}
                                 />
+                        </View>
+
+                        <View style={[sCategoriesStyles.bottomButtonContainer]}>
+                                <CustomButton text="Appliquer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable : sCategoriesStyles.pressable}} onPress={()=>{applyAllUserChoices()}} />
                         </View>
                 </View>
         )

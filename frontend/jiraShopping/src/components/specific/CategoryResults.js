@@ -33,9 +33,9 @@ const CategoryResults = (props) => {
     const {searchText, display, category} = route.params
     const {
         selectedOrderBy,
-       products, setProducts, getSearchedTextWithFilters, refreshComponent,resetAllFiltersWithoutFecthingDatas,
+       products, setProducts, getSearchedTextWithFilters, refreshComponent, resetAllFilters,
         isLoading, setIsLoading , selectedCategories , setSelectedCategories, loadMoreDataWithFilters, selectedModalCategoriesFromContext, 
-        selectedBrandFromContext, selectedConditionsFromContext
+        selectedBrandFromContext, selectedConditionsFromContext, filterUpdated
     } = useContext(FilterContext)
 
     
@@ -74,12 +74,12 @@ useEffect(()=>{
     //console.log(searchText)
     cat_reminder = selectedCategories
 },[])
-        async function getDatas({searchText, selectedModalCategories, selectedCategory={}, selectedBrands, conditions, orderBy})
+        async function getDatas({searchText, selectedModalCategories, selectedCategory={}, selectedBrands, conditions, orderBy, resetPage})
         {
             //console.log("GETDATAS")
             //console.log({searchText, selectedModalCategories, selectedCategories, selectedBrands, conditions, orderBy})
             
-            await loadMoreDataWithFilters({searchText:searchText, selectedCategory:selectedCategory, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy})
+            await loadMoreDataWithFilters({searchText:searchText, selectedCategory:selectedCategory, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, resetPage:resetPage})
                             //{searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})    
         }
 
@@ -102,17 +102,20 @@ useEffect(()=>{
     //console.log(category);
     //if(!isLoading)
     //    setIsLoading(true)
-    
-    getDatas({searchText:" ", selectedCategory:category, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy})
+    //console.log('OK')
+    setProducts([])
+    //console.log(selectedBrandFromContext)
+    getDatas({searchText:" ", selectedCategory:category, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy, resetPage:true})
 
-    }, [searchText])
+    }, [searchText, filterUpdated])
 
 useEffect(() => {
     const cat_reminder = selectedCategories
         const beforeRemoveListener = navigation.addListener('beforeRemove', (e) => {
             e.preventDefault();
             setSelectedCategories(cat_reminder)
-            setOnExit(true)
+            resetAllFilters()
+            setOnExit(true) //no more need
             navigation.dispatch(e.data.action)
         })
         return beforeRemoveListener;
@@ -126,7 +129,7 @@ const title = `Resultats de recherche "${searchText}"`
                         </View>
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters name="CategoryResults" search={false} onExit={onExit} setOnExit={setOnExit} selectedCategory={category} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false,}} searchText={searchText} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters previousScreen="CategoryResults" name="CategoryResults" search={false} onExit={onExit} setOnExit={setOnExit} selectedCategory={category} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false,}} searchText={searchText} category={category} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )

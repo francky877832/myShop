@@ -43,9 +43,9 @@ export const filtersSearchStyles = StyleSheet.create({
     },
     pressableFilterDisabled:
     {
-        borderWidth : 2,
-        borderColor : appColors.secondaryColor1,
-        backgroundColor : appColors.lightOrange,
+        //borderWidth : 1,
+        //borderColor : appColors.red,
+        backgroundColor : appColors.lightWhite,
     },
     itemText :
     {

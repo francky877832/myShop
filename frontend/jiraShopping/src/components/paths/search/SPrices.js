@@ -26,7 +26,7 @@ const SPrices = (props) => {
     const { category, subCategories } = route.params
     const [minPrice, setMinPrice] = useState(null)
     const [maxPrice, setMaxPrice] = useState(null)
-    const { minPriceFromContext, maxPriceFromContext, setMinPriceFromContext, setMaxPriceFromContext,} = useContext(FilterContext)
+    const { minPriceFromContext, maxPriceFromContext, setMinPriceFromContext, setMaxPriceFromContext, setFiltersUpdated} = useContext(FilterContext)
     
     const [isMinPriceFocused, setIsMinPriceFocused] = useState(false)
     const [isMaxPriceFocused, setIsMaxPriceFocused] = useState(false)
@@ -38,6 +38,7 @@ const SPrices = (props) => {
     const applyAllUserChoices = () => {
         setMinPriceFromContext(minPrice)
         setMaxPriceFromContext(maxPrice)
+        //setFiltersUpdated(true)
         navigation.goBack()
     }
 

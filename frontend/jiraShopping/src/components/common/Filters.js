@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useCallback, useMemo  } from 'react';
-import { View, Text, Pressable, TextInput, ScrollView, FlatList, Alert} from 'react-native';
+import { View, Text, Pressable, TextInput, ScrollView, FlatList, Alert, Modal} from 'react-native';
 
 import { Button, CheckBox } from 'react-native-elements';
 import { RadioButton, } from 'react-native-paper';
@@ -46,7 +46,7 @@ const Filters = (props) => {
 
     const { categories, brands, /*isLoading, setIsLoading*/ } = useContext(ProductItemContext)
 //console.log(categories)
-    const { suggestion, searchText,  getDatas, display, notDisplayFilters, onExit, setOnExit, search } = props
+    const { suggestion, searchText,  getDatas, display, notDisplayFilters, onExit, setOnExit, search, previousScreen, category } = props
     const [showSuggestion, setShowSuggestion] = useState(suggestion)
     let replacedFilter;
 
@@ -313,7 +313,7 @@ const validateFilters = async () => {
                             <Text style={[customText.text, modalOrderByVisible ? filtersStyles.modalVisibleText : false,]}>Trier</Text>
                         </Pressable>
 
-                        <Pressable style={[filtersStyles.trierFiltrer, {borderLeftWidth:1,borderLeftColor:appColors.secondaryColor3}, modalFiltersVisible ? filtersStyles.trierFiltrerFocused : false,]} onPress={()=>{navigation('FiltersSearch', {notDisplayFilters:notDisplayFilters})}}>
+                        <Pressable style={[filtersStyles.trierFiltrer, {borderLeftWidth:1,borderLeftColor:appColors.secondaryColor3}, modalFiltersVisible ? filtersStyles.trierFiltrerFocused : false,]} onPress={()=>{navigation.navigate('FiltersSearch', {notDisplayFilters:notDisplayFilters,previousScreen:previousScreen, searchText:searchText, category:category})}}>
                                 <Icon name='filter' type='ionicon' size={18} color={appColors.secondaryColor1} />
                                     <View style={{width:10}}></View>
                                 <Text style={[customText.text, modalFiltersVisible ? filtersStyles.modalVisibleText : false, ]}>Filtrer</Text>
@@ -342,13 +342,13 @@ const validateFilters = async () => {
         </View>
 
 
-                {!modalFiltersVisible && modalOrderByVisible &&
-            <View style={[filtersStyles.orderByContainer]}>
-                <View style={{alignSelf : "center",}}>
-                    <Text style={[customText.text,filtersStyles.label]}>Trier Par...</Text>
-                </View>
 
-                    <View style={[filtersStyles.filterFlatlist, filtersStyles.radioBox]}>
+    <Modal visible={modalOrderByVisible} transparent={true}  onRequestClose={() => setModalOrderByVisible(false)}>
+        <View style={[filtersStyles.orderByContainer]}>
+            <View style={[filtersStyles.modalHeader]}>
+                <Text style={[customText.text,filtersStyles.modalHeaderText]}>Trier Par...</Text>
+            </View>
+            <View style={[filtersStyles.radioBox]}>
                         <RadioButton.Group onValueChange={val => {handleOrderby(val); return val}} value={selectedOrderBy} style={[filtersStyles.radioGroup,]}>
                             {
                                 orderByItems.map((item) => {
@@ -361,17 +361,11 @@ const validateFilters = async () => {
                                 })
                             }
                         </RadioButton.Group>
-
-                        <View style={{flexDirection:"row",justifyContent:"space-around",alignItems:"center",paddingHorizontal:5,top:0,width:"100%",}}>
-                            <CustomButton text="Vider" color={appColors.gray} backgroundColor={appColors.white} styles={{pressable : {paddingVertical:15,borderRadius:10,width:"100%",borderWidth:1,borderColor:appColors.secondaryColor3},text:{fontWeight:"bold",}}} onPress={()=>{handleOrderby("")}} />
-                        </View>
-                        
                     </View>
                     <View style={{height:20,}}></View>
-                
-            </View>
-
-        }
+          
+        </View>
+      </Modal>
 
 
 

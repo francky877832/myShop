@@ -134,7 +134,7 @@ const removeUserHistorique = async (name) => {
               
                 //Alert.alert("", "Historique ajoute avec success")
                 //setRefreshComponent(!refreshComponent)
-                setIsLoading(true)
+                //setIsLoading(true)
             }catch(error)
             {
                 console.log(error)

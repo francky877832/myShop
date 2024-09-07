@@ -28,9 +28,9 @@ const SBrands = (props) => {
     const { brands} = props
 
 
-    const { setSelectedBrandFromContext, selectedBrandFromContext } = useContext(FilterContext)
+    const { setSelectedBrandFromContext, selectedBrandFromContext, setFiltersUpdated } = useContext(FilterContext)
 
-    const [selectedLocalBrand, setSelectedLocalBrand] = useState({})
+    const [selectedLocalBrand, setSelectedLocalBrand] = useState(selectedBrandFromContext)
 
     const updateSelectedLocalBrands = useCallback((name) => {
         setSelectedLocalBrand((prevSlectedBrands)=>{
@@ -45,8 +45,8 @@ const SBrands = (props) => {
     })
 
     const applyAllUserChoices = () => {
-        setSelectedBrandFromContext(prev => selectedLocalBrand )
         navigation.goBack()
+        setSelectedBrandFromContext(selectedLocalBrand)        
     }
 
     const handleUserChoice = async (name) => {

@@ -1,7 +1,7 @@
 import { StyleSheet, } from "react-native";
 import { appColors, appFont, screenWidth, customText, inputTextStyle} from "./commonStyles";
 import { screenHeight } from "./commentsStyles";
-
+import { card } from "./ordersStyles";
 
 export const topHeight = 55
 export const subTopHeight = 55
@@ -96,27 +96,34 @@ export const filtersStyles = StyleSheet.create({
     },
     orderByContainer :
     {
+        flex: 1, 
+        //position : "absolute",
         width: screenWidth,
-        marginTop : topHeight,
-        alignItems : "flex-start",
-        backgroundColor : appColors.white,
-        position : "absolute",
-        paddingTop : 20,
-        //bottom : 0, left : 0, right : 0, backgroundColor : "red",
-        zIndex : 101,
-
-        borderRadius: 5,
-        shadowColor: appColors.lightWhite,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 8,
-        elevation: 5,
-        backgroundColor : appColors.lightWhite,
-        //paddingTop : 5,
-        justifyContent : "center",
+        alignSelf : 'center',
         alignItems : "center",
-        borderBottomWidth : 1,
-        borderBottomColor : appColors.secondaryColor4,
+        justifyContent: 'center',
+        borderBottomWidth : 1,        
+        backgroundColor: appColors.clearBlack,
+        zIndex : 101,
+    },
+    radioBox : 
+    {
+        ...card,
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        backgroundColor : appColors.lightWhite,
+        width : '90%',
+        paddingHorizontal : 40,
+        paddingVertical : 20,
+        borderWidth : 1,
+        borderColor : appColors.clearBlack,
+        borderRadius : 10,
+    },
+    radioContainer: 
+    {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
     },
   
 
@@ -201,18 +208,7 @@ export const filtersStyles = StyleSheet.create({
         width: 20,
     },
      
-    radioContainer: 
-    {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-        left : 40,
-    },
-    radioBox: 
-    {
-        alignSelf : "flex-start",
-        width : "100%",
-    },
+ 
 
 
     categoryFocused :

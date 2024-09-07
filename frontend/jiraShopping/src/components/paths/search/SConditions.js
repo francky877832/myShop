@@ -27,7 +27,7 @@ const SConditions = (props) => {
     const [isOldFocused, setIsOldFocused] = useState(false)
     const [isNewOldFocused, setIsNewOldFocused] = useState(false)
     const [conditions, setConditions] = useState({"old":false, "new":false, "new used":false})
-    const {selectedConditionsFromContext, setSelectedConditionsFromContext} = useContext(FilterContext)
+    const {selectedConditionsFromContext, setSelectedConditionsFromContext, setFiltersUpdated} = useContext(FilterContext)
 
     const updateConditions = useCallback((name) =>
         {
@@ -58,6 +58,7 @@ const SConditions = (props) => {
 
     const applyAllUserChoices = () => {
         setSelectedConditionsFromContext(conditions)
+        //setFiltersUpdated(true)
         navigation.goBack()
     }
 

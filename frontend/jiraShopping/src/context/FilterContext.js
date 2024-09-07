@@ -126,15 +126,25 @@ const FilterProvider = ({children}) => {
 
     })*/
 
-    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory, selectedBrands, conditions, resetPage=false}) =>
+    const getSearchedTextWithFilters = useCallback(async ({searchText, orderBy, selectedModalCategories, selectedCategory, selectedBrands, conditions, selectedColors, resetPage=false}) =>
     {
+        
         if(resetPage){ setPage(1)}
         //console.log({searchText, orderBy, selectedModalCategories, selectedBrands, conditions, selectedCategories})
         //setIsLoading(true)
         //setSelectedOrderBy(orderBy);
         //selectedCategories
         //console.log(selectedCategory)
-        selectedModalCategories = selectedModalCategories || {}
+        searchText = searchText || " "
+        selectedModalCategories = selectedModalCategoriesFromContext
+        selectedCategory = selectedCategories
+        selectedBrands = selectedBrandFromContext
+        conditions = selectedConditionsFromContext
+        selectedColors = selectedColorFromContext
+
+        //console.log(selectedBrandFromContext)
+
+
         let categories;
         if(Object.keys(selectedModalCategories).length>0 || searchText.trim().length>0)
         {
@@ -163,24 +173,31 @@ const FilterProvider = ({children}) => {
             }
             selectedModalCategories={}
         }
-        console.log("categories")
-        console.log(categories)
+
+        //console.log("categories")
+       // console.log(categories)
         //console.log(categories)
-        selectedBrands = selectedBrands || {}
+        
+        //GESTION DES MARQUES
         let brands = Object.keys(selectedBrands).filter((key)=>{ return selectedBrands[key]==true})
-        //console.log(selectedBrands)
-        conditions = conditions || {}
+        
+        //COLORS
+        let colors = Object.keys(selectedColors).filter((key)=>{ return selectedColors[key]==true})
+
+        //CONDITIONS
         let condition = []
         conditions["old"] && condition.push("used")
         conditions["new"] && condition.push("new")
         conditions["new used"] && condition.push("new used")
         //console.log(condition)
-        
+
+       
         const filters = {
             name : searchText?.trim(),
             customFilters : {
                 categories : categories || [],
                 brands : brands || [],
+                colors : colors || [],
                 minPrice : minPrice.replace('.',''),
                 maxPrice : maxPrice.replace('.',''),
                 condition : condition || [],
@@ -239,13 +256,14 @@ const FilterProvider = ({children}) => {
                     throw new Error(`Erreur lors de la recherhce de produit${response.text()}`)
                 const responseJson = await response.json();
                 //console.log(responseJson.datas)
+                console.log(filters)
                return responseJson
                //setProducts(responseJson.datas)
                 //setIsLoading(false)
                
                 //setSelectedCategories({"Vetements": true, "name": "Vetements"}) //OR NOT
                 //setRefreshComponent(!refreshComponent)
-
+    
         } catch (error) {
             setIsLoading(false)
             console.error(error.message);
@@ -262,6 +280,7 @@ const FilterProvider = ({children}) => {
         //console.log("hasMore")
         //console.log(hasMore)
         //console.log(isLoading)
+        
         if (!resetPage && (isLoading || !hasMore)) return;
         //if (isLoading) return;
     
@@ -269,15 +288,18 @@ const FilterProvider = ({children}) => {
         try {
             //console.log("page")
             //console.log(page)
-            
+            console.log("filters")
+
             const newData = await getSearchedTextWithFilters({searchText:searchText, selectedModalCategories:selectedModalCategories, selectedCategory:selectedCategory, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, resetPage:resetPage}); //A MODDIFIER
-            //console.log(newData)
+            console.log(newData.datas.length)
+            console.log("filters")
+
             if (newData.datas.length > 0) {
                 //setProducts(newData.datas)
                 //console.log(products)
                 //updateProducts(newData.datas);
-                console.log("*****")
-                console.log(resetPage)
+                //console.log("*****")
+                //console.log(resetPage)
                 if(resetPage)
                 {
                     search ? setSearchedProducts(newData.datas) :  setProducts(newData.datas)
@@ -303,7 +325,7 @@ const FilterProvider = ({children}) => {
             } finally {
                 setIsLoading(false);
             }
-      }, [isLoading, hasMore, page]);
+      }) // [isLoading, hasMore, page, selectedBrandFromContext]);
 
 
 
@@ -332,16 +354,30 @@ const FilterProvider = ({children}) => {
 
     const resetAllFilters = useCallback(() => {
         setIsLoading(false)
+        setHasMore(true)
+        setPage(1)
         //setSelectedCategories({})
         //setSelectedBrands([])
         setSelectedOrderBy("")
+        
         setMinPrice("")
         setMaxPrice("")
+        setMaxPriceFromContext(null)
+        setMinPriceFromContext(null)
+
         setIsNewFocused(true)
         setIsNewOldFocused(true)
         setIsNewOldFocused(true)
-        setHasMore(true)
-        setPage(1)
+        setSelectedConditionsFromContext({})
+
+        setSelectedModalCategoriesFromContext({})
+        
+        setSelectedBrandFromContext({})
+
+       
+        setSelectedColorFromContext({})
+
+
         setProducts([])
         setSearchedProducts([])
 
