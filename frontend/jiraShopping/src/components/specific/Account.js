@@ -11,11 +11,12 @@ import { accountStyles } from '../../styles/accountStyles';
 import { settings } from '../../utils/offersDatas';
 import { topStyles } from '../../styles/topStyles';
 import badgeIconStyles from '../../styles/badgeIconStyles';
+import { UserContext } from '../../context/UserContext';
 
-const loggedUser = "Francky"
+//const loggedUser = "Francky"
 const   Account = (props) => {
     const navigation = useNavigation()
-
+    const {user} = useContext(UserContext)
   
     return(
         <View style={[accountStyles.container,{}]}>
@@ -23,7 +24,7 @@ const   Account = (props) => {
                 <View style={{height:10,}}></View>
 
                 <View style={[accountStyles.firstLine]}>
-                    <Text style={[accountStyles.text,{fontWeight:"bold"}]}>@{loggedUser}</Text>
+                    <Text style={[accountStyles.text,{fontWeight:"bold"}]}>@{user.username}</Text>
                     <View style={[accountStyles.firstLineIcons]}>
                         <Pressable  style={[topStyles.notification, ]} onPress = { ()=>{ navigation.navigate("Notifications");} }>
                             <BadgeIcon name="notifications" size={24} color="black" badgeCount={5} styles={badgeIconStyles} />

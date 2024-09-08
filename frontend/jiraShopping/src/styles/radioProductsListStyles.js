@@ -119,7 +119,7 @@ export const radioProductStyles = StyleSheet.create({
     productImage :
     {
         width : 75,
-        height : 100
+        height : 90
     },
     productInfos :
     {
@@ -129,14 +129,16 @@ export const radioProductStyles = StyleSheet.create({
     {
         top : 2,
         //left : 40,
-        borderWidth : 1,
-        borderColor : appColors.secondaryColor1,
+        borderWidth : 2,
+        borderColor : appColors.yellow,
+        borderRadius : 10,
         backgroundColor : appColors.lightOrange,
-        width : screenWidth,
+        width : screenWidth/2,
         //alignSelf : "center",
         justifyContent : "center",
         alignItems : "center",
-        paddingHorizontal : 10,
+        paddingHorizontal : 5,
+        //alignSelf : 'flex-start'
     },
     checkBoxContainer :
     {
@@ -150,5 +152,41 @@ export const radioProductStyles = StyleSheet.create({
         color:appColors.secondaryColor5,
         fontWeight:"normal",
     },
+
+
+    inBasketQuantity :
+    {
+        top:10, 
+        flexDirection : 'row',
+        justifyContent : 'center',
+        alignItems : 'center',
+        width:'100%', 
+        paddingRight:350,
+        //backgroundColor : 'blue',
+        //height : 30,
+    },
+    trash :
+    {
+        //alignSelf : 'flex-end',
+    },
+    quantityContainer :
+    {
+        //height : 30,
+        //width : '100%',
+        borderWidth : 0,
+        
+    },
+    inputContainer :
+    {
+        borderRadius : 0,
+        borderWidth : 0,
+        borderBottom : 1,
+        width : 50,
+    },
+    inputContainerFocused :
+    {
+        borderBottomWidth : 1,
+        borderColor : appColors.secondaryColor1,
+    }
 
 })

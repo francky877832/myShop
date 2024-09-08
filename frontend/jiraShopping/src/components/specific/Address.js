@@ -16,7 +16,7 @@ const GEO_NAMES_USERNAME = 'francky877832';
 const COUNTRY_CODE = 'CM';
 const loggedUser = "Francky"
 
-const   CityPicker = (props) => {
+const CityPicker = (props) => {
     const [cities, setCities] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -47,12 +47,18 @@ const   CityPicker = (props) => {
       fetchCities();
     }, []);
   
-    if (loading) {
+    /*if (loading) {
       return <ActivityIndicator size="large" color={appColors.black} />;
-    }
+    }*/
     return(
         <View style={adressStyles.cityContainer}>
             <Text style={adressStyles.label}>Votre Ville</Text>
+            { 
+            loading 
+                ?
+                <ActivityIndicator size="large" color={appColors.black} />
+            
+                :
                 <Picker
                     selectedValue={selectedCity}
                     onValueChange={(itemValue) => setSelectedCity(itemValue)}
@@ -62,6 +68,7 @@ const   CityPicker = (props) => {
                     <Picker.Item key={city.id} label={city.name} value={city.name} />
                     ))}
                 </Picker>
+            }
         </View>
     )
 }

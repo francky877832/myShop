@@ -11,10 +11,10 @@ const userSchema = new Schema({
     password: { type: String, required: true },
     role: { type: String, enum: ['customer', 'seller', 'admin'], default: 'seller' },
     address: {
-        street: { type: String },
+        quater: { type: String },
         city: { type: String },
-        region: { type: String },
-        country: { type: String }
+        country: { type: String, default:'Cameroon' },
+        title: { type: String }
     },
     phone: { type: String },
     isPhoneVerified : { type: Number, enum: [0, 1], default : 0 },
