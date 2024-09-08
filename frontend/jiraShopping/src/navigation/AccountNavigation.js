@@ -23,7 +23,7 @@ export default function AccountNavigation() {
 
   return ( 
         <Stack.Navigator 
-          initialRouteName="Referral"
+          initialRouteName="AccountHome"
           screenOptions={annimatedStackTransition(1, 300, 100)}
         >
             <Stack.Screen name="AccountHome" component={Account} options={{ title: 'Account', headerShown : false, tabBarVisible: true }} />

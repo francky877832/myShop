@@ -32,15 +32,9 @@ exports.getUserLikedProducts  =  (req, res, next) => {
       {
         $unwind: '$productDetails'
       },
-      // 5. Joindre avec la collection 'favourites' pour trouver les utilisateurs qui ont aimé ces produits
-      /*{
-        $lookup: {
-          from: 'favourites',
-          localField: 'productDetails._id',
-          foreignField: 'products',
-          as: 'productFavourites'
-        }
-      },*/
+      
+      /*
+      
       // 6. Joindre avec la collection 'users' pour obtenir les détails des utilisateurs qui ont aimé les produits
       {
         $lookup: {
@@ -63,8 +57,44 @@ exports.getUserLikedProducts  =  (req, res, next) => {
           as: 'favouriteUsersFollowers'
         }
       },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'favouriteUsers.followings',
+          foreignField: '_id',
+          as: 'favouriteUsersFollowings'
+        }
+      },*/
+
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'productDetails.favourites',
+          foreignField: '_id',
+          as: 'favourites'
+        }
+      },
+      
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'favourites.followers',
+          foreignField: '_id',
+          as: 'favouritesFollowers'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'favourites.followings',
+          foreignField: '_id',
+          as: 'favouritesFollowings'
+        }
+      },
+
+
      
-      // 9. Joindre avec la collection 'users' pour obtenir les détails du vendeur (seller) du produit
+
       {
         $lookup: {
           from: 'users',
@@ -96,7 +126,7 @@ exports.getUserLikedProducts  =  (req, res, next) => {
       },
 
       
-      {
+      /*{
         $unwind: '$productDetails.favourites'
       },
       {
@@ -124,7 +154,7 @@ exports.getUserLikedProducts  =  (req, res, next) => {
           as: 'favouritesFollowings'
         }
       },
-      
+      */
          
 
       {

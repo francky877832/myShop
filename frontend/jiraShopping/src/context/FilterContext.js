@@ -13,8 +13,8 @@ const FilterProvider = ({children}) => {
     const [selectedBrandFromContext, setSelectedBrandFromContext] = useState({})
     const [selectedConditionsFromContext, setSelectedConditionsFromContext] = useState({})
     const [selectedColorFromContext, setSelectedColorFromContext] = useState({})
-    const [minPriceFromContext, setMinPriceFromContext] = useState(null)
-    const [maxPriceFromContext, setMaxPriceFromContext] = useState(null)
+    const [minPriceFromContext, setMinPriceFromContext] = useState("")
+    const [maxPriceFromContext, setMaxPriceFromContext] = useState("")
 
     const [allCategoriesSelected, setAllCategoriesSelected] = useState(Object.keys(selectedModalCategoriesFromContext).some((el)=>selectedModalCategoriesFromContext[el]===false))
     const [filtersUpdated, setFiltersUpdated] = useState(false);
@@ -141,6 +141,7 @@ const FilterProvider = ({children}) => {
         selectedBrands = selectedBrandFromContext
         conditions = selectedConditionsFromContext
         selectedColors = selectedColorFromContext
+        
 
         //console.log(selectedBrandFromContext)
 
@@ -198,8 +199,8 @@ const FilterProvider = ({children}) => {
                 categories : categories || [],
                 brands : brands || [],
                 colors : colors || [],
-                minPrice : minPrice.replace('.',''),
-                maxPrice : maxPrice.replace('.',''),
+                minPrice : minPriceFromContext.replace('.',''),
+                maxPrice : maxPriceFromContext.replace('.',''),
                 condition : condition || [],
             },
         }
@@ -367,8 +368,8 @@ const FilterProvider = ({children}) => {
 
         setMinPrice("")
         setMaxPrice("")
-        setMaxPriceFromContext(null)
-        setMinPriceFromContext(null)
+        setMaxPriceFromContext("")
+        setMinPriceFromContext("")
 
         setIsNewFocused(true)
         setIsNewOldFocused(true)

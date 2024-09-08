@@ -68,13 +68,13 @@ export const useCacheWithDatas = (cacheKey, getCache, loadDatas, parameters) => 
                 {
                   setDatas(newData)
                   isCacheLoaded.current = false; 
-                  console.log("222")
+                  //console.log("222")
                 }
                 else
                 {
                   setDatas((prev)=>[...prev, ...newData])
                   isCacheLoaded.current = false; 
-                  console.log('333')
+                  //console.log('333')
                 }
                 setPage((prevPage) => prevPage + 1);
 
@@ -102,7 +102,7 @@ export const useCacheWithDatas = (cacheKey, getCache, loadDatas, parameters) => 
         if (offersCache) {
           setDatas(offersCache);
           isCacheLoaded.current = true; 
-          console.log('111')
+          //console.log('111')
         }
   
         await loadMore();

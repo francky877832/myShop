@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useCallback, useMemo  } from 'react';
-import { View, Text, Pressable, TextInput, ScrollView, FlatList, Alert, Modal} from 'react-native';
+import { View, Text, Pressable, TextInput, ScrollView, FlatList, Alert, TouchableWithoutFeedback, Modal} from 'react-native';
 
 import { Button, CheckBox } from 'react-native-elements';
 import { RadioButton, } from 'react-native-paper';
@@ -357,7 +357,7 @@ const validateFilters = async () => {
 
 
     <Modal visible={modalOrderByVisible} transparent={true}  onRequestClose={() => setModalOrderByVisible(false)}>
-        <View style={[filtersStyles.orderByContainer]}>
+        <Pressable style={[filtersStyles.orderByContainer]}  onPress={() => setModalOrderByVisible(false)}>
             <View style={[filtersStyles.radioBox]}>
                     <View style={[filtersStyles.modalHeader]}>
                         <Text style={[customText.text,filtersStyles.modalHeaderText]}>Trier Par...</Text>
@@ -374,11 +374,10 @@ const validateFilters = async () => {
                                 })
                             }
                         </RadioButton.Group>
-                    </View>
-                    <View style={{height:20,}}></View>
-          
-        </View>
-      </Modal>
+            </View>
+            <View style={{height:20,}}></View>
+        </Pressable>
+    </Modal>
 
 
 
