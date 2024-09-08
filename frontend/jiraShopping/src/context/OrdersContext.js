@@ -120,61 +120,22 @@ const updateOrderStatus = async (itemId, productId, status) => {
 const getOrders = useCallback(async (user, page, limit) => {
     try 
     {
+        setIsLoading(true)
         const newData = await fetchUserOrders(user, page, limit);
         
         
             setOrders(newData.orders.products)
             setSold(newData.sold)
             setBought(newData.bought)
-
+        //console.log(newData)
     } catch (error) {
         console.error('Erreur lors du chargement des données :', error);
     } finally {
         setIsLoading(false);
     }
 
-}, [isLoading, hasMore, page]) 
+},) // [isLoading, hasMore, page])  //pour un rechargements a chaque venue sur la page
    
-/*
-  const getOrders = useCallback(async (user, page, limit) => {
-    
-    if (isLoading || !hasMore) return;
-  
-    setIsLoading(true);
-    try {
-      const newData = await fetchUserOrders(user, page, limit);
-      //console.log(getOrders)
-      if (newData?.length > 0) {
-
-            const sold_products = newData.filter((item)=> (user._id===item.products.productDetails.seller._id))
-            const bought_products = newData.filter((item)=> (user._id!=item.products.productDetails.seller._id))
-
-        if(isNewDatas)
-        {
-            setOrders((prevOrders)=>[...prevOrders, ...newData])
-           
-            setSold((prevSold)=>[...prevSold, ...sold_products])
-            setBought((prevSold)=>[...prevSold, ...bought_products])
-        }
-        else
-        {
-            setOrders(newData)
-            setSold(sold_products)
-            setBought(bought_products)
-        }
-
-        
-        setPage((prevPage) => prevPage + 1);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error('Erreur lors du chargement des données :', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isLoading, hasMore, page])
-*/
 
 const separateSoldAndBought = () => {
     const sold_products = orders.filter((item)=> (user._id===item.products.productDetails.seller._id))

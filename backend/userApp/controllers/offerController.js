@@ -126,7 +126,9 @@ exports.getOffersProduct = async (req, res, next) => {
         }
         const pipeline = getPipeLineForOffers(match)
         const offersWithProduct = await Offer.aggregate(pipeline).exec();
-        res.status(200).json(offersWithProduct);
+        //res.status(200).json(offersWithProduct);
+        res.status(200).json(offersWithProduct[0]);
+
     }
     catch(error)
     {

@@ -22,7 +22,6 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import RenderNotificationItem from '../common/RenderNotificationItem';
 import { OrdersContext } from '../../context/OrdersContext';
-import { setIsLoading } from '../../store/favourites/favouritesSlice';
 
 
 
@@ -36,7 +35,7 @@ const OrdersNotifications = (props) => {
 
  //[isLoading, hasMore, page]);
   
-    const {orders, isLoading, getOrders, hasMore, page, updateOrderRead, updateOrderStatus, setHasMore, setPage, setOrders, setIsNewDatas } = useContext(OrdersContext)
+    const {orders, isLoading, setIsLoading, getOrders, hasMore, page, updateOrderRead, updateOrderStatus, setHasMore, setPage, setOrders, setIsNewDatas } = useContext(OrdersContext)
   const onEndReached = async () => { await getOrders(user, page) }
 
   
@@ -57,6 +56,9 @@ const openOrder = async (user, item) => {
     }
 }
 
+
+
+
 const timeoutRef = useRef(null)
 useEffect(() => {
 
@@ -66,7 +68,7 @@ useEffect(() => {
       
        fetchData();
       
-       if (timeoutRef.current) {
+    if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
     }
 
@@ -101,7 +103,7 @@ useEffect(() => {
                         }} 
                         openNotif={openOrder} user={user} />
                 ) } }
-                    keyExtractor={ (item) => { return item.products._id.toString(); } }
+                    keyExtractor={ (item) => { return Math.random().toString() /*item.products._id.toString();*/ } }
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     contentContainerStyle={[notificationsStyles.flatlist]}
                     onEndReached={()=>{}}

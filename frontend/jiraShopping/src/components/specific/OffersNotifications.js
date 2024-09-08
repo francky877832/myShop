@@ -24,19 +24,20 @@ import { useNavigation } from '@react-navigation/native';
 import RenderNotificationItem from '../common/RenderNotificationItem';
 
 
-
+import { storeCache, getCache } from '../../cache/cacheFunctions';
 
 
 const OffersNotifications = (props) => {
+  const navigation = useNavigation()
     const { user } = useContext(UserContext)
     //const user = {_id : "668fdfc6077f2a5c361dd7fc",}
     const [isLoading, setIsLoading] = useState(false)
     const [page, setPage] = useState(1);
-    const limit = 50
+    const limit = 100
     const [hasMore, setHasMore] = useState(true);
     const [offers, setOffers] = useState([])
-    const navigation = useNavigation()
-
+   // const [isCacheLoaded, setIsCacheLoaded] = useState(false)
+   const isCacheLoaded = useRef(false)
 
   const getOff = useCallback(async (user, page, limit) => {
     if (isLoading || !hasMore) return;
@@ -47,8 +48,12 @@ const OffersNotifications = (props) => {
       const newData = await getOffers(user, page, limit);
       //console.log(newData[0])
       if (newData.length > 0) {
-        setOffers((prevOffers)=>[...prevOffers, ...newData])
+
+        isCacheLoaded ? setOffers(newData)  : setOffers((prevOffers)=>[...prevOffers, ...newData])
         setPage((prevPage) => prevPage + 1);
+        //setIsCacheLoaded(false)
+        isCacheLoaded.current = false
+
       } else {
         setHasMore(false);
       }
@@ -57,7 +62,7 @@ const OffersNotifications = (props) => {
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);
+  },) //[isLoading, hasMore, page]);
   
   
   const onEndReached = async () => { await getOff(user, page, limit) }
@@ -84,6 +89,14 @@ const openOffer = async (user, item) => {
   useEffect(() => {
     const fetchData = async () => {  
         //console.log("isLoading")
+        const offersCache = await getCache('OFFERS_NOTIFICATIONS')
+        //console.log(offersCache)
+        if(offersCache)
+        {
+          setOffers(offersCache)
+          //setIsCacheLoaded(true)
+          isCacheLoaded.current = true
+        }
         await getOff(user, page, limit)
       };
       
@@ -91,6 +104,18 @@ const openOffer = async (user, item) => {
     
   }, []);
 
+
+  useEffect(() => {
+        const beforeRemoveListener = navigation.addListener('beforeRemove', async (e) => {
+            e.preventDefault();
+
+            await storeCache('OFFERS_NOTIFICATIONS', offers)
+
+            console.log("éstoreDatas")
+            navigation.dispatch(e.data.action)
+        })
+        return beforeRemoveListener;
+}, [navigation, offers]);
 
 
     return (

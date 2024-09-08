@@ -15,19 +15,20 @@ import { UserContext } from '../../context/UserContext';
 import { server } from '../../remote/server';
 import { MinifyHorizontalProduct } from '../common/CommonSimpleComponents'
 
-const loggedUser = "Francky"
+//const loggedUser = "Francky"
 const   OffersItem = (props) => {
     const { item, styles, seller, buyer } = props
+    const {user} = useContext(UserContext)
     //console.log(item)
     const from  = item.from //== "buyer" ? buyer : seller
     if(item?.hasGotResponse == 2)
     {
-        //if(from == loggedUser) //dont show input, show waiting for reply
+        //if(from == user._id) //dont show input, show waiting for reply
          //else show input + accept or refuse icons
         return (
                 <View style={[offersStyles.offerContainer,{}]}>
                     {
-                        from == loggedUser
+                        from == user._id
                         ?
                             <View style={[offersStyles.offer, offersStyles.offerRight ,{}]}>
                                 <View style={[offersStyles.offerTop,{backgroundColor:appColors.secondaryColor3,}]}>
@@ -66,13 +67,13 @@ const   OffersItem = (props) => {
     }
     else if(item?.hasGotResponse == 0)
     {
-        //if(from == loggedUser) //show input + red x icon
+        //if(from == user._id) //show input + red x icon
         //else show input + for another offers
         
             return (
                 <View style={[offersStyles.offerContainer,{}]}>
                     {
-                        from == loggedUser
+                        from == user._id
                         ?
                             <View style={[offersStyles.offer, offersStyles.offerRight ,{}]}>
                                 <View style={[offersStyles.offerTop,{backgroundColor:appColors.secondaryColor3,}]}>
@@ -104,12 +105,12 @@ const   OffersItem = (props) => {
     }
     else if(item?.hasGotResponse == 1)
     {
-        //if(from == loggedUser) //close input + red thick icon
+        //if(from == user._id) //close input + red thick icon
         //else close input and "has been approved"
         return (
             <View style={[offersStyles.offerContainer,{}]}>
             {
-                from == loggedUser
+                from == user._id
                 ?
                     <View style={[offersStyles.offer, offersStyles.offerRight ,{}]}>
                         <View style={[offersStyles.offerTop,{backgroundColor:appColors.secondaryColor3,}]}>
@@ -147,8 +148,8 @@ const Offers = (props) => {
     const { product } = route.params
     //const _getLastOffers
     //console.log(product)
-    console.log(route.params.notificationsOffers)
-    const [offers, setOffers] = useState(route.params.notificationsOffers || defaultOffer)
+    //console.log(route.params.notificationsOffers)
+    const [offers, setOffers] = useState(/*route.params.notificationsOffers ||*/ defaultOffer)
     
 
     const [inputValue, setInputValue] = useState("")
@@ -156,6 +157,7 @@ const Offers = (props) => {
     const [isLoading, setIsLoading] = useState(true)
     const [isPriceLoading, setIsPriceLoading] = useState(false)
     const [isConfirmLoading, setIsConfirmLoading] = useState(false)
+    const [hasResponse, setHasResponse] = useState(false)
 
     const [priceError, setPriceError] = useState(false)
 
@@ -188,7 +190,7 @@ const checkPrice = (price) => {
     let price_ = parseInt(price.split('.').join(''))
     price_ = isNaN(price_)?0:price_
     console.log(price_)
-    if(price_ < downBoundry || price_ > upBoundry)
+    if(price_!=0 && (price_ < downBoundry || price_ > upBoundry))
     {
         setPriceError(true)
     }
@@ -217,7 +219,7 @@ const addOffer = async ()=>{
             buyer : user._id,
             product : product._id,
             realPrice : realPrice,
-            offers : { price:price, from:user.username, hasGotResponse:2 },
+            offers : { price:price, from:user._id, hasGotResponse:2 },
             //hasGotResponse : 0,
         }
 
@@ -241,6 +243,7 @@ const addOffer = async ()=>{
             Alert.alert("Offre ajouté avec succes")
             setIsPriceLoading(false)
             setIsLoading(true)
+            setHasResponse(prev=>!prev)
         }catch(error){
             console.log(error)
             Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
@@ -264,7 +267,7 @@ const fetchUserOffers = async()=>{
                 throw new Error('Erreur lors de la requête'+await response.text());
             }
                 //console.log(datas[0].offers)
-            datas.length>0 ? setOffers(datas[0]) :  setOffers(defaultOffer)
+            datas.offers.length>0 ? setOffers(datas.offers) : null //setOffers(defaultOffer)
     }catch(error){
         console.log(error)
         Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
@@ -293,9 +296,11 @@ const setHasGotResponse = async(bool)=>{
             throw new Error('Erreur lors de la requête'+await response.text());
         }
        // console.log("ok")
-        Alert.alert("Ok", "Ajout avec succes ")
+        //Alert.alert("Ok", "Ajout avec succes ")
         setIsConfirmLoading(false)
         setIsLoading(true)
+        setHasResponse(prev=>!prev)
+
     }catch(error){
         console.log(error)
         Alert.alert("Erreur", "Une erreur est survenue! ")
@@ -304,23 +309,34 @@ const setHasGotResponse = async(bool)=>{
     }
 }
 
-
+//console.log('pkl')
 useEffect(()=>{
    
         const fetchData = async () => {
             //setIsLoading(true);
             await fetchUserOffers()
-          };
-      
-          if (route.params.notificationsOffers) {
-            setOffers(route.params.notificationsOffers)
-          }
-          else
-          {
+        };
+          
+      /* if(hasResponse) //Si on a effectuer une action - addOffer/SetHasGotResponse
+        {
             fetchData();
-          }
+        }
+        else if (route.params.notificationsOffers && !hasResponse) 
+        {
+            setOffers(route.params.notificationsOffers)
+        }
+        else
+        {
+            fetchData();
+        }
+      */
+
+        fetchData();
+        //console.log("ok")
+            
+         
         //console.log(offers)
-    }, [fetchUserOffers])
+    }, [hasResponse])
 
     const onPressProduct = (product) => {
         navigation.navigate({name:"ProductDetails", params:{ productDetails: product, },  key: Date.now().toString()});
@@ -384,7 +400,7 @@ useEffect(()=>{
         
                     </View>
                     :
-                            offers[offers?.length-1]?.hasGotResponse == 2 && offers[offers.length-1].from != loggedUser
+                            offers[offers?.length-1]?.hasGotResponse == 2 && offers[offers.length-1].from != user._id
                             ?
                             <View style={[offersStyles.inputContainer, offersStyles.offerBottom,{flex:1,backgroundColor:appColors.white}]}>
                                 <Pressable onPress={()=>{setHasGotResponse(false)}} style={[offersStyles.offersBottomConfirmationButtom,{}]}>
