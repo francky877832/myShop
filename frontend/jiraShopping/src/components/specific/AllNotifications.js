@@ -13,7 +13,7 @@ import { datas } from '../../utils/sampleDatas';
 import { appColors, customText } from '../../styles/commonStyles';
 
 //
-import { sendNotificaitons, getNotifications, updateNotificationsRead, getProductFromNotifications ,
+import { sendNotifications, getNotifications, updateNotificationsRead, getProductFromNotifications ,
           getOffers,
         } from '../../utils/commonAppNetworkFunctions'
 
@@ -21,6 +21,8 @@ import { sinceDate } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
 import { useNavigation } from '@react-navigation/native';
+import { useCache, useCacheBeforeRemove, useCacheWithDatas } from '../../hooks/cacheHooks';
+import { getCache, storeCache } from '../../cache/cacheFunctions';
 
 
 import RenderNotificationItem from '../common/RenderNotificationItem';
@@ -33,17 +35,26 @@ const initialLayout = { width: Dimensions.get('window').width };
 const AllNotifications = () => {
 
   const { user } = useContext(UserContext)
+  /*
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(1);
   const limit = 50
   const [hasMore, setHasMore] = useState(true);
-  const [notificaitons, setNotifications] = useState([])
+
+  const isCacheLoaded = useRef(false)
+  */
+
+  const [notifications, setNotifications] = useState([])
   const navigation = useNavigation()
+
+  //GESTION DE LA CACHE ET DU SIDE EFFECT SIMULTANNEMENT
+  useCacheBeforeRemove(navigation, storeCache, ['ALL_NOTIFICATIONS', notifications])
+  const { datas, loadMore, loading, hasMore } = useCacheWithDatas('ALL_NOTIFICATIONS', getCache, getNotifications, [user] ) 
 
 
 const sendNotif = async (username, source, model, type) => {
     setIsLoading(true)
-    const response = await sendNotificaitons({username:username, source:source, model:model, type:type})
+    const response = await sendNotifications({username:username, source:source, model:model, type:type})
     if(response)
     {
         Alert.alert('Notif','Notification Ajoutée avec succes.')
@@ -66,8 +77,8 @@ const sendNotif = async (username, source, model, type) => {
     Alert.alert('UpdateNotif','Verifier votre connexion Internet.')
   }
 }*/
-
-const getNotif = useCallback(async (user, page, limit) => {
+/*
+const getNotif = useCallback(async (user, page, limit,) => {
   if (isLoading || !hasMore) return;
 
   setIsLoading(true);
@@ -75,8 +86,11 @@ const getNotif = useCallback(async (user, page, limit) => {
 
     const newData = await getNotifications(user, page, limit);
     if (newData.length > 0) {
-      setNotifications((prevNotif)=>[...prevNotif, ...newData])
+
+      isCacheLoaded.current ? setNotifications(newData) : setNotifications((prevNotif)=>[...prevNotif, ...newData])
       setPage((prevPage) => prevPage + 1);
+      isCacheLoaded.current = false
+
     } else {
       setHasMore(false);
     }
@@ -86,11 +100,15 @@ const getNotif = useCallback(async (user, page, limit) => {
     setIsLoading(false);
   }
 }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);
+*/
 
+const onEndReached = useCallback(async () => { 
+  if (hasMore) {
+    loadMore(); 
+  }
+}, [loadMore, hasMore])
 
-const onEndReached = async () => { await getNotif(user, page, limit) }
-
-
+/*
 useEffect(() => {
   const fetchData = async () => {  
       //console.log("isLoading")
@@ -100,7 +118,7 @@ useEffect(() => {
       fetchData();
   
 }, []);
-
+*/
 
 
 const openNotif = async (user, item) => {
@@ -138,21 +156,22 @@ const openNotif = async (user, item) => {
   }
 }
 
+
+  useEffect(()=>{
+      setNotifications(datas)
+  }, [datas])
+
     return(
         <View style={[notificationsStyles.sceneContainers]}>
             <FlatList
-                    data={notificaitons}
+                    data={notifications}
                     renderItem={ ({item}) => { return(<RenderNotificationItem from="notifications" item={item} openNotif={openNotif} user={user} />)} }
                     keyExtractor={ (item) => { return Math.random().toString(); } }
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     contentContainerStyle={[notificationsStyles.flatlist]}
                     onEndReached={()=>{onEndReached()}}
                     onEndReachedThreshold={0.3}
-                    ListFooterComponent={
-                      <Pressable onPress={async()=>{sendNotif(user.username, 'app', 'USER', 'ON_REGISTERED')}} style={{backgroundColor:appColors.secondaryColor1,color:appColors.white,alignItems:"center",paddingVertical:20,}}>
-                        <Text style={{color:appColors.white,}}>Send Notifications</Text>
-                      </Pressable>
-                    }
+                   
             />
 
             
@@ -160,7 +179,13 @@ const openNotif = async (user, item) => {
   )
 }
   
-
+/*
+ ListFooterComponent={{
+                      <Pressable onPress={async()=>{sendNotif(user.username, 'app', 'USER', 'ON_REGISTERED')}} style={{backgroundColor:appColors.secondaryColor1,color:appColors.white,alignItems:"center",paddingVertical:20,}}>
+                        <Text style={{color:appColors.white,}}>Send Notifications</Text>
+                      </Pressable>
+                    }}
+  */
 
 
 

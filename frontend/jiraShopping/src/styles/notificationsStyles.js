@@ -13,6 +13,10 @@ export const notificationsStyles = StyleSheet.create({
         backgroundColor : appColors.white,
 
     },
+    sceneContainers :
+    {
+        paddingBottom : 50,
+    },
     item :
     {
         width : '100%',

@@ -19,7 +19,7 @@ import { sinceDate } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
 import { useNavigation } from '@react-navigation/native';
-
+import { useCacheBeforeRemove, useCacheWithDatas } from '../../hooks/cacheHooks';
 
 import RenderNotificationItem from '../common/RenderNotificationItem';
 
@@ -30,16 +30,23 @@ import { storeCache, getCache } from '../../cache/cacheFunctions';
 const OffersNotifications = (props) => {
   const navigation = useNavigation()
     const { user } = useContext(UserContext)
-    //const user = {_id : "668fdfc6077f2a5c361dd7fc",}
-    const [isLoading, setIsLoading] = useState(false)
+      //GESTION DE LA CACHE ET DU SIDE EFFECT SIMULTANNEMENT
+  useCacheBeforeRemove(navigation, storeCache, ['OFFERS_NOTIFICATIONS', offers])
+  //(cacheKey, getCache, loadMoreDatas, parameters)
+  const { datas, loadMore, loading, hasMore } = useCacheWithDatas('OFFERS_NOTIFICATIONS', getCache, getOffers, [user] ) 
+    
+    /*const [isLoading, setIsLoading] = useState(false)
     const [page, setPage] = useState(1);
     const limit = 100
-    const [hasMore, setHasMore] = useState(true);
+    const [hasMore, setHasMore] = useState(true);*/
+
     const [offers, setOffers] = useState([])
    // const [isCacheLoaded, setIsCacheLoaded] = useState(false)
-   const isCacheLoaded = useRef(false)
+   //const isCacheLoaded = useRef(false)
 
-  const getOff = useCallback(async (user, page, limit) => {
+/*
+  const getOff = useCallback(async (user) => {
+    const result = {}
     if (isLoading || !hasMore) return;
   
     setIsLoading(true);
@@ -49,10 +56,9 @@ const OffersNotifications = (props) => {
       //console.log(newData[0])
       if (newData.length > 0) {
 
-        isCacheLoaded ? setOffers(newData)  : setOffers((prevOffers)=>[...prevOffers, ...newData])
         setPage((prevPage) => prevPage + 1);
         //setIsCacheLoaded(false)
-        isCacheLoaded.current = false
+        result = {...result, datas:newData}
 
       } else {
         setHasMore(false);
@@ -61,11 +67,16 @@ const OffersNotifications = (props) => {
       console.error('Erreur lors du chargement des données :', error);
     } finally {
       setIsLoading(false);
+      return {...result,  datas:newData, hasMore, isLoading, user, page, limit}
     }
   },) //[isLoading, hasMore, page]);
+  */
   
-  
-  const onEndReached = async () => { await getOff(user, page, limit) }
+  const onEndReached = useCallback(async () => { 
+    if (hasMore) {
+      loadMore(); 
+    }
+  }, [loadMore, hasMore])
 
   
 const openOffer = async (user, item) => {
@@ -85,38 +96,12 @@ const openOffer = async (user, item) => {
     }
 }
 
-  
-  useEffect(() => {
-    const fetchData = async () => {  
-        //console.log("isLoading")
-        const offersCache = await getCache('OFFERS_NOTIFICATIONS')
-        //console.log(offersCache)
-        if(offersCache)
-        {
-          setOffers(offersCache)
-          //setIsCacheLoaded(true)
-          isCacheLoaded.current = true
-        }
-        await getOff(user, page, limit)
-      };
-      
-        fetchData();
-    
-  }, []);
 
 
-  useEffect(() => {
-        const beforeRemoveListener = navigation.addListener('beforeRemove', async (e) => {
-            e.preventDefault();
 
-            await storeCache('OFFERS_NOTIFICATIONS', offers)
-
-            console.log("éstoreDatas")
-            navigation.dispatch(e.data.action)
-        })
-        return beforeRemoveListener;
-}, [navigation, offers]);
-
+  useEffect(()=>{
+      setOffers(datas)
+  }, [datas])
 
     return (
         <View style={[notificationsStyles.sceneContainers]}>
