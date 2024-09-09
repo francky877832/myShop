@@ -28,6 +28,7 @@ import SSubCategories from '../components/paths/search/SSubCategories';
 import VerifyDeliveryInfos from '../components/specific/VerifyDeliveryInfos';
 import Address from '../components/specific/Address';
 import ConfirmDeliveryInfos from '../components/specific/ConfirmDeliveryInfos';
+import ValidatePayment from '../components/specific/ValidatePayment';
 import HeaderNavigation from '../components/common/HeaderNavigation';
 
 import HomeNavigation from '../navigation/HomeNavigation';
@@ -62,9 +63,9 @@ export default function MainNavigation() {
             <OrdersProvider>
             <CommentsProvider>
             <Stack.Navigator
-              initialRouteName="UserLogin"
+              initialRouteName="ValidatePayment"
               screenOptions={annimatedStackTransition(0.9, 250, 200)}
-      >
+            >
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
                 <Stack.Screen name="Search" component={Search}  options={{ title: 'Search', headerShown : false,}} />
                 <Stack.Screen name="ProductDetails" component={ProductDetails}  options={{ title: 'Product Details', headerShown : false, tabBarVisible: false, }} />
@@ -86,6 +87,7 @@ export default function MainNavigation() {
                 <Stack.Screen name="VerifyDeliveryInfos" component={VerifyDeliveryInfos}  options={{ unmountOnBlur: true, title: 'Informations De Payement', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="VerifyDeliveryInfosAddress" component={Address} options={{ title: 'Mon Adresse', headerShown : true, tabBarVisible: true }} />
                 <Stack.Screen name="ConfirmDeliveryInfos" component={ConfirmDeliveryInfos} options={{ title: 'Confirmer Les Informations', headerShown : true, tabBarVisible: true }} />
+                <Stack.Screen name="ValidatePayment" component={ValidatePayment} options={{ title: 'Valider Le Payement', headerShown : true, tabBarVisible: true }} />
 
                 
                 <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : false, tabBarVisible: false, }} />

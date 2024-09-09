@@ -22,7 +22,7 @@ const VerifyDeliveryInfos = (props) => {
     const navigation = useNavigation()
     //const { user, temporaryAddress, setTemporaryAddress } = useContext(UserContext)
     //const {products} = route.params
-    const user = {address:{title:'Ndokoti'}, phone:'+237677127907'}
+    const user = {address:{title:'Ndokoti'}, phone:'677127907'}
     const [temporaryAddress, setTemporaryAddress] = useState({address:{title:'Ndokoti'},})
 
     const [addressTitle, setAdressTitle] = useState(temporaryAddress.address.title)
@@ -163,7 +163,7 @@ const VerifyDeliveryInfos = (props) => {
                 </Pressable>
 
                 <View style={[verifyInfosStyles.acheter]}>
-                    <CustomButton text="Valider" disable={false} styles={{ pressable: verifyInfosStyles.button, text: verifyInfosStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { handleValidatePressed()}} />
+                    <CustomButton text="Payer" disable={false} styles={{ pressable: verifyInfosStyles.button, text: verifyInfosStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { handleValidatePressed()}} />
                 </View>
             </View>
             
