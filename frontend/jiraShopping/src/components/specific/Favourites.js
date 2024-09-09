@@ -17,6 +17,8 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserFavourites } from '../../store/favourites/favouritesSlice'; 
+import { useIsFocused } from '@react-navigation/native';
+import { UserContext } from '../../context/UserContext';
 
 
 const loggedUser = "Francky"
@@ -26,6 +28,8 @@ const Favourites = (props) => {
 
    // const {favourites, isLoading, loadMoreFavouriteProducts} = useContext(FavouritesContext)
    const dispatch = useDispatch();
+   const isFocused = useIsFocused()
+   const {user, isAuthenticated, } = useContext(UserContext)
    const { favourites, isLoading, page, hasMore, modifiedProducts } = useSelector((state) => state.favourites);
    const basket = useSelector((state) => state.basket.basket);
    
@@ -34,10 +38,18 @@ const Favourites = (props) => {
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
     
     const loadMoreFavouriteProducts = useCallback(() => {
-        //dispatch(fetchUserFavourites({user:loggedUserId, page:page}));
+        //dispatch(fetchUserFavourites({user:user._id, page:page}));
     },[fetchUserFavourites, page])
 
+/* En le faisant on modifie aıtomatiquement modified product*/
+    useEffect(() => {
+        if (isFocused) {
+            dispatch(fetchUserFavourites({user:user._id, page:page}));
+            //console.log('FavouritesRefreshed')
+        }
+      }, [isFocused]);
 
+      //basket={basket} pour reactualiser les favourites lorsquon ajoute un produi a basket
     return(
         <View style={[favouritesStyles.container,]}>
                     <View style={[favouritesStyles.top]}>

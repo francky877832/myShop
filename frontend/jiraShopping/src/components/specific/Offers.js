@@ -148,9 +148,9 @@ const Offers = (props) => {
     const route = useRoute()
     const { product } = route.params
     //const _getLastOffers
-    //console.log(product)
+    //console.log(product.offers)
     //console.log(route.params.notificationsOffers)
-    const [offers, setOffers] = useState(/*route.params.notificationsOffers ||*/ defaultOffer)
+    const [offers, setOffers] = useState(route.params.notificationsOffers?.length>0 ? route.params.notificationsOffers : defaultOffer)
     
 
     const [inputValue, setInputValue] = useState("")
@@ -267,7 +267,8 @@ const fetchUserOffers = async()=>{
             if (!response.ok) {
                 throw new Error('Erreur lors de la requête'+await response.text());
             }
-                //console.log(datas[0].offers)
+                //console.log(datas)
+
             datas.offers.length>0 ? setOffers(datas.offers) : null //setOffers(defaultOffer)
     }catch(error){
         console.log(error)

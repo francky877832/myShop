@@ -101,25 +101,22 @@ const getProductsFromCategories = async () =>{
 
 
   
-    const loadMoreData = useCallback(async (user) => {
+    const loadMoreData = useCallback(async ({user, resetPage=false}) => {
       console.log("ook")
-      if (isLoading || !hasMore) return;
-  
+      if (!resetPage && (isLoading || !hasMore)) return;
+      console.log(resetPage)
       setIsLoading(true);
       try {
-
+        const page = resetPage ? 1 : page
         const newData = await getProducts(user, page);
     
         //console.log(newData[2].comments)
         if (newData.length > 0) {
-          //setProducts(newData)
-          //console.log("pk")
-          //updateProducts(newData.datas);
-          //newData.map((el)=>console.log(el.comments))
-          setProducts((prevProducts)=>[...prevProducts, ...newData])
-          //if(page < totalPages)
+          console.log(newData[3].likes)
+          setProducts(prevProducts =>  resetPage ? [...newData] : [...prevProducts, ...newData]);
+
           setPage((prevPage) => prevPage + 1);
-          //setRefreshKey(prevKey => prevKey + 1);
+
           console.log(page)
         } else {
           setHasMore(false); // Pas plus de données à charger

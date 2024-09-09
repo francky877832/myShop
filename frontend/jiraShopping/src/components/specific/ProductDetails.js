@@ -437,7 +437,7 @@ const handleSellerBrandPressed = (product) => {
                     {
                     (user._id!=data.seller._id) 
                            ?
-                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data, inputFocused:true}) } }>
+                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data, inputFocused:true, notificationsOffers:data.offers[0].offers}) } }>
                             <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{"Proposer"}</Text>
                         </Pressable>
                         :

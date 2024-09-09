@@ -3,7 +3,7 @@ import React, { useState, useEffect, createContext, useContext, useRef, useCallb
 import { View, Text, StyleSheet, Animated, Easing, Alert, Dimensions, ActivityIndicator} from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 const initialLayout = { width: Dimensions.get('window').width };
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 
 //custom component
 import Top from '../common/Top';
@@ -77,6 +77,7 @@ const FirstRoute = React.memo(() => (
 
 const Preferences = (props) => {
     const navigation = useNavigation()
+    const isFocused = useIsFocused()
     const [isSearch, setIsSearch] = useState(false) 
     //const [isLoading, setIsLoading]  = useState(true)
     const dispatch = useDispatch();
@@ -90,38 +91,42 @@ const Preferences = (props) => {
     const { getProducts , loadMoreData, products, isLoading, hasMore, setIsLoading, refreshKey} = useContext(ProductContext)
 
     const loadMoreData_ = useCallback(async () => {
-      await loadMoreData(user)
+      await loadMoreData({user:user, resetPage:false})
     })
 
 
     
     useEffect(() => {
       //console.log(loggedUserId)
-      if (isAuthenticated){
-        dispatch(fetchUserFavourites({user:user._id, page:page}));
+      if (isAuthenticated &&  isFocused){
+        dispatch(fetchUserFavourites({user:user._id, page:page})); //reset:true
         dispatch(fetchUserBasket(user._id));
+        console.log("PREFERENCE BASKET AND FAVOURITES")
       }
+    
 
-  }, [dispatch]);
+  }, [dispatch, isFocused]);
   
 useEffect(()=>{
     //loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
 }, [])
 
 useEffect( () => {
-    console.log("****************")
+    //console.log("****************")
     const fetchData = async () => {
-        await loadMoreData(user)
+        await loadMoreData({user:user, resetPage:true})
         //console.log("OK")
         //setIsLoading(false);
       };
   // if (isAuthenticated && isLoading) {
-    if (isAuthenticated) {
+
+    if (isAuthenticated &&  isFocused) {
         fetchData()
+        console.log("PREFERENCE PRODUCT")
     }
-    console.log("CLOSE***")
+   
     
-  }, []); //refreshComponent, isAuthenticated,
+  }, [isFocused]); //refreshComponent, isAuthenticated,
 
 //console.log(user)
 
