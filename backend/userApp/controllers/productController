@@ -145,12 +145,14 @@ exports.removeProduct  = (req, res, next) => {
 exports.getProducts = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
-    const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
+    const userId = req.query.user
+    const limit = parseInt(req.query.limit) || 50; // Nombre d'éléments par page, par défaut 5
     const skip = (page - 1) * limit;
 
+    
     // Étape 1 : Pipeline d'agrégation pour les produits
    
-    const pipeline = getPipeLineForProducts(undefined, skip, limit, { _id: -1 })
+    const pipeline = getPipeLineForProducts(undefined, skip, limit, { _id: -1 }, userId)
     // Étape 2 : Exécuter le pipeline d'agrégation pour obtenir les produits avec commentaires
     const productsWithComments = await Product.aggregate(pipeline).exec();
 //console.log(productsWithComments[0].favourites)
@@ -159,7 +161,8 @@ exports.getProducts = async (req, res, next) => {
     const totalPages = Math.ceil(totalDatas / limit);
 
     // Retourner la réponse
-    res.status(200).json({ datas: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
+    console.log(productsWithComments.length)
+    res.status(200).json({ datas: productsWithComments.slice(skip, skip+limit), page: page, totalPages: totalPages, totalDatas: totalDatas });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });

@@ -26,11 +26,11 @@ const ProductProvider = ({children}) => {
     const dispatch = useDispatch()
 
 
-     const getProducts = async (page)=> {
+     const getProducts = async (user, page)=> {
       //console.log("responseJson")
         try
         {
-            const response = await fetch(`${server}/api/datas/products/get?page=${page}`,{
+            const response = await fetch(`${server}/api/datas/products/get?user=${user._id}&page=${page}`,{
                 method: 'GET',
                 headers: {
                     'Content-Type': 'Application/json',
@@ -101,14 +101,14 @@ const getProductsFromCategories = async () =>{
 
 
   
-    const loadMoreData = useCallback(async () => {
+    const loadMoreData = useCallback(async (user) => {
       console.log("ook")
       if (isLoading || !hasMore) return;
   
       setIsLoading(true);
       try {
 
-        const newData = await getProducts(page);
+        const newData = await getProducts(user, page);
     
         //console.log(newData[2].comments)
         if (newData.length > 0) {

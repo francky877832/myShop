@@ -90,7 +90,7 @@ const Preferences = (props) => {
     const { getProducts , loadMoreData, products, isLoading, hasMore, setIsLoading, refreshKey} = useContext(ProductContext)
 
     const loadMoreData_ = useCallback(async () => {
-      await loadMoreData()
+      await loadMoreData(user)
     })
 
 
@@ -111,7 +111,7 @@ useEffect(()=>{
 useEffect( () => {
     console.log("****************")
     const fetchData = async () => {
-        await loadMoreData()
+        await loadMoreData(user)
         //console.log("OK")
         //setIsLoading(false);
       };
