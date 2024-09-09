@@ -108,9 +108,6 @@ exports.formatMoney = (m) => {
     return money.reverse().join('')
 }
 
-exports.formatPhoneNumber = (phone) => {
-    
-}
 
 exports.countDatas = (datas) => {
     let count = 0
@@ -374,6 +371,16 @@ export const pluralize = (nombre, nom) => {
 
     // Retourne au singulier
     return nom;
+}
+
+
+
+//ORDERS
+exports.formatPhoneNumber = (phone) => {
+
+}
+exports.caculateProductTotalPrices = (products) => {
+    //offersPrice, newPrice
 }
 
 

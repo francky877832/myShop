@@ -195,8 +195,9 @@ const submitProduct = async () => {
             name : valueName,
             description : valueDesc,
 
-            price : valuePrice.replace('.',''),
+            price : route.params.product? route.params.product.price : valuePrice.replace('.',''),
             newPrice : valuePrice.replace('.',''),
+            offerPrice : valuePrice.replace('.',''),
 
             minPrice : valuePrice.replace('.',''),
             maxPrice : valuePrice.replace('.',''),

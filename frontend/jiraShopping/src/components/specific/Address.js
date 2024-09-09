@@ -134,11 +134,7 @@ useEffect(()=>{
 }, [navigation])
 
 
-    const updateUserInfos = async (infos) => 
-    {
-        //MONGODB
-        navigation.navigate('VerifyDeliveryInfos', {page:'VerifyDeliveryInfosAddress'})
-    }
+   
      const handleTemporaryAddress = (temporaryAddress) =>
     {
         setTemporaryAddress(temporaryAddress)
@@ -156,6 +152,12 @@ useEffect(()=>{
         }
         const userPhone = {phone:tel}
 
+        const updateUserInfos = async (infos) => 
+        {
+                //MONGODB
+            navigation.navigate('VerifyDeliveryInfos', {page:'VerifyDeliveryInfosAddress'})
+        }
+
     if(route.params.page=='VerifyDeliveryInfos')
     {
         Alert.alert(
@@ -163,10 +165,7 @@ useEffect(()=>{
             "Voulez Vous définitivement changer d'adresse ou uniquement pour cette livraison ?",
             [
               { text: "Non", onPress: () => handleTemporaryAddress(), style: "cancel" },
-              { text: "Oui", onPress: async () => {
-                     await updateUserInfos()
-                  }
-               }
+              { text: "Oui", onPress: async () => { await updateUserInfos()} }
             ]
           );
     }

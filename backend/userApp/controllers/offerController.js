@@ -1,4 +1,5 @@
 const Offer = require('../models/offerModel');
+const Product = require('../models/productModel');
 const mongoose = require('../../shared/db').mongoose;
 const { getPipeLineForOffers } = require('./pipelinesForControllers')
 
@@ -12,8 +13,9 @@ exports.respondOfferProduct = (req, res, next) => {
         //console.log(offers)
         offers[0].offers.at(-1).hasGotResponse = offer.hasGotResponse
         Offer.updateOne({ seller : offer.seller, buyer : offer.buyer, product : offer.product}, {offers:offers[0].offers})
-        .then(() => {
-            console.log("p")
+        .then(async () => {
+            //console.log("p")
+            //await Product.findByIdAndUpdate(offer.product, {offersPrice:offers[0].offers.at(-1).price})
             res.status(200).json({message : "Reponse mise a jour pour l'offre."});
         }).catch( (error) => {
             console.log(error)

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Pressable, ActivityIndicator, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Pressable, ActivityIndicator, Keyboard, TouchableWithoutFeedback, Alert, Linking } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -15,12 +15,13 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { verifyInfosStyles } from '../../styles/verifyInfosStyles';
 import { UserContext } from '../../context/UserContext';
-import { formatMoney, formatPhoneNumber } from '../../utils/commonAppFonctions'
+import { formatMoney, formatPhoneNumber, caculateProductTotalPrices } from '../../utils/commonAppFonctions'
 
 const VerifyDeliveryInfos = (props) => {
     const route = useRoute()
     const navigation = useNavigation()
     //const { user, temporaryAddress, setTemporaryAddress } = useContext(UserContext)
+    //const {products} = route.params
     const user = {address:{title:'Ndokoti'}, phone:'+237677127907'}
     const [temporaryAddress, setTemporaryAddress] = useState({address:{title:'Ndokoti'},})
 
@@ -54,6 +55,21 @@ const VerifyDeliveryInfos = (props) => {
         }
         navigation.navigate('ConfirmDeliveryInfos', {infos:ordersDetails})
         
+    }
+
+    const handleContratPressed = () => {
+        const visitContratLink = () => {
+            Linking.openURL('https://www.google.com');
+        }
+        Alert.alert(
+            "Information",
+            "L'applicaiton essaye de vous diriger vers un lien externe. Continuer ?",
+            [
+                { text: "Non", onPress: () => null, style: "cancel" },
+                { text: "Oui", onPress: () =>{visitContratLink() }
+                }
+            ]
+            );
     }
 
     return (
@@ -122,7 +138,7 @@ const VerifyDeliveryInfos = (props) => {
                         <RadioButton value={true} />
                             <View style={[verifyInfosStyles.radioItem]}>
                                 <Text style={[customText.text,]}>Accepter les conditions du </Text>
-                                <Pressable style={[ verifyInfosStyles.pressableContrat]}>
+                                <Pressable style={[ verifyInfosStyles.pressableContrat]} onPress={()=>(handleContratPressed())}>
                                     <Text style={[customText.text, verifyInfosStyles.pressableContratText]}>Contrat De Vente</Text>
                                 </Pressable>
                                 <Text style={[customText.text,]}>. </Text>

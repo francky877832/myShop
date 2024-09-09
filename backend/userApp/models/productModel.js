@@ -8,9 +8,11 @@ const productSchema = new Schema({
 
     price : { type : Number, required : true },
     newPrice: { type: Number, default: function() { return this.price; } },
+    
 
     minPrice: { type: Number, default: function() { return this.price - this.price*10/100; } },
     maxPrice: { type: Number, default: function() { return this.price + this.price*10/100; } },
+
 
     kargoPrice: { type: Number, required : false },
 

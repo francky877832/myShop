@@ -14,6 +14,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
 import { server } from '../../remote/server';
 import { MinifyHorizontalProduct } from '../common/CommonSimpleComponents'
+import { useDispatch } from 'react-redux';
 
 //const loggedUser = "Francky"
 const   OffersItem = (props) => {
@@ -161,7 +162,7 @@ const Offers = (props) => {
 
     const [priceError, setPriceError] = useState(false)
 
-    const realPrice = !!product.newPrice ? product.newPrice : product.price
+    const realPrice = product.newPrice != product.price ? product.newPrice : product.price
     const downBoundry = parseInt(realPrice)*(50/100)
     const upBoundry = parseInt(realPrice)
 //console.log(downBoundry)
