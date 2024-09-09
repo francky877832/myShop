@@ -64,7 +64,7 @@ exports.getPipeLineForProducts = ( userId=undefined, skip=0, limit=100, sort={_i
               }
             },
             {
-              $unwind: { path: "$offers", pre }
+              $unwind: { path: "$offers", preserveNullAndEmptyArrays:true }
             },
           ],
           as: "offers" // Stocker les offres dans ce champ
