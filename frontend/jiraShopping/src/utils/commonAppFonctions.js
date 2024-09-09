@@ -108,6 +108,10 @@ exports.formatMoney = (m) => {
     return money.reverse().join('')
 }
 
+exports.formatPhoneNumber = (phone) => {
+    
+}
+
 exports.countDatas = (datas) => {
     let count = 0
 

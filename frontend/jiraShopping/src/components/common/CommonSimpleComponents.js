@@ -161,6 +161,7 @@ exports.TemporaryNotification = (props) => {
 
 exports.PriceDetails = (props) => {
     const {product, title, closePriceDetails} = props
+    const transport = product.feesBy==='buyer' ? product.kargoPrice : 0
     return (
         <View style={[commonSimpleComponentsStyles.priceDetails.container]}>
             <View style={[{flexDirection:'row', justifyContent:'space-between', paddingRight:10}]}>
@@ -182,7 +183,7 @@ exports.PriceDetails = (props) => {
                     <Text  style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle]}>Frais De Transport</Text>
                     <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle, {fontStyle:'italic', fontSize:11}]}>Payé par {product.feesBy==='seller'?'vous':'acheteur'}</Text>
                 </View>
-                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.price]}>{!!product.kargoPrice?formatMoney(product.kargoPrice):'Non Inclus'} </Text>
+                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.price, product.feesBy==='seller'?{fontStyle:'italic',fontSize:14}:null]}>{product.feesBy==='buyer'?-formatMoney(product.kargoPrice):'Payé par le vendeur'} </Text>
             </View>
 
             <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine]}>
@@ -192,7 +193,7 @@ exports.PriceDetails = (props) => {
 
             <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine, commonSimpleComponentsStyles.priceDetails.totalPriceLine]}>
                 <Text  style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle, commonSimpleComponentsStyles.priceDetails.totalPriceText]}>Total - Vos Gain</Text>
-                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.price]}>{formatMoney(product.newPrice-product.newPrice*10/100)}  XAF</Text>
+                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.price]}>{formatMoney((product.newPrice-product.newPrice*10/100)-transport)}  XAF</Text>
             </View>
 
         </View>

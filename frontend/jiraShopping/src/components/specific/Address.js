@@ -9,7 +9,11 @@ import {CustomButton} from '../common/CommonSimpleComponents'
 import { appColors, customText, appFont } from '../../styles/commonStyles';
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+
+import { storeCache, getCache } from '../../cache/cacheFunctions';
+import { UserContext } from '../../context/UserContext';
+import { setIsLoading } from '../../store/favourites/favouritesSlice';
 
 
 const GEO_NAMES_USERNAME = 'francky877832';
@@ -76,6 +80,9 @@ const CityPicker = (props) => {
 const   Address = (props) => {
     
     const navigation = useNavigation()
+    const route = useRoute()
+    //const { user, temporaryAddress, setTemporaryAddress } = useContext(UserContext)
+    const [temporaryAddress, setTemporaryAddress] = useState({})
     const [allowBack, setAllowBack] = useState(false);
     const [addressTitle, setAdressTitle] = useState("")
     const [completeName, setCompleteName] = useState("")
@@ -94,9 +101,10 @@ const   Address = (props) => {
 
 
 
+
 // Ajouter l'écouteur pour l'événement de retour
 const onBackPress = useCallback((e) => {
-    if (allowBack) {
+    if (allowBack || route.params.page=='VerifyDeliveryInfos') {
         return;
     }
 
@@ -104,19 +112,20 @@ const onBackPress = useCallback((e) => {
       e.preventDefault(); // Empêcher le comportement par défaut de la navigation
     }
 
-    Alert.alert(
-      "Attention!",
-      "Abandoné les modifications ?",
-      [
-        { text: "Non", onPress: () => null, style: "cancel" },
-        { text: "Oui", onPress: () =>{
-                setAllowBack(true);
-                //navigation.goBack();
-                navigation.dispatch(e.data.action);
+
+        Alert.alert(
+        "Attention!",
+        "Abandoné les modifications ?",
+        [
+            { text: "Non", onPress: () => setIsPostLoading(false), style: "cancel" },
+            { text: "Oui", onPress: () =>{
+                    setAllowBack(true);
+                    //navigation.goBack();
+                    navigation.dispatch(e.data.action);
+                }
             }
-         }
-      ]
-    );
+        ]
+        );
   }, [allowBack, navigation]);
 
 useEffect(()=>{
@@ -125,10 +134,46 @@ useEffect(()=>{
 }, [navigation])
 
 
-    const updateAddress = ()=>{
+    const updateUserInfos = async (infos) => 
+    {
+        //MONGODB
+        navigation.navigate('VerifyDeliveryInfos', {page:'VerifyDeliveryInfosAddress'})
+    }
+     const handleTemporaryAddress = (temporaryAddress) =>
+    {
+        setTemporaryAddress(temporaryAddress)
+        navigation.navigate('VerifyDeliveryInfos', {page:'VerifyDeliveryInfosAddress'})
+    }
+
+    const updateAddress = async ()=>{
         setIsPostLoading(true)
 
-        //MONGODB
+        const newAddress = {
+            quater: quater,
+            city: selectedCity,
+            country: 'Cameroon',
+            title: addressTitle
+        }
+        const userPhone = {phone:tel}
+
+    if(route.params.page=='VerifyDeliveryInfos')
+    {
+        Alert.alert(
+            "Modification De L'adresse",
+            "Voulez Vous définitivement changer d'adresse ou uniquement pour cette livraison ?",
+            [
+              { text: "Non", onPress: () => handleTemporaryAddress(), style: "cancel" },
+              { text: "Oui", onPress: async () => {
+                     await updateUserInfos()
+                  }
+               }
+            ]
+          );
+    }
+    else
+    {
+        await updateUserInfos()
+    }
 
     }
 
@@ -139,7 +184,7 @@ useEffect(()=>{
         <ScrollView style={{flex:1}}>
             <View style={[adressStyles.containers]}>
             <View style={[{height:20}]}></View>
-                        <Input placeholder="Nommer l'endroit ou vous vivez : Tonnerre" value={addressTitle} onChangeText={(name)=>{setAdressTitle(name)}}
+                        <Input placeholder="Nommer l'endroit ou vous vivez : Tonnerre" value={addressTitle} onChangeText={(name)=>{setAdressTitle(name);}}
                             inputMode='text'
                             multiline={false}
                             maxLength={100}

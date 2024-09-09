@@ -25,7 +25,9 @@ import OrdersDetails from '../components/specific/OrdersDetails';
 import FiltersSearch from '../components/specific/FiltersSearch';
 import ChooseSearchFilters from '../components/common/ChooseSearchFilters';
 import SSubCategories from '../components/paths/search/SSubCategories';
-import VerifyInfos from '../components/specific/VerifyInfos';
+import VerifyDeliveryInfos from '../components/specific/VerifyDeliveryInfos';
+import Address from '../components/specific/Address';
+import ConfirmDeliveryInfos from '../components/specific/ConfirmDeliveryInfos';
 import HeaderNavigation from '../components/common/HeaderNavigation';
 
 import HomeNavigation from '../navigation/HomeNavigation';
@@ -60,7 +62,7 @@ export default function MainNavigation() {
             <OrdersProvider>
             <CommentsProvider>
             <Stack.Navigator
-              initialRouteName="UserLogin"
+              initialRouteName="VerifyDeliveryInfos"
               screenOptions={annimatedStackTransition(0.9, 250, 200)}
       >
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
@@ -80,7 +82,10 @@ export default function MainNavigation() {
                 <Stack.Screen name="FiltersSearch" component={FiltersSearch}  options={{ unmountOnBlur: true, title: 'Filtres', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="ChooseSearchFilters" component={ChooseSearchFilters}  options={{ unmountOnBlur: true, title: 'Categories', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="SSubCategories" component={SSubCategories}  options={{ unmountOnBlur: true, title: 'Sous-Categories', headerShown : true, tabBarVisible: false, }} />
-                <Stack.Screen name="VerifyInfos" component={VerifyInfos}  options={{ unmountOnBlur: true, title: 'Vérifications', headerShown : true, tabBarVisible: false, }} />
+                
+                <Stack.Screen name="VerifyDeliveryInfos" component={VerifyDeliveryInfos}  options={{ unmountOnBlur: true, title: 'Informations De Payement', headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="VerifyDeliveryInfosAddress" component={Address} options={{ title: 'Mon Adresse', headerShown : true, tabBarVisible: true }} />
+                <Stack.Screen name="ConfirmDeliveryInfos" component={ConfirmDeliveryInfos} options={{ title: 'Confirmer Les Informations', headerShown : true, tabBarVisible: true }} />
 
                 
                 <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : false, tabBarVisible: false, }} />

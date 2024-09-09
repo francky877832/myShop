@@ -20,6 +20,8 @@ const UserProvider = ({children}) => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
+    const [temporaryAddress, setTemporaryAddress] = useState({})
+
     //Controler les datas avec JOI VALIDATION
     const checkEmail = (email) =>{
 
@@ -73,6 +75,7 @@ const UserProvider = ({children}) => {
                 
                 //Mis a jour du contexte User
                 setUser(user)
+                setTemporaryAddress({address:user.address, phone:user.phone})
                 setIsAuthenticated(true);
 
             }
@@ -95,8 +98,8 @@ const UserProvider = ({children}) => {
     
     
 
-    const filterStateVars = {refreshComponent, email, username, password, user, isAuthenticated }
-    const filterStateSetters = {setRefreshComponent, setEmail, setUsername, setPassword, setUser, setIsAuthenticated}
+    const filterStateVars = {temporaryAddress, refreshComponent, email, username, password, user, isAuthenticated }
+    const filterStateSetters = {setTemporaryAddress, setRefreshComponent, setEmail, setUsername, setPassword, setUser, setIsAuthenticated}
     const utilsFunctions = { checkEmail, checkPassword, checkUsername, loginUserWithEmailAndPassword}
     return (
         <UserContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
