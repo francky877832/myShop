@@ -94,9 +94,9 @@ useEffect(() => {
                     data={orders}
                     renderItem={ ({item}) => { return(<RenderNotificationItem from="offers" setRead={setRead}
                             item={{...item,
-                                read : item.products.read,
+                                read : item.group.read,
                             title:"Nouvelle Commande",
-                            message : user._id===item.products.productDetails.seller._id ?
+                            message : item.sellers.some(el => el._id == user._id) ?
                                     "Félicitations!! Votre produit vient d'etre acheté. PréCipitez-vous vers l'agence la plus proche afin de l'expedier.\n Cliquez pour plus d\'informations."
                                 :
                                     "Félicitations!! Vous venez de passer une nouvelle commande. Nous travaillons pour que vous entrez en possession de votre produit dans les plus bref delais."

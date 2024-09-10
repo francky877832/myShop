@@ -41,6 +41,10 @@ export const ordersStyles = StyleSheet.create({
         paddingVertical : 10,
         paddingHorizontal : 20,
     },
+    orderImagesContainer :
+    {
+        flexDirection : 'row',
+    },
     orderTopLeft:
     {
 

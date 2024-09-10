@@ -124,7 +124,7 @@ const getOrders = useCallback(async (user, page, limit) => {
         const newData = await fetchUserOrders(user, page, limit);
         
         
-            setOrders(newData.orders.products)
+            setOrders(newData.orders)
             setSold(newData.sold)
             setBought(newData.bought)
         //console.log(newData)
@@ -137,7 +137,7 @@ const getOrders = useCallback(async (user, page, limit) => {
 },) // [isLoading, hasMore, page])  //pour un rechargements a chaque venue sur la page
    
     const addNewOrder = async () => {
-        
+
     }
 
 

@@ -209,21 +209,7 @@ exports.getOrdersUser = async (req, res, next) => {
         }
       },
 
-      {
-        $lookup: {
-          from: 'groupOrders',
-          localField: 'group',
-          foreignField: '_id',
-          as: 'group'
-        }
-      },
-      {
-        $addFields: {
-                'group':  {
-                $arrayElemAt: [`$group`, 0]
-            }
-        }
-      },
+
 
 
 
@@ -297,6 +283,25 @@ exports.getOrdersUser = async (req, res, next) => {
           as: 'favourites'
         }
       },
+
+
+      {
+        $lookup: {
+          from: 'groupOrders',
+          localField: 'group',
+          foreignField: '_id',
+          as: 'group'
+        }
+      },
+      {
+        $addFields: {
+                'group':  {
+                $arrayElemAt: [`$group`, 0]
+            }
+        }
+      },
+
+
    
       {
         $lookup: {
@@ -432,10 +437,9 @@ exports.getOrdersUser = async (req, res, next) => {
 
        
 
-      const sold_products = orders.flatMap((item)=> item.products.filter((el) => el.product?.seller?._id == userId ))
-      const bought_products =  orders.flatMap((item)=> item.products.filter((el) => el.product?.seller?._id != userId ))
+      const sold_products = orders.flatMap((item)=> { return {...item, products : item.products.filter((el) => el.product?.seller?._id == userId)}} )
+      const bought_products =  orders.flatMap((item)=> { return {...item, products : item.products.filter((el) => el.product?.seller?._id != userId)}} )
 //REGROUPER LES PRDUIT SUIVANT DES GROUPORDERS
-
        res.status(200).json({
           orders: orders, // results[0], //{...orders[0], products:results[0]},
           sold : sold_products,
