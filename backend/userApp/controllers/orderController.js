@@ -212,7 +212,7 @@ exports.getOrdersUser = async (req, res, next) => {
       {
         $lookup: {
           from: 'groupOrders',
-          localField: 'products.groupId',
+          localField: 'group',
           foreignField: '_id',
           as: 'group'
         }
@@ -239,13 +239,13 @@ exports.getOrdersUser = async (req, res, next) => {
         }
       },
 
-      /*{
+      {
         $addFields: {
                 'products.product':  {
                 $arrayElemAt: [`$products.product`, 0]
             }
         }
-      },*/
+      },
 
       {
         $lookup: {
@@ -292,7 +292,7 @@ exports.getOrdersUser = async (req, res, next) => {
       {
         $lookup: {
           from: 'users',
-          localField: 'product.favourites',
+          localField: 'products.product.favourites',
           foreignField: '_id',
           as: 'favourites'
         }
@@ -387,8 +387,8 @@ exports.getOrdersUser = async (req, res, next) => {
                             ]
                         },
                         // Ajouter les commentaires au dataDetails
-                        //comments: '$comments',
-                        //favourites: '$favourites'
+                        comments: '$comments',
+                        favourites: '$favourites'
                     }
                 ]
             }
@@ -429,50 +429,17 @@ exports.getOrdersUser = async (req, res, next) => {
 
         const totalPages = Math.ceil(totalDatas / limit);
 
-        const groupedOrders = orders.reduce((acc, order) => {
-            const productNo = order.products.no;
-                  if (!acc[productNo]) {
-                acc[productNo] = [];
-            }
-            acc[productNo].push(order);
-        
-            return acc;
-        }, {});
-        
-      
+
        
 
-      const sold_products = orders.filter((item)=> (userId==item.products.productDetails?.seller?._id))
-      const bought_products = orders.filter((item)=> (userId!=item.products.productDetails?.seller?._id))
+      const sold_products = orders.flatMap((item)=> item.products.filter((el) => el.product?.seller?._id == userId ))
+      const bought_products =  orders.flatMap((item)=> item.products.filter((el) => el.product?.seller?._id != userId ))
 //REGROUPER LES PRDUIT SUIVANT DES GROUPORDERS
-      const groupedSold= sold_products.reduce((acc, order) => {
-        const productNo = order.products.no;
-              if (!acc[productNo]) {
-            acc[productNo] = [];
-        }
-        acc[productNo].push(order);
-    
-        return acc;
-      }, {});
 
-      const groupedBought= bought_products.reduce((acc, order) => {
-        const productNo = order.products.no;
-              if (!acc[productNo]) {
-            acc[productNo] = [];
-        }
-        acc[productNo].push(order);
-    
-        return acc;
-    }, {});
-    const results = Object.values(groupedOrders);
-    const sold = Object.values(groupedSold);
-    const bought = Object.values(groupedBought);
-      //console.log(sold_products.length)
-      //res.status(200).json(orders)
        res.status(200).json({
           orders: orders, // results[0], //{...orders[0], products:results[0]},
-          sold : sold,
-          bought : bought,
+          sold : sold_products,
+          bought : bought_products,
           page: page,
           totalPages: totalPages,
           totalDatas: totalDatas
