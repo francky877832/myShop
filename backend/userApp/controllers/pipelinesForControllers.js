@@ -2,7 +2,7 @@ const mongoose = require('../../shared/db').mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
 exports.getPipeLineForProducts = ( userId=undefined, skip=0, limit=100, sort={_id:1}, userId2=undefined ) => {
-    let match; console.log(userId2)
+    let match; //console.log(userId2)
     if(userId) 
     {
       match = { seller: new mongoose.Types.ObjectId(userId), }

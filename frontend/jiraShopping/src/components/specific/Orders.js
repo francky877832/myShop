@@ -12,12 +12,10 @@ import { productDetailsStyles } from '../../styles/productDetailsStyles';
 import { datas } from '../../utils/sampleDatas';
 import { appColors, customText } from '../../styles/commonStyles';
 
-
 import { sinceDate, formatMoney, formatDateToLitteral, capitalizeFirstLetter } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
 import { useNavigation, useRoute } from '@react-navigation/native';
-
 
 import RenderNotificationItem from '../common/RenderNotificationItem';
 import { OrdersContext } from '../../context/OrdersContext';

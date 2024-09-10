@@ -101,25 +101,47 @@ const getProductsFromCategories = async () =>{
 
 
   
-    const loadMoreData = useCallback(async ({user, resetPage=false}) => {
+    const loadMoreData = useCallback(async ({user, resetPage=false, isInitial=false}) => {
       console.log("ook")
-      if (!resetPage && (isLoading || !hasMore)) return;
-      console.log(resetPage)
+      console.log(resetPage, isLoading, hasMore)
+      //if (!resetPage && (isLoading || !hasMore)) return;
+      if(!((resetPage && !isLoading) || (!resetPage && hasMore && !isLoading) || (hasMore && !isLoading))) {
+        console.log("GOIG OUT")  
+        return;
+      }
       setIsLoading(true);
       try {
-        const page = resetPage ? 1 : page
-        const newData = await getProducts(user, page);
-    
-        //console.log(newData[2].comments)
-        if (newData.length > 0) {
-          console.log(newData[3].likes)
-          setProducts(prevProducts =>  resetPage ? [...newData] : [...prevProducts, ...newData]);
+        const page_ = resetPage ? 1 : page
+        const newData = await getProducts(user, page_);
+        console.log(resetPage)
 
-          setPage((prevPage) => prevPage + 1);
+        console.log(newData.length)
+        if (newData.length > 0) 
+        {
+          //console.log(newData[3].likes)
+          
+          if(resetPage)
+          {
+            setProducts(newData);
+            setHasMore(true)
+            setPage(2)
+            console.log('RESETPAGE')
+          }
+          else
+          {
+            setProducts(prevProducts => [...prevProducts, ...newData])
+            setPage((prevPage) => prevPage + 1);
+            console.log('NORESET')
+          }
+          
 
-          console.log(page)
+          console.log("éThere")
+         
+
+          //console.log(page)
         } else {
           setHasMore(false); // Pas plus de données à charger
+          console.log("HASMORE FALSE")
         }
       } catch (error) {
         console.error('Erreur lors du chargement des données :', error);

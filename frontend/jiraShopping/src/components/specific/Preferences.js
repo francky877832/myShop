@@ -81,25 +81,34 @@ const Preferences = (props) => {
     const [isSearch, setIsSearch] = useState(false) 
     //const [isLoading, setIsLoading]  = useState(true)
     const dispatch = useDispatch();
-    const page = useSelector((state) => state.favourites.page);
+    const Fav_page = useSelector((state) => state.favourites.page);
     const { favourites, liked } = useSelector(state => state.favourites);
     //console.log(page)
 
 
 
     const {user, loginUserWithEmailAndPassword, isAuthenticated, setIsAuthenticated } = useContext(UserContext)
-    const { getProducts , loadMoreData, products, isLoading, hasMore, setIsLoading, refreshKey} = useContext(ProductContext)
+    const { getProducts , loadMoreData, products, isLoading, hasMore, page, setIsLoading, refreshKey} = useContext(ProductContext)
+
+    const [initialLoad, setInitialLoad] = useState(true); // Variable pour empêcher le premier appel
+    
 
     const loadMoreData_ = useCallback(async () => {
-      await loadMoreData({user:user, resetPage:false})
-    })
+      /*console.log("initLoad")
+      console.log(initialLoad)
+      console.log("initLoad")*/
+
+        console.log("ONEDNREACH")
+        await loadMoreData({user:user, resetPage:false})
+      
+    }) // [isLoading, hasMore, page])
 
 
     
     useEffect(() => {
       //console.log(loggedUserId)
       if (isAuthenticated &&  isFocused){
-        dispatch(fetchUserFavourites({user:user._id, page:page})); //reset:true
+        dispatch(fetchUserFavourites({user:user._id, page:Fav_page})); //reset:true
         dispatch(fetchUserBasket(user._id));
         console.log("PREFERENCE BASKET AND FAVOURITES")
       }
@@ -114,7 +123,7 @@ useEffect(()=>{
 useEffect( () => {
     //console.log("****************")
     const fetchData = async () => {
-        await loadMoreData({user:user, resetPage:true})
+        await loadMoreData({user:user, resetPage:true, isInitial:true})
         //console.log("OK")
         //setIsLoading(false);
       };
@@ -123,10 +132,11 @@ useEffect( () => {
     if (isAuthenticated &&  isFocused) {
         fetchData()
         console.log("PREFERENCE PRODUCT")
+        setInitialLoad(false)
     }
    
     
-  }, [isFocused]); //refreshComponent, isAuthenticated,
+  }, [isFocused]) // [isFocused]); //refreshComponent, isAuthenticated,
 
 //console.log(user)
 
@@ -155,7 +165,7 @@ const renderScene = ({ route }) => {
           //return <ProductsListWithFilters_ onEndReached={loadMoreData} isLoading={isLoading} hasMore={hasMore} data={products} />;
           return (
             <View style={{flex:1,}}>
-                <ProductsListWithFilters name="Preference" onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
+                <ProductsListWithFilters name="Preference" onEndReached={loadMoreData_} onEndReachedThreshold={0.1} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
             </View>
           )
         case 'categories':
