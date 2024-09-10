@@ -4,9 +4,9 @@ const orderCtrl = require('../controllers/orderController');
 
 
 //Basket route
-router.get('/get/:user', orderCtrl.getOrdersUser);
+router.get('/get/:user', orderCtrl.getUserOrders);
 
-router.post('/add', orderCtrl.addOrderUser);
+router.post('/add', orderCtrl.addUserOrder);
 router.put('/update/read/:id', orderCtrl.updateOrderRead);
 router.put('/update/status/:id', orderCtrl.updateOrderStatus);
 

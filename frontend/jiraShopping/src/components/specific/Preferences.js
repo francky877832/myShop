@@ -31,6 +31,7 @@ import {CustomActivityIndicator, TemporaryNotification} from '../common/CommonSi
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserFavourites } from '../../store/favourites/favouritesSlice'; 
 import { fetchUserBasket } from '../../store/baskets/basketsSlice';
+import { debouncer } from '../../utils/commonAppFonctions';
 
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
@@ -108,19 +109,20 @@ const Preferences = (props) => {
     
     useEffect(() => {
       //console.log(loggedUserId)
-      if (isAuthenticated &&  isFocused){
+      if (isAuthenticated){
         dispatch(fetchUserFavourites({user:user._id, page:Fav_page})); //reset:true
         dispatch(fetchUserBasket(user._id));
         console.log("PREFERENCE BASKET AND FAVOURITES")
       }
     
 
-  }, [dispatch, isFocused]);
+  }, []);
   
 useEffect(()=>{
     //loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
 }, [])
 
+/*
 useEffect( () => {
     //console.log("****************")
     const fetchData = async () => {
@@ -130,28 +132,30 @@ useEffect( () => {
       };
   // if (isAuthenticated && isLoading) {
 
+
       if (isAuthenticated &&  isFocused) {
       fetchData()
       console.log("PREFERENCE PRODUCT")
-      setInitialLoad(false)
   }
 
-  /*
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-  }
+    
+  }, [isFocused])
 
-  // Configurer un nouveau timeout
-  timeoutRef.current = setTimeout(() => {
-    if (isAuthenticated &&  isFocused) {
+  */
+  useEffect( () => {
+    //console.log("****************")
+    const fetchData = async () => {
+        await loadMoreData({user:user, resetPage:true, isInitial:true})
+      };
+
+
+    if (isAuthenticated) {
       fetchData()
       console.log("PREFERENCE PRODUCT")
-      setInitialLoad(false)
-  }
-  }, 500);
-   */
+    }
+
     
-  }, [/*isFocused]*/]) // [isFocused]); //refreshComponent, isAuthenticated,
+  }, [])
 
 //console.log(user)
 

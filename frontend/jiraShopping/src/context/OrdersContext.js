@@ -97,7 +97,7 @@ const updateOrderStatus = async (itemId, productId, status) => {
         }
         try{
             
-            const response = await fetch(`${server}/api/datas/orders/offer/update/status/${itemId}`, {
+            const response = await fetch(`${server}/api/datas/orders/order/update/status/${itemId}`, {
                 method: 'PUT',
                 body: JSON.stringify(order),
                 headers: {
@@ -136,8 +136,29 @@ const getOrders = useCallback(async (user, page, limit) => {
 
 },) // [isLoading, hasMore, page])  //pour un rechargements a chaque venue sur la page
    
-    const addNewOrder = async () => {
-
+    const addNewOrder = async (order) => {
+        try {
+            const response =  await fetch(`${server}/api/datas/orders/add`, {
+              method: 'POST', 
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(order),
+            });
+        
+            if (!response.ok) {
+              throw new Error(`Erreur du serveur: ${response.status}`);
+            }
+        
+            // Récupère les données de la réponse
+            const data = await response.json();
+            console.log('Order created successfully:', data);
+            return data;
+          } catch (error) {
+            console.error('Erreur lors de la création de la commande:', error);
+            return false
+          }
+        
     }
 
 

@@ -23,6 +23,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectBasket, selectIsLoading, selectError, fetchUserBasket } from '../../store/baskets/basketsSlice';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
+import { debouncer } from '../../utils/commonAppFonctions';
 
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
@@ -40,13 +41,14 @@ const Basket = (props) => {
     const isLoading = useSelector((state) => state.basket.status);
     const error = useSelector((state) => state.basket.error);
 
-    useEffect(() => {
+   /* useEffect(() => {
         if (isFocused) {
-            dispatch(fetchUserBasket(user._id));
+
+           debouncer(dispatch, 3000)(fetchUserBasket(user._id));
             //console.log('newBasket')
         }
       }, [isFocused]);
-
+*/
     return(
         <View style={[basketStyles.container,]}>
             <View style={[{flex:1,}]}>

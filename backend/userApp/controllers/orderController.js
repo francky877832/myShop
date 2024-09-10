@@ -1,25 +1,67 @@
 const Order = require('../models/orderModel');
+const GroupOrder = require('../models/groupOrderModel');
 const mongoose = require('mongoose');
 
+exports.addUserOrder = async (req, res, next) => {
+  const { group, order } = req.body;
 
-exports.addOrderUser = (req, res, next) => {
+  if (!group || !order) {
+    return res.status(400).json({ error: "Invalid input data" });
+  }
 
-    const order = new Order({
-        seller : req.body.seller,
-        buyer : req.body.buyer,
-        products : req.body.products,
-        totalPrice : req.body.totalPrice,
-        quantity : req.body.quantity,
-        shippingAddress : {street : req.body.shippingAddress.street, city : req.body.shippingAddress.city, country : req.body.shippingAddress.country }
-    })
-    order.save()
-    .then( () => {
-        res.status(200).json({ message: "Order placed successfully." });
-    })
-    .catch( (error) => {
-        res.status(400).json({ error: error });
-    });
+  //const session = await mongoose.startSession();
+  //session.startTransaction();
+
+  try {
+    const shippingAddress = {
+      quater: group.shippingAddress.quater,
+      title: group.shippingAddress.title,
+      city: group.shippingAddress.city,
+      country: group.shippingAddress.country
+    };
+
+    const group_order = {
+      no: group.no,
+      read: 0,
+      phone: group.phone,
+      totalPrice: group.totalPrice,
+      quantity: group.quantity,
+      shippingAddress: shippingAddress
+    };
+
+    // Assure-toi que GroupOrder est bien défini et connecté à MongoDB
+    const newOrderGroup = await GroupOrder.create({ ...group_order }); //session
+
+    const new_order = {
+      group: new mongoose.Types.ObjectId(newOrderGroup._id),
+      sellers: order.sellers,
+      buyer: order.buyer,
+      products: order.products,
+      totalPrice: order.totalPrice,
+      quantity: order.quantity
+    };
+
+    // Assure-toi que Order est bien défini et connecté à MongoDB
+    const newOrder = await Order.create({ ...new_order}); //session
+
+    //await session.commitTransaction();
+    //session.endSession();
+    return res.status(200).json({ group: newOrderGroup, order: newOrder });
+
+  } catch (error) {
+    console.error("Transaction Error:", error); // Ajoute une sortie pour le débogage
+    //await session.abortTransaction();
+    //session.endSession();
+    return res.status(500).json({ error: error.message || "Internal Server Error" });
+  } finally {
+    /*if (session.inTransaction()) {
+      await session.abortTransaction(); // Assure-toi que la transaction est annulée si une exception se produit
+    }
+    session.endSession();*/
+  }
 };
+
+
 
 
 
@@ -35,7 +77,7 @@ exports.updateOrderStatus  = async (req, res, next) => {
   
       // Trouve la commande et met à jour le statut du produit
       const order = await Order.findOneAndUpdate(
-        { _id:  req.params.id, 'products.product': product },
+        { _id:  new mongoose.Types.ObjectId(req.params.id), 'products.product': new mongoose.Types.ObjectId(product) },
         {
           $set: {
             'products.$.status': status,
@@ -63,7 +105,7 @@ exports.updateOrderRead = async (req, res, next) => {
     try {
   
       const order = await Order.findOneAndUpdate(
-        { _id:  req.params.id, 'products.product': product },
+        { _id: new mongoose.Types.ObjectId(req.params.id), 'products.product':  new mongoose.Types.ObjectId(product) },
         {
           $set: {
             'products.$.read': 1,
@@ -89,7 +131,7 @@ exports.updateOrderRead = async (req, res, next) => {
 
 
   exports.removeOrderUser = (req, res, next) => {
-    Order.deleteOne({ _id : req.params.id })
+    Order.deleteOne({ _id : new mongoose.Types.ObjectId(req.params.id)  })
     .then( () => { 
         res.status(200).json({ message: `Order deleted successfully.` });
     })
@@ -110,7 +152,7 @@ exports.updateOrderRead = async (req, res, next) => {
   };
 */
 
-exports.getOrdersUser = async (req, res, next) => {
+exports.getUserOrders = async (req, res, next) => {
     console.log("ORDERS")
   const userId = req.params.user;
   const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
@@ -287,7 +329,7 @@ exports.getOrdersUser = async (req, res, next) => {
 
       {
         $lookup: {
-          from: 'groupOrders',
+          from: 'grouporders',
           localField: 'group',
           foreignField: '_id',
           as: 'group'

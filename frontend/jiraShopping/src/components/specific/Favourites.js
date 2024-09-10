@@ -19,7 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserFavourites } from '../../store/favourites/favouritesSlice'; 
 import { useIsFocused } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
-
+import { debouncer } from '../../utils/commonAppFonctions';
 
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
@@ -42,12 +42,12 @@ const Favourites = (props) => {
     },[fetchUserFavourites, page])
 
 /* En le faisant on modifie aıtomatiquement modified product*/
-    useEffect(() => {
+    /*useEffect(() => {
         if (isFocused) {
-            dispatch(fetchUserFavourites({user:user._id, page:page}));
+            debouncer(dispatch, 3000)(fetchUserFavourites({user:user._id, page:page}));
             //console.log('FavouritesRefreshed')
         }
-      }, [isFocused]);
+      }, [isFocused]);*/
 
       //basket={basket} pour reactualiser les favourites lorsquon ajoute un produi a basket
     return(

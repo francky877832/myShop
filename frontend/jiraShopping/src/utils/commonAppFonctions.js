@@ -2,6 +2,20 @@ import nlp from "compromise";
 const Fuse = require('fuse.js');
 
 export const capitalizeFirstLetter = str => str ? str[0].toUpperCase() + str.slice(1).toLowerCase() : str;
+export const debouncer = (callback, time) => {
+    let timeoutId;
+  
+    return (...args) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+  
+      timeoutId = setTimeout(() => {
+        callback(...args);
+        //console.log("debouning")
+      }, time);
+    };
+  };
 
 exports.sinceDate = (_date) => {
     const date2 = new Date(_date)

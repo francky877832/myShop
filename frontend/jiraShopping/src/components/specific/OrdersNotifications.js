@@ -64,7 +64,7 @@ useEffect(() => {
 
     const fetchData = async () => {  
         await getOrders(user, page)
-      };
+    };
       
        fetchData();
       

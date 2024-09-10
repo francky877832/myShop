@@ -165,4 +165,69 @@ try {
         console.log(error);
         res.status(400).json({ error: error })
     }
+
+
+
+
+    const shippingAddress = {
+      quater : group.shippingAddress.quater, 
+      title : group.shippingAddress.title, 
+      city : group.shippingAddress.city, 
+      country : group.shippingAddress.country 
+    }
+      const group_order = {
+        no : group.no,
+        read : 0,
+        phone : group.phone,
+        totalPrice : group.totalPrice,
+        quantity : group.quantity,
+        shippingAddress : shippingAddress,
+      }
+
+      const newOrderGroup = await GroupOrder.create(group_order)
+      const new_order = {
+          group : newOrderGroup._id,
+          sellers :order.sellers,
+          buyer : order.buyer,
+          products :order.products,
+          totalPrice : order.totalPrice,
+          quantity :order.quantity,
+      }
+
+      {
+        "group" : 
+        {
+            "no" : 20032090,
+            "read" : 0,
+            "phone" : "+237677127907",
+            "totalPrice" : 10000,
+            "quantity" : 3,
+            "shippingAddress" : {
+                "quater" : "nylon", 
+                "title" : "rue l'an 2000", 
+                "city" : "Mbouda", 
+                "country" : "Cameroon"
+            },
+            "paymentMethod" : "MTN Money",
+            "paymentDetails" : "+237677127907"
+        },
+        "order" : 
+        {
+          "sellers" : ["66715deae5f65636347e7f9e", "66731fcb569b492d3ef429ba"],
+          "buyer" : "668fdfc6077f2a5c361dd7fc",
+          "products" : [
+            {
+                "product" : "668a681b25a5467dd508118c"
+            },
+            {
+                "product" : "6689733ae80918c70bc9fb23"
+            },
+            {
+                "product" : "6689733ae80918c70bc9fb23"
+            }
+        ],
+          "totalPrice" : 10000,
+          "quantity" : 3
+        }
+      }
     
