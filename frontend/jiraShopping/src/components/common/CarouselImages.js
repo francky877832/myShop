@@ -26,6 +26,17 @@ const CarouselImage = (props) =>
     const [selectedImage, setSelectedImage] = useState(null);
     const [showViews, setShowViews] = useState(true)
     const [showInBasket, setShowInBasket] = useState(false)
+    const [showFreeKargo, setShowFreeKargo] = useState(false)
+
+    const animationSet = {  }
+    useEffect(() => {
+      if(product.views > 0) animationSet['showViews'] = setShowViews
+      if(product.inBasket > 0) animationSet['showInBasket'] = setShowInBasket
+      if(product.feesBy=='seller') animationSet['showFreeKargo'] = setShowFreeKargo
+    }, [])
+ 
+
+    const animationIndex = useRef(0)
     //const image = "../../assets/images/product5.png"
     const intervalRef = useRef(null);
 
@@ -40,17 +51,28 @@ const CarouselImage = (props) =>
     </Pressable> 
   )
 
+  const animationToDisplay = () =>{
+    //console.log('item', item)
+    animationSet[Object.keys(animationSet)[animationIndex.current]](false)
+
+    animationIndex.current = (animationIndex.current+1)%Object.keys(animationSet).length
+    
+    animationSet[Object.keys(animationSet)[animationIndex.current]](true)
+
+
+    
+
+  }
 useEffect(()=>{
   intervalRef.current = setInterval(() => {
-    setShowInBasket(prev => !prev);
-    setShowViews(prev => !prev);
-    //console.log('ok')
+    animationToDisplay()
   }, 5000);
   return () => {
     clearInterval(intervalRef.current);
   };
 }, [])
 
+//console.log(product.inBasket)
 
 useEffect(() => {
 
@@ -70,7 +92,7 @@ useEffect(() => {
         </View>
 
         {
-          (showViews && product.views>=0) &&
+          (showViews && parseInt(product.views)>0) &&
             <LeftToRightViewBox show={showViews} duration={1000} styles={paginationStyles.viewsBox}>
               <Text style={paginationStyles.viewsText}>
                 {formatMoney(product.views)} {pluralize(product.views, 'vue')}
@@ -79,13 +101,23 @@ useEffect(() => {
         }
 
        {
-        (showInBasket && product.inBasket>=0) &&
+        (showInBasket && parseInt(product.inBasket)>0) &&
           <LeftToRightViewBox show={showInBasket} duration={1000} styles={paginationStyles.viewsBox}>
               <Text style={paginationStyles.viewsText}>
-                  Ce produit est deja dans le panier de {formatMoney(product.inBasket)} {pluralize(product.inBasket, 'personne')}!
+                  Ce produit est deja dans le panier de {formatMoney(parseInt(product.inBasket))} {pluralize(product.inBasket, 'personne')}!
               </Text>
           </LeftToRightViewBox>
-        }
+        } 
+
+        {
+        (showFreeKargo && product.feesBy==='seller') &&
+          <LeftToRightViewBox show={showFreeKargo} duration={1000} styles={paginationStyles.viewsBox}>
+              <Text style={paginationStyles.viewsText}>
+                 Frais de transport gratuits pour ce produit.
+              </Text>
+          </LeftToRightViewBox>
+        } 
+
 
 
         <Modal

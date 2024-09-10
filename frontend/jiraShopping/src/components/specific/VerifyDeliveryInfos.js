@@ -20,10 +20,10 @@ import { formatMoney, formatPhoneNumber, caculateProductTotalPrices } from '../.
 const VerifyDeliveryInfos = (props) => {
     const route = useRoute()
     const navigation = useNavigation()
-    //const { user, temporaryAddress, setTemporaryAddress } = useContext(UserContext)
-    //const {products} = route.params
-    const user = {address:{title:'Ndokoti'}, phone:'677127907'}
-    const [temporaryAddress, setTemporaryAddress] = useState({address:{title:'Ndokoti'},})
+    const { user, temporaryAddress, setTemporaryAddress } = useContext(UserContext)
+    const {products} = route.params
+    //const user = {address:{title:'Ndokoti'}, phone:'677127907'}
+    //const [temporaryAddress, setTemporaryAddress] = useState({address:{title:'Ndokoti'},})
 
     const [addressTitle, setAdressTitle] = useState(temporaryAddress.address.title)
     const [phone, setPhone] = useState(user.phone)
@@ -106,8 +106,9 @@ const VerifyDeliveryInfos = (props) => {
             <View style={[verifyInfosStyles.containers]}> 
                 <View style={[{height:20}]}></View>
 
-                <View  style={[verifyInfosStyles.titles]}>
-                    <Text  style={[verifyInfosStyles.titlesText]}>Numéro Orange Money Ou MTN Money</Text>
+                <View  style={[verifyInfosStyles.titles, {flexDirection:'row',alignItems:'center'}]}>
+                    <Text  style={[verifyInfosStyles.titlesText]}>Numéro Orangey Ou MTN Money </Text> 
+                    <Text style={[verifyInfosStyles.titlesText, {fontSize:11, fontWeight:'normal'}]}>(avec +237)</Text>
                 </View>
 
                 <View style={[verifyInfosStyles.contents]}>

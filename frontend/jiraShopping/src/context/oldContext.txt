@@ -1,0 +1,48 @@
+ const loadMoreData = useCallback(async ({user, resetPage=false, isInitial=false}) => {
+      console.log("ook")
+      console.log(resetPage, isLoading, hasMore)
+      //if (!resetPage && (isLoading || !hasMore)) return;
+      if(!((resetPage && !isLoading) || (!resetPage && hasMore && !isLoading) || (hasMore && !isLoading))) {
+        console.log("GOIG OUT")  
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const page_ = resetPage ? 1 : page
+        const newData = await getProducts(user, page_);
+        console.log(resetPage)
+
+        console.log(newData.length)
+        if (newData.length > 0) 
+        {
+          //console.log(newData[3].likes)
+          
+          if(resetPage)
+          {
+            setProducts(newData);
+            setHasMore(true)
+            setPage(2)
+            console.log('RESETPAGE')
+          }
+          else
+          {
+            setProducts(prevProducts => [...prevProducts, ...newData])
+            setPage((prevPage) => prevPage + 1);
+            console.log('NORESET')
+          }
+          
+
+          console.log("éThere")
+         
+
+          //console.log(page)
+        } else {
+          setHasMore(false); // Pas plus de données à charger
+          console.log("HASMORE FALSE")
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des données :', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }, [isLoading, hasMore, page]) //[isLoading, hasMore, page]);

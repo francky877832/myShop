@@ -136,21 +136,15 @@ const getOrders = useCallback(async (user, page, limit) => {
 
 },) // [isLoading, hasMore, page])  //pour un rechargements a chaque venue sur la page
    
-
-const separateSoldAndBought = () => {
-    const sold_products = orders.filter((item)=> (user._id===item.products.productDetails.seller._id))
-    const bought_products = orders.filter((item)=> (user._id!=item.products.productDetails.seller._id))
-
-    setSold(sold_products)
-    setBought(bought_products)
-}
-
+    const addNewOrder = async () => {
+        
+    }
 
 
    
     const favouritesStateVars = { orders, sold, bought, isLoading, hasMore, page,}
     const favouritesStateStters = { setIsLoading,  setHasMore, setPage, setOrders, setIsNewDatas }
-    const utilsFunctions = { getOrders, updateOrderRead, updateOrderStatus  }
+    const utilsFunctions = { getOrders, updateOrderRead, updateOrderStatus, addNewOrder  }
     return (
         <OrdersContext.Provider value={{...favouritesStateVars, ...favouritesStateStters, ...utilsFunctions}}>
             {children}

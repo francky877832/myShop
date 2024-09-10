@@ -8,14 +8,16 @@ function generateUniqueDeliveryNumber() {
 }
 
 const orderSchema = new  Schema({
-    seller : { type : Schema.Types.ObjectId, ref : 'User', required : true },
+    sellers : [{ type : Schema.Types.ObjectId, ref : 'User', required : true }],
     buyer: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    group: { type: Schema.Types.ObjectId, ref: 'GroupOrder', required: true },
+
     products: [
                 {
                     _id : { type: Schema.Types.ObjectId, required: true },
                     product : {type: Schema.Types.ObjectId, ref: 'Product', required: true },
                     status: {type: String, enum: ['pending', 'shipped', 'delivered', 'canceled'], default: 'pending' },
-                    groupId: { type: Schema.Types.ObjectId, ref: 'GroupOrder', required: true },
+                    //group: { type: Schema.Types.ObjectId, ref: 'GroupOrder', required: true },
                     quantity: { type: Number, required: true, default: 1 },
                     deliveryNo: { type: String, required : true, default : 0 },
                     deliveryDate: { type : Date, default : Date.now },

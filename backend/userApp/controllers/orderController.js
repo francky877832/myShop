@@ -122,87 +122,51 @@ exports.getOrdersUser = async (req, res, next) => {
       {
         $match: {
           $or: [
-            { seller: new mongoose.Types.ObjectId(userId) },
+            { sellers: { $elemMatch: { $eq: new mongoose.Types.ObjectId(userId) } } },
             { buyer: new mongoose.Types.ObjectId(userId) }
           ]
         }
       },
-      {
-        $unwind: '$products' 
-      },
-      {
-        $lookup: {
-          from: 'products',
-          localField: 'products.product',
-          foreignField: '_id',
-          as: 'productDetails'
-        }
-      },
-
-      {
-        $addFields: {
-                'products.productDetails':  {
-                $arrayElemAt: [`$productDetails`, 0]
-            }
-        }
-      },
-
+      
+      {$unwind : '$sellers'},
       {
         $lookup: {
-          from: 'groupOrders',
-          localField: 'products.groupId',
+          from: 'users',
+          localField: 'sellers',
           foreignField: '_id',
-          as: 'group'
+          as: 'sellers'
         }
       },
+      {$unwind : '$sellers'},
       {
-        $addFields: {
-                'products.groupOrders':  {
-                $arrayElemAt: [`$group`, 0]
-            }
+        $lookup: {
+          from: 'users',
+          localField: 'sellers.followers',
+          foreignField: '_id',
+          as: 'sellers.followers'
         }
       },
 
       {
         $lookup: {
           from: 'users',
-          localField: 'seller',
+          localField: 'sellers.followings',
           foreignField: '_id',
-          as: 'seller'
-        }
-      },
-      {
-        $unwind: {
-          path: '$seller',
-          preserveNullAndEmptyArrays: true
-        }
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'seller.followers',
-          foreignField: '_id',
-          as: 'seller.followers'
+          as: 'sellers.followings'
         }
       },
 
       {
         $lookup: {
           from: 'users',
-          localField: 'seller.followings',
+          localField: 'sellers.favourites',
           foreignField: '_id',
-          as: 'seller.followings'
+          as: 'sellers.favourites'
         }
       },
 
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'seller.favourites',
-          foreignField: '_id',
-          as: 'seller.favourites'
-        }
-      },
+
+
 
       {
         $lookup: {
@@ -245,14 +209,90 @@ exports.getOrdersUser = async (req, res, next) => {
         }
       },
 
+      {
+        $lookup: {
+          from: 'groupOrders',
+          localField: 'products.groupId',
+          foreignField: '_id',
+          as: 'group'
+        }
+      },
+      {
+        $addFields: {
+                'group':  {
+                $arrayElemAt: [`$group`, 0]
+            }
+        }
+      },
 
 
+
+      {
+        $unwind: '$products' 
+      },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'products.product',
+          foreignField: '_id',
+          as: 'products.product'
+        }
+      },
+
+      /*{
+        $addFields: {
+                'products.product':  {
+                $arrayElemAt: [`$products.product`, 0]
+            }
+        }
+      },*/
+
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'products.product.seller',
+          foreignField: '_id',
+          as: 'seller'
+        }
+      },
+      {
+        $unwind: {
+          path: '$seller',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'seller.followers',
+          foreignField: '_id',
+          as: 'seller.followers'
+        }
+      },
+
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'seller.followings',
+          foreignField: '_id',
+          as: 'seller.followings'
+        }
+      },
+
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'seller.favourites',
+          foreignField: '_id',
+          as: 'seller.favourites'
+        }
+      },
 
      
       {
         $lookup: {
           from: 'users',
-          localField: 'products.productDetails.favourites',
+          localField: 'product.favourites',
           foreignField: '_id',
           as: 'favourites'
         }
@@ -261,7 +301,7 @@ exports.getOrdersUser = async (req, res, next) => {
       {
         $lookup: {
           from: 'comments',
-          let: { productId: '$products.productDetails._id' },
+          let: { productId: '$products.product._id' },
           pipeline: [
             { $match: { $expr: { $eq: ['$product', '$$productId'] } } },
             { $sort: { _id: -1 } },
@@ -322,11 +362,20 @@ exports.getOrdersUser = async (req, res, next) => {
      
     {
         $addFields: {
-            'products.productDetails': {
+          'sellers' : {
+            $mergeObjects : [
+              '$sellers',
+              {
+                followers: { $ifNull: ['$sellers.followers', []] },
+                followings: { $ifNull: ['$sellers.followings', []] },
+                favourites: { $ifNull: ['$sellers.favourites', []] }
+              }
+            ]
+          },
+            'products.product': {
                 $mergeObjects: [
-                    '$products.productDetails', // Conserver les détails existants
+                    '$products.product', // Conserver les détails existants
                     {
-                        // Remplacer les informations de seller avec les informations jointes
                         seller: {
                             $mergeObjects: [
                                 '$seller',
@@ -338,8 +387,8 @@ exports.getOrdersUser = async (req, res, next) => {
                             ]
                         },
                         // Ajouter les commentaires au dataDetails
-                        comments: '$comments',
-                        favourites: '$favourites'
+                        //comments: '$comments',
+                        //favourites: '$favourites'
                     }
                 ]
             }
@@ -353,12 +402,28 @@ exports.getOrdersUser = async (req, res, next) => {
       },
       {
         $limit: limit // Limiter le nombre de documents retournés
+      },
+      {
+        $group: {
+          _id: "$_id", 
+          //sellers: { $push: "$sellers" }, 
+          //products: { $push: "$products" }, 
+          sellers: { $addToSet: "$sellers" },
+          products: { $addToSet: "$products" },
+          // Fusionner tous les autres champs du document original
+          doc: { $first: "$$ROOT" }
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: { $mergeObjects: [ "$doc", { products: "$products", sellers:"$sellers" } ] }
+        }
       }
     
     ]);
 
     const totalDatas = await Order.countDocuments({  $or: [
-        { seller: new mongoose.Types.ObjectId(userId) },
+        { sellers: new mongoose.Types.ObjectId(userId) },
         { buyer: new mongoose.Types.ObjectId(userId) }
       ] }).exec();
 
@@ -375,7 +440,7 @@ exports.getOrdersUser = async (req, res, next) => {
         }, {});
         
       
-        
+       
 
       const sold_products = orders.filter((item)=> (userId==item.products.productDetails?.seller?._id))
       const bought_products = orders.filter((item)=> (userId!=item.products.productDetails?.seller?._id))
@@ -405,7 +470,7 @@ exports.getOrdersUser = async (req, res, next) => {
       //console.log(sold_products.length)
       //res.status(200).json(orders)
        res.status(200).json({
-          orders: {...orders[0], products:results[0]},
+          orders: orders, // results[0], //{...orders[0], products:results[0]},
           sold : sold,
           bought : bought,
           page: page,

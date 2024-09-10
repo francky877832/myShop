@@ -24,9 +24,11 @@ const ProductProvider = ({children}) => {
     const {user} = useContext(UserContext)
     const [refreshKey, setRefreshKey] = useState(0);
     const dispatch = useDispatch()
+    const limit = 5
+    const skip = 0
 
 
-     const getProducts = async (user, page)=> {
+     const getProducts = async (user, page,)=> {
       //console.log("responseJson")
         try
         {
@@ -100,45 +102,45 @@ const getProductsFromCategories = async () =>{
 }
 
 
-  
-    const loadMoreData = useCallback(async ({user, resetPage=false, isInitial=false}) => {
-      console.log("ook")
-      console.log(resetPage, isLoading, hasMore)
-      //if (!resetPage && (isLoading || !hasMore)) return;
-      if(!((resetPage && !isLoading) || (!resetPage && hasMore && !isLoading) || (hasMore && !isLoading))) {
-        console.log("GOIG OUT")  
-        return;
-      }
-      setIsLoading(true);
-      try {
-        const page_ = resetPage ? 1 : page
-        const newData = await getProducts(user, page_);
-        console.log(resetPage)
+    
+  const loadMoreData = useCallback(async ({user, resetPage=false, isInitial=false}) => {
+    console.log("ook")
+    console.log(resetPage, isLoading, hasMore)
+    //if (!resetPage && (isLoading || !hasMore)) return;
+    if(!((resetPage && !isLoading) || (!resetPage && hasMore && !isLoading) || (hasMore && !isLoading))) {
+      console.log("GOIG OUT")  
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const page_ = resetPage ? 1 : page
+      const newData = await getProducts(user, page_);
+      console.log(resetPage)
 
-        console.log(newData.length)
-        if (newData.length > 0) 
+      console.log(newData.length)
+      if (newData.length > 0) 
+      {
+        //console.log(newData[3].likes)
+        
+        if(resetPage)
         {
-          //console.log(newData[3].likes)
-          
-          if(resetPage)
-          {
-            setProducts(newData);
-            setHasMore(true)
-            setPage(2)
-            console.log('RESETPAGE')
-          }
-          else
-          {
-            setProducts(prevProducts => [...prevProducts, ...newData])
-            setPage((prevPage) => prevPage + 1);
-            console.log('NORESET')
-          }
-          
+          setProducts(newData);
+          setHasMore(true)
+          setPage(2)
+          console.log('RESETPAGE')
+        }
+        else
+        {
+          setProducts(prevProducts => [...prevProducts, ...newData])
+          setPage((prevPage) => prevPage + 1);
+          console.log('NORESET')
+        }
+        
 
-          console.log("éThere")
-         
+        console.log("éThere")
+      
 
-          //console.log(page)
+        //console.log(page)
         } else {
           setHasMore(false); // Pas plus de données à charger
           console.log("HASMORE FALSE")

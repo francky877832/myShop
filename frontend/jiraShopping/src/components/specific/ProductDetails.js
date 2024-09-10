@@ -192,6 +192,10 @@ const handleSellerBrandPressed = (product) => {
     const scrollViewRef = useRef(null);
 
 
+    const handlePaymentButtonCliked = () => {
+        navigation.navigate('VerifyDeliveryInfos', {products:[data]})
+    }
+
     return (
 
   <View style={productDetailsStyles.container}>
@@ -452,7 +456,7 @@ const handleSellerBrandPressed = (product) => {
                         ?
                         <CustomButton text="Acheter" disable={true} styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor3} onPress={() => { }} />
                         :
-                        <CustomButton text="Acheter" disable={false} styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />
+                        <CustomButton text="Acheter" disable={false} styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { handlePaymentButtonCliked()}} />
                     }
                 </View>
             </View>

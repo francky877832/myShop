@@ -83,6 +83,7 @@ const Preferences = (props) => {
     const dispatch = useDispatch();
     const Fav_page = useSelector((state) => state.favourites.page);
     const { favourites, liked } = useSelector(state => state.favourites);
+    const timeoutRef = useRef(null);
     //console.log(page)
 
 
@@ -129,14 +130,28 @@ useEffect( () => {
       };
   // if (isAuthenticated && isLoading) {
 
+      if (isAuthenticated &&  isFocused) {
+      fetchData()
+      console.log("PREFERENCE PRODUCT")
+      setInitialLoad(false)
+  }
+
+  /*
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+  }
+
+  // Configurer un nouveau timeout
+  timeoutRef.current = setTimeout(() => {
     if (isAuthenticated &&  isFocused) {
-        fetchData()
-        console.log("PREFERENCE PRODUCT")
-        setInitialLoad(false)
-    }
-   
+      fetchData()
+      console.log("PREFERENCE PRODUCT")
+      setInitialLoad(false)
+  }
+  }, 500);
+   */
     
-  }, [isFocused]) // [isFocused]); //refreshComponent, isAuthenticated,
+  }, [/*isFocused]*/]) // [isFocused]); //refreshComponent, isAuthenticated,
 
 //console.log(user)
 
