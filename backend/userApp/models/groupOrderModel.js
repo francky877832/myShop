@@ -18,8 +18,8 @@ const groupOrderSchema = new  Schema({
         totalPrice: { type: Number, required: true },
         quantity: { type: Number, required: true, default: 1 },
 
-        paymentMethod : {type: String, enum: ['MTN Money', 'Orange Money']}, //require:true
-        paymentDetails : {type: String,  }, //require:true
+        paymentMethod : {type: String, enum: ['campay',], default:'campay', require:true},
+        paymentDetails : {type: String, enum: ['orange', 'mtn'] }, //require:true
 
                     
         createdAt : { type : Date, default : Date.now },

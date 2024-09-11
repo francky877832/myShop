@@ -81,6 +81,7 @@ const VerifyDeliveryInfos = (props) => {
                     phone : phone,
                 }
 
+
                 const order = {
                     group : 
                     {
@@ -90,8 +91,8 @@ const VerifyDeliveryInfos = (props) => {
                         totalPrice : totalPrice,
                         quantity : products.length,
                         shippingAddress : ordersDetails.address,
-                        paymentMethod : null, //a mettre ajour avec le webhook
-                        paymentDetails :  ordersDetails.phone,
+                        paymentMethod : "CamPay",
+                        paymentDetails :  null, //a mettre ajour avec le webhook
                     },
                     order : 
                     {
@@ -103,10 +104,10 @@ const VerifyDeliveryInfos = (props) => {
                     }
                 }
                 //console.log(products)
-                const response = await addNewOrder(order)
-                if(response)
+                const {newOrderGroup, newOrder} = await addNewOrder(order)
+                if(newOrder)
                 {
-                    navigation.navigate('ConfirmDeliveryInfos', {infos:ordersDetails})
+                    navigation.navigate('ValidatePayment', {details:{...ordersDetails, amount:totalPrice ,external_reference:newOrderGroup._id}})
                 }
             }catch(error){
                 console.log(error)

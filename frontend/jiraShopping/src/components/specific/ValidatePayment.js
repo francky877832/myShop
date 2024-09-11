@@ -38,8 +38,16 @@ const ValidatePayment = () => {
             getAuthToken(campay_credentials.username, campay_credentials.password).then(async (credentials)=>{
                 if (credentials.token) {
                     setAuthToken(credentials.token);
-                 
-                    const response = await completeTransaction(credentials.token, details)
+                    
+                    const payment_details = {
+  
+                        "amount": `${details.amount}`,
+                        "from": `237${details.phone.trim()}`,
+                        "description": "Test",
+                        "external_reference": details.external_reference
+                    }
+                    const response = await completeTransaction(credentials.token, payment_details)
+                    
                     if(response.ussd_code)
                     {
                         setSuccessInfos(response)

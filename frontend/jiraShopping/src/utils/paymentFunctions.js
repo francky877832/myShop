@@ -30,6 +30,7 @@ export const getAuthToken = async (username, password) => {
   };
 
 
+  
 export const completeTransaction = async (authToken, details ) => {
 
     try {
@@ -40,6 +41,7 @@ export const completeTransaction = async (authToken, details ) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(details),
+        redirect: 'follow'
       });
 
       const data = await response.json();

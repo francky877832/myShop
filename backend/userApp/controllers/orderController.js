@@ -1,6 +1,63 @@
 const Order = require('../models/orderModel');
 const GroupOrder = require('../models/groupOrderModel');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+require('dotenv').config({ path: '.../../shared/.env' });
+
+
+exports.updatePaymentStatus = async (req, res, next) => {
+    const {
+      status,
+      reference,
+      amount,
+      currency,
+      operator,
+      code,
+      operator_reference,
+      signature,
+      endpoint,
+      external_reference,
+      external_user,
+      extra_first_name,
+      extra_last_name,
+      extra_email,
+      phone_number
+    } = req.query;
+  
+    try {
+      const decoded = jwt.verify(signature, process.env.CAMPAY_WEBHOOK_KEY);
+      //console.log("Signature valide:", decoded);
+      
+      if (status === 'SUCCESSFUL') {
+        const updatedOrder = await Order.findOneAndUpdate(
+          { _id:   new mongoose.Types.ObjectId(external_reference) },  
+          { status: 'payment_successfull' },
+          { paymentDetails : operator.toLwerCase() },    
+          { new: true }              
+        );
+  
+        if (updatedOrder) {
+          return res.status(200).json({ success: true, message: 'Order updated successfully', order: updatedOrder });
+        } else {
+          return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+      } else if (status === 'FAILED') {
+        const deletedOrder = await Order.findOneAndDelete({ group: new mongoose.Types.ObjectId(external_reference) });
+        const deletedGroupOrder = await Order.findOneAndDelete({ _id: new mongoose.Types.ObjectId(external_reference) });
+  
+        if (deletedOrder && deletedGroupOrder) {
+          return res.status(200).json({ success: true, message: 'Order deleted due to payment failure', deletedOrder: deletedOrder, deletedGroupOrder:deletedGroupOrder });
+        } else {
+          return res.status(404).json({ success: false, message: 'Order not found for deletion' });
+        }
+      } else {
+        return res.status(400).json({ success: false, message: 'Invalid status received' });
+      }
+    } catch (error) {
+      console.error('Signature JWT invalide', error);
+      res.status(400).send('Invalid signature');
+    }
+}
 
 exports.addUserOrder = async (req, res, next) => {
   const { group, order } = req.body;
@@ -29,7 +86,6 @@ exports.addUserOrder = async (req, res, next) => {
       shippingAddress: shippingAddress
     };
 
-    // Assure-toi que GroupOrder est bien défini et connecté à MongoDB
     const newOrderGroup = await GroupOrder.create({ ...group_order }); //session
 
     const new_order = {
@@ -46,7 +102,7 @@ exports.addUserOrder = async (req, res, next) => {
 
     //await session.commitTransaction();
     //session.endSession();
-    return res.status(200).json({ group: newOrderGroup, order: newOrder });
+    return res.status(200).json({ newOrderGroup: newOrderGroup, newOrder: newOrder });
 
   } catch (error) {
     console.error("Transaction Error:", error); // Ajoute une sortie pour le débogage
