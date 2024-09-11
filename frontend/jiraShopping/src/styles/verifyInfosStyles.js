@@ -1,7 +1,7 @@
 import { StyleSheet, } from "react-native";
 import { appColors, appFont, screenWidth } from "./commonStyles";
 import { customText } from "./commonStyles";
-
+import { card } from "./filtersStyles";
 
 export const verifyInfosStyles = StyleSheet.create({
     container : 
@@ -155,6 +155,33 @@ export const verifyInfosStyles = StyleSheet.create({
         //justifyContent : 'space-evenly',
         paddingHorizontal : 5,
         //backgroundColor:'red',
+    },
+
+
+    modalContainer :
+    {
+        flex: 1, 
+        //position : "absolute",
+        width: screenWidth,
+        alignSelf : 'center',
+        alignItems : "center",
+        justifyContent: 'center',
+        borderBottomWidth : 1,        
+        backgroundColor: appColors.clearBlack,
+        zIndex : 101,
+    },
+    modalContent : 
+    {
+        ...card,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor : appColors.lightWhite,
+        width : '90%',
+        paddingHorizontal : 40,
+        paddingVertical : 20,
+        borderWidth : 1,
+        borderColor : appColors.clearBlack,
+        borderRadius : 10,
     },
 
    

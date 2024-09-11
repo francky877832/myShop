@@ -37,6 +37,7 @@ import { ActivityIndicator } from 'react-native-paper';
 import { UserContext } from '../../context/UserContext';
 import { ProductContext } from '../../context/ProductContext';
 import { addModifiedProduct } from '../../store/favourites/favouritesSlice';
+import { defaultOffer } from '../../utils/offersDatas';
 
 const loggedUserId = "668fdfc6077f2a5c361dd7fc"
 const loggedUser = "Francky"
@@ -441,7 +442,7 @@ const handleSellerBrandPressed = (product) => {
                     {
                     (user._id!=data.seller._id) 
                            ?
-                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data, inputFocused:true, notificationsOffers:data.offers[0].offers}) } }>
+                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data, inputFocused:true, notificationsOffers:Object.keys(data.offers).length>0 ? data.offers.offers : defaultOffer}) } }>
                             <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{"Proposer"}</Text>
                         </Pressable>
                         :

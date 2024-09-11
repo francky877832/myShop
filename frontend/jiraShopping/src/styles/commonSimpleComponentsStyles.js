@@ -1,8 +1,8 @@
 import { StyleSheet, } from "react-native";
-import { appColors, appFont } from "./commonStyles";
+import { appColors, appFont, screenWidth} from "./commonStyles";
 import { productStyles } from "./productStyles";
 import { ActivityIndicator } from "react-native-paper";
-
+import { card } from "./filtersStyles";
 
 
 export const commonSimpleComponentsStyles = StyleSheet.create({
@@ -82,6 +82,36 @@ export const commonSimpleComponentsStyles = StyleSheet.create({
         },
         
     },
+
+    modalActivityIndicator : 
+    {
+        modalContainer :
+        {
+            flex: 1, 
+            //position : "absolute",
+            width: screenWidth,
+            alignSelf : 'center',
+            alignItems : "center",
+            justifyContent: 'center',
+            borderBottomWidth : 1,        
+            backgroundColor: appColors.clearBlack,
+            zIndex : 101,
+        },
+        modalContent : 
+        {
+            ...card,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor : appColors.lightWhite,
+            width : '90%',
+            paddingHorizontal : 40,
+            paddingVertical : 20,
+            borderWidth : 1,
+            borderColor : appColors.clearBlack,
+            borderRadius : 10,
+        },
+    },
+
 
     priceDetails : 
     {

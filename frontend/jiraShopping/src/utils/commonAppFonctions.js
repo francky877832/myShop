@@ -17,6 +17,8 @@ export const debouncer = (callback, time) => {
     };
   };
 
+
+
 exports.sinceDate = (_date) => {
     const date2 = new Date(_date)
     const date1 = new Date()
@@ -390,11 +392,20 @@ export const pluralize = (nombre, nom) => {
 
 
 //ORDERS
+
 exports.formatPhoneNumber = (phone) => {
 
 }
-exports.caculateProductTotalPrices = (products) => {
-    //offersPrice, newPrice
+
+exports.generateOrderNo = (prefixe = "CMD") => {
+    const date = new Date();
+    const annee = date.getFullYear();
+    const mois = String(date.getMonth() + 1).padStart(2, '0');
+    const jour = String(date.getDate()).padStart(2, '0');
+
+    const nombreAleatoire = Math.floor(1000 + Math.random() * 9000); 
+    const codeCommande = `${prefixe}-${annee}${mois}${jour}-${nombreAleatoire}`;
+    return codeCommande;
 }
 
 

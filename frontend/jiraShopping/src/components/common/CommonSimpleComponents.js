@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, Pressable, ActivityIndicator, Image } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ActivityIndicator, Image, Modal } from 'react-native';
 
 import BadgeIcon from './BadgeIcon';
 import { Ionicons } from '@expo/vector-icons';
@@ -145,6 +145,20 @@ exports.CustomActivityIndicator = (props) => {
         <View style={[commonSimpleComponentsStyles.activityIndicator.container,{}]}>
                 <ActivityIndicator style={[commonSimpleComponentsStyles.activityIndicator.activityIndicator,{}]} size="large" color={appColors.secondaryColor1} />
         </View>
+    )
+}
+
+exports.CustomModalActivityIndicator = (props) => { 
+    const {onRequestClose, isLoading, size, color, message} = props
+    return (
+        <Modal visible={isLoading} transparent={true}  onRequestClose={() => onRequestClose(true)}>
+                <View style={[commonSimpleComponentsStyles.modalActivityIndicator.modalContainer]}>
+                    <View style={[commonSimpleComponentsStyles.modalActivityIndicator.modalContent]}>
+                        <Text style={[customText.text, {fontWeight:'bold'}]}>{message}</Text>
+                        <ActivityIndicator color={color} size={size} />
+                    </View>
+                </View>
+            </Modal>
     )
 }
 

@@ -136,14 +136,19 @@ const getOrders = useCallback(async (user, page, limit) => {
 
 },) // [isLoading, hasMore, page])  //pour un rechargements a chaque venue sur la page
    
-    const addNewOrder = async (order) => {
+
+    
+    
+
+    const addNewOrder = async (group, order) => {
         try {
+            setIsLoading(true)
             const response =  await fetch(`${server}/api/datas/orders/add`, {
               method: 'POST', 
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify(order),
+              body: JSON.stringify({group, order}),
             });
         
             if (!response.ok) {
@@ -156,7 +161,9 @@ const getOrders = useCallback(async (user, page, limit) => {
             return data;
           } catch (error) {
             console.error('Erreur lors de la création de la commande:', error);
-            return false
+            throw new Error(`Erreur du serveur: ${error}`);
+          } finally {
+            setIsLoading(false)
           }
         
     }
@@ -165,7 +172,7 @@ const getOrders = useCallback(async (user, page, limit) => {
    
     const favouritesStateVars = { orders, sold, bought, isLoading, hasMore, page,}
     const favouritesStateStters = { setIsLoading,  setHasMore, setPage, setOrders, setIsNewDatas }
-    const utilsFunctions = { getOrders, updateOrderRead, updateOrderStatus, addNewOrder  }
+    const utilsFunctions = { getOrders, updateOrderRead, updateOrderStatus, addNewOrder,   }
     return (
         <OrdersContext.Provider value={{...favouritesStateVars, ...favouritesStateStters, ...utilsFunctions}}>
             {children}

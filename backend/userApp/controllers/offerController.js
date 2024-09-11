@@ -129,7 +129,12 @@ exports.getOffersProduct = async (req, res, next) => {
         const pipeline = getPipeLineForOffers(match)
         const offersWithProduct = await Offer.aggregate(pipeline).exec();
         //res.status(200).json(offersWithProduct);
-        res.status(200).json(offersWithProduct[0]);
+        //console.log(offersWithProduct)
+        /*if(offersWithProduct.length===0)
+        {
+            res.status(404).json({message : "Cette offre nexiste pas entre ces deux users." });
+        }*/
+        res.status(200).json({...offersWithProduct[0]});
 
     }
     catch(error)

@@ -269,7 +269,7 @@ const fetchUserOffers = async()=>{
             }
                 //console.log(datas)
 
-            datas.offers.length>0 ? setOffers(datas.offers) : null //setOffers(defaultOffer)
+                Object.keys(datas).length>0 ? setOffers(datas.offers) : null //setOffers(defaultOffer)
     }catch(error){
         console.log(error)
         Alert.alert("Erreur", "Une erreur est survenue! "+ error,)

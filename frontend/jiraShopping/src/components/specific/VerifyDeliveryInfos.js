@@ -1,10 +1,10 @@
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Pressable, ActivityIndicator, Keyboard, TouchableWithoutFeedback, Alert, Linking } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Pressable, ActivityIndicator, Keyboard, TouchableWithoutFeedback, Alert, Linking, Modal } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import {CustomButton, PriceDetails} from '../common/CommonSimpleComponents'
+import {CustomButton, PriceDetails, CustomModalActivityIndicator} from '../common/CommonSimpleComponents'
 import { RadioButton } from 'react-native-paper';
 
 import { appColors, customText, appFont } from '../../styles/commonStyles';
@@ -15,12 +15,14 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { verifyInfosStyles } from '../../styles/verifyInfosStyles';
 import { UserContext } from '../../context/UserContext';
-import { formatMoney, formatPhoneNumber, caculateProductTotalPrices } from '../../utils/commonAppFonctions'
+import { formatMoney, formatPhoneNumber, generateOrderNo} from '../../utils/commonAppFonctions'
+import { OrdersContext } from '../../context/OrdersContext';
 
 const VerifyDeliveryInfos = (props) => {
     const route = useRoute()
     const navigation = useNavigation()
     const { user, temporaryAddress, setTemporaryAddress } = useContext(UserContext)
+    const { addOrder, isLoading, setIsLoading } = useContext(OrdersContext)
     const {products} = route.params
     //const user = {address:{title:'Ndokoti'}, phone:'677127907'}
     //const [temporaryAddress, setTemporaryAddress] = useState({address:{title:'Ndokoti'},})
@@ -41,22 +43,6 @@ const VerifyDeliveryInfos = (props) => {
         navigation.navigate('VerifyDeliveryInfosAddress', {page:'VerifyDeliveryInfos', })
     }
 
-    const handleValidatePressed = () => 
-    {
-        if(!hasAcceptedContrat)
-        {
-            Alert.alert("Attention!","Vous devez accepter les termes dictés par le contrat de vente pour votre sécurité et la sécurité de vos achats.");
-            return;
-        }
-      
-        const ordersDetails = {
-            address : temporaryAddress,
-            phone : phone,
-        }
-        navigation.navigate('ConfirmDeliveryInfos', {infos:ordersDetails})
-        
-    }
-
     const handleContratPressed = () => {
         const visitContratLink = () => {
             Linking.openURL('https://www.google.com');
@@ -72,8 +58,68 @@ const VerifyDeliveryInfos = (props) => {
             );
     }
 
+    
+    const handleValidatePressed = async () => 
+        {
+            if(!hasAcceptedContrat)
+            {
+                Alert.alert("Attention!","Vous devez accepter les termes dictés par le contrat de vente pour votre sécurité et la sécurité de vos achats.");
+                return;
+            }
+          
+            
+            try
+            {
+                const totalPrice = products.reduce((total, product) =>{
+                    const priceToPay = (Object.keys(product.offers).length>0 && product.offers.offers.at(-1).hasGosResponse==1) ? product.offers.offers.at(-1).price : product.newPrice
+                    return total+parseInt(priceToPay)
+                }, 0)
+            const ordernO = generateOrderNo()
+            const ordersDetails = {
+                address : temporaryAddress,
+                phone : phone,
+            }
+
+                const order = {
+                    group : 
+                    {
+                        no : ordernO,
+                        read : 0,
+                        phone : ordersDetails.phone,
+                        totalPrice : totalPrice,
+                        quantity : products.length,
+                        shippingAddress : ordersDetails.address,
+                        paymentMethod : null, //a mettre ajour avec le webhook
+                        paymentDetails :  ordersDetails.phone,
+                    },
+                    order : 
+                    {
+                    sellers : products.map(product => product.seller),
+                    buyer : user._id,
+                    products : products.map(product => product._id),
+                    totalPrice : totalPrice,
+                    quantity : products.length
+                    }
+                }
+                
+                const response = await addOrder(group, order)
+                if(response)
+                {
+                    navigation.navigate('ConfirmDeliveryInfos', {infos:ordersDetails})
+                }
+            }catch(error){
+                console.log(error)
+                Alert.alert('Une erreur reseau est survenue. Veillez reessayer. Si cela persiste, contacter le service client.')
+            }finally {
+                setIsLoading(false)
+            }
+           
+            
+        }
+    
+
     return (
-        <View style={[verifyInfosStyles.container]}>
+        <ScrollView contentContainerStyle={[verifyInfosStyles.container]}>
             <View style={[{height:10}]}></View>
             <View style={[verifyInfosStyles.containers]}> 
                 <View style={[verifyInfosStyles.titles]}>
@@ -167,8 +213,11 @@ const VerifyDeliveryInfos = (props) => {
                     <CustomButton text="Payer" disable={false} styles={{ pressable: verifyInfosStyles.button, text: verifyInfosStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { handleValidatePressed()}} />
                 </View>
             </View>
-            
-        </View>
+                        
+    
+            <CustomModalActivityIndicator onRequestClose={setIsLoading} isLoading={isLoading} size="large" color={appColors.secondaryColor1} message="Commande en cours de preparation..." />
+
+        </ScrollView>
     )
 }
 

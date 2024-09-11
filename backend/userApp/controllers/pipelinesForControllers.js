@@ -97,7 +97,13 @@ exports.getPipeLineForProducts = ( userId=undefined, skip=0, limit=100, sort={_i
       },
       {
         $addFields: {
-          offers : '$offers',
+          offers: {
+            $cond: {
+              if: { $gt: [{ $size: '$offers' }, 0] },
+              then: { $arrayElemAt: ['$offers', 0] },
+              else: {}
+            }
+          },
           favourites: {
             $map: {
               input: '$favourites',
