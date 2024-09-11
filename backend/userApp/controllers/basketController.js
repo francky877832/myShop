@@ -111,9 +111,18 @@ exports.getBasketProducts = async (req, res, next) => {
       const basketProduct = await Basket.aggregate(pipeline).exec();
       
   
-          const totalDatas = basketProduct[0].productDetails.length
-          basketProduct[0]?.productDetails.reverse()
-          res.status(200).json(basketProduct[0]);
+          //const totalDatas = basketProduct[0].productDetails?.length
+          if(basketProduct.length > 0)
+          {
+            basketProduct[0]?.productDetails.reverse()
+            res.status(200).json(basketProduct[0]);
+          }
+          else
+          {
+            res.status(200).json({});
+          }
+            
+        
   
         }catch(error) { 
               console.log(error)

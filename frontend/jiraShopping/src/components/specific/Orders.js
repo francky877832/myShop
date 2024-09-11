@@ -102,12 +102,12 @@ const Orders = (props) => {
                             {
                                 order.products.map((item, key) => {
                                     return (
-                                            <>
-                                            <Pressable style={[ordersStyles.orderImg]} key={key}>
-                                                <Image source={{uri: item.product.images[0]}} style={[ordersStyles.images]} />
-                                            </Pressable>
-                                            <View style={{width:10}}></View>
-                                            </>
+                                            <View key={key}>
+                                                <Pressable style={[ordersStyles.orderImg]}>
+                                                    <Image source={{uri: item.product.images[0]}} style={[ordersStyles.images]} />
+                                                </Pressable>
+                                                <View style={{width:10}}></View>
+                                            </View>
                                     )
                                 })
                             }

@@ -535,8 +535,24 @@ exports.getUserOrders = async (req, res, next) => {
 
        
 
-      const sold_products = orders.flatMap((item)=> { return {...item, products : item.products.filter((el) => el.product?.seller?._id == userId)}} )
-      const bought_products =  orders.flatMap((item)=> { return {...item, products : item.products.filter((el) => el.product?.seller?._id != userId)}} )
+      const sold_products = [] //orders.flatMap((item)=> { return {...item, seller:userId, products : item.products.filter((el) => el.product?.seller?._id == userId && item.buyer._id != userId)}})
+      const bought_products =  orders.filter((item) => item.buyer._id == userId)
+      for(let order of orders)
+      {
+        let products = []
+        for(let product of order.products)
+        {
+          if(product.product.seller._id == userId)
+          {
+            products.push(product)
+          }
+        }
+        if(products.length > 0)
+          sold_products.push({...order, products : products })
+          
+      }
+      
+      //orders.flatMap((item)=> { return {...item, products : item.products.filter((el) => el.product?.seller?._id != userId)}} )
 //REGROUPER LES PRDUIT SUIVANT DES GROUPORDERS
        res.status(200).json({
           orders: orders, // results[0], //{...orders[0], products:results[0]},
@@ -544,7 +560,9 @@ exports.getUserOrders = async (req, res, next) => {
           bought : bought_products,
           page: page,
           totalPages: totalPages,
-          totalDatas: totalDatas
+          totalDatas: totalDatas,
+          sold_count : sold_products.length,
+          bought_count : bought_products.length
         });
 
   } catch (error) {

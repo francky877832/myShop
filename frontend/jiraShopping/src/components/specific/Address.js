@@ -104,7 +104,7 @@ const   Address = (props) => {
 
 // Ajouter l'écouteur pour l'événement de retour
 const onBackPress = useCallback((e) => {
-    if (allowBack || route.params.page=='VerifyDeliveryInfos') {
+    if (allowBack || route.params?.page=='VerifyDeliveryInfos') {
         return;
     }
 
@@ -158,7 +158,7 @@ useEffect(()=>{
             navigation.navigate('VerifyDeliveryInfos', {page:'VerifyDeliveryInfosAddress'})
         }
 
-    if(route.params.page=='VerifyDeliveryInfos')
+    if(route.params?.page=='VerifyDeliveryInfos')
     {
         Alert.alert(
             "Modification De L'adresse",

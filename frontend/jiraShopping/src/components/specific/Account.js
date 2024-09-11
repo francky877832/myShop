@@ -20,9 +20,13 @@ const   Account = (props) => {
     const {user} = useContext(UserContext)
     const { bought, sold } = useContext(OrdersContext)
     
-    //console.log(bought)
+    console.log(bought)
     const handleBoughtClicked = () => {
         navigation.navigate('Orders', {groupOrder:bought})
+    }
+
+    const handleSoldClicked = () => {
+        navigation.navigate('Orders', {groupOrder:sold})
     }
 
     return(
@@ -59,7 +63,7 @@ const   Account = (props) => {
                     </View>
 
                     <View style={[accountStyles.achatsVentesView]}>
-                        <Pressable style={[accountStyles.AchatIcon]}>
+                        <Pressable style={[accountStyles.AchatIcon]} onPress={()=>{handleSoldClicked()}}>
                             <Icon type="materialicon" name="price-check" size={50} color={appColors.orange} />
                         </Pressable>
                         <View style={{height:5,}}></View>
