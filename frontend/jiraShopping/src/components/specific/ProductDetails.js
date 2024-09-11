@@ -194,7 +194,7 @@ const handleSellerBrandPressed = (product) => {
 
 
     const handlePaymentButtonCliked = () => {
-        navigation.navigate('VerifyDeliveryInfos', {products:[data]})
+        navigation.navigate('VerifyDeliveryInfos', {products:[data,]})
     }
 
     return (

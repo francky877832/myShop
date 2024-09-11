@@ -22,7 +22,7 @@ const VerifyDeliveryInfos = (props) => {
     const route = useRoute()
     const navigation = useNavigation()
     const { user, temporaryAddress, setTemporaryAddress } = useContext(UserContext)
-    const { addOrder, isLoading, setIsLoading } = useContext(OrdersContext)
+    const { addNewOrder, isLoading, setIsLoading } = useContext(OrdersContext)
     const {products} = route.params
     //const user = {address:{title:'Ndokoti'}, phone:'677127907'}
     //const [temporaryAddress, setTemporaryAddress] = useState({address:{title:'Ndokoti'},})
@@ -74,11 +74,12 @@ const VerifyDeliveryInfos = (props) => {
                     const priceToPay = (Object.keys(product.offers).length>0 && product.offers.offers.at(-1).hasGosResponse==1) ? product.offers.offers.at(-1).price : product.newPrice
                     return total+parseInt(priceToPay)
                 }, 0)
-            const ordernO = generateOrderNo()
-            const ordersDetails = {
-                address : temporaryAddress,
-                phone : phone,
-            }
+
+                const ordernO = generateOrderNo()
+                const ordersDetails = {
+                    address : temporaryAddress,
+                    phone : phone,
+                }
 
                 const order = {
                     group : 
@@ -94,22 +95,22 @@ const VerifyDeliveryInfos = (props) => {
                     },
                     order : 
                     {
-                    sellers : products.map(product => product.seller),
+                    sellers : products.map(product => product.seller._id),
                     buyer : user._id,
-                    products : products.map(product => product._id),
+                    products : products.map(product => ({product : product._id})),
                     totalPrice : totalPrice,
                     quantity : products.length
                     }
                 }
-                
-                const response = await addOrder(group, order)
+                //console.log(products)
+                const response = await addNewOrder(order)
                 if(response)
                 {
                     navigation.navigate('ConfirmDeliveryInfos', {infos:ordersDetails})
                 }
             }catch(error){
                 console.log(error)
-                Alert.alert('Une erreur reseau est survenue. Veillez reessayer. Si cela persiste, contacter le service client.')
+                Alert.alert('Erreur', 'Une erreur reseau est survenue. Veillez reessayer. Si cela persiste, n\'hésitez contacter le service client.')
             }finally {
                 setIsLoading(false)
             }

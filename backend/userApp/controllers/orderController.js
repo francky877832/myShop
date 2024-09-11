@@ -34,9 +34,9 @@ exports.addUserOrder = async (req, res, next) => {
 
     const new_order = {
       group: new mongoose.Types.ObjectId(newOrderGroup._id),
-      sellers: order.sellers,
+      sellers: order.sellers.map(seller => new mongoose.Types.ObjectId(seller)),
       buyer: order.buyer,
-      products: order.products,
+      products: order.products.map(product => ({product : new mongoose.Types.ObjectId(product.product)})),
       totalPrice: order.totalPrice,
       quantity: order.quantity
     };

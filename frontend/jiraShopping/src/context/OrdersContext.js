@@ -140,7 +140,7 @@ const getOrders = useCallback(async (user, page, limit) => {
     
     
 
-    const addNewOrder = async (group, order) => {
+    const addNewOrder = async (order) => {
         try {
             setIsLoading(true)
             const response =  await fetch(`${server}/api/datas/orders/add`, {
@@ -148,7 +148,7 @@ const getOrders = useCallback(async (user, page, limit) => {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({group, order}),
+              body: JSON.stringify(order),
             });
         
             if (!response.ok) {
