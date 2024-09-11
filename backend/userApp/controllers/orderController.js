@@ -31,7 +31,7 @@ exports.updatePaymentStatus = async (req, res, next) => {
       if (status === 'SUCCESSFUL') {
         const updatedOrder = await Order.findOneAndUpdate(
           { _id:   new mongoose.Types.ObjectId(external_reference) },  
-          { status: 'payment_successfull' },
+          { paymentStatus: 'payment_successfull' },
           { paymentDetails : operator.toLwerCase() },    
           { new: true }              
         );

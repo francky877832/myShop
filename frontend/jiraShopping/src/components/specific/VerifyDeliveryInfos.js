@@ -75,7 +75,7 @@ const VerifyDeliveryInfos = (props) => {
                     return total+parseInt(priceToPay)
                 }, 0)
 
-                const ordernO = generateOrderNo()
+                const ordernO = generateOrderNo('JW')
                 const ordersDetails = {
                     address : temporaryAddress,
                     phone : phone,

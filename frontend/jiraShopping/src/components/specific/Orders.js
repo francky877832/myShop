@@ -32,7 +32,7 @@ const Orders = (props) => {
     const navigation = useNavigation()
     const route = useRoute()
     const {orders, getOrders, page, sold, bought } = useContext(OrdersContext)
-
+    const { groupOrder } = route.params
  
 
     const RenderOrder = (props) => {
@@ -40,6 +40,8 @@ const Orders = (props) => {
        //console.log(order.length)
        
        const statusItem = {
+        'payment_pending' : {color:appColors.yellow, iconName:'timer-outline', iconType:'ionicon'},
+        'payment_successfull' : {color:appColors.green, iconName:'checkmark-shap', iconType:'ionicon'},
         'pending' : {color:appColors.yellow, iconName:'timer-outline', iconType:'ionicon'},
         'shipping' : {color:appColors.secondaryColor1, iconName:'', iconType:''},
         'delivered' : {color:appColors.green, iconName:'checkmark-shap', iconType:'ionicon'},
@@ -138,7 +140,7 @@ const handleSellerBrandPressed = (product) => {
     return (
         <ScrollView style={[ordersStyles.container]}>
             <FlatList
-                    data={bought}
+                    data={groupOrder}
                     renderItem={ ({item}) => { return(<RenderOrder order={item} user={user} />
                 ) } }
                     keyExtractor={ (item) => { return Math.random().toString(); } }

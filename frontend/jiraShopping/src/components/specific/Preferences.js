@@ -32,6 +32,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserFavourites } from '../../store/favourites/favouritesSlice'; 
 import { fetchUserBasket } from '../../store/baskets/basketsSlice';
 import { debouncer } from '../../utils/commonAppFonctions';
+import { OrdersContext } from '../../context/OrdersContext';
 
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
@@ -91,6 +92,7 @@ const Preferences = (props) => {
 
     const {user, loginUserWithEmailAndPassword, isAuthenticated, setIsAuthenticated } = useContext(UserContext)
     const { getProducts , loadMoreData, products, isLoading, hasMore, page, setIsLoading, refreshKey} = useContext(ProductContext)
+    const {getOrders, page:order_page} = useContext(OrdersContext)
 
     const [initialLoad, setInitialLoad] = useState(true); // Variable pour empêcher le premier appel
     
@@ -109,9 +111,17 @@ const Preferences = (props) => {
     
     useEffect(() => {
       //console.log(loggedUserId)
+
+      const fetchData = async () => {  
+        await getOrders(user, order_page)
+      } ;
+      
+
       if (isAuthenticated){
         dispatch(fetchUserFavourites({user:user._id, page:Fav_page})); //reset:true
         dispatch(fetchUserBasket(user._id));
+      
+        fetchData();
         console.log("PREFERENCE BASKET AND FAVOURITES")
       }
     

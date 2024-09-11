@@ -3,6 +3,10 @@ import * as SecureStore from 'expo-secure-store';
 
 //import AsyncStorage from '@react-native-async-storage/async-storage';
 
+  /*
+    await AsyncStorage.setItem(key, jsonValue);
+    const jsonValue = await AsyncStorage.getItem(key);
+  */
 export const storeCache = async (key, value) => {
     //console.log(value)
     if(value)

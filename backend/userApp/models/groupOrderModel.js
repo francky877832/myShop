@@ -6,7 +6,8 @@ const groupOrderSchema = new  Schema({
 
         no : { type: String, required : true, default : 0 },
         read : { type: Number, enum : [0, 1], default : 0, required : true },
-        status: {type: String, enum: ['payment_pending', 'payment_successfull', 'payment_failed', 'pending', 'shipped', 'delivered'], default: 'payment_pending' },
+        status: {type: String, enum: ['pending', 'shipped', 'delivered'], default: 'pending' },
+        paymentStatus : {type: String, enum: ['payment_pending', 'payment_successfull', 'payment_failed'], default:'payment_pending'},
         phone: { type: String },
         shippingAddress: {
             quater: { type: String },

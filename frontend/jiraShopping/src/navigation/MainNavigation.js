@@ -42,6 +42,7 @@ import { UserProvider } from '../context/UserContext';
 import { ProductProvider } from '../context/ProductContext';
 import { CommentsProvider } from '../context/CommentsContext';
 import { OrdersProvider } from '../context/OrdersContext';
+import { GeneralProvider } from '../context/GeneralContext';
 
 import { annimatedStackTransition } from './commonNavigationFonctions'
 
@@ -59,7 +60,7 @@ export default function MainNavigation() {
  
   <ProductProvider>
     <ProductItemProvider>
-          
+    <GeneralProvider>
             <OrdersProvider>
             <CommentsProvider>
             <Stack.Navigator
@@ -96,7 +97,7 @@ export default function MainNavigation() {
               </Stack.Navigator>
             </CommentsProvider>
             </OrdersProvider>
-          
+        </GeneralProvider>
       </ProductItemProvider>
       </ProductProvider>
       

@@ -47,7 +47,7 @@ const openOrder = async (user, item) => {
             await updateOrderRead(item._id, item.products.product)
         }
             
-        navigation.navigate("Orders", {order:item})
+        navigation.navigate("OrdersDetails", {order:item})
     }
     catch(error)
     {
@@ -66,7 +66,7 @@ useEffect(() => {
         await getOrders(user, page)
     };
       
-       fetchData();
+    //fetchData();
       
     if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -78,7 +78,8 @@ useEffect(() => {
         setIsLoading(false)
         setPage(1)
         setIsNewDatas(true)
-    }, 500);
+        fetchData();
+    }, 1000);
 
     
   }, []);

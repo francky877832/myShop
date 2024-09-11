@@ -12,12 +12,19 @@ import { settings } from '../../utils/offersDatas';
 import { topStyles } from '../../styles/topStyles';
 import badgeIconStyles from '../../styles/badgeIconStyles';
 import { UserContext } from '../../context/UserContext';
+import { OrdersContext } from '../../context/OrdersContext';
 
 //const loggedUser = "Francky"
 const   Account = (props) => {
     const navigation = useNavigation()
     const {user} = useContext(UserContext)
-  
+    const { bought, sold } = useContext(OrdersContext)
+    
+    //console.log(bought)
+    const handleBoughtClicked = () => {
+        navigation.navigate('Orders', {groupOrder:bought})
+    }
+
     return(
         <View style={[accountStyles.container,{}]}>
             <View style={[accountStyles.top]}>
@@ -36,7 +43,7 @@ const   Account = (props) => {
 
                 <View style={[accountStyles.achatsVentes]}>
                     <View style={[accountStyles.achatsVentesView]}>
-                        <Pressable  style={[accountStyles.AchatIcon]}>
+                        <Pressable  style={[accountStyles.AchatIcon]} onPress={()=>{handleBoughtClicked()}}>
                             <Icon type="font-awesome" name="shopping-cart" size={50} color={appColors.orange} />
                         </Pressable>
                         <View style={{height:5,}}></View>
