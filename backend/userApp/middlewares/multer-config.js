@@ -25,6 +25,7 @@ const userStorage = multer.diskStorage({
     callback(null, 'userApp/assets/images/users');
   },
   filename: (req, file, callback) => {
+    console.log(file.originalname)
     const name = file.originalname.split(' ').join('_');
     const extension = MIME_TYPES[file.mimetype];
     callback(null, name + Date.now() + '.' + extension);

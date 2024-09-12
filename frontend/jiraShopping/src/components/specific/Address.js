@@ -81,15 +81,19 @@ const   Address = (props) => {
     
     const navigation = useNavigation()
     const route = useRoute()
-    //const { user, temporaryAddress, setTemporaryAddress } = useContext(UserContext)
-    const [temporaryAddress, setTemporaryAddress] = useState({})
+    const { user, setUser, temporaryAddress, setTemporaryAddress, updateUser } = useContext(UserContext)
+    const [hasUploaded, setHasUploaded] = useState(false)
+    //const [temporaryAddress, setTemporaryAddress] = useState({})
     const [allowBack, setAllowBack] = useState(false);
-    const [addressTitle, setAdressTitle] = useState("")
-    const [completeName, setCompleteName] = useState("")
-    const [tel, setTel] = useState("")
-    const [selectedCity, setSelectedCity] = useState("");
-    const [quater, setQuater] = useState("");
-    const [completeAddress, setCompleteAddress] = useState("")
+
+
+    const [addressTitle, setAdressTitle] = useState(temporaryAddress.title)
+    const [completeName, setCompleteName] = useState(user.name)
+    const [tel, setTel] = useState(user.phone)
+    const [selectedCity, setSelectedCity] = useState(temporaryAddress.city);
+    const [quater, setQuater] = useState(temporaryAddress.quater);
+    const [completeAddress, setCompleteAddress] = useState(temporaryAddress.completeAddress)
+
 
     const [isAddressTitleFocused, setIsAddressTitleFocused] = useState(false)
     const [isCompleteNameFocused, setIsCompleteNameFocused] = useState(false)
@@ -129,9 +133,12 @@ const onBackPress = useCallback((e) => {
   }, [allowBack, navigation]);
 
 useEffect(()=>{
-    const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
-    return unsubscribe;
-}, [navigation])
+    if(!hasUploaded)
+    {
+        const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
+        return unsubscribe;
+    }
+}, [navigation, allowBack, hasUploaded])
 
 
    
@@ -148,31 +155,50 @@ useEffect(()=>{
             quater: quater,
             city: selectedCity,
             country: 'Cameroon',
-            title: addressTitle
+            title: addressTitle,
+            completeAddress : completeAddress
         }
-        const userPhone = {phone:tel}
+       //const userPhone = {phone:tel}
+
+        const updatedDatas = {address:newAddress, phone:tel}
 
         const updateUserInfos = async (infos) => 
         {
+            try
+            {
                 //MONGODB
-            navigation.navigate('VerifyDeliveryInfos', {page:'VerifyDeliveryInfosAddress'})
+
+                //Mise en cahce des donnee
+
+                //actions
+                setHasUploaded(true)
+                if(route.params?.page=='VerifyDeliveryInfos'){
+                    navigation.navigate('VerifyDeliveryInfos', {page:'VerifyDeliveryInfosAddress'})
+                }
+            }
+            catch(error)
+            {
+
+            }finally{
+                setIsPostLoading(false)  
+            }
         }
 
-    if(route.params?.page=='VerifyDeliveryInfos')
-    {
-        Alert.alert(
-            "Modification De L'adresse",
-            "Voulez Vous définitivement changer d'adresse ou uniquement pour cette livraison ?",
-            [
-              { text: "Non", onPress: () => handleTemporaryAddress(), style: "cancel" },
-              { text: "Oui", onPress: async () => { await updateUserInfos()} }
-            ]
-          );
-    }
-    else
-    {
-        await updateUserInfos()
-    }
+        if(route.params?.page=='VerifyDeliveryInfos')
+        {
+            Alert.alert(
+                "Modification De L'adresse",
+                "Voulez Vous définitivement changer d'adresse ou uniquement pour cette livraison ?",
+                [
+                { text: "Non", onPress: () => handleTemporaryAddress(), style: "cancel" },
+                { text: "Oui", onPress: async () => { await updateUserInfos(updatedDatas)} }
+                ]
+            );
+        }
+        else
+        {
+            await updateUserInfos(updatedDatas)
+        }
 
     }
 

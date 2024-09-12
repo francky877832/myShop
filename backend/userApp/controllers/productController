@@ -17,8 +17,9 @@ exports.addProductUser = (req, res, next) => {
  // delete datas.seller;
 
   const imageFiles = req.files
-  let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/${file.destination}/${file.filename}`})
- 
+  //let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/${file.destination}/${file.filename}`})
+  let imageNames = imageFiles.map((file)=> {return `${file.filename}`})
+
   const product = new Product(
     {
       ...datas,
@@ -55,7 +56,8 @@ exports.updateProduct = async (req, res, next) => {
             return ['http', 'https'].includes(img.split(':')[0])
         })
 
-    const newImages = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/${file.destination}/${file.filename}`})
+    //const newImages = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/${file.destination}/${file.filename}`})
+    const newImages = imageFiles.map((file)=> {return `${file.filename}`})
 
     //console.log(oldImages)
     //console.log(newImages)

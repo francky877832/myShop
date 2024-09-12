@@ -93,14 +93,45 @@ const UserProvider = ({children}) => {
             Alert.alert("Une erreur est survenue", `${error.message} => Verifier votre connexion Internet.`)
             setIsAuthenticated(false);
         }
-}
+    }
+
+
+   const  updateUser = async (userId, updatedFormData) => {
+    try {
+            const response = await fetch(`${server}/api/auth/users/update/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                body: updatedFormData,  // Convertit les données mises à jour en FormData
+            });
+    
+            // Vérification si la requête a réussi
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Erreur lors de la mise à jour de l\'utilisateur:', errorData.message);
+                return;
+            }
+    
+            const responseData = await response.json();
+            console.log('Réponse du serveur:', responseData);
+    
+            if (responseData.success) {
+                console.log('Informations mises à jour avec succès:', responseData.data);
+            }
+        } catch (error) {
+            console.error('Erreur lors de la requête:', error);
+        }
+    }
+
+    
 
     
     
 
     const filterStateVars = {temporaryAddress, refreshComponent, email, username, password, user, isAuthenticated }
     const filterStateSetters = {setTemporaryAddress, setRefreshComponent, setEmail, setUsername, setPassword, setUser, setIsAuthenticated}
-    const utilsFunctions = { checkEmail, checkPassword, checkUsername, loginUserWithEmailAndPassword}
+    const utilsFunctions = { updateUser, checkEmail, checkPassword, checkUsername, loginUserWithEmailAndPassword}
     return (
         <UserContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

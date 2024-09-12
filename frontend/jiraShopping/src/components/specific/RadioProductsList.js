@@ -172,11 +172,11 @@ const RadioProduct = (props) => {
                                                             <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
                                                             
                                                             <View style={[{flexDirection : 'row', alignItems:'center', top:10,}]}>
-                                                                <Text style={[customText.text, {fontWeight:"bold",color:((hasPropositionPrice(product2) || product2.price > product2.newPrice ))?appColors.secondaryColor1:appColors.clearBlack}]}>{formatMoney(choosePrice(product2))} XAF{/* prix de la proposition ou real Price*/}</Text>
+                                                                <Text style={[customText.text, {fontWeight:"bold",color:((hasPropositionPrice(product2) || product2.price > product2.newPrice ))?appColors.green:appColors.clearBlack}]}>{formatMoney(choosePrice(product2))} XAF{/* prix de la proposition ou real Price*/}</Text>
                                                                 <View style={{width:10}}></View>
                                                                 {
                                                                     (hasPropositionPrice(product2) || product2.price > product2.newPrice ) &&
-                                                                    <Text style={[customText.text, {fontStyle:'italic',fontWeight:"bold",fontSize:11, color:appColors.green}]}> Offre Spéciale</Text>
+                                                                    <Text style={[customText.text, {fontStyle:'italic',fontWeight:"bold",fontSize:11, color:appColors.secondaryColor1}]}> Offre Spéciale</Text>
                                                                 }
                                                             </View>
 

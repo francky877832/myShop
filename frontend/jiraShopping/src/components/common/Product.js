@@ -24,6 +24,7 @@ import { Icon } from 'react-native-elements';
 import { ProductContext } from '../../context/ProductContext';
 import { addModifiedProduct } from '../../store/favourites/favouritesSlice';
 
+import { productsImagesPath } from '../../remote/server';
 
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
@@ -282,7 +283,7 @@ function displayGrilleBttom(origin, product){
                     </View>
                         
                     <Pressable style={ productStyles.pressable } onPress = {handlePress} >
-                        <Image source={{uri: product.images[0]}}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
+                        <Image source={{uri: `${productsImagesPath}/${product.images[0]}`}}  style={[productStyles.image, horizontal ? productStyles.imageHorizontal : false]} />
                         <View style={ productStyles.text }>
                             <View style={{ flexDirection:"column", justifyContent:"flex-start", height:50, }}>
                                { /*</Text><Text numberOfLines={1} style={[customText.text, productStyles.shopName]}> @{product.seller.username} | </Text>*/}

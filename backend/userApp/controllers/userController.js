@@ -54,6 +54,46 @@ exports.signupUser = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
  };
 
+ exports.updateUser = async (req, res, next) => {
+  const userId = req.params.user
+  let updatedDatas = req.body
+  const imageFiles = req.files || []
+  try
+  {
+    let password;
+    if(Object.keys(req.body).includes('password'))
+    {
+      password = bcrypt.hash(req.body.password, 10)
+    }
+
+    const images = imageFiles.map((file)=> {return `${file.filename}`})
+    if(images.length>0)
+    {
+      updatedDatas = {...req.body, image:images[0]}
+    }
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(userId) }, 
+      { $set: updatedDatas },  
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      res.status(404).json({ success: false, message: 'Utilisateur non trouvé.' });
+    }
+    else
+    {
+      res.status(200).json({ success: true, message: 'Informations mises à jour avec succès.', data: updatedUser});
+    }
+
+  
+  }catch(error){
+    console.log(error)
+    res.status(500).json({ error })
+  }
+
+
+}
+
  
 
  
@@ -170,5 +210,6 @@ exports.getReferredUsers = async (req, res) => {
       res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs référencés", error });
   }
 };
+
 
 

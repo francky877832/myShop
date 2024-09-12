@@ -96,11 +96,11 @@ const VerifyDeliveryInfos = (props) => {
                     },
                     order : 
                     {
-                    sellers : products.map(product => product.seller._id),
-                    buyer : user._id,
-                    products : products.map(product => ({product : product._id})),
-                    totalPrice : totalPrice,
-                    quantity : products.length
+                        sellers : products.map(product => product.seller._id),
+                        buyer : user._id,
+                        products : products.map(product => ({product : product._id, quantity:product.orderQuantity})),
+                        totalPrice : totalPrice,
+                        quantity : products.length
                     }
                 }
                 //console.log(products)

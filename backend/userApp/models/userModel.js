@@ -5,7 +5,7 @@ const uniqueValidator = require('mongoose-unique-validator');
 const appName = "TheStyle"
 const userSchema = new Schema({
     name: { type: String },
-    surname: { type: String },
+    //surname: { type: String },
     username: { type: String, required: true, unique: true, default : () => { return `${appName}${(Date.now()).toString().split('').reverse().join('').substring(0,4)}` } },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -14,7 +14,8 @@ const userSchema = new Schema({
         quater: { type: String },
         city: { type: String },
         country: { type: String, default:'Cameroon' },
-        title: { type: String }
+        title: { type: String },
+        completeAddress : {type : String }
     },
     phone: { type: String },
     isPhoneVerified : { type: Number, enum: [0, 1], default : 0 },

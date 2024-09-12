@@ -12,17 +12,23 @@ import { useNavigation } from '@react-navigation/native';
 
 
 import auth from '@react-native-firebase/auth';
+import { UserContext } from '../../context/UserContext';
+import bcrypt from 'bcryptjs';
+
 //import firestore from '@react-native-firebase/firestore';
 
 const loggedUser = "Francky"
 
 const   PasswordChange = (props) => {
     const navigation = useNavigation()
+    const {user, setUser, updateUser} = useContext(UserContext)
     const [allowBack, setAllowBack] = useState(false);
 
     const [oldPassword, setOldPassword] = useState("")
     const [newPassword1, setNewPassword1] = useState("")
     const [newPassword2, setNewPassword2] = useState("")
+    const [hasUploaded, setHasUploaded] = useState(false)
+
 
 
     const [isOldPasswordFocused, setIsOldPasswordFocused] = useState("")
@@ -58,31 +64,59 @@ const   PasswordChange = (props) => {
           ]
         );
       }, [allowBack, navigation]);
+
     useEffect(()=>{
-        const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
-        return unsubscribe;
-    }, [navigation])
+        if(!hasUploaded)
+        {
+            const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
+            return unsubscribe;
+        }
+    }, [navigation, allowBack, hasUploaded])
 
 
     const signInWithEmailAndPassword = useCallback(async (email, password)=>{
         return await auth().signInWithEmailAndPassword(email, password);
     },[])
 
-    const updatePassword = async (newPassword) => {
-        setIsPostLoading(true)
-        const email = "francky877832@gmail.com"
-        const password = "0000000"  
+    const updatePassword = async (oldPassword, newPassword1, newPassword2) => {
         try {
-            
-            const userCredential = await signInWithEmailAndPassword(email, password)
-            if (userCredential.user) 
+            setIsPostLoading(true)
+            const email = user.email
+           
+            let updatedDatas = {}
+            const isMatch = await bcrypt.compare(oldPassword, user.password);
+            if(isMatch)
             {
-                await userCredential.user.updatePassword(newPassword);
-                //MONGODB
-                Alert.alert('Mot de passe mis à jour avec succès.');
-            } else {
-                Alert.alert('Aucun utilisateur connecté.');
+                if(newPassword1 === newPassword2)
+                {
+                    updatedDatas = {
+                        password : newPassword1
+                    }
+
+                    const userCredential = await signInWithEmailAndPassword(email, oldPassword)
+                    if (userCredential.user) 
+                    {
+                        await userCredential.user.updatePassword(newPassword1);
+                        //MONGODB
+                        await updateUser(user._id, updatedDatas)
+                        Alert.alert('Mot de passe mis à jour avec succès.');
+                        setHasUploaded(true)
+                    } else {
+                        Alert.alert('Aucun utilisateur connecté.');
+                    }
+                }
+                else
+                {
+                    
+                }
             }
+            else
+            {
+    
+            }
+
+            //Il me rste gerer les erreurs
+           
             setIsPostLoading(false)
         } catch (error) 
         {
@@ -173,7 +207,7 @@ const   PasswordChange = (props) => {
 
             <View style={[addProductStyles.addProductSubmitView,{}]}>
                 { !isPostLoading ?
-                        <CustomButton text="Changer De Mot De Passe" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={()=>{updatePassword("00000000")}} />
+                        <CustomButton text="Changer De Mot De Passe" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={()=>{updatePassword(oldPassword, newPassword1, newPassword2)}} />
                         :
                         <ActivityIndicator color={appColors.secondaryColor1} size="large" />
                 }

@@ -6,7 +6,7 @@ import { Input, Icon } from 'react-native-elements';
 import PhoneAuth from './PhoneAuth';
 
 import { appColors, customText, appFont, screenHeight, screenWidth } from '../../styles/commonStyles';
-import {CustomButton} from '../common/CommonSimpleComponents'
+import {CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpleComponents'
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
 
@@ -14,6 +14,7 @@ import { UserContext } from '../../context/UserContext';
 
 import { requestPermissions, pickImages, takePhoto, resizeImages } from '../../utils/utilsFunctions'
 import { useNavigation } from '@react-navigation/native';
+import { server, usersImagesPath } from '../../remote/server';
 
 import auth from '@react-native-firebase/auth';
 //import firestore from '@react-native-firebase/firestore';
@@ -25,12 +26,14 @@ const   AccountSettings = (props) => {
 
 
     const navigation = useNavigation()
+    const {user, setUser, updateUser} = useContext(UserContext)
+
 
     const [allowBack, setAllowBack] = useState(false);
-    const [username, setUsername] = useState("")
-    const [tel, setTel] = useState("")
-    const [email, setEmail] = useState("")
-    const [slogan, setSlogan] = useState("")
+    const [username, setUsername] = useState(user.username)
+    const [tel, setTel] = useState(user.phone)
+    const [email, setEmail] = useState(user.email)
+    const [slogan, setSlogan] = useState(user.slogan)
 
     const [isUsernameFocused, setIsUsernameFocused] = useState(false)
     const [isTelFocused, setIsTelFocused] = useState(false)
@@ -38,9 +41,11 @@ const   AccountSettings = (props) => {
     const [isSloganFocused, setIsSloganFocused] = useState(false)
     const [isEmailLoading, setIsEmailLoading] = useState(false)
 
-    const {user, setUser} = useContext(UserContext)
+    const [hasUploaded, setHasUploaded] = useState(false)
+
     //console.log(user)
-    const [pp, setPp] = useState([user.image])
+    const [pp, setPp] = useState([`${usersImagesPath}/${user.image}`])
+    const [ppImage, setPpImage] = useState([])
     const [cameraOrGalery, setCameraOrGalery] = useState(false)
     const [isPostLoading, setIsPostLoading] = useState(false)
 
@@ -79,22 +84,15 @@ const   AccountSettings = (props) => {
 useEffect(()=>{
 //Appel de useCallBack
    // Ajouter l'écouteur pour l'événement de retour
-const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
-return unsubscribe;
-}, [navigation, onBackPress])
-
-    const pickUpImages = async () =>{
-        
-        const img = await pickImages(MAX_IMAGES, MIN_IMAGES, [])
-    //console.log(img)
-        setPp((prevImages)=>{
-                return [
-                    img[0].uri,
-                ]
-            }
-        )
-        setCameraOrGalery(false)  
+    if(!hasUploaded)
+    {
+        const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
+        return unsubscribe;
     }
+}, [navigation, onBackPress, hasUploaded])
+
+
+
 
     const signInWithEmailAndPassword = useCallback(async (email, password)=>{
         return await auth().signInWithEmailAndPassword(email, password);
@@ -114,9 +112,25 @@ return unsubscribe;
     }, [isEmailLoading])
            
     //
+
+    const pickUpImages = async () => {
+        
+        const img = await pickImages(MAX_IMAGES, MIN_IMAGES, [])
+    //console.log(img)
+        setPp((prevImages)=>{
+                return [
+                    img[0].uri,
+                ]
+            }
+        )
+        setPpImage(img)
+        setCameraOrGalery(false)  
+    }
+
     const takeUpPhoto = async () => {
         const img = await takePhoto(MAX_IMAGES, MIN_IMAGES, pp)
         setPp((prevImages) => [img.uri]);
+        setPpImage(img)
         setCameraOrGalery(false)
     }
 
@@ -137,10 +151,47 @@ return unsubscribe;
             }
     }
     //console.log(pp)
+
 const updateProfil = async () => {
     setIsPostLoading(true)
-    const pp_ = await resizeImages(pp,IMG_MAX_HEIGHT,IMG_MAX_WIDTH)
+    //const pp_ = await resizeImages(pp, IMG_MAX_HEIGHT, IMG_MAX_WIDTH)
+
+    const formData = new FormData();
+
+    const newInfos = {
+        username : username,
+        phone : tel,
+        email : email,
+        slogan : slogan
+    }
+
+    for (const key in newInfos) {
+        //console.log(key)
+        formData.append(key, newInfos[key]);
+    }
+    //console.log(ppImage)
+    if (ppImage.length>0) {
+        formData.append('profilePicture', {
+            uri: ppImage[0].uri,      
+            name: ppImage[0].fileName,     
+            type: ppImage[0].mimeType  
+        });
+    }
+
+
+   try {
+       
+       await updateUser(user._id, formData)
+       setHasUploaded(true)
+    } catch (error) {
+        console.error('Erreur lors de la requête:', error);
+        setIsPostLoading(false)
+    }finally {
+        setIsPostLoading(false)
+    }
+
 }
+
     return(
 <View style={[accountSettingsStyles.container]}>
     <KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
@@ -150,7 +201,7 @@ const updateProfil = async () => {
 
             <View style={[accountSettingsStyles.pp]}>
                 <Pressable>
-                <Image source={{uri: pp[0] }} style={[accountSettingsStyles.imgeProfil]} />
+                <Image source={{uri: `${pp[0]}` }} style={[accountSettingsStyles.imgeProfil]} />
                 </Pressable>
                 <Pressable style={[{left:20,marginTop:50,}]} onPress={()=>{setCameraOrGalery(!cameraOrGalery)}}>
                     <Text style={[accountSettingsStyles.text,{textAlignVertical:"bottom",textDecorationLine:"underline",color:appColors.secondaryColor1,}]}>Mettre a jour</Text>
@@ -254,7 +305,10 @@ const updateProfil = async () => {
                     <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Camera</Text>
                 </Pressable>
             </View>
-        }         
+        }    
+
+    <CustomModalActivityIndicator onRequestClose={setIsPostLoading} isLoading={isPostLoading} size="large" color={appColors.secondaryColor1} message="Profil en cours de mise a jour..." />
+     
 </View>
     )
 }
