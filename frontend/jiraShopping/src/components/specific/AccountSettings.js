@@ -34,6 +34,11 @@ const   AccountSettings = (props) => {
     const [tel, setTel] = useState(user.phone)
     const [email, setEmail] = useState(user.email)
     const [slogan, setSlogan] = useState(user.slogan)
+    const [isEmailVerified, setIsEmailVerified] = useState(user.isEmailVerified)
+    const [showPasswordInput, setShowPasswordInput] = useState(false)
+    const [password, setPassword] = useState("")
+    const [isPasswordFocused, setIsPasswordFocused] = useState(false)
+    const [hasSentEmail, setHasSentEmail] = useState(false)
 
     const [isUsernameFocused, setIsUsernameFocused] = useState(false)
     const [isTelFocused, setIsTelFocused] = useState(false)
@@ -42,6 +47,7 @@ const   AccountSettings = (props) => {
     const [isEmailLoading, setIsEmailLoading] = useState(false)
 
     const [hasUploaded, setHasUploaded] = useState(false)
+    const [checkEmail, setCheckEmail] = useState(false)
 
     //console.log(user)
     const [pp, setPp] = useState([`${usersImagesPath}/${user.image}`])
@@ -97,19 +103,42 @@ useEffect(()=>{
     const signInWithEmailAndPassword = useCallback(async (email, password)=>{
         return await auth().signInWithEmailAndPassword(email, password);
     },[])
+
     useEffect(()=>{
-        const email = "francky877832@gmail.com"
-        const password = "0000000"
-        async function singIn(){
-            const userCredential = await signInWithEmailAndPassword(email, password)
-            if (userCredential.user.emailVerified && !(user.isEmailVerified))
+        //const email = user.email
+        //const password = user.password
+
+        //const email = 'francky877832@gmail.com'
+        //const password = '0000000'
+
+        async function singIn()
+        {
+            try
             {
-                setUser({...user, isEmailVerified:1})
-                //MONGODB
+
+            
+                const userCredential = await signInWithEmailAndPassword(email, password)
+                if (userCredential.user.emailVerified && !(user.isEmailVerified))
+                {
+                    setUser(prev => ({...prev, isEmailVerified:1}))
+                    setIsEmailVerified(true)
+                    setShowPasswordInput(false)
+                    //MONGODB
+
+                }
+            }catch(error)
+            {
+                console.log(error)
             }
         }
-        singIn() 
-    }, [isEmailLoading])
+
+        
+        if(email && password)
+        {
+            singIn()
+        }
+
+    }, [checkEmail])
            
     //
 
@@ -135,6 +164,8 @@ useEffect(()=>{
     }
 
     const verifyEmail = async (email, password)=> {
+        //const myEmail = "francky877832@gmail.com"
+        //const myPassword = "0000000"
         setIsEmailLoading(true)
             try 
             {
@@ -144,7 +175,9 @@ useEffect(()=>{
                     await userCredential.user.sendEmailVerification();
                     Alert.alert("", 'Vérification par email envoyée ! Vérifiez votre boîte de réception.');
                 }
+                
                 setIsEmailLoading(false)
+                setHasSentEmail(true)
             } catch (error) {
                 setIsEmailLoading(false)
                 Alert.alert("Error : ", error.message);
@@ -162,7 +195,8 @@ const updateProfil = async () => {
         username : username,
         phone : tel,
         email : email,
-        slogan : slogan
+        slogan : slogan,
+        isEmailVerified : isEmailVerified,
     }
 
     for (const key in newInfos) {
@@ -237,13 +271,18 @@ const updateProfil = async () => {
                         <View style={[accountSettingsStyles.VerifierBox]}>
                             <Text style={[accountSettingsStyles.text,]}>Email</Text>
                             {!user.isEmailVerified ?
-                                <Pressable style={[accountSettingsStyles.verifier, {}]} onPress={()=>{verifyEmail("francky877832@gmail.com","0000000")}}>
-                                    { !isEmailLoading ?
-                                        <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Verifier</Text>
+                                <View>
+                                    { (!isEmailLoading && !hasSentEmail) ?
+                                        <Pressable style={[accountSettingsStyles.verifier, {}]} onPress={()=>{setShowPasswordInput(true)}}>
+                                            <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Verifier</Text>
+                                        </Pressable>
                                         :
-                                        <ActivityIndicator color={appColors.white} size="small" />
+                                        <Pressable style={[accountSettingsStyles.verifier, {backgroundColor:appColors.green}]} onPress={()=>{setCheckEmail(prev=>!prev);setShowPasswordInput(false);}}>
+                                            <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Mettre A Jour</Text>
+                                        </Pressable>
                                     }
-                                </Pressable>
+                                </View>
+                                
                                 :
                                 <View>
                                     <Icon type="ionicon" name="checkmark-circle" color={appColors.green} />
@@ -263,7 +302,35 @@ const updateProfil = async () => {
                             containerStyle={ []}
                             inputContainerStyle = {[searchBarStyles.inputContainer, isEmailFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
                         />
+                   
                 </View>
+
+                {
+                        showPasswordInput &&
+                        <View>
+                            <Input placeholder="Votre mot de passe" value={password} onChangeText={(pass)=>{setPassword(pass)}}
+                                            keyboardType="phone-pad"
+                                            multiline={false}
+                                            maxLength={100}
+                                            placeholderTextColor={appColors.secondaryColor3}
+                                            inputStyle = {[searchBarStyles.inputText, {color:appColors.gray,} ]}
+                                            onFocus={() => setIsPasswordFocused(true)}
+                                            onBlur={() => setIsPasswordFocused(false)}
+                                            underlineColorAndroid='transparent'
+                                            containerStyle={ []}
+                                            inputContainerStyle = {[searchBarStyles.inputContainer, isPasswordFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
+                                        />
+                            <Pressable style={[accountSettingsStyles.confirmPassword]} onPress={() => {verifyEmail(email, password)}}>
+                              { !isEmailLoading ?
+                                    <Text style={[{color:appColors.white, fontWeight:'bold',}]}>Envoyer L'email</Text>        
+                                    :
+                                    <ActivityIndicator color={appColors.white} size="small" />
+                              }
+                            </Pressable>
+                            
+                          <View style={{height:20}}></View>
+                        </View>
+                    }
 
                 <View style={[accountSettingsStyles.inputBox]}>
                     <Text style={[accountSettingsStyles.text,]}>Slogan De Votre Boutique</Text>
@@ -344,6 +411,7 @@ const accountSettingsStyles = StyleSheet.create({
     infosBox :
     {
         paddingLeft : 25,
+        paddingRight : 25,
         backgroundColor : appColors.white,
         top : -20,
     },
@@ -371,5 +439,13 @@ const accountSettingsStyles = StyleSheet.create({
         paddingHorizontal : 10,
         borderRadius : 15,
     },
+    confirmPassword :
+    {
+      backgroundColor:appColors.secondaryColor1,
+      justifyContent:"center",
+      alignItems:"center",
+      padding:10,
+      borderRadius:20,
+    }
    
 })

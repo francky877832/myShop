@@ -16,7 +16,6 @@ import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 import { formatMoney } from '../../utils/commonAppFonctions';
 import { choosePrice, hasPropositionPrice } from '../../utils/commonAppFonctions';
-
 //contexte
 import { useSelector, useDispatch } from 'react-redux';
 import { addFavourite, addFavouriteContext, setLikedIcon, updateLocalFavourites, isProductFavourite, addLocalFavourite, removeLocalFavourite} from '../../store/favourites/favouritesSlice'; 
@@ -186,13 +185,13 @@ exports.Counter = (props) => {
             />
     */
    const num = isNaN(parseInt(number)) ? 1 : parseInt(number)
-   //console.log(num)
+   //console.log(number)
     return (
         <View style={[commonSimpleComponentsStyles.counter.container]}>
             <Pressable style={[{}]} onPress={()=>{dispatch(setNumber({id:id, quantity: Math.max(num-1, 1)}))}}>
                 <Icon name="remove" type="ionicon" color={appColors.black} size={20} />
             </Pressable>
-            <Input value={3}
+            <Input value={num}
                 inputMode='numeric'
                 editable={false}
                 multiline={false}

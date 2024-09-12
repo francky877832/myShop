@@ -5,7 +5,7 @@ import { server } from '../../remote/server';
 import { addModifiedProduct } from '../favourites/favouritesSlice'; // Importer l'action
 import { useDispatch } from 'react-redux';
 import { startTransition } from 'react';
-
+import { choosePrice } from '../../utils/commonAppFonctions'
 
 // Initial state
 const initialState = {
@@ -135,17 +135,26 @@ const basketSlice = createSlice({
   initialState,
   reducers: {
     updateSelectedProducts: (state, action) => {
-      const { itemId, bool } = action.payload;
+      const { product, bool } = action.payload;
+      //console.log(action)
       const updatedSelectedProducts = {
         ...state.selectedProducts,
-        [itemId]: bool !== 'remove' ? !state.selectedProducts[itemId] : false,
+        [product._id]: !state.selectedProducts[product._id] // bool !== 'remove' ? !state.selectedProducts[itemId] : false,
       };
+      //console.log(state.selectedProducts)
       state.selectedProducts = updatedSelectedProducts;
-      state.totalPrice = Object.keys(updatedSelectedProducts).reduce((total, key) => {
-        const isSelected = updatedSelectedProducts[key];
-        const item = state.basket.find((product) => product._id === key);
-        return isSelected ? total + (item?.price || 0) : total;
-      }, 0);
+      let total=0
+      Object.keys(updatedSelectedProducts).forEach(key => {
+          const isSelected = updatedSelectedProducts[key];
+          const item = state.basket.find((product) => product._id === key);
+          total += isSelected ? choosePrice(item) : 0
+      })
+      state.totalPrice = total
+      /*reduce((total, key) => {
+       
+        //const item = state.basket.find((product) => product._id === key);
+        return isSelected ? total + (choosePrice(product) || 0) : 0;
+      }, 0);*/
     },
     setSelectedSeller: (state, action) => {
       state.selectedSeller = action.payload;
@@ -205,7 +214,7 @@ const basketSlice = createSlice({
       },
       updateQuantities(state, action) {
         const { id, quantity } = action.payload
-        console.log(action.payload)
+        //console.log(action.payload)
         state.quantities = {...state.quantities, [id]:quantity}
       },
   },

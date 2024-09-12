@@ -19,6 +19,7 @@ export default function PhoneAuth(props) {
   const [showCodeInput, setShowCodeInput] = useState(false)
   const [isTelLoading, setIsTelLoading] = useState(false)
   const [isCodeLoading, setIsCodeLoading] = useState(false)
+  //const [isEmailVerified, setIsEmailV]
 
   const {tel, setTel, setIsTelFocused, isTelFocused, accountSettingsStyles, user, setUser
    } = props  
@@ -26,10 +27,11 @@ export default function PhoneAuth(props) {
   const signInWithPhoneNumber = async () => {
     setIsTelLoading(true)
     try {
-      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+      const confirmation = await auth().signInWithPhoneNumber("+237657526607");
       setConfirm(confirmation);
       setShowCodeInput(true)
       setIsTelLoading(false)
+      //console.log(confirmation)
     } catch (error) {
       Alert.alert("Erreur","Une erreur inconnue est survenue. Rééssayez plus tard.")
       console.log("Error: ", error);
@@ -72,7 +74,8 @@ export default function PhoneAuth(props) {
       <View style={[accountSettingsStyles.inputBox]}>
         <View style={[accountSettingsStyles.VerifierBox]}>
                         <Text style={[accountSettingsStyles.text,]}>Numero De Téléphone</Text>
-                        {!user.isPhoneVerified ?
+                        <Text>
+                          {/*!user.isPhoneVerified ?
                             <Pressable onPress={signInWithPhoneNumber} style={[accountSettingsStyles.verifier,{}]}>
                               { !isTelLoading ?
                                     <Text style={[accountSettingsStyles.text,{color:appColors.white,fontWeight:"bold",}]}>Verifier</Text>
@@ -84,7 +87,8 @@ export default function PhoneAuth(props) {
                             <View>
                                 <Icon type="ionicon" name="checkmark-circle" color={appColors.green} />
                             </View>
-                        }
+                        */}
+                        </Text>
                     </View>
 
                     <Input placeholder="EX : +237677120000" value={tel} onChangeText={(name)=>{setTel(name)}}
@@ -100,7 +104,9 @@ export default function PhoneAuth(props) {
                             inputContainerStyle = {[searchBarStyles.inputContainer, isTelFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
                         />
         </View>
-      {showCodeInput &&
+      <Text>
+        {
+          /*showCodeInput &&
         <View>
                   <Input placeholder="Code recu par mesage" value={code} onChangeText={(name)=>{setCode(name)}}
                             keyboardType="phone-pad"
@@ -124,7 +130,9 @@ export default function PhoneAuth(props) {
             
           <View style={{height:20}}></View>
         </View>
+        */
         }
+      </Text>
     
    </View>
   );

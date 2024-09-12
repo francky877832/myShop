@@ -31,6 +31,8 @@ import  {
     setSelectedSeller, updateQuantities,
   } from '../../store/baskets/basketsSlice';
 import { UserContext } from '../../context/UserContext';
+import { productsImagesPath } from '../../remote/server';
+
 
   const loggedUser = "Francky"
   const loggedUserId = "66715deae5f65636347e7f9e"
@@ -101,15 +103,54 @@ const handleRemoveFromBasket = useCallback((product) => {
   },[]);
 
   const handleSelectedSeller = useCallback((val) => {dispatch(setSelectedSeller(val)) },[]);
-  const handleUpdateSelectedProducts  = useCallback((product) => {dispatch(updateSelectedProducts({itemId:product._id}))},[])
+  const handleUpdateSelectedProducts  = useCallback((product) => {dispatch(updateSelectedProducts({product:product}))},[])
 
+
+
+  const proceedBasketPayment = () => {
+    if(Object.keys(selectedProducts).length > 0 || !Object.keys(selectedProducts).some(id => selectedProducts[id]===true))
+    {
+        const orderProducts = basket.filter(p => selectedProducts[p._id]===true)
+        const orderProductsWithQuantities = orderProducts.map(p => {
+            return {...p, orderQuantity:quantities[p._id] || 1}
+        })
+        //console.log(orderProductsWithQuantities)
+        navigation.navigate('VerifyDeliveryInfos', {products:orderProductsWithQuantities})
+    }
+    else
+    {
+        Alert.alert('Vous devez choisir au moins un produit.')
+    }
+    
+  }
 
 
 const RadioProduct = (props) => {
         const {item, user} = props
 
-
+        /*
+    const [localSelectedProducts, setLocalSelectedProducts] = useState({})
+    const updateLocalSelectedProducts = (itemId) => {
+        setLocalSelectedProducts(prev => {
+            console.log('ok')
+        return ({
+                    ...prev,
+                    [itemId]: !localSelectedProducts[itemId] 
+                })
+        })
         
+        //console.log(state.selectedProducts)
+        state.selectedProducts = updatedSelectedProducts;
+        state.totalPrice = Object.keys(updatedSelectedProducts).reduce((total, key) => {
+        const isSelected = updatedSelectedProducts[key];
+        const item = state.basket.find((product) => product._id === key);
+        return isSelected ? total + (item?.price || 0) : total;
+        }, 0);
+        
+    }
+    */
+
+            
 
         let passed_sellers = []
         let passed_product = []
@@ -118,7 +159,7 @@ const RadioProduct = (props) => {
         //const profile = item.productDetails.images[0] || require('../../assets/images/product5.png')
         const inBasket = 3
 
-        const handleSellerBrandPressed = (product) => {
+        const handleSellerBrandPressed = useCallback((product) => {
             //Pas vraiment necesairre parce qun user ne pourra pas ajouter son propre produit a Basket
             if(user._id!=product.seller._id)
             {
@@ -128,7 +169,7 @@ const RadioProduct = (props) => {
             {
                 navigation.navigate('Preferences', {screen: 'MyShop',params:undefined})
             }
-        }
+        }, [navigation])
 // <SellerBrand pub={false} certified={true} username={product1.seller.username} route={route} navigation={navigation} closeNotif={true} /> 
     
         return (
@@ -165,7 +206,7 @@ const RadioProduct = (props) => {
                                                     <Pressable style={[radioProductStyles.productInfos,{ }]} onPress={()=>{navigation.navigate('ProductDetails', {productDetails:product2})}}>
                                                         <View style={{width:10}}></View>
                                                         <View style={[radioProductStyles.imageContainer,{}]}>
-                                                            <Image source={{uri: product2.images[0]}} style={[radioProductStyles.productImage,{}]} />
+                                                            <Image source={{uri: `${productsImagesPath}/${product2.images[0]}`}} style={[radioProductStyles.productImage,{}]} />
                                                         </View>
                                                         <View style={[{left : 10, flexWrap:'wrap', width:'100%', }]}>
                                                             <Text style={[customText.text, ]} numberOfLines={2} >{product2.name.length>25?product2.name.substring(0,25)+'...':product2.name}</Text>
@@ -253,7 +294,7 @@ const RadioProduct = (props) => {
                             <Text style={[radioProductsListtStyles.price, {fontWeight:"bold",}]}>{formatMoney(totalPrice)?formatMoney(totalPrice):0} XAF</Text>
                         </View>
                         <View style={radioProductsListtStyles.buttonView}>
-                            <CustomButton text="Payer" color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{}} styles={radioProductsListtStyles} />
+                            <CustomButton text="Payer" color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{proceedBasketPayment()}} styles={radioProductsListtStyles} />
                         </View>
                     </View>
             </View>
