@@ -119,7 +119,7 @@ export const radioProductStyles = StyleSheet.create({
     },
     radioContainer2 :
     {
-        paddingTop : 0,
+        paddingTop : 10,
     },
     radioProducts :
     {
@@ -178,6 +178,8 @@ export const radioProductStyles = StyleSheet.create({
         paddingRight:350,
         left : 90,
         alignSelf : 'center',
+        //borderBottomWidth : 1,
+        //borderColor : appColors.secondaryColor3,
     },
     trash :
     {

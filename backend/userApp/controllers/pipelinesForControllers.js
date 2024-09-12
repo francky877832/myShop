@@ -628,6 +628,19 @@ exports.getPipeLineForavouritesAndBasket = ( userId, skip=0, limit=0,) => {
         as: "offers" // Stocker les offres dans ce champ
       }
     },
+    {
+      $addFields: {
+        offers: {
+          $cond: {
+            if: { 
+              $gt: [{ $size: { $ifNull: ['$offers', []] } }, 0]
+            },
+            then: { $arrayElemAt: ['$offers', 0] },
+            else: {}
+          }
+        },
+      }
+    },
        
 
     {

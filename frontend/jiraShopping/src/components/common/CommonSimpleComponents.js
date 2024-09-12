@@ -5,6 +5,7 @@ import { Input } from 'react-native-elements';
 import BadgeIcon from './BadgeIcon';
 import { Ionicons } from '@expo/vector-icons';
 import { productStyles } from '../../styles/productStyles';
+import { productDetailsStyles } from '../../styles/productDetailsStyles';
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
 import { appFont, appColors, appFontSize, customText } from '../../styles/commonStyles';
@@ -14,6 +15,7 @@ import { CheckBox } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 import { formatMoney } from '../../utils/commonAppFonctions';
+import { choosePrice, hasPropositionPrice } from '../../utils/commonAppFonctions';
 
 //contexte
 import { useSelector, useDispatch } from 'react-redux';
@@ -211,6 +213,21 @@ exports.Counter = (props) => {
     )
 }
 
+
+exports.DisplayPrice = (props) => {
+    const { product } = props
+    //import { formatMoney, pluralize, choosePrice, hasPropositionPrice } from '../../utils/commonAppFonctions';
+
+    return (
+        <View style={[{flexDirection : 'row'}]}>
+            <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(choosePrice(product))} XAF</Text>                                                    
+
+            {
+                hasPropositionPrice(product) 
+            }
+        </View>
+    )
+}
 
 exports.TemporaryNotification = (props) => {
     const {message} = props

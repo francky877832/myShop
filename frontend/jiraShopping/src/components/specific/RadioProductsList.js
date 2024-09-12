@@ -16,12 +16,12 @@ import { appColors, customText, screenWidth } from '../../styles/commonStyles';
 //Contexte
 import { FavouritesContext } from '../../context/FavouritesContext';
 import { Icon } from 'react-native-elements';
-import { CustomButton, Counter } from '../common/CommonSimpleComponents'
+import { CustomButton, Counter, DisplayPrice } from '../common/CommonSimpleComponents'
 import { CheckBox } from 'react-native-elements';
 
 import { BasketContext } from '../../context/BasketContext';
 
-import { formatMoney, pluralize } from '../../utils/commonAppFonctions';
+import { formatMoney, pluralize, choosePrice, hasPropositionPrice } from '../../utils/commonAppFonctions';
 
 import { useSelector, useDispatch } from 'react-redux';
 import  {
@@ -130,7 +130,7 @@ const RadioProduct = (props) => {
             }
         }
 // <SellerBrand pub={false} certified={true} username={product1.seller.username} route={route} navigation={navigation} closeNotif={true} /> 
-
+    
         return (
             <View styles={[radioProductStyles.container,{}]}>       
                 <RadioButton.Group onValueChange={val => {handleSelectedSeller(val)}} value={selectedSeller} style={[radioProductStyles.radioGroup,radioProductStyles.radioGroup1,]}>
@@ -170,7 +170,16 @@ const RadioProduct = (props) => {
                                                         <View style={[{left : 10, flexWrap:'wrap', width:'100%', }]}>
                                                             <Text style={[customText.text, ]} numberOfLines={2} >{product2.name.length>25?product2.name.substring(0,25)+'...':product2.name}</Text>
                                                             <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
-                                                            <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(product2.price)} XAF{/* prix de la proposition ou real Price*/}</Text>
+                                                            
+                                                            <View style={[{flexDirection : 'row', alignItems:'center', top:10,}]}>
+                                                                <Text style={[customText.text, {fontWeight:"bold",color:((hasPropositionPrice(product2) || product2.price > product2.newPrice ))?appColors.secondaryColor1:appColors.clearBlack}]}>{formatMoney(choosePrice(product2))} XAF{/* prix de la proposition ou real Price*/}</Text>
+                                                                <View style={{width:10}}></View>
+                                                                {
+                                                                    (hasPropositionPrice(product2) || product2.price > product2.newPrice ) &&
+                                                                    <Text style={[customText.text, {fontStyle:'italic',fontWeight:"bold",fontSize:11, color:appColors.green}]}> Offre Spéciale</Text>
+                                                                }
+                                                            </View>
+
                                                             <Text style={[customText.text, {top:10, fontSize:12, fontWeight:"bold"} ]} numberOfLines={2} >Stock Restant : {product2.stock}</Text>
                                                         </View>
                                                     </Pressable>    
