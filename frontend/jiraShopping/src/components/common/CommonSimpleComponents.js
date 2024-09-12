@@ -1,9 +1,11 @@
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator, Image, Modal } from 'react-native';
 
+import { Input } from 'react-native-elements';
 import BadgeIcon from './BadgeIcon';
 import { Ionicons } from '@expo/vector-icons';
 import { productStyles } from '../../styles/productStyles';
+import { searchBarStyles } from '../../styles/searchBarStyles';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
 import { appFont, appColors, appFontSize, customText } from '../../styles/commonStyles';
 //import { CheckBox } from 'react-native-elements';
@@ -159,6 +161,53 @@ exports.CustomModalActivityIndicator = (props) => {
                     </View>
                 </View>
             </Modal>
+    )
+}
+
+exports.Counter = (props) => {
+    const { id, number, dispatch, setNumber, quantities, limit} = props
+
+    /*
+         <Input value={quantities[product2._id]} onChangeText={(qt)=>{updateQuantities(product2._id, qt)}}
+                inputMode='numeric'
+                multiline={false}
+                maxLength={2}
+                placeholder='1'
+                placeholderTextColor={appColors.secondaryColor3}
+                inputStyle = {[searchBarStyles.inputText, {color:appColors.gray,}]}
+                onFocus={() => updateQuantitiesFocused(product2._id, true)}
+                onBlur={() => updateQuantitiesFocused(product2._id, false)}
+                underlineColorAndroid='transparent'
+                style={[{textAlign : 'center'}]}
+                containerStyle={[{justifyContent:'center',alignItems:'center'}]}
+                inputContainerStyle = {[radioProductStyles.inputContainer, quantitiesFocused[product2._id] && radioProductStyles.inputContainerFocused,]}
+            />
+    */
+   const num = isNaN(parseInt(number)) ? 1 : parseInt(number)
+   //console.log(num)
+    return (
+        <View style={[commonSimpleComponentsStyles.counter.container]}>
+            <Pressable style={[{}]} onPress={()=>{dispatch(setNumber({id:id, quantity: Math.max(num-1, 1)}))}}>
+                <Icon name="remove" type="ionicon" color={appColors.black} size={20} />
+            </Pressable>
+            <Input value={3}
+                inputMode='numeric'
+                editable={false}
+                multiline={false}
+                maxLength={2}
+                placeholder={num+""}
+                placeholderTextColor={appColors.clearBlack}
+                inputStyle = {[searchBarStyles.inputText, {color:appColors.clearBlack,fontSize:12}]}
+                
+                underlineColorAndroid='transparent'
+                style={[{textAlign : 'center'}]}
+                containerStyle={[commonSimpleComponentsStyles.counter.containerStyleInput]}
+                inputContainerStyle = {[commonSimpleComponentsStyles.counter.inputContainer,]}
+            />
+            <Pressable onPress={()=>{dispatch(setNumber({id:id, quantity: Math.min(num+1, limit)}))}}>
+                <Icon name="add" type="ionicon" color={appColors.black} size={20} />
+            </Pressable>
+        </View>
     )
 }
 

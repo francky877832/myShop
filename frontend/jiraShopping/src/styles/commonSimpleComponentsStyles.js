@@ -111,6 +111,33 @@ export const commonSimpleComponentsStyles = StyleSheet.create({
             borderRadius : 10,
         },
     },
+    
+    counter : 
+    {
+        container :
+       {
+            left : 20,
+            flexDirection : 'row',
+            //backgroundColor : appColors.blue,
+            alignItems : 'center',
+            justifyContent : 'space-between',
+       },
+       containerStyleInput :
+       {
+            width : 50,
+            height : 35,
+            flexDirection : 'row',
+            alignItems : 'center',
+            //backgroundColor : 'green',
+       },
+       inputContainer :
+       {
+           width : 30,
+           height : 25,
+           backgroundColor : appColors.lightWhite,
+       },
+       
+    },
 
 
     priceDetails : 

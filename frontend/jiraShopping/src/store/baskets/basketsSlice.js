@@ -4,6 +4,7 @@ import { API_BACKEND } from '@env';
 import { server } from '../../remote/server';
 import { addModifiedProduct } from '../favourites/favouritesSlice'; // Importer l'action
 import { useDispatch } from 'react-redux';
+import { startTransition } from 'react';
 
 
 // Initial state
@@ -13,6 +14,7 @@ const initialState = {
   selectedSeller: '',
   totalPrice: 0,
   isLoading: false,
+  quantities : {},
 };
 
 // Thunks
@@ -192,6 +194,7 @@ const basketSlice = createSlice({
         
 
       },
+      
       removeLocalBasket(state, action) {
         const itemId = action.payload;
         const existingIndex = state.basket.findIndex(basketItem => basketItem._id === itemId);
@@ -199,6 +202,11 @@ const basketSlice = createSlice({
         if (existingIndex !== -1) {
           state.basket.splice(existingIndex, 1);
         }
+      },
+      updateQuantities(state, action) {
+        const { id, quantity } = action.payload
+        console.log(action.payload)
+        state.quantities = {...state.quantities, [id]:quantity}
       },
   },
   extraReducers: (builder) => {
@@ -243,6 +251,7 @@ export const isProductBasket = (state, productId) => {
     return state.basket.basket.some(product => product._id === productId);
   };
 
+
 // Selectors
 export const selectBasket = (state) => state.basket.basket;
 export const selectIsLoading = (state) => state.basket.status;
@@ -251,5 +260,5 @@ export const selectSelectedProducts = (state) => state.basket.selectedProducts;
 export const selectSelectedSeller = (state) => state.basket.selectedSeller;
 export const selectTotalPrice = (state) => state.basket.totalPrice;
 
-export const { updateSelectedProducts, setSelectedSeller, addOrRemoveLocalBasket } = basketSlice.actions;
+export const { updateSelectedProducts, setSelectedSeller, addOrRemoveLocalBasket, updateQuantities } = basketSlice.actions;
 export default basketSlice.reducer;

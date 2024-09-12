@@ -16,7 +16,7 @@ import { appColors, customText, screenWidth } from '../../styles/commonStyles';
 //Contexte
 import { FavouritesContext } from '../../context/FavouritesContext';
 import { Icon } from 'react-native-elements';
-import { CustomButton } from '../common/CommonSimpleComponents'
+import { CustomButton, Counter } from '../common/CommonSimpleComponents'
 import { CheckBox } from 'react-native-elements';
 
 import { BasketContext } from '../../context/BasketContext';
@@ -28,7 +28,7 @@ import  {
     removeFromBasket,
     updateSelectedProducts,
     updateLocalBasket,
-    setSelectedSeller,
+    setSelectedSeller, updateQuantities,
   } from '../../store/baskets/basketsSlice';
 import { UserContext } from '../../context/UserContext';
 
@@ -43,7 +43,23 @@ const RadioProductsList = (props) => {
     
     dispatch = useDispatch()
 
-    
+    const [quatity, setQuantity] = useState(1)
+    const [quantitiesFocused, setQuantitiesFocused] = useState({})
+
+    //const [quantities, setQuantities] = useState({})
+
+    /*const updateQuantities = useCallback((id, quantity) => {
+        console.log(quantity)
+        setQuantities(prev => {
+            //console.log(prev)
+            return {...prev, [id] : quantities[id] ? parseInt(quantity) : 1}
+        })
+    }, [quantities])*/
+    const updateQuantitiesFocused = (id, focused) => {
+        setQuantitiesFocused(prev => {
+            return {[id] : focused}
+        })
+    }
 
     const basket = datas
     const selectedProducts = useSelector((state) => state.basket.selectedProducts);
@@ -51,6 +67,8 @@ const RadioProductsList = (props) => {
     const totalPrice = useSelector((state) => state.basket.totalPrice);
     const isLoading = useSelector((state) => state.basket.status);
     const error = useSelector((state) => state.basket.error);
+
+    const quantities = useSelector((state) => state.basket.quantities);
 
 
     const timeoutRef = useRef(null);
@@ -85,27 +103,17 @@ const handleRemoveFromBasket = useCallback((product) => {
   const handleSelectedSeller = useCallback((val) => {dispatch(setSelectedSeller(val)) },[]);
   const handleUpdateSelectedProducts  = useCallback((product) => {dispatch(updateSelectedProducts({itemId:product._id}))},[])
 
+
+
 const RadioProduct = (props) => {
         const {item, user} = props
 
-        const [quatity, setQuantity] = useState(1)
-        const [quantitiesFocused, setQuantitiesFocused] = useState({})
 
-        const [quantities, setQuantities] = useState({})
-
-        const updateQuantities = (id, quantity) => {
-            setQuantities(prev => {
-                return {[id] : quantity}
-            })
-        }
-        const updateQuantitiesFocused = (id, focused) => {
-            setQuantitiesFocused(prev => {
-                return {[id] : focused}
-            })
-        }
+        
 
         let passed_sellers = []
         let passed_product = []
+
         //console.log(item)
         //const profile = item.productDetails.images[0] || require('../../assets/images/product5.png')
         const inBasket = 3
@@ -121,6 +129,7 @@ const RadioProduct = (props) => {
                 navigation.navigate('Preferences', {screen: 'MyShop',params:undefined})
             }
         }
+// <SellerBrand pub={false} certified={true} username={product1.seller.username} route={route} navigation={navigation} closeNotif={true} /> 
 
         return (
             <View styles={[radioProductStyles.container,{}]}>       
@@ -133,14 +142,16 @@ const RadioProduct = (props) => {
                                 { passed_sellers.includes(product1.seller._id) ? false :
                                     <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer1]} >
                                         <RadioButton value={product1.seller._id} />
-                                        <Pressable onPress={()=>{ handleSellerBrandPressed(product1) }}>
-                                            <SellerBrand pub={false} certified={true} username={product1.seller.username} route={route} navigation={navigation} closeNotif={true} /> 
-                                            <Text>{/*A MODIFIER*/}</Text>
+                                        <Pressable style={[radioProductStyles.sellerBrand]} onPress={()=>{ handleSellerBrandPressed(product1) }}>
+                                            <Image source={{uri: product1.seller.image}} style={radioProductStyles.sellerImage} />
+                                            <View style={{width:10}}></View>
+                                            <Text style={[customText.text, {fontWeight:'bold'}]}>{product1.seller.username}</Text>
                                         </Pressable>
                                     </View>
                                 }
                             
                         {item.products.map((product2, key) => {
+                             //setQuantities(prev => { return {...prev, [product2._id] : 1}})
                              passed_sellers.push(product1.seller._id) 
                             if(product1.seller._id == product2.seller._id && !passed_product.includes(product2._id))
                             { 
@@ -150,6 +161,7 @@ const RadioProduct = (props) => {
                                             <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer2, {  }]} >
                                                     <CheckBox title=
                                                     {
+                                                    <View style={[{}]}>
                                                     <Pressable style={[radioProductStyles.productInfos,{ }]} onPress={()=>{navigation.navigate('ProductDetails', {productDetails:product2})}}>
                                                         <View style={{width:10}}></View>
                                                         <View style={[radioProductStyles.imageContainer,{}]}>
@@ -160,30 +172,16 @@ const RadioProduct = (props) => {
                                                             <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
                                                             <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(product2.price)} XAF{/* prix de la proposition ou real Price*/}</Text>
                                                             <Text style={[customText.text, {top:10, fontSize:12, fontWeight:"bold"} ]} numberOfLines={2} >Stock Restant : {product2.stock}</Text>
-                                                            
-                                                            <View style={[radioProductStyles.inBasketQuantity]}>
-                                                                    <Input value={quantities[product2._id]} onChangeText={(qt)=>{updateQuantities(product2._id, qt)}}
-                                                                        inputMode='numeric'
-                                                                        multiline={false}
-                                                                        maxLength={2}
-                                                                        placeholder='1'
-                                                                        placeholderTextColor={appColors.secondaryColor3}
-                                                                        inputStyle = {[searchBarStyles.inputText, {color:appColors.gray,}]}
-                                                                        onFocus={() => updateQuantitiesFocused(product2._id, true)}
-                                                                        onBlur={() => updateQuantitiesFocused(product2._id, false)}
-                                                                        underlineColorAndroid='transparent'
-                                                                        style={[{textAlign : 'center'}]}
-                                                                        containerStyle={[{justifyContent:'center',alignItems:'center'}]}
-                                                                        inputContainerStyle = {[radioProductStyles.inputContainer, quantitiesFocused[product2._id] && radioProductStyles.inputContainerFocused,]}
-                                                                    />
-                                                                    
-                                                                
-                                                                <Pressable onPress={()=>{handleRemoveFromBasket(product2);}} style={[radioProductStyles.trash]}>
-                                                                    <Icon name="trash-outline" color={appColors.red} size={24} type="ionicon" style={[{/*alignSelf:"flex-end"*/}]} />
-                                                                </Pressable>
-                                                            </View>
                                                         </View>
-                                                    </Pressable> 
+                                                    </Pressable>    
+                                                    <View style={[{height:5}]}></View>
+                                                        <View style={[radioProductStyles.inBasketQuantity]}>
+                                                            <Counter id={product2._id} number={quantities[product2._id]} quantities={quantities} dispatch={dispatch} setNumber={updateQuantities} limit={product2.stock} />
+                                                            <Pressable onPress={()=>{handleRemoveFromBasket(product2);}} style={[radioProductStyles.trash]}>
+                                                                <Icon name="trash-outline" color={appColors.red} size={24} type="ionicon" style={[{/*alignSelf:"flex-end"*/}]} />
+                                                            </Pressable>
+                                                        </View>
+                                                    </View>
                                                 } 
                                                 containerStyle={[radioProductStyles.checkBoxContainer,{}]} 
                                                 textStyle={[customText.text,radioProductStyles.checkBoxText]} 
@@ -194,16 +192,21 @@ const RadioProduct = (props) => {
 
                                                 </View> 
                                             
-                                               
+                                                    
+
                                                     {product2.inBasket>0 &&
-                                                        <View style={radioProductStyles.inBasket}>
-                                                            <Text style={[customText.text, {fontSize:10,}]}>{`Dans le panier de ${product2.inBasket} ${pluralize(product2.inBasket, 'autre')} ${pluralize(product2.inBasket, 'personne')}`}</Text>
-                                                        </View>
+                                                        <>
+                                                            <View style={[{height:5}]}></View>
+                                                            <View style={radioProductStyles.inBasket}>
+                                                                <Text style={[customText.text, {fontSize:10,}]}>{`Dans le panier de ${product2.inBasket} ${pluralize(product2.inBasket, 'autre')} ${pluralize(product2.inBasket, 'personne')}`}</Text>
+                                                            </View>
+                                                            <View style={{height:5,}}></View>
+                                                        </>
                                                     }
 
                                                     
                                             
-                                            <View style={{height:10,}}></View>
+                                           
                                     </View>
                                 )
                             }
@@ -249,3 +252,20 @@ const RadioProduct = (props) => {
 }
 
 export default  RadioProductsList
+
+
+/* <Input value={quantities[product2._id]} onChangeText={(qt)=>{updateQuantities(product2._id, qt)}}
+                                                                        inputMode='numeric'
+                                                                        multiline={false}
+                                                                        maxLength={2}
+                                                                        placeholder='1'
+                                                                        placeholderTextColor={appColors.secondaryColor3}
+                                                                        inputStyle = {[searchBarStyles.inputText, {color:appColors.gray,}]}
+                                                                        onFocus={() => updateQuantitiesFocused(product2._id, true)}
+                                                                        onBlur={() => updateQuantitiesFocused(product2._id, false)}
+                                                                        underlineColorAndroid='transparent'
+                                                                        style={[{textAlign : 'center'}]}
+                                                                        containerStyle={[{justifyContent:'center',alignItems:'center'}]}
+                                                                        inputContainerStyle = {[radioProductStyles.inputContainer, quantitiesFocused[product2._id] && radioProductStyles.inputContainerFocused,]}
+                                                                    />
+*/
