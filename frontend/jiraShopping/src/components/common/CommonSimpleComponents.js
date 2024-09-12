@@ -19,6 +19,7 @@ import { choosePrice, hasPropositionPrice } from '../../utils/commonAppFonctions
 //contexte
 import { useSelector, useDispatch } from 'react-redux';
 import { addFavourite, addFavouriteContext, setLikedIcon, updateLocalFavourites, isProductFavourite, addLocalFavourite, removeLocalFavourite} from '../../store/favourites/favouritesSlice'; 
+import { productsImagesPath } from '../../remote/server';
 
 exports.LikeButton = (props) => {
     const dispatch = useDispatch();
@@ -288,7 +289,7 @@ exports.MinifyHorizontalProduct = (props) => {
     }
     return (
         <Pressable style={[styles.productContainer]} onPress={()=>{onPress(product)}}>
-            <Image source={{ uri: product.images[0] }} style={styles.productImages} />
+            <Image source={{ uri: `${productsImagesPath}/${product.images[0]}` }} style={styles.productImages} />
             <View style={{width:10}}></View>
             <Text style={[styles.productName]} numberOfLines={2}>{formatName(product.name)}</Text>
         </Pressable>

@@ -16,10 +16,10 @@ const { width: screenWidth } = Dimensions.get('window');
 
 
 import { LeftToRightViewBox } from './AnimatedComponents';
-
+import { productsImagesPath } from '../../remote/server';
 const CarouselImage = (props) =>
 {
-  const {styles, product, images} = props
+    const {styles, product, images} = props
     const carouselRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isModalVisible, setModalVisible] = useState(false);
@@ -47,7 +47,7 @@ const CarouselImage = (props) =>
   //console.log(images)
   const renderItem = ({ item, index }) => (
     <Pressable onPress={() => handleImagePress(item)} style={[caourselImageStyles.itemContainer, productStyles.card, {borderRadius:0}]} key={index}>
-      <Image source={{uri: item}} style={caourselImageStyles.image} />
+      <Image source={{uri: `${productsImagesPath}/${item}`}} style={caourselImageStyles.image} />
     </Pressable> 
   )
 
@@ -126,7 +126,7 @@ useEffect(() => {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={paginationStyles.modalContainer}>
-          <Image source={{ uri: selectedImage }} style={paginationStyles.fullImage} />
+          <Image source={{ uri:`${productsImagesPath}/${selectedImage}` }} style={paginationStyles.fullImage} />
           <Pressable
             style={paginationStyles.closeButton}
             onPress={() => setModalVisible(false)}

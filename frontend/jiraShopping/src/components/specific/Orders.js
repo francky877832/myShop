@@ -20,7 +20,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import RenderNotificationItem from '../common/RenderNotificationItem';
 import { OrdersContext } from '../../context/OrdersContext';
 import SellerBrand from '../common/SellerBrand';
-
+import { productsImagesPath } from '../../remote/server';
 
 
 
@@ -102,9 +102,9 @@ const Orders = (props) => {
                             {
                                 order.products.map((item, key) => {
                                     return (
-                                            <View key={key}>
+                                            <View key={key} style={[{flexDirection:'row'}]}>
                                                 <Pressable style={[ordersStyles.orderImg]}>
-                                                    <Image source={{uri: item.product.images[0]}} style={[ordersStyles.images]} />
+                                                    <Image source={{uri: `${productsImagesPath}/${item.product.images[0]}`}} style={[ordersStyles.images]} />
                                                 </Pressable>
                                                 <View style={{width:10}}></View>
                                             </View>
@@ -138,17 +138,19 @@ const handleSellerBrandPressed = (product) => {
 }
 
     return (
-        <ScrollView style={[ordersStyles.container]}>
+        <ScrollView contentContainerStyle={[ordersStyles.container]}>
             <FlatList
                     data={groupOrder}
                     renderItem={ ({item}) => { return(<RenderOrder order={item} user={user} />
                 ) } }
                     keyExtractor={ (item) => { return Math.random().toString(); } }
                     ItemSeparatorComponent ={ (item) => { return <View style={{height:5,}}></View> }}
-                    contentContainerStyle={[ordersStyles.flatlist]}
+                    contentContainerStyle={[ordersStyles.flatlist,{paddingBottom:20}]}
+                    style={[]}
                     onEndReached={()=>{}}
                     onEndReachedThreshold={0.5}
                     ListFooterComponent={()=>{
+                        /*
                         return(
                             <View>
                                 <View style={{height:20}}></View>
@@ -156,7 +158,7 @@ const handleSellerBrandPressed = (product) => {
                                     <SellerBrand pub={false} onlineDate={user.online} username={user.username} navigation={navigation} route={route} closeNotif={false} />
                                 </Pressable>
                             </View>
-                        )
+                        )*/
                     }}
             />
         </ScrollView>

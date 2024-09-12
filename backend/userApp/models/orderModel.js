@@ -18,8 +18,8 @@ const orderSchema = new  Schema({
                     status: {type: String, enum: ['pending', 'shipped', 'delivered', 'canceled'], default: 'pending' },
                     //group: { type: Schema.Types.ObjectId, ref: 'GroupOrder', required: true },
                     quantity: { type: Number, required: true, default: 1 },
-                    deliveryNo: { type: String, },
-                    deliveryDate: { type : Date, },
+                    deliveryNo: { type: String, default : null },
+                    deliveryDate: { type : Date, default : null },
                     createdAt : { type : Date, default : Date.now },
                     updatedAt : { type : Date, default : Date.now },
                 }

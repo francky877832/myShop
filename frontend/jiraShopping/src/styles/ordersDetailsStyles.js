@@ -29,6 +29,7 @@ export const ordersDetailsStyles = StyleSheet.create({
         backgroundColor : appColors.white,
         ...card,
         paddingVertical : 10,
+        paddingHorizontal : 10,
         
     },
     top:

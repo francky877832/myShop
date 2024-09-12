@@ -21,7 +21,8 @@ exports.signupUser = (req, res, next) => {
         const user = new User({
           email: req.body.email,
           password: hash,
-          username : req.body.username
+          username : req.body.username,
+          image : 'new-user.jpg'
         });
         user.save()
           .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))

@@ -400,6 +400,54 @@ exports.getUserOrders = async (req, res, next) => {
       },
 
 
+
+
+      {
+        $lookup: {
+          from: "offers", 
+          let: { 
+            productId: '$products.product._id', 
+            sellers: "$sellers" 
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$product', '$$productId'] },  // Jointure sur le produit
+                    {
+                      $or: [
+                        { $eq: ["$buyer", new mongoose.Types.ObjectId(userId)] },  // Condition 1 : buyer = userId
+                        { $eq: ["$seller", new mongoose.Types.ObjectId(userId)] }, 
+                        //{ $in: [new mongoose.Types.ObjectId(userId), "$$sellers"] } // Condition 2 : userId dans sellers[]
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+      
+          ],
+          as:  'products.product.offers' // Stocker les offres dans ce champ
+        }
+      },
+      {
+        $addFields: {
+          'products.product.offers': {
+            $cond: {
+              if: { 
+                $gt: [{ $size: { $ifNull: ['$products.product.offers', []] } }, 0]
+              },
+              then: { $arrayElemAt: ['$products.product.offers', 0] },
+              else: {}
+            }
+          },
+        }
+      },
+         
+  
+
+
    
       {
         $lookup: {

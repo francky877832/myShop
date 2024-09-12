@@ -15,7 +15,7 @@ import { UserContext } from '../../context/UserContext';
 import { server } from '../../remote/server';
 import { MinifyHorizontalProduct } from '../common/CommonSimpleComponents'
 import { useDispatch } from 'react-redux';
-
+import { productsImagesPath } from '../../remote/server';
 //const loggedUser = "Francky"
 const   OffersItem = (props) => {
     const { item, styles, seller, buyer } = props
