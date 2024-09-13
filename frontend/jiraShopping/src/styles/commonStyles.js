@@ -8,6 +8,7 @@ export const appColors = {
     //secondaryColor1 : "#f27a1a",
     secondaryColor1 : "#e52165",
     black : "#0d1137",
+    clearBlack : 'rgba(13, 17, 55, 0.7)',
     lightSecondaryColor1 : "rgba(229, 33, 101, 0.1)",
     lightSecondaryColor2 : "rgba(229, 33, 101, 0.04)",
     lightOrange : "rgba(229, 33, 101, 0.1)",
