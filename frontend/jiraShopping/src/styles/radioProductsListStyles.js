@@ -142,11 +142,10 @@ export const radioProductStyles = StyleSheet.create({
     {
         top : 2,
         //left : 40,
-        borderWidth : 
-        1,
-        borderColor : appColors.secondaryColor1,
+        borderWidth : 2,
+        borderColor : appColors.yellow,
         borderRadius : 10,
-        backgroundColor : appColors.lightSecondaryColor1,
+        backgroundColor : appColors.lightOrange,
         width : screenWidth/2,
         //alignSelf : "center",
         justifyContent : "center",

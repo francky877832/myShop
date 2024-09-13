@@ -407,7 +407,7 @@ const handleSellerBrandPressed = (product) => {
     
         {showPriceDetails &&
             <View style={[productDetailsStyles]}>
-                <PriceDetails product={data} closePriceDetails={setShowPriceDetails} title="Informations Sur La Vente"/>
+                <PriceDetails products={[data,]} closePriceDetails={setShowPriceDetails} title="Informations Sur La Vente"/>
             </View>
         }
 

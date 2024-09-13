@@ -390,6 +390,16 @@ export const pluralize = (nombre, nom) => {
 }
 
 
+export const formatLikes = (likes) => {
+    if (likes < 1000) {
+      return likes.toString(); // Affiche directement si moins de 1000 likes
+    } else if (likes >= 1000 && likes < 1000000) {
+      return (likes / 1000).toFixed(likes % 1000 === 0 ? 0 : 1) + 'K'; // Affiche en "K"
+    } else {
+      return (likes / 1000000).toFixed(likes % 1000000 === 0 ? 0 : 1) + 'M'; // Affiche en "M"
+    }
+  }
+  
 
 //ORDERS
 

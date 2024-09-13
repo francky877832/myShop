@@ -33,7 +33,7 @@ const HomeNavigation = () => {
           lazy : true,
           headerShown : false,
           tabBarActiveTintColor: appColors.secondaryColor1,
-          tabBarInactiveTintColor: appColors.clearBlack,
+          tabBarInactiveTintColor: appColors.secondaryColor5,
           tabBarStyle: [{"display": route.name == "Home" ? 'flex' : 'flex', bottom : 0}, null],
 
 

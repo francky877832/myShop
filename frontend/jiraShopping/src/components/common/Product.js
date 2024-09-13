@@ -291,10 +291,11 @@ function displayGrilleBttom(origin, product){
 
                             </View>
 
-                    <View style={{height:10,}}></View>
+                  
 
-                            <View style={[{flexWrap:'wrap'}]} >
-                                {product.likes>0 ? 
+                            <View style={[{flexWrap:'wrap'}]} >  
+                               
+                                {/*product.likes>0 ? 
                                 <View style={[{flexDirection:'row'}]}>
                                     <BadgeIcon name="heart-sharp" size={20} color={appColors.red} badgeCount={0} styles={{}} />
                                         <View style={{width:5,}}></View>
@@ -302,7 +303,7 @@ function displayGrilleBttom(origin, product){
                                 </View>
                                 : 
                                 <Text style={{alignSelf:"center"}}>---</Text>
-                                }
+                                */}
 
                                 {product.price <= product.newPrice  
                                     ? 

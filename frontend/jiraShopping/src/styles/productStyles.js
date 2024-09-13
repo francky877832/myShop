@@ -87,13 +87,13 @@ export const productStyles = StyleSheet.create({
     },
     productName :
     { 
-        fontWeight : "bold",
+        //fontWeight : "bold",
         fontStyle : "normal",
         fontFamily : appFont.mainFontFamily,
         color : appColors.secondaryColor5,
-        paddingTop : 7,
+        //paddingTop : 7,
         alignSelf : "center",
-        fontSize: 15,
+        fontSize: 16,
     },
     price :
     {

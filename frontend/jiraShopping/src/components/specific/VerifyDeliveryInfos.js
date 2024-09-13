@@ -26,6 +26,7 @@ const VerifyDeliveryInfos = (props) => {
     const { addNewOrder, isLoading, setIsLoading } = useContext(OrdersContext)
     const {products} = route.params
     const [totalPrice, setTotalPrice] = useState(0)
+
    
     
     //const user = {address:{title:'Ndokoti'}, phone:'677127907'}
@@ -205,6 +206,14 @@ const VerifyDeliveryInfos = (props) => {
             </View>
 
             <View style={[{height:20}]}></View>
+
+
+
+            {showPriceDetails &&
+                <View style={[verifyInfosStyles]}>
+                    <PriceDetails products={products} closePriceDetails={setShowPriceDetails} title="Informations Sur La Vente"/>
+                </View>
+            }
 
             <View style={[verifyInfosStyles.bottom]}> 
                 <Pressable style={[verifyInfosStyles.button, verifyInfosStyles.price]} onPress={()=>{setShowPriceDetails(!showPriceDetails)}}>

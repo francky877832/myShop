@@ -14,7 +14,7 @@ import { CheckBox } from '@rneui/themed';
 
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
-import { formatMoney } from '../../utils/commonAppFonctions';
+import { formatMoney, pluralize, formatLikes } from '../../utils/commonAppFonctions';
 import { choosePrice, hasPropositionPrice } from '../../utils/commonAppFonctions';
 //contexte
 import { useSelector, useDispatch } from 'react-redux';
@@ -78,6 +78,12 @@ exports.LikeButton = (props) => {
             {!hasLikedItem
                 ? <BadgeIcon name="heart-outline" size={24} color={style.color} badgeCount={0} styles={{zIndex:99}} />
                 : <BadgeIcon name="heart-sharp" size={24} color={appColors.secondaryColor1} badgeCount={0} styles={{}} />
+            }
+            { item.likes > 0 &&
+                    <View style={[{flexDirection:'row'}]}>
+                    <View style={{width:5,}}></View>
+                        <Text style={[customText.text, {color:appColors.lightWhite}, {fontSize:14,fontWeight:'bold'}]}>{formatLikes(item.likes) || 1}</Text> 
+                    </View>
             }
         </Pressable>
     );
@@ -167,7 +173,7 @@ exports.CustomModalActivityIndicator = (props) => {
 }
 
 exports.Counter = (props) => {
-    const { id, number, dispatch, setNumber, quantities, limit} = props
+    const { product, number, dispatch, setNumber, quantities, limit} = props
 
     /*
          <Input value={quantities[product2._id]} onChangeText={(qt)=>{updateQuantities(product2._id, qt)}}
@@ -189,7 +195,7 @@ exports.Counter = (props) => {
    //console.log(number)
     return (
         <View style={[commonSimpleComponentsStyles.counter.container]}>
-            <Pressable style={[{}]} onPress={()=>{dispatch(setNumber({id:id, quantity: Math.max(num-1, 1)}))}}>
+            <Pressable style={[{}]} onPress={()=>{setNumber(product, Math.max(num-1, 1))}}>
                 <Icon name="remove" type="ionicon" color={appColors.black} size={20} />
             </Pressable>
             <Input value={num}
@@ -206,7 +212,7 @@ exports.Counter = (props) => {
                 containerStyle={[commonSimpleComponentsStyles.counter.containerStyleInput]}
                 inputContainerStyle = {[commonSimpleComponentsStyles.counter.inputContainer,]}
             />
-            <Pressable onPress={()=>{dispatch(setNumber({id:id, quantity: Math.min(num+1, limit)}))}}>
+            <Pressable onPress={()=>{setNumber(product, Math.min(num+1, limit)) }}>
                 <Icon name="add" type="ionicon" color={appColors.black} size={20} />
             </Pressable>
         </View>
@@ -240,8 +246,42 @@ exports.TemporaryNotification = (props) => {
 
 
 exports.PriceDetails = (props) => {
-    const {product, title, closePriceDetails} = props
+    const {products, title, closePriceDetails} = props
+    let product;
+ 
+        const totalPrice = products.reduce((total, product) =>{
+            const priceToPay = choosePrice(product)
+            return total+parseInt(priceToPay)*product.orderQuantity
+        }, 0)
+
+        let passed_products = []
+        const kargoPrice = products.reduce((total, prod) =>{
+          
+            //Si cest differents sellers ça marche mais sil ya un meme seller pour 2 produits cest pas bon
+            //return prod.feesBy=='buyer' ?  total+parseInt(prod.kargoPrice) : total
+            let toAdd;
+            if(passed_products.some(p => (p.seller._id==prod.seller._id && p.feesBy=='buyer') ))
+            {
+                toAdd = 0
+            }
+            else
+            {
+                toAdd = prod.feesBy=='buyer' ?  parseInt(prod.kargoPrice) : 0
+                passed_products.push(prod)
+            }
+
+            return  total + toAdd
+           
+        }, 0)
+
+        const feesBy = products.some(p => p.feesBy == 'buyer')
+
+        product = { newPrice:totalPrice, feesBy:feesBy, kargoPrice:kargoPrice, orderQuantity:products.reduce((t,p) => { return t+parseInt(p.orderQuantity)}, 0) }
+   
+
+
     const transport = product.feesBy==='buyer' ? product.kargoPrice : 0
+    
     return (
         <View style={[commonSimpleComponentsStyles.priceDetails.container]}>
             <View style={[{flexDirection:'row', justifyContent:'space-between', paddingRight:10}]}>
@@ -256,6 +296,11 @@ exports.PriceDetails = (props) => {
             <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine]}>
                 <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle]}>Prix Réel</Text>
                 <Text style={[customText.text,commonSimpleComponentsStyles.priceDetails.price]}>{formatMoney(product.newPrice)} XAF</Text>
+            </View>
+
+            <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine]}>
+                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle]}>Quantité</Text>
+                <Text style={[customText.text,commonSimpleComponentsStyles.priceDetails.price]}> {product.orderQuantity} </Text>
             </View>
 
             <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine]}>

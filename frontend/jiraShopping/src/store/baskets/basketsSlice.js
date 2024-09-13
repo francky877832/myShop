@@ -67,6 +67,8 @@ export const addToBasket = createAsyncThunk(
       }
     }
   );
+
+
   
   // Async thunk for removing from basket
   export const removeFromBasket = createAsyncThunk(
@@ -135,11 +137,12 @@ const basketSlice = createSlice({
   initialState,
   reducers: {
     updateSelectedProducts: (state, action) => {
+      console.log(action.payload)
       const { product, bool } = action.payload;
-      //console.log(action)
+      
       const updatedSelectedProducts = {
         ...state.selectedProducts,
-        [product._id]: !state.selectedProducts[product._id] // bool !== 'remove' ? !state.selectedProducts[itemId] : false,
+        [product._id]: bool && !state.selectedProducts[product._id] // bool !== 'remove' ? !state.selectedProducts[itemId] : false,
       };
       //console.log(state.selectedProducts)
       state.selectedProducts = updatedSelectedProducts;
@@ -147,7 +150,7 @@ const basketSlice = createSlice({
       Object.keys(updatedSelectedProducts).forEach(key => {
           const isSelected = updatedSelectedProducts[key];
           const item = state.basket.find((product) => product._id === key);
-          total += isSelected ? choosePrice(item) : 0
+          total += isSelected ? choosePrice(item)* ((state.selectedProducts[item._id]&&state.quantities[item._id]) || 1) : 0
       })
       state.totalPrice = total
       /*reduce((total, key) => {

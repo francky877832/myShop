@@ -103,8 +103,11 @@ const handleRemoveFromBasket = useCallback((product) => {
   },[]);
 
   const handleSelectedSeller = useCallback((val) => {dispatch(setSelectedSeller(val)) },[]);
-  const handleUpdateSelectedProducts  = useCallback((product) => {dispatch(updateSelectedProducts({product:product}))},[])
-
+  const handleUpdateSelectedProducts  = useCallback((product, bool) => {dispatch(updateSelectedProducts({product:product, bool:bool}))},[])
+  const  updateQuantitiesAndPrice = useCallback((product, num) => {
+    dispatch(updateQuantities({id:product._id, quantity: num}))
+    handleUpdateSelectedProducts({product:product, bool:false})
+  }, [])
 
 
   const proceedBasketPayment = () => {
@@ -114,7 +117,7 @@ const handleRemoveFromBasket = useCallback((product) => {
         const orderProductsWithQuantities = orderProducts.map(p => {
             return {...p, orderQuantity:quantities[p._id] || 1}
         })
-        //console.log(orderProductsWithQuantities)
+        //console.log(orderProductsWithQuantities[1].orderQuantity)
         navigation.navigate('VerifyDeliveryInfos', {products:orderProductsWithQuantities})
     }
     else
@@ -226,7 +229,7 @@ const RadioProduct = (props) => {
                                                     </Pressable>    
                                                     <View style={[{height:5}]}></View>
                                                         <View style={[radioProductStyles.inBasketQuantity]}>
-                                                            <Counter id={product2._id} number={quantities[product2._id]} quantities={quantities} dispatch={dispatch} setNumber={updateQuantities} limit={product2.stock} />
+                                                            <Counter product={product2} number={quantities[product2._id]} quantities={quantities} dispatch={dispatch} setNumber={updateQuantitiesAndPrice} limit={product2.stock} />
                                                             <Pressable onPress={()=>{handleRemoveFromBasket(product2);}} style={[radioProductStyles.trash]}>
                                                                 <Icon name="trash-outline" color={appColors.red} size={24} type="ionicon" style={[{/*alignSelf:"flex-end"*/}]} />
                                                             </Pressable>
@@ -236,7 +239,7 @@ const RadioProduct = (props) => {
                                                 containerStyle={[radioProductStyles.checkBoxContainer,{}]} 
                                                 textStyle={[customText.text,radioProductStyles.checkBoxText]} 
                                                 checked={selectedSeller==product2.seller._id && selectedProducts[product2._id]} 
-                                                onPress={() => {selectedSeller==product2.seller._id ? handleUpdateSelectedProducts(product2) : Alert.alert("Infos","Veillez d'abord selectionner le vendeur adéquat.") }} 
+                                                onPress={() => {selectedSeller==product2.seller._id ? handleUpdateSelectedProducts(product2, true) : Alert.alert("Infos","Veillez d'abord selectionner le vendeur adéquat.") }} 
                                             
                                                 />
 
