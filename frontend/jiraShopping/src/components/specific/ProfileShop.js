@@ -320,7 +320,7 @@ const setFollowers = async (follower, following) => {
 
 
                         </View>
-                        { route.params!=undefined ?
+                        { user._id != seller._id ?
 
                                 <Pressable  style={[profilShopStyles.followButton, follow ? profilShopStyles.followFocused : false, {}]} onPress = { ()=>{ setFollowers(user, seller); } }>
                                     <BadgeIcon name={follow ? "person-remove" : "person-add"} size={24} color={follow ? appColors.secondaryColor1 : appColors.white} badgeCount={0} styles={badgeIconStyles} />
@@ -335,11 +335,11 @@ const setFollowers = async (follower, following) => {
                     </Animated.View>
                     
 
-                        <View style={{flex:1, paddingBottom:route.params==undefined?40:0}} {...panResponder.panHandlers}>
+                        <View style={{flex:1, paddingBottom:(user._id === seller._id)?40:0}} {...panResponder.panHandlers}>
                             <ProductsListWithFilters origin="profileShop" updateProfileLike={setNumLikes} minified={true} isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products?.length} ${products?.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
 
-                    { route.params==undefined &&
+                    {(user._id === seller._id) &&
                         <View style={[profilShopStyles.addProduct,{}]}>
                                 <CustomButton color={appColors.white} backgroundColor={appColors.secondaryColor1} text="Ajouter Un Produit" onPress={()=>{navigation.navigate("AddProduct")}} styles={profilShopStyles} />
                         </View>

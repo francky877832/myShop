@@ -46,11 +46,12 @@ export const ordersDetailsStyles = StyleSheet.create({
     },
     product : 
     {
-        //
+        paddingVertical : 5,
     },
     status:
     {
         flexDirection : 'row',
+        alignItems : 'center',
     },
     orderBody :
     {

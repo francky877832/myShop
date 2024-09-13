@@ -31,7 +31,7 @@ import  {
     setSelectedSeller, updateQuantities,
   } from '../../store/baskets/basketsSlice';
 import { UserContext } from '../../context/UserContext';
-import { productsImagesPath } from '../../remote/server';
+import { productsImagesPath, usersImagesPath } from '../../remote/server';
 
 
   const loggedUser = "Francky"
@@ -108,7 +108,7 @@ const handleRemoveFromBasket = useCallback((product) => {
 
 
   const proceedBasketPayment = () => {
-    if(Object.keys(selectedProducts).length > 0 || !Object.keys(selectedProducts).some(id => selectedProducts[id]===true))
+    if(Object.keys(selectedProducts).length > 0 && Object.keys(selectedProducts).some(id => selectedProducts[id]===true))
     {
         const orderProducts = basket.filter(p => selectedProducts[p._id]===true)
         const orderProductsWithQuantities = orderProducts.map(p => {
@@ -119,7 +119,7 @@ const handleRemoveFromBasket = useCallback((product) => {
     }
     else
     {
-        Alert.alert('Vous devez choisir au moins un produit.')
+        Alert.alert('Infos','Vous devez choisir au moins un produit.')
     }
     
   }
@@ -184,7 +184,7 @@ const RadioProduct = (props) => {
                                     <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer1]} >
                                         <RadioButton value={product1.seller._id} />
                                         <Pressable style={[radioProductStyles.sellerBrand]} onPress={()=>{ handleSellerBrandPressed(product1) }}>
-                                            <Image source={{uri: product1.seller.image}} style={radioProductStyles.sellerImage} />
+                                            <Image source={{uri: `${usersImagesPath}/${product1.seller.image}`}} style={radioProductStyles.sellerImage} />
                                             <View style={{width:10}}></View>
                                             <Text style={[customText.text, {fontWeight:'bold'}]}>{product1.seller.username}</Text>
                                         </Pressable>

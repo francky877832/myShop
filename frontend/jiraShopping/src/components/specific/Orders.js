@@ -103,7 +103,7 @@ const Orders = (props) => {
                                 order.products.map((item, key) => {
                                     return (
                                             <View key={key} style={[{flexDirection:'row'}]}>
-                                                <Pressable style={[ordersStyles.orderImg]}>
+                                                <Pressable style={[ordersStyles.orderImg]} onPress={()=>{ navigation.navigate('ProductDetails', {productDetails:item.product})}}>
                                                     <Image source={{uri: `${productsImagesPath}/${item.product.images[0]}`}} style={[ordersStyles.images]} />
                                                 </Pressable>
                                                 <View style={{width:10}}></View>

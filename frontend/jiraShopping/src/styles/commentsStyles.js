@@ -90,19 +90,21 @@ export const commentsStyles = StyleSheet.create({
       width : 30,
       height : 30,
       borderRadius : 15,
-      //justifyContent : 'flex-end',
+      justifyContent : 'center',
+      alignItems : 'center',
       alignSelf : 'flex-end',
-      borderWidth : 2,
-      borderColor : appColors.secondaryColor1,
+      borderWidth : 1,
+      borderColor : appColors.lightWhite,
       zIndex : 99,
       //bottom : 0,
+      //top : '3%',
     },
     commentProfile :
     {
       width : 30,
       height : 30,
       borderRadius : 15,
-      top : '2%',
+      //top : '2%',
     }
   
     

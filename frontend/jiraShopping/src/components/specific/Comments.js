@@ -16,6 +16,7 @@ import { server } from '../../remote/server';
 
 import { CommentsContext } from '../../context/CommentsContext';
 import { ActivityIndicator } from 'react-native-paper';
+import { usersImagesPath } from '../../remote/server';
 
 const loggedUserId = "66731fcb569b492d3ef429ba"
 const loggedUser = "Francky"
@@ -83,8 +84,8 @@ const respondTo = (id, user) => {
                     <View style={[styles.commentContainer,]} >
                         <View style={{flexDirection:"row", alignItems:"center"}}>
 
-                            <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{user._id!=comment.user._id ? navigation.navigate("Shop", {seller:comment.user}) :  navigation.navigate('Preferences', {screen: 'MyShop',params:undefined});}}>
-                                <Image source={{uri: comment.user.image||user.image}} style={[commentsStyles.commentProfile, ]} />
+                            <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{navigation.navigate("Shop", {seller:comment.user}) }}>
+                                <Image source={{uri: `${usersImagesPath}/${comment.user.image}`}} style={[commentsStyles.commentProfile, ]} />
                             </Pressable>
 
                             <Pressable style={[styles.comment, ]} onPress={()=>{ }}>
@@ -155,9 +156,9 @@ const respondTo = (id, user) => {
 
                                                 <Pressable style={[commentsStyles.commentProfileContainer, ]} onPress={()=>{
                                                         //console.log(item.user);
-                                                        user._id!=item.user._id ? navigation.navigate("Shop", {seller:item.user}) :  navigation.navigate('Preferences', {screen: 'MyShop',params:undefined});
+                                                         navigation.navigate("Shop", {seller:item.user}) 
                                                     }}>
-                                                    <Image source={{uri: item.user.image||user.image}} style={[commentsStyles.commentProfile, ]} />
+                                                    <Image source={{uri: `${usersImagesPath}/${item.user.image}`}} style={[commentsStyles.commentProfile, ]} />
                                                 </Pressable>
                                             </View>
 

@@ -15,7 +15,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { verifyInfosStyles } from '../../styles/verifyInfosStyles';
 import { UserContext } from '../../context/UserContext';
-import { formatMoney, formatPhoneNumber, generateOrderNo} from '../../utils/commonAppFonctions'
+import { formatMoney, formatPhoneNumber, generateOrderNo, choosePrice} from '../../utils/commonAppFonctions'
+
 import { OrdersContext } from '../../context/OrdersContext';
 
 const VerifyDeliveryInfos = (props) => {
@@ -24,6 +25,9 @@ const VerifyDeliveryInfos = (props) => {
     const { user, temporaryAddress, setTemporaryAddress } = useContext(UserContext)
     const { addNewOrder, isLoading, setIsLoading } = useContext(OrdersContext)
     const {products} = route.params
+    const [totalPrice, setTotalPrice] = useState(0)
+   
+    
     //const user = {address:{title:'Ndokoti'}, phone:'677127907'}
     //const [temporaryAddress, setTemporaryAddress] = useState({address:{title:'Ndokoti'},})
 
@@ -37,6 +41,13 @@ const VerifyDeliveryInfos = (props) => {
     const [isAddressTitleFocused, setIsAddressTitleFocused] = useState(false)
     const [isPhoneFocused, setIsPhoneFocused] = useState(false)
 
+    useEffect(() => {
+        const price = products.reduce((total, product) =>{
+            const priceToPay = choosePrice(product)
+            return total+parseInt(priceToPay)
+        }, 0)
+        setTotalPrice(price)
+    }, [])
 
     const handleAddressCliked = () => 
     {
@@ -70,10 +81,7 @@ const VerifyDeliveryInfos = (props) => {
             
             try
             {
-                const totalPrice = products.reduce((total, product) =>{
-                    const priceToPay = (Object.keys(product.offers).length>0 && product.offers.offers.at(-1).hasGosResponse==1) ? product.offers.offers.at(-1).price : product.newPrice
-                    return total+parseInt(priceToPay)
-                }, 0)
+                
 
                 const ordernO = generateOrderNo('JW')
                 const ordersDetails = {
@@ -208,7 +216,7 @@ const VerifyDeliveryInfos = (props) => {
                                 <Icon type='octicon' name="triangle-up" size={24} color={appColors.secondaryColor1} />
                         }      
                         <View style={[{width:10}]}></View>      
-                   <Text numberOfLines={2} style={[customText.text, productStyles.price, verifyInfosStyles.buttonText,]}>{formatMoney(15000)} XAF</Text>
+                   <Text numberOfLines={2} style={[customText.text, productStyles.price, verifyInfosStyles.buttonText,]}>{formatMoney(totalPrice)} XAF</Text>
                 </Pressable>
 
                 <View style={[verifyInfosStyles.acheter]}>

@@ -87,7 +87,7 @@ const OrdersDetails = (props) => {
                     <View style={{height:10}}></View>
 
                     <View>
-                        <CustomButton text="Visiter La Boutique"  styles={{ pressable: ordersDetailsStyles.button, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />
+                        <CustomButton text="Visiter La Boutique"  styles={{ pressable: ordersDetailsStyles.button, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{ navigation.navigate('Shop', {seller:order.product.seller})}} />
                     </View>
                  
                 </View>
@@ -100,8 +100,8 @@ const OrdersDetails = (props) => {
                     </Pressable>
 
                     <View style={[ordersDetailsStyles.orderBody]}>
-                        <Pressable style={[ordersDetailsStyles.orderImg]}>
-                            <Image source={{uri: `${productsImagesPath}/${order.product.images[0]}`}} style={[ordersDetailsStyles.image]} />
+                        <Pressable style={[ordersDetailsStyles.orderImg]} onPress={()=>{ navigation.navigate('ProductDetails', {productDetails:order.product})}}>
+                            <Image source={{uri: `${productsImagesPath}/${order.product.images[0]}`}} style={[ordersDetailsStyles.image]}  />
                         </Pressable>
          
 
@@ -127,7 +127,7 @@ const OrdersDetails = (props) => {
                             <View style={{height:10}}></View>
 
                             <View>
-                                <CustomButton text="Aller Au Produit"  styles={{ pressable: ordersDetailsStyles.button, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { }} />
+                                <CustomButton text="Aller Au Produit"  styles={{ pressable: ordersDetailsStyles.button, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={()=>{ navigation.navigate('ProductDetails', {productDetails:order.product})}} />
                             </View>
 
                             <View style={{height:10}}></View>
@@ -202,7 +202,7 @@ function flatlistFooter(){
                 <View style={[ordersDetailsStyles.addressDetails]}>
                     <View style={[ordersDetailsStyles.line]}>
                         <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Acheteur : </Text>
-                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>{ordersDetails.buyer.name}</Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>{ordersDetails.buyer.name || ordersDetails.buyer.username}</Text>
                     </View>
                     
                     <View style={{height:10}}></View>
