@@ -152,7 +152,7 @@ exports.getProducts = async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
     const skip = (page - 1) * limit;
 
-    console.log("page : ", page)
+    //console.log("page : ", page)
   
     // Étape 1 : Pipeline d'agrégation pour les produits
    
@@ -160,7 +160,7 @@ exports.getProducts = async (req, res, next) => {
     // Étape 2 : Exécuter le pipeline d'agrégation pour obtenir les produits avec commentaires
     const productsWithComments = await Product.aggregate(pipeline).exec();
 //console.log(productsWithComments[0].favourites)
-  console.log("taille : " , productsWithComments.length)
+  //console.log("taille : " , productsWithComments.length)
     // Étape 3 : Compter le total des produits pour la pagination
     const totalDatas = await Product.countDocuments().exec();
     const totalPages = Math.ceil(totalDatas / limit);
@@ -252,7 +252,7 @@ exports.getProductsUser =  async (req, res, next) => {
     const skip = (page - 1) * limit;
 
 
-    const pipeline = getPipeLineForProducts(req.params.user, skip, limit, { sold:1, visibility:-1, _id: -1 })
+    const pipeline = getPipeLineForProducts(req.params.user, skip, limit, { sold:1, visibility:-1, _id: -1 }, undefined) //undefined pour ne pas recupere les offres
     const productsWithComments = await Product.aggregate(pipeline).exec();
     const totalDatas = await Product.countDocuments({seller : new mongoose.Types.ObjectId(req.params.user)}).exec();
     const totalPages = Math.ceil(totalDatas / limit);

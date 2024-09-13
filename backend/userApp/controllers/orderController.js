@@ -1,5 +1,6 @@
 const Order = require('../models/orderModel');
 const GroupOrder = require('../models/groupOrderModel');
+const Product = require('../models/productModel');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 require('dotenv').config({ path: '.../../shared/.env' });
@@ -29,7 +30,7 @@ exports.updatePaymentStatus = async (req, res, next) => {
       //console.log("Signature valide:", decoded);
       
       if (status === 'SUCCESSFUL') {
-        const updatedOrder = await Order.findOneAndUpdate(
+        const updatedOrder = await GroupOrder.findOneAndUpdate(
           { _id:   new mongoose.Types.ObjectId(external_reference) },  
           { paymentStatus: 'payment_successfull' },
           { paymentDetails : operator.toLwerCase() },    
@@ -37,13 +38,19 @@ exports.updatePaymentStatus = async (req, res, next) => {
         );
   
         if (updatedOrder) {
+            //marquer les produit en sold
+            const order_ = await Order.findOneAndDelete({ group: new mongoose.Types.ObjectId(external_reference) })
+            const productIds = order_.products.map(item => new mongoose.Types.ObjectId(item.product))
+
+            await Product.updateMany( { _id: { $in: productIds }, stock:0 }, { $set: { sold: 1, visibility:0 } } )
+
           return res.status(200).json({ success: true, message: 'Order updated successfully', order: updatedOrder });
         } else {
           return res.status(404).json({ success: false, message: 'Order not found' });
         }
       } else if (status === 'FAILED') {
         const deletedOrder = await Order.findOneAndDelete({ group: new mongoose.Types.ObjectId(external_reference) });
-        const deletedGroupOrder = await Order.findOneAndDelete({ _id: new mongoose.Types.ObjectId(external_reference) });
+        const deletedGroupOrder = await GroupOrder.findOneAndDelete({ _id: new mongoose.Types.ObjectId(external_reference) });
   
         if (deletedOrder && deletedGroupOrder) {
           return res.status(200).json({ success: true, message: 'Order deleted due to payment failure', deletedOrder: deletedOrder, deletedGroupOrder:deletedGroupOrder });

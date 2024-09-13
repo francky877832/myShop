@@ -79,7 +79,7 @@ const Product = (props) => {
     //hasLikedItem={hasLiked(item)}
 
     const _handleLikePressed = useCallback(() => {
-        console.log("product.likes")
+        //console.log("product.likes")
         //console.log(item.likes)
         //console.log(modifiedProduct.length>0 ? modifiedProduct[0].likes:false)
         //console.log(modifiedProduct)
@@ -223,15 +223,15 @@ const showConfirmationRenewProduct = (product) => {
           },
           {
             text: "Confirmer", // Bouton de confirmation
-            onPress: () =>{ 
+            onPress: async () =>{ 
                 const updatedProduct = {
                     ...product,
                     sold : sold,
                     visibility : visibility
-                  };
+                };
                 dispatch(addModifiedProduct(updatedProduct));
                 setForceUpdate(!forceUpdate)
-                productHasBeenSold(product, sold, visibility)
+                await productHasBeenSold(product, sold, visibility)
             },
           },
         ],

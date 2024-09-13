@@ -5,9 +5,17 @@ export const screenHeight = screen.height
 
 export const appColors = {
     mainColor : "#F0F0F0",
-    secondaryColor1 : "#f27a1a",
-    lightOrange : "rgba(242, 122, 26, 0.1)",
-    lightOrange2 : "rgba(242, 122, 26, 0.04)",
+    //secondaryColor1 : "#f27a1a",
+    secondaryColor1 : "#e52165",
+    black : "#0d1137",
+    lightSecondaryColor1 : "rgba(229, 33, 101, 0.1)",
+    lightSecondaryColor2 : "rgba(229, 33, 101, 0.04)",
+    lightOrange : "rgba(229, 33, 101, 0.1)",
+    lightOrange2 : "rgba(229, 33, 101, 0.04)",
+
+
+    //lightOrange : "rgba(242, 122, 26, 0.1)",
+    //lightOrange2 : "rgba(242, 122, 26, 0.04)",
     secondaryColor2 : "#fff",
     secondaryColor3 : "#ccc",
     secondaryColor4 : "#777",
@@ -23,8 +31,8 @@ export const appColors = {
     white : "#fff",
     yellow : '#FFC107',
     lightBlack : "rgba(0, 0, 0, 0.2)",
-    black : "rgba(0, 0, 0, 0.9)",
-    clearBlack : "rgba(0, 0, 0, 0.7)",
+    //black : "rgba(0, 0, 0, 0.9)",
+    //clearBlack : "rgba(0, 0, 0, 0.7)",
     lightWhite : "rgb(240, 240, 240)",
     //lightWhite2 : "rgba(240, 240, 240, 0.02)",
 }

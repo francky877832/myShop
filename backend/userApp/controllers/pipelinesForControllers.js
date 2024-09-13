@@ -9,13 +9,14 @@ exports.getPipeLineForProducts = ( userId=undefined, skip=0, limit=100, sort={_i
     }
     else
     {
-      match = { sold : 0, visibility : 1} //on recupere les produit non vendu et visible
+      match = { seller:{$ne: new mongoose.Types.ObjectId(userId2)}, sold : 0, visibility : 1} //on recupere les produit non vendu et visible
     }
     //const match2 = userId2 ? { buyer : new mongoose.Types.ObjectId(userId), } : {}
   const pipeline = [
-    ...(userId ? [{
+    /*...(userId ? [{
         $match: match
-    }] : []),
+    }] : []),*/
+     {$match: match},
     { $sort: sort }, 
     { $skip: skip }, 
 

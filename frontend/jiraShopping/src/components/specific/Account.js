@@ -48,7 +48,7 @@ const   Account = (props) => {
                 <View style={[accountStyles.achatsVentes]}>
                     <View style={[accountStyles.achatsVentesView]}>
                         <Pressable  style={[accountStyles.AchatIcon]} onPress={()=>{handleBoughtClicked()}}>
-                            <Icon type="font-awesome" name="shopping-cart" size={50} color={appColors.orange} />
+                            <Icon type="font-awesome" name="shopping-cart" size={50} color={appColors.secondaryColor1} />
                         </Pressable>
                         <View style={{height:5,}}></View>
                         <Text  style={[accountStyles.text]}>Mes Achats</Text>
@@ -56,7 +56,7 @@ const   Account = (props) => {
 
                     <View style={[accountStyles.achatsVentesView]}>
                         <Pressable style={[accountStyles.AchatIcon]} onPress={()=>(navigation.navigate("MyShop"))}>
-                            <Icon type="ionicon" name="bag-handle" size={50} color={appColors.orange} />
+                            <Icon type="ionicon" name="bag-handle" size={50} color={appColors.secondaryColor1} />
                         </Pressable>
                         <View style={{height:5,}}></View>
                         <Text  style={[accountStyles.text]}>Ma Boutique</Text>
@@ -64,7 +64,7 @@ const   Account = (props) => {
 
                     <View style={[accountStyles.achatsVentesView]}>
                         <Pressable style={[accountStyles.AchatIcon]} onPress={()=>{handleSoldClicked()}}>
-                            <Icon type="materialicon" name="price-check" size={50} color={appColors.orange} />
+                            <Icon type="materialicon" name="price-check" size={50} color={appColors.secondaryColor1} />
                         </Pressable>
                         <View style={{height:5,}}></View>
                         <Text  style={[accountStyles.text]}>Mes Ventes</Text>
@@ -84,7 +84,7 @@ const   Account = (props) => {
                                 <Pressable style={[accountStyles.settingsElement, !item.available?accountStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`)}} disabled={!item.available}> 
                                     <Text style={[accountStyles.text,{fontSize:18,},!item.available?accountStyles.unavailable:false]}>{item.name}</Text>
                                     { item.available &&
-                                        <Icon type="font-awesome" name="angle-right" size={30} color={appColors.orange} />
+                                        <Icon type="font-awesome" name="angle-right" size={30} color={appColors.secondaryColor1} />
                                     }
                                     </Pressable>
                                 )

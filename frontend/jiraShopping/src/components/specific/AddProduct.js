@@ -27,7 +27,7 @@ import { ProductItemContext } from '../../context/ProductItemContext';
 import { FilterContext
 
  } from '../../context/FilterContext';
-import { server, noImagePath } from '../../remote/server';
+import { server, noImagePath, productsImagesPath } from '../../remote/server';
 import { sendNotifications } from '../../utils/commonAppNetworkFunctions'
 
 
@@ -395,7 +395,7 @@ const handleImagePress = (image) => {
                     <Pressable style={[addProductStyles.imageBox,{marginRight:10, marginBottom:10,}]}  onPress={() => handleImagePress(source)} key={index}>
                         { images.length > 0  && item!=undefined &&
                             <View style={{}}>
-                                <Image source={{ uri: source }} style={{width:98,height:98,}} />
+                                <Image source={{ uri: `${productsImagesPath}/${source}` }} style={{width:98,height:98,}} />
                                 <Pressable onPress={()=>{deleteSelectedImage(source);}} style={{width:20,height:20,backgroundColor:appColors.lightBlack,position:"absolute",alignSelf:"flex-end",top:0,}}>
                                     <Icon name="close" type="ionicon" size={18} color={appColors.secondaryColor1} />
                                 </Pressable>
