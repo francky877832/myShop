@@ -15,6 +15,7 @@ const orderSchema = new  Schema({
     products: [
                 {
                     product : {type: Schema.Types.ObjectId, ref: 'Product', required: true },
+                    uniquePrice : { type: Number, required: true, },
                     status: {type: String, enum: ['pending', 'shipped', 'delivered', 'canceled'], default: 'pending' },
                     //group: { type: Schema.Types.ObjectId, ref: 'GroupOrder', required: true },
                     quantity: { type: Number, required: true, default: 1 },

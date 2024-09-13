@@ -107,8 +107,8 @@ const OrdersDetails = (props) => {
 
                         <View style={[ordersDetailsStyles.productDetails]}>
                             <View>
-                                <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Seller</Text>
-                                <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Nom Produit</Text>
+                                <Text style={[customText.text, ordersDetailsStyles.textRight, {fontStyle:'italic'}]}>{order.product.seller.username}</Text>
+                                <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>{order.product.name}</Text>
                             </View>
 
                             <View style={{height:10}}></View>
@@ -121,7 +121,7 @@ const OrdersDetails = (props) => {
                             <View style={{height:10}}></View>
 
                             <View>
-                                <Text style={[customText.text, ordersDetailsStyles.textRight, {color:appColors.secondaryColor1}]}>{1000} XAF</Text>
+                                <Text style={[customText.text, ordersDetailsStyles.textRight, {color:appColors.secondaryColor1}]}>{formatMoney(order.uniquePrice)} XAF</Text>
                             </View>
 
                             <View style={{height:10}}></View>
