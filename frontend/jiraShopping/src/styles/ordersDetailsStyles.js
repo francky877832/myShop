@@ -129,6 +129,7 @@ export const ordersDetailsStyles = StyleSheet.create({
     {
         padding : 10,
         borderRadius : 5,
+        //width : 200,
     },
     buttonText :
     {

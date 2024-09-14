@@ -122,7 +122,7 @@ exports.addUserOrder = async (req, res, next) => {
       group: new mongoose.Types.ObjectId(newOrderGroup._id),
       sellers: order.sellers.map(seller => new mongoose.Types.ObjectId(seller)),
       buyer: order.buyer,
-      products: order.products.map(product => ({product : new mongoose.Types.ObjectId(product.product), quantity:product.quantity})),
+      products: order.products.map(product => ({product : new mongoose.Types.ObjectId(product.product), quantity:product.quantity, uniquePrice:product.uniquePrice})),
       totalPrice: order.totalPrice,
       quantity: order.quantity
     };
@@ -429,7 +429,7 @@ exports.getUserOrders = async (req, res, next) => {
         }
       },
       { 
-        $match: { 'group.paymentStatus': 'payment_successfull' },
+        $match: { 'group.paymentStatus': 'payment_successful' },
       },
 
       {
@@ -437,7 +437,6 @@ exports.getUserOrders = async (req, res, next) => {
           from: "offers", 
           let: { 
             productId: '$products.product._id', 
-            sellers: "$sellers" 
           },
           pipeline: [
             {
@@ -635,7 +634,7 @@ exports.getUserOrders = async (req, res, next) => {
        res.status(200).json({
           orders: orders, // results[0], //{...orders[0], products:results[0]},
           sold : sold_products,
-          bought : bought_products,
+         bought : bought_products,
           page: page,
           totalPages: totalPages,
           totalDatas: totalDatas,

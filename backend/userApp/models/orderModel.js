@@ -15,12 +15,13 @@ const orderSchema = new  Schema({
     products: [
                 {
                     product : {type: Schema.Types.ObjectId, ref: 'Product', required: true },
+                    quantity: { type: Number, required: true, default: 1 },
                     uniquePrice : { type: Number, required: true, },
+
                     status: {type: String, enum: ['pending', 'shipped', 'delivered', 'canceled'], default: 'pending' },
                     delivererConfirmation :  {type: String, enum: [0, 1, 2], default: 2 },
                     buyerConfirmation :  {type: String, enum: [0, 1, 2], default: 2 },
                     //group: { type: Schema.Types.ObjectId, ref: 'GroupOrder', required: true },
-                    quantity: { type: Number, required: true, default: 1 },
                     deliveryNo: { type: String, default : null },
                     deliveryDate: { type : Date, default : null },
                     createdAt : { type : Date, default : Date.now },

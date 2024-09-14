@@ -13,7 +13,7 @@ import { appColors, customText } from '../../styles/commonStyles';
 import { CustomButton } from '../common/CommonSimpleComponents'
 
 
-import { sinceDate, formatMoney, formatDateToLitteral } from '../../utils/commonAppFonctions'
+import { sinceDate, formatMoney, formatDateToLitteral, truncateText } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -108,7 +108,7 @@ const OrdersDetails = (props) => {
                         <View style={[ordersDetailsStyles.productDetails]}>
                             <View>
                                 <Text style={[customText.text, ordersDetailsStyles.textRight, {fontStyle:'italic'}]}>{order.product.seller.username}</Text>
-                                <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>{order.product.name}</Text>
+                                <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>{truncateText(order.product.name, 25)[0]}{truncateText(order.product.name, 25)[1] ? "..." : null }</Text>
                             </View>
 
                             <View style={{height:10}}></View>
@@ -132,10 +132,23 @@ const OrdersDetails = (props) => {
 
                             <View style={{height:10}}></View>
 
+                           
                         </View>
 
                     </View>
-                 
+                
+                {
+                    !order.buyerConfirmation &&
+                    <View style={[{}]}>
+                        <View>
+                            <CustomButton text="J'ai reçu le produit"  styles={{ pressable: ordersDetailsStyles.button, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ navigation.navigate('ProductDetails', {productDetails:order.product})}} />
+                        </View>
+
+                        <View style={[{}]}>
+                            <Text style={[{fontSize:11,fontStyle:'italic'}]}>Confirmez lorsque vous avez reçu ce produit. Néamoins le confirmation est automatique 2 heures apres la réception du collis.</Text>
+                        </View>
+                    </View>
+                }
 
                 </View>
 
