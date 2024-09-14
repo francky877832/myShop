@@ -1,6 +1,8 @@
 const Order = require('../models/orderModel');
 const GroupOrder = require('../models/groupOrderModel');
 const Product = require('../models/productModel');
+const notificaitonCtrl = require('../controllers/notificationController');
+
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 require('dotenv').config({ path: '.../../shared/.env' });
@@ -44,6 +46,8 @@ exports.updatePaymentStatus = async (req, res, next) => {
 
             await Product.updateMany( { _id: { $in: productIds }, stock:0 }, { $set: { sold: 1, visibility:0 } } )
 
+            //Envoyer la notification
+            //La notification est automatique comme orders fais partir du systeme de notifications
           return res.status(200).json({ success: true, message: 'Order updated successfully', order: updatedOrder });
         } else {
           return res.status(404).json({ success: false, message: 'Order not found' });
@@ -53,6 +57,25 @@ exports.updatePaymentStatus = async (req, res, next) => {
         const deletedGroupOrder = await GroupOrder.findOneAndDelete({ _id: new mongoose.Types.ObjectId(external_reference) });
   
         if (deletedOrder && deletedGroupOrder) {
+
+          const notification = {
+            ...req,
+            params : {user:deletedOrder.buyer},
+            body :
+            {
+              user : deletedOrder.buyer,
+              source : 'admin',
+              modele : 'orders',
+              type : 'PAYMENT_FAILED',
+              message : 'Le payment de la commande que vous avez passé a échoué. Veillez reéssayer ou contacter le service client.',
+              action : 'none',
+              read : 0,
+              title : 'Payement Failed',
+              datas : null
+            }
+        }
+          await notificaitonCtrl.updateUserNotifications(notification, res, next)
+
           return res.status(200).json({ success: true, message: 'Order deleted due to payment failure', deletedOrder: deletedOrder, deletedGroupOrder:deletedGroupOrder });
         } else {
           return res.status(404).json({ success: false, message: 'Order not found for deletion' });
@@ -405,9 +428,9 @@ exports.getUserOrders = async (req, res, next) => {
             }
         }
       },
-
-
-
+      { 
+        $match: { 'group.paymentStatus': 'payment_successfull' },
+      },
 
       {
         $lookup: {

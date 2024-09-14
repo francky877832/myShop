@@ -412,10 +412,15 @@ const handleSellerBrandPressed = (product) => {
         }
 
             {
-                !hasPropositionPrice(data) &&
+                (hasPropositionPrice(data) || data.sold===1) &&
                 <View style={[productDetailsStyles.propositionPrice]}>
                     <View>
-                        <Text style={[customText.text, productDetailsStyles.offerLeftText]}>Vous avez reçu une offre spéciale pour ce produit!</Text>
+                        { hasPropositionPrice(data) ?
+                            <Text style={[customText.text, productDetailsStyles.offerLeftText]}>Vous avez reçu une offre spéciale pour ce produit!</Text>
+                            :
+                            <Text style={[customText.text, productDetailsStyles.offerLeftText]}>Ce produit a déja été vendu!</Text>
+
+                        }
                     </View>
                     {
                     /*
@@ -456,7 +461,7 @@ const handleSellerBrandPressed = (product) => {
                             </Pressable>    
                         */}
                     {
-                    (user._id!=data.seller._id) 
+                    (user._id!=data.seller._id && data.sold===0) 
                            ?
                         <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data, inputFocused:true, notificationsOffers:Object.keys(data.offers).length>0 ? data.offers.offers : defaultOffer}) } }>
                             <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{"Proposer"}</Text>
@@ -474,7 +479,7 @@ const handleSellerBrandPressed = (product) => {
                     {
                        (user._id==data.seller._id || data.sold===1)
                         ?
-                        <CustomButton text="Acheter" disable={true} styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor3} onPress={() => { }} />
+                        <CustomButton text={data.sold===1?"Vendu":"Acheter"} disable={true} styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor3} onPress={() => { }} />
                         :
                         <CustomButton text="Acheter" disable={false} styles={{ pressable: productDetailsStyles.button, text: productDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor1} onPress={() => { handlePaymentButtonCliked()}} />
                     }

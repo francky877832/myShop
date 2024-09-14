@@ -65,6 +65,14 @@ export const notifications =
 			message : "",
 			action : "",
 		},
+		PAYMENT_SUCCESSFUL : { 
+			message : "",
+			action : "",
+		},
+		PAYMENT_FAILED : { 
+			message : "",
+			action : "",
+		},
 		ON_ORDER_PENDING : { 
 			message : "",
 			action : "",

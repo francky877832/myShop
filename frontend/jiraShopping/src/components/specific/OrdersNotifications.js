@@ -47,7 +47,7 @@ const openOrder = async (user, item) => {
             await updateOrderRead(item._id, item.products.product)
         }
             
-        navigation.navigate("OrdersDetails", {order:item})
+        navigation.navigate("OrdersDetails", {ordersDetails:item})
     }
     catch(error)
     {
