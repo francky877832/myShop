@@ -8,7 +8,7 @@ import { offersStyles } from '../../styles/offersStyles';
 import { commentsStyles } from '../../styles/commentsStyles';
 import { appColors, customText, appFont } from '../../styles/commonStyles';
 
-import { formatMoney, checkOfferPrice, serialize } from '../../utils/commonAppFonctions';
+import { formatMoney, checkOfferPrice, serialize, hasPropositionPrice } from '../../utils/commonAppFonctions';
 import { offersDatas, defaultOffer } from '../../utils/offersDatas';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
@@ -176,9 +176,9 @@ const inputRef = useRef(null)
 useEffect(()=>{
     
     const task = InteractionManager.runAfterInteractions(() => {
-        if (inputRef.current && route.params.inputFocused)
+        if (inputRef.current && route.params.inputFocused && !hasPropositionPrice(product))
         {
-            inputRef.current.focus()
+             inputRef.current.focus()
         }
     })
 
@@ -343,6 +343,10 @@ useEffect(()=>{
     const onPressProduct = (product) => {
         navigation.navigate({name:"ProductDetails", params:{ productDetails: product, },  key: Date.now().toString()});
     }
+
+    const handlePaymentButtonCliked = (product) => {
+        navigation.navigate('VerifyDeliveryInfos', {products:[product,]})
+    }
     return (
         <View style={[offersStyles.container]}>
 
@@ -435,7 +439,7 @@ useEffect(()=>{
                                                 <Text style={[customText.text,]}>Accepté</Text>
                                             </Pressable>
                                         { user._id != product.seller &&
-                                            <Pressable onPress={()=>{}} style={[offersStyles.offersBottomConfirmationButtom,{}]}>
+                                            <Pressable onPress={()=>{ handlePaymentButtonCliked(product) }} style={[offersStyles.offersBottomConfirmationButtom,{}]}>
                                                 <Icon name='cart-outline' type='ionicon' size={24} color={appColors.green} />
                                                 <Text style={[customText.text,]}>Acheter</Text>
                                             </Pressable>

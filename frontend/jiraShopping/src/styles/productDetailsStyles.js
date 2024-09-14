@@ -224,6 +224,28 @@ export const productDetailsStyles = StyleSheet.create({
     },
 
  
+    //OFFERS
+    propositionPrice :
+    {
+        flexDirection : 'row',
+        justifyContent : 'center',
+        alignItems : 'center',
+        paddingVertical : 10,
+        paddingHorizontal : 10,
+        backgroundColor : appColors.black,
+        borderTopWidth : 1,
+        borderColor : appColors.white,
+
+    },
+
+    offerLeftText :
+    {
+        color : appColors.white,
+    },
+    offerRightText :
+    {
+        color : appColors.white,
+    },
     
 
   

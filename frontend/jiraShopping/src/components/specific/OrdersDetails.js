@@ -227,11 +227,12 @@ function flatlistFooter(){
                     </View>
 
                     <View style={{height:10}}></View>
-
-                    <View style={[ordersDetailsStyles.line]}>
-                        <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Tél : </Text>
-                        <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>{ordersDetails.group.phone}</Text>
-                    </View>
+                    {( user._id == ordersDetails.buyer._id) &&
+                        <View style={[ordersDetailsStyles.line]}>
+                            <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Tél : </Text>
+                            <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>{ordersDetails.group.phone}</Text>
+                        </View>
+                    }
                 </View>
             </View>
 

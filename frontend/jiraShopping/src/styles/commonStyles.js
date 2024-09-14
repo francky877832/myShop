@@ -69,3 +69,30 @@ export const formErrorStyle = {
     }
     
 }
+
+export const disabledButton = 
+{
+    backgroundColor : appColors.secondaryColor3,
+    color : appColors.white,
+    fontWeight : 'bold',
+}
+export const button = 
+{
+    backgroundColor : appColors.secondaryColor1,
+    color : appColors.white,
+    fontWeight : 'bold',
+} 
+export const buttonInvers = 
+{
+    backgroundColor : appColors.white,
+    color : appColors.secondaryColor1,
+    fontWeight : 'bold',
+} 
+export const buttonAccepted = 
+{
+    backgroundColor : appColors.green,
+    color : appColors.white,
+    borderWidth : 1,
+    borderColor : appColors.green,
+    fontWeight : 'bold',
+} 

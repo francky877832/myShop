@@ -82,7 +82,7 @@ exports.LikeButton = (props) => {
             { item.likes > 0 &&
                     <View style={[{flexDirection:'row'}]}>
                     <View style={{width:5,}}></View>
-                        <Text style={[customText.text, {color:appColors.lightWhite}, {fontSize:14,fontWeight:'bold'}]}>{formatLikes(item.likes) || 1}</Text> 
+                        <Text style={[customText.text, {color:style.color}, {fontSize:14,fontWeight:styles.fontWeight || 'bold'}]}>{formatLikes(item.likes) || 1}</Text> 
                     </View>
             }
         </Pressable>
@@ -247,11 +247,11 @@ exports.TemporaryNotification = (props) => {
 
 exports.PriceDetails = (props) => {
     const {products, title, closePriceDetails} = props
-    let product;
+    let product; 
  
         const totalPrice = products.reduce((total, product) =>{
             const priceToPay = choosePrice(product)
-            return total+parseInt(priceToPay)*product.orderQuantity
+            return total+parseInt(priceToPay)*(product.orderQuantity||1)
         }, 0)
 
         let passed_products = []
@@ -276,7 +276,7 @@ exports.PriceDetails = (props) => {
 
         const feesBy = products.some(p => p.feesBy == 'buyer')
 
-        product = { newPrice:totalPrice, feesBy:feesBy, kargoPrice:kargoPrice, orderQuantity:products.reduce((t,p) => { return t+parseInt(p.orderQuantity)}, 0) }
+        product = { newPrice:totalPrice, feesBy:feesBy, kargoPrice:kargoPrice, orderQuantity:products.reduce((t,p) => { return t+parseInt(p.orderQuantity||1)}, 0) }
    
 
 

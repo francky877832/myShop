@@ -19,7 +19,7 @@ import { PrevButton, ShareButton, LikeButton, CustomButton, CustomActivityIndica
 import Comments from './Comments';
 import { productDetailsStyles } from '../../styles/productDetailsStyles';
 import { productStyles } from '../../styles/productStyles';
-import { appColors, customText } from '../../styles/commonStyles';
+import { appColors, buttonAccepted, customText } from '../../styles/commonStyles';
 import { formatMoney, sinceDate, truncateText } from '../../utils/commonAppFonctions';
 import { datas } from '../../utils/sampleDatas';
 import BadgeIcon from '../common/BadgeIcon';
@@ -38,7 +38,8 @@ import { UserContext } from '../../context/UserContext';
 import { ProductContext } from '../../context/ProductContext';
 import { addModifiedProduct } from '../../store/favourites/favouritesSlice';
 import { defaultOffer } from '../../utils/offersDatas';
-
+import { usersImagesPath } from '../../remote/server';
+import { hasPropositionPrice, choosePrice } from '../../utils/commonAppFonctions'
 const loggedUserId = "668fdfc6077f2a5c361dd7fc"
 const loggedUser = "Francky"
 const visitorUserId = "66715deae5f65636347e7f9e"
@@ -249,9 +250,8 @@ const handleSellerBrandPressed = (product) => {
                         </View>
                         <View style={{justifyContent:"center",alignItems:"center",}}>
 
-                                <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user}  synchro={true} item={data} styles={{ color: appColors.black }} isCard={false} />
+                                <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user}  synchro={true} item={data} styles={{ color: appColors.black, fontWeight:'normal'}} isCard={false} />
 
-                            <Text style={[customText.text]}>{numLike}</Text>
                         </View>
                     </View>
 
@@ -358,7 +358,7 @@ const handleSellerBrandPressed = (product) => {
                                 data={[...likeAdders].slice(0,5)}
                                 renderItem={ ({item}) => { return (
                                     <View style={[productDetailsStyles.likeItem]}>
-                                        <Image source={{uri: item.image}} style={[productDetailsStyles.likeAddersImages]} />
+                                        <Image source={{uri: `${usersImagesPath}/${item.image}`}} style={[productDetailsStyles.likeAddersImages]} />
                                         <Text style={[customText.text, ]}>{item.username.substring(0,4)}...</Text>
                                     </View>
                                 )} }
@@ -411,6 +411,22 @@ const handleSellerBrandPressed = (product) => {
             </View>
         }
 
+            {
+                !hasPropositionPrice(data) &&
+                <View style={[productDetailsStyles.propositionPrice]}>
+                    <View>
+                        <Text style={[customText.text, productDetailsStyles.offerLeftText]}>Vous avez reçu une offre spéciale pour ce produit!</Text>
+                    </View>
+                    {
+                    /*
+                        <View>
+                            <Text style={[customText.text, productDetailsStyles.offerRightText]}>XAF {choosePrice(data)}</Text>
+                        </View>
+                    */
+                    }
+                </View>
+            }
+
             <View style={[productDetailsStyles.bottom]}>
                 <Pressable style={[productDetailsStyles.button, productDetailsStyles.price]} onPress={()=>{setShowPriceDetails(!showPriceDetails)}}>
                     {
@@ -422,14 +438,14 @@ const handleSellerBrandPressed = (product) => {
                     }                    
                     
                     
-                    {data.price <= data.newPrice  
+                    {(hasPropositionPrice(data) || (data.price > data.newPrice))
                                     ? 
-                                        <Text numberOfLines={2} style={[customText.text, productStyles.price, productDetailsStyles.buttonText,]}>{formatMoney(data.price)} XAF</Text>
-                                    :
                                         <View style={{ flexDirection:"column", justifyContent:"flex-start", flexWrap:'wrap' }} >
                                             <Text numberOfLines={2} style={[customText.text, productStyles.price, productDetailsStyles.buttonText,  {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{formatMoney(data.price)} </Text>
-                                            <Text numberOfLines={2} style={[customText.text, productStyles.price, productDetailsStyles.buttonText,  {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:14}]}>{formatMoney(data.newPrice)} XAF</Text>
+                                            <Text numberOfLines={2} style={[customText.text, productStyles.price, productDetailsStyles.buttonText,  {textDecorationLine:"none", color:"green", marginLeft:5,fontSize:14}]}>{formatMoney(choosePrice(data))} XAF</Text>
                                         </View>
+                                    :
+                                    <Text numberOfLines={2} style={[customText.text, productStyles.price, productDetailsStyles.buttonText,]}>{formatMoney(data.newPrice)} XAF</Text>
                                 }
                 </Pressable>
 
@@ -444,6 +460,9 @@ const handleSellerBrandPressed = (product) => {
                            ?
                         <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data, inputFocused:true, notificationsOffers:Object.keys(data.offers).length>0 ? data.offers.offers : defaultOffer}) } }>
                             <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{"Proposer"}</Text>
+                            { hasPropositionPrice(data) &&
+                                <Text numberOfLines={1} style={[customText.text, {color:appColors.white,fontWeight:"bold"}]}>{"Accepté"}</Text>
+                            }
                         </Pressable>
                         :
                         <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Notifications", {key:1}) } }>
