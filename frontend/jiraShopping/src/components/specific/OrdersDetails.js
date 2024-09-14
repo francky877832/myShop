@@ -138,14 +138,30 @@ const OrdersDetails = (props) => {
                     </View>
                 
                 {
-                    !order.buyerConfirmation &&
+                    !order.buyerConfirmation && (user._id == ordersDetails.buyer._id) &&
                     <View style={[{}]}>
-                        <View>
-                            <CustomButton text="J'ai reçu le produit"  styles={{ pressable: ordersDetailsStyles.button, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ navigation.navigate('ProductDetails', {productDetails:order.product})}} />
-                        </View>
+                       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={[{flexDirection:'row',justifyContent:'center'}]}>
+                            <CustomButton text="J'ai reçu ce produit"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20}, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ navigation.navigate('ProductDetails', {productDetails:order.product})}} />
+                        </ScrollView>
 
                         <View style={[{}]}>
                             <Text style={[{fontSize:11,fontStyle:'italic'}]}>Confirmez lorsque vous avez reçu ce produit. Néamoins le confirmation est automatique 2 heures apres la réception du collis.</Text>
+                        </View>
+                    </View>
+                }
+
+                
+                {
+                    !order.buyerConfirmation && (user._id != ordersDetails.buyer._id) &&
+                    <View style={[{}]}>
+                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={[{flexDirection:'row',justifyContent:'center'}]}>
+                            <CustomButton text="J'ai déja expédié ce produit"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20}, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ navigation.navigate('ProductDetails', {productDetails:order.product})}} />
+                            <View style={{width:5}}></View>
+                            <CustomButton text="Ce produit est déja arrivé"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20},  text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ navigation.navigate('ProductDetails', {productDetails:order.product})}} />
+                        </ScrollView>
+
+                        <View style={[{}]}>
+                            <Text style={[{fontSize:11,fontStyle:'italic'}]}>Vous recevrez automatiquement vos gains lorsque le client validera la reception du collis. Cliquez sur 'processus de livraison' ci haut ou dans la section Compte de l'appli pour plus d'informations.</Text>
                         </View>
                     </View>
                 }
@@ -240,11 +256,20 @@ function flatlistFooter(){
                     </View>
 
                     <View style={{height:10}}></View>
-                    {( user._id == ordersDetails.buyer._id) &&
+
+                    {
+                        <View style={[ordersDetailsStyles.line]}>
+                            <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Tél : </Text>
+                            <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>{ user._id == ordersDetails.buyer._id ? ordersDetails.group.phone :  ordersDetails.group.orderPhone}</Text>
+                        </View>
+                    }
+                    {/*
+                    ( user._id == ordersDetails.buyer._id) &&
                         <View style={[ordersDetailsStyles.line]}>
                             <Text style={[customText.text, ordersDetailsStyles.textRight, {}]}>Tél : </Text>
                             <Text style={[customText.text, ordersDetailsStyles.textLeft, {}]}>{ordersDetails.group.phone}</Text>
                         </View>
+                        */
                     }
                 </View>
             </View>

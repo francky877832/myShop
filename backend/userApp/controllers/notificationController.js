@@ -204,7 +204,7 @@ exports.getUserNotifications = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
     const limit = parseInt(req.query.limit) || 3; // Nombre d'éléments par page, par défaut 3
     const skip = (page - 1) * limit;
-
+    const userId = req.params.user
     const dataTypes = ['users', 'products', 'orders']; // Peut être généré dynamiquement
 
     // Étapes de lookup
@@ -227,7 +227,7 @@ exports.getUserNotifications = async (req, res, next) => {
     const pipeline = [
       {
         $match: {
-          user: new mongoose.Types.ObjectId(req.params.user), // Assurez-vous que le user est un ObjectId
+          user: new mongoose.Types.ObjectId(userId), // Assurez-vous que le user est un ObjectId
         }
       },
       {
@@ -289,6 +289,8 @@ exports.getUserNotifications = async (req, res, next) => {
       },
 
 
+
+
       {
         $lookup: {
           from: 'users',
@@ -297,6 +299,42 @@ exports.getUserNotifications = async (req, res, next) => {
           as: 'favourites'
         }
       },
+
+
+      {
+        $lookup: {
+          from: "offers", 
+          let: { productId: `productsData._id` },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$product", "$$productId"] }, // Jointure sur le produit
+                    { $eq: ["$buyer", new mongoose.Types.ObjectId(userId)] }
+                  ]
+                }
+              }
+            },
+      
+          ],
+          as: "offers" // Stocker les offres dans ce champ
+        }
+      },
+      {
+        $addFields: {
+          offers: {
+            $cond: {
+              if: { 
+                $gt: [{ $size: { $ifNull: ['$offers', []] } }, 0]
+              },
+              then: { $arrayElemAt: ['$offers', 0] },
+              else: {}
+            }
+          },
+        }
+      },
+
       {
         $lookup: {
           from: 'comments',

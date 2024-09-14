@@ -9,6 +9,7 @@ const groupOrderSchema = new  Schema({
         status: {type: String, enum: ['pending', 'shipped', 'delivered'], default: 'pending' },
         paymentStatus : {type: String, enum: ['payment_pending', 'payment_successfull', 'payment_failed'], default:'payment_pending'},
         phone: { type: String },
+        orderPhone : { type: String },
         shippingAddress: {
             quater: { type: String },
             city: { type: String },

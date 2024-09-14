@@ -418,15 +418,16 @@ exports.generateOrderNo = (prefixe = "CMD") => {
     return codeCommande;
 }
 exports.choosePrice = (product) => {
-    if(Object.keys(product.offers)?.length>0 && product.offers?.offers?.length>0 && product.offers?.offers?.at(-1).hasGotResponse==1 )
+    if(product.hasOwnProperty('offers') && Object.keys(product.offers)?.length>0 && product.offers?.offers?.length>0 && product.offers?.offers?.at(-1)?.hasGotResponse==1 )
     {
-        return product.offers?.offers?.at(-1).price
+        return product.offers?.offers?.at(-1)?.price
     }
     return product.newPrice
 }
 
 exports.hasPropositionPrice = (product) => {
-    return Object.keys(product.offers)?.length>0 && product.offers?.offers?.length>0 && product.offers?.offers?.at(-1).hasGotResponse==1
+    //console.log(product)
+    return product.hasOwnProperty('offers') && Object.keys(product?.offers)?.length>0 && product?.offers?.offers?.length>0 && product?.offers?.offers?.at(-1)?.hasGotResponse==1
 }
 
 

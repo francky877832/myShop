@@ -113,7 +113,8 @@ exports.addUserOrder = async (req, res, next) => {
       phone: group.phone,
       totalPrice: group.totalPrice,
       quantity: group.quantity,
-      shippingAddress: shippingAddress
+      shippingAddress: shippingAddress,
+      orderPhone : group.orderPhone
     };
 
     const newOrderGroup = await GroupOrder.create({ ...group_order }); //session
@@ -634,7 +635,7 @@ exports.getUserOrders = async (req, res, next) => {
        res.status(200).json({
           orders: orders, // results[0], //{...orders[0], products:results[0]},
           sold : sold_products,
-         bought : bought_products,
+          bought : bought_products,
           page: page,
           totalPages: totalPages,
           totalDatas: totalDatas,

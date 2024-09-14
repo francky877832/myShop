@@ -138,7 +138,7 @@ const handleSellerBrandPressed = (product) => {
 }
 
     return (
-        <ScrollView contentContainerStyle={[ordersStyles.container]}>
+        <View style={[ordersStyles.container]}>
             <FlatList
                     data={groupOrder}
                     renderItem={ ({item}) => { return(<RenderOrder order={item} user={user} />
@@ -161,7 +161,7 @@ const handleSellerBrandPressed = (product) => {
                         )*/
                     }}
             />
-        </ScrollView>
+        </View>
     );
 } 
 

@@ -102,6 +102,7 @@ const VerifyDeliveryInfos = (props) => {
                         shippingAddress : ordersDetails.address,
                         paymentMethod : "CamPay",
                         paymentDetails :  null, //a mettre ajour avec le webhook
+                        orderPhone : orderPhone,
                     },
                     order : 
                     {
