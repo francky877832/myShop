@@ -13,7 +13,7 @@ import { appColors, customText } from '../../styles/commonStyles';
 import { CustomButton } from '../common/CommonSimpleComponents'
 
 
-import { sinceDate, formatMoney, formatDateToLitteral, truncateText } from '../../utils/commonAppFonctions'
+import { sinceDate, formatMoney, formatDateToLitteral, truncateText, openWhatsApp, whatsappMessage } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -23,7 +23,7 @@ import RenderNotificationItem from '../common/RenderNotificationItem';
 import { OrdersContext } from '../../context/OrdersContext';
 import { ordersStyles } from '../../styles/ordersStyles';
 import { choosePrice } from '../../utils/commonAppFonctions'
-import { productsImagesPath } from '../../remote/server';
+import { orderPhone, productsImagesPath } from '../../remote/server';
 
 
 
@@ -138,10 +138,10 @@ const OrdersDetails = (props) => {
                     </View>
                 
                 {
-                    !order.buyerConfirmation && (user._id == ordersDetails.buyer._id) &&
+                    order.buyerConfirmation!=1 && (user._id == ordersDetails.buyer._id) &&
                     <View style={[{}]}>
                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={[{flexDirection:'row',justifyContent:'center'}]}>
-                            <CustomButton text="J'ai reçu ce produit"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20}, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ navigation.navigate('ProductDetails', {productDetails:order.product})}} />
+                            <CustomButton text="J'ai reçu ce produit"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20}, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ openWhatsApp(ordersDetails.group.orderPhone||orderPhone, '*NE MODIFIEZ PAS CE MESSAGE!!!!*\n\n'+whatsappMessage(ordersDetails.buyer.username, order.product.seller.username, "buyer-delivered", ordersDetails.group.no, ordersDetails.group._id, order.product._id)) }} />
                         </ScrollView>
 
                         <View style={[{}]}>
@@ -152,12 +152,12 @@ const OrdersDetails = (props) => {
 
                 
                 {
-                    !order.buyerConfirmation && (user._id != ordersDetails.buyer._id) &&
+                    order.buyerConfirmation!=1 && (user._id != ordersDetails.buyer._id) &&
                     <View style={[{}]}>
                         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={[{flexDirection:'row',justifyContent:'center'}]}>
-                            <CustomButton text="J'ai déja expédié ce produit"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20}, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ navigation.navigate('ProductDetails', {productDetails:order.product})}} />
+                            <CustomButton text="J'ai déja expédié ce produit"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20}, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ openWhatsApp(ordersDetails.group.orderPhone||orderPhone, '*NE MODIFIEZ PAS CE MESSAGE!!!!*\n\n'+whatsappMessage(ordersDetails.buyer.username, order.product.seller.username, "seller-product-shipped", ordersDetails.group.no, ordersDetails.group._id, order.product._id)) }} />
                             <View style={{width:5}}></View>
-                            <CustomButton text="Ce produit est déja arrivé"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20},  text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ navigation.navigate('ProductDetails', {productDetails:order.product})}} />
+                            <CustomButton text="Ce produit est déja arrivé"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20},  text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ openWhatsApp(ordersDetails.group.orderPhone||orderPhone, '*NE MODIFIEZ PAS CE MESSAGE!!!!*\n\n'+whatsappMessage(ordersDetails.buyer.username, order.product.seller.username, "seller-product-delivered", ordersDetails.group.no, ordersDetails.group._id, order.product._id)) }} />
                         </ScrollView>
 
                         <View style={[{}]}>

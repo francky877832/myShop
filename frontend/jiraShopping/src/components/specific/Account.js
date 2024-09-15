@@ -13,6 +13,7 @@ import { topStyles } from '../../styles/topStyles';
 import badgeIconStyles from '../../styles/badgeIconStyles';
 import { UserContext } from '../../context/UserContext';
 import { OrdersContext } from '../../context/OrdersContext';
+import { truncateTextAndAddDots } from '../../utils/commonAppFonctions'
 
 //const loggedUser = "Francky"
 const   Account = (props) => {
@@ -35,7 +36,7 @@ const   Account = (props) => {
                 <View style={{height:10,}}></View>
 
                 <View style={[accountStyles.firstLine]}>
-                    <Text style={[accountStyles.text,{fontWeight:"bold"}]}>@{user.username}</Text>
+                    <Text style={[accountStyles.text,{fontWeight:"bold"}]}>@{truncateTextAndAddDots(user.username, 15)}</Text>
                     <View style={[accountStyles.firstLineIcons]}>
                         <Pressable  style={[topStyles.notification, ]} onPress = { ()=>{ navigation.navigate("Notifications");} }>
                             <BadgeIcon name="notifications" size={24} color="black" badgeCount={5} styles={badgeIconStyles} />

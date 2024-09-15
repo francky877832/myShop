@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { verifyInfosStyles } from '../../styles/verifyInfosStyles';
 import { UserContext } from '../../context/UserContext';
-import { formatMoney, formatPhoneNumber, generateOrderNo, choosePrice} from '../../utils/commonAppFonctions'
+import { formatMoney, formatPhoneNumber, generateOrderNo, choosePrice, openWhatsApp} from '../../utils/commonAppFonctions'
 
 import { OrdersContext } from '../../context/OrdersContext';
 import { orderPhone } from '../../remote/server';
@@ -119,7 +119,7 @@ const VerifyDeliveryInfos = (props) => {
                 const {newOrderGroup, newOrder} = await addNewOrder(order)
                 if(newOrder)
                 {
-                    navigation.navigate('ValidatePayment', {details:{...ordersDetails, amount:totalPrice ,external_reference:newOrderGroup._id}})
+                    navigation.navigate('ValidatePayment', {details:{...ordersDetails, amount:totalPrice, external_reference:newOrderGroup._id}})
                 }
             }catch(error){
                 console.log(error)

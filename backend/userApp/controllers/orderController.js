@@ -256,6 +256,10 @@ exports.getUserOrders = async (req, res, next) => {
           ]
         }
       },
+
+      {
+        $sort: { 'createdAt': -1 },
+      },
       
       {$unwind : '$sellers'},
       {
@@ -575,9 +579,7 @@ exports.getUserOrders = async (req, res, next) => {
             }
         }
     },
-    {
-        $sort: { 'products.updatedAt': -1 } // Trier par le champ 'updatedAt' dans 'notifications'
-      },
+      
       {
         $skip: skip // Sauter les documents pour la pagination
       },
@@ -604,9 +606,9 @@ exports.getUserOrders = async (req, res, next) => {
     ]);
 
     const totalDatas = await Order.countDocuments({  $or: [
-        { sellers: new mongoose.Types.ObjectId(userId) },
-        { buyer: new mongoose.Types.ObjectId(userId) }
-      ] }).exec();
+      { sellers: { $elemMatch: { $eq: new mongoose.Types.ObjectId(userId) } } },
+      { buyer: new mongoose.Types.ObjectId(userId) }
+    ] }).exec();
 
         const totalPages = Math.ceil(totalDatas / limit);
 
@@ -622,11 +624,11 @@ exports.getUserOrders = async (req, res, next) => {
         {
           if(product.product.seller._id == userId)
           {
-            products.push(product)
+            products.unshift(product)
           }
         }
         if(products.length > 0)
-          sold_products.push({...order, products : products })
+          sold_products.unshift({...order, products : products })
           
       }
       

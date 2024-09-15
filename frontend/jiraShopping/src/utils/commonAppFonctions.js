@@ -1,5 +1,7 @@
 import nlp from "compromise";
 const Fuse = require('fuse.js');
+import { Linking, Alert } from 'react-native';
+
 
 export const capitalizeFirstLetter = str => str ? str[0].toUpperCase() + str.slice(1).toLowerCase() : str;
 export const debouncer = (callback, time) => {
@@ -16,6 +18,30 @@ export const debouncer = (callback, time) => {
       }, time);
     };
   };
+
+
+
+
+export const openWhatsApp = async (phoneNumber, message) => {
+ // const url = `https://wa.me/${phoneNumber}` //?text=${encodeURIComponent(message)}`;
+
+  const url = `whatsapp://send?phone=${phoneNumber}&text=${message}`;
+  const fallbackUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+
+  try {
+    // Check if WhatsApp can be opened
+    await Linking.openURL(url);
+  } catch (err) {
+    // If WhatsApp is not installed, open the fallback URL
+    await Linking.openURL(fallbackUrl);
+  }
+
+}
+
+export const whatsappMessage = (buyer, seller, status, orderNo, group, product) => {
+    return `Buyer : ${buyer}\nSeller : ${seller}\nStatus: ${status}\nOrder No: ${orderNo}\nGroup: ${group}\nProduct: JW-PROD-${product}`
+}
+
 
 
 
@@ -53,11 +79,16 @@ exports.sinceDate = (_date) => {
 
 }
 
-exports.truncateText = (text, numChars, clicked=false) => {
+export const truncateText = (text, numChars, clicked=false) => {
     if(text.length > numChars)
         return [text.substring(0, numChars+1), 1, clicked]
     else
         return [text.substring(0, numChars+1), 0, clicked]
+}
+
+exports.truncateTextAndAddDots = (text, numChars, clicked=false) => {
+    const data = truncateText(text, numChars, clicked)
+    return data[0] + (data[1] === 1 ? "..." : "")
 }
 
 exports.displayComment = (comments) => {
