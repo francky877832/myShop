@@ -12,10 +12,10 @@ export const commonSimpleComponentsStyles = StyleSheet.create({
         likeIcon :
         {
             //...productStyles.card, isCard paramater
-            width : 40,
-            height : 40,
-            justifyContent:"center", 
-            alignItems : 'center',
+            width : 25,
+            height : 25,
+            //justifyContent:"center", 
+            //alignItems : 'center',
         },
         
     },

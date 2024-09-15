@@ -18,6 +18,7 @@ import { UserContext } from '../../context/UserContext';
 import { formatMoney, formatPhoneNumber, generateOrderNo, choosePrice} from '../../utils/commonAppFonctions'
 
 import { OrdersContext } from '../../context/OrdersContext';
+import { orderPhone } from '../../remote/server';
 
 const VerifyDeliveryInfos = (props) => {
     const route = useRoute()
@@ -88,6 +89,7 @@ const VerifyDeliveryInfos = (props) => {
                 const ordersDetails = {
                     address : temporaryAddress,
                     phone : phone,
+                    orderPhone : orderPhone,
                 }
 
 
@@ -101,8 +103,8 @@ const VerifyDeliveryInfos = (props) => {
                         quantity : products.length,
                         shippingAddress : ordersDetails.address,
                         paymentMethod : "CamPay",
-                        paymentDetails :  null, //a mettre ajour avec le webhook
-                        orderPhone : orderPhone,
+                        paymentDetails :  null, //a mettre a jour avec le webhook
+                        orderPhone : ordersDetails.orderPhone,
                     },
                     order : 
                     {

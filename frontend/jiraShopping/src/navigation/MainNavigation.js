@@ -88,7 +88,7 @@ export default function MainNavigation() {
                 <Stack.Screen name="VerifyDeliveryInfos" component={VerifyDeliveryInfos}  options={{ unmountOnBlur: true, title: 'Informations De Payement', headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="VerifyDeliveryInfosAddress" component={Address} options={{ title: 'Mon Adresse', headerShown : true, tabBarVisible: true }} />
                 <Stack.Screen name="ConfirmDeliveryInfos" component={ConfirmDeliveryInfos} options={{ title: 'Confirmer Les Informations', headerShown : true, tabBarVisible: true }} />
-                <Stack.Screen name="ValidatePayment" component={ValidatePayment} options={{ title: 'Valider Le Payement', headerShown : true, tabBarVisible: true }} />
+                <Stack.Screen name="ValidatePayment" component={ValidatePayment} options={{ title: 'Validation De Payement', headerShown : true, tabBarVisible: true }} />
 
                 
                 <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : false, tabBarVisible: false, }} />

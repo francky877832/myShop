@@ -24,7 +24,7 @@ import { productsImagesPath } from '../../remote/server';
 exports.LikeButton = (props) => {
     const dispatch = useDispatch();
     const { favourites, liked } = useSelector(state => state.favourites);
-    const { item, hasLikedItem, _handleLikePressed, synchro, isCard, styles, user } = props;
+    const { item, hasLikedItem, _handleLikePressed, synchro, isCard, styles, user, noText } = props;
     const style = styles || {};
 
     const timeoutRef = useRef(null);
@@ -79,7 +79,7 @@ exports.LikeButton = (props) => {
                 ? <BadgeIcon name="heart-outline" size={24} color={style.color} badgeCount={0} styles={{zIndex:99}} />
                 : <BadgeIcon name="heart-sharp" size={24} color={appColors.secondaryColor1} badgeCount={0} styles={{}} />
             }
-            { item.likes > 0 &&
+            { item.likes > 0 && !noText &&
                     <View style={[{flexDirection:'row'}]}>
                     <View style={{width:5,}}></View>
                         <Text style={[customText.text, {color:style.color}, {fontSize:14,fontWeight:styles.fontWeight || 'bold'}]}>{formatLikes(item.likes) || 1}</Text> 

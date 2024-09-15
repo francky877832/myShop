@@ -209,7 +209,7 @@ const handleSellerBrandPressed = (product) => {
                     <ShareButton styles={productDetailsStyles.shareButton} />
                     <View style={{ width: 10 }}></View>
                             
-                    <LikeButton _handleLikePressed={_handleLikePressed} hasLikedItem={like} user={user} synchro={true} item={data} styles={{ color: appColors.white }} isCard={false} />
+                    <LikeButton _handleLikePressed={_handleLikePressed} noText={true} hasLikedItem={like} user={user} synchro={true} item={data} styles={{ color: appColors.white }} isCard={false} />
                 </View>
             </View>
             
