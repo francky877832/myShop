@@ -13,7 +13,7 @@ import { appColors, customText } from '../../styles/commonStyles';
 import { CustomButton } from '../common/CommonSimpleComponents'
 
 
-import { sinceDate, formatMoney, formatDateToLitteral, truncateText, openWhatsApp, whatsappMessage } from '../../utils/commonAppFonctions'
+import { sinceDate, formatMoney, formatDateToLitteral, truncateText, openWhatsApp, whatsappMessage, capitalizeFirstLetter } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -28,8 +28,8 @@ import { orderPhone, productsImagesPath } from '../../remote/server';
 
 
 const OrdersDetails = (props) => {
-    //const { user } = useContext(UserContext)
-    const user = {_id : "668fdfc6077f2a5c361dd7fc",}
+    const { user } = useContext(UserContext)
+    //const user = {_id : "668fdfc6077f2a5c361dd7fc",}
     const [isLoading, setIsLoading] = useState(false)
    
     const navigation = useNavigation()
@@ -47,7 +47,7 @@ const OrdersDetails = (props) => {
             'payment_pending' : {color:appColors.yellow, iconName:'timer-outline', iconType:'ionicon'},
             'payment_successful' : {color:appColors.green, iconName:'checkmark-shap', iconType:'ionicon'},
             'pending' : {color:appColors.yellow, iconName:'timer-outline', iconType:'ionicon'},
-            'shipping' : {color:appColors.secondaryColor1, iconName:'', iconType:''},
+            'shipping' : {color:appColors.secondaryColor1, iconName:'truck-delivery', iconType:'material-community'},
             'delivered' : {color:appColors.green, iconName:'checkmark-shap', iconType:'ionicon'},
             'canceled' : {color:appColors.red, iconName:'close', iconType:'ionicon'},
             'completed' : {color:appColors.green, iconName:'checkmark-circle', iconType:'ionicon'},
@@ -96,7 +96,7 @@ const OrdersDetails = (props) => {
                     <Pressable style={[ordersDetailsStyles.status]}>
                         <Icon name={statusItem[order.status]?.iconName} type={statusItem[order.status]?.iconType} size={18} color={statusItem[order.status]?.color} />
                         <View style={{width:5}}></View>
-                        <Text style={[customText.text, ordersDetailsStyles.textRight, {color:statusItem[order.status]?.color}]}>{order.status}</Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {color:statusItem[order.status]?.color}]}>{capitalizeFirstLetter(order.status)}</Text>
                     </Pressable>
 
                     <View style={[ordersDetailsStyles.orderBody]}>

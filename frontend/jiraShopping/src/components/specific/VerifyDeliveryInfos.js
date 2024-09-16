@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { verifyInfosStyles } from '../../styles/verifyInfosStyles';
 import { UserContext } from '../../context/UserContext';
-import { formatMoney, formatPhoneNumber, generateOrderNo, choosePrice, openWhatsApp} from '../../utils/commonAppFonctions'
+import { formatMoney, calculateTotalPrice, formatPhoneNumber, deFormatPhoneNumber, generateOrderNo, choosePrice, openWhatsApp} from '../../utils/commonAppFonctions'
 
 import { OrdersContext } from '../../context/OrdersContext';
 import { orderPhone } from '../../remote/server';
@@ -44,11 +44,8 @@ const VerifyDeliveryInfos = (props) => {
     const [isPhoneFocused, setIsPhoneFocused] = useState(false)
 
     useEffect(() => {
-        const price = products.reduce((total, product) =>{
-            const priceToPay = choosePrice(product)
-            return total+parseInt(priceToPay)
-        }, 0)
-        setTotalPrice(price)
+        setTotalPrice(calculateTotalPrice(products))
+
     }, [])
 
     const handleAddressCliked = () => 
@@ -84,7 +81,6 @@ const VerifyDeliveryInfos = (props) => {
             try
             {
                 
-
                 const ordernO = generateOrderNo('JW')
                 const ordersDetails = {
                     address : temporaryAddress,

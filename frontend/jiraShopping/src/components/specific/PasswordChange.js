@@ -4,16 +4,16 @@ import { Input, Icon } from 'react-native-elements';
 
 
 import { appColors, customText, appFont } from '../../styles/commonStyles';
-import {CustomButton} from '../common/CommonSimpleComponents'
+import {CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpleComponents'
 
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
 import { useNavigation } from '@react-navigation/native';
 
-
 import auth from '@react-native-firebase/auth';
 import { UserContext } from '../../context/UserContext';
 import bcrypt from 'bcryptjs';
+import { storeCache } from '../../cache/cacheFunctions';
 
 //import firestore from '@react-native-firebase/firestore';
 
@@ -74,57 +74,50 @@ const   PasswordChange = (props) => {
     }, [navigation, allowBack, hasUploaded])
 
 
-    const signInWithEmailAndPassword = useCallback(async (email, password)=>{
+    const signInWithEmailAndPassword = useCallback(async (email, password) => {
         return await auth().signInWithEmailAndPassword(email, password);
-    },[])
-
-    const updatePassword = async (oldPassword, newPassword1, newPassword2) => {
+      }, []);
+      
+      const updatePassword = async (oldPassword, newPassword1, newPassword2) => {
         try {
-            setIsPostLoading(true)
-            const email = user.email
-           
-            let updatedDatas = {}
-            const isMatch = await bcrypt.compare(oldPassword, user.password);
-            if(isMatch)
-            {
-                if(newPassword1 === newPassword2)
-                {
-                    updatedDatas = {
-                        password : newPassword1
-                    }
+          setIsPostLoading(true);
+          const email = user.email;
+          const formData = new FormData();
+      
+          if (newPassword1 !== newPassword2) {
+            throw new Error('Vos 2 mots de passe ne correspondent pas.');
+          }
+      
+          const userCredential = await signInWithEmailAndPassword(email, oldPassword);
+          if (!userCredential.user) {
+            throw new Error('Aucun utilisateur connecté.');
+          }
+      
+          await userCredential.user.updatePassword(newPassword1);
 
-                    const userCredential = await signInWithEmailAndPassword(email, oldPassword)
-                    if (userCredential.user) 
-                    {
-                        await userCredential.user.updatePassword(newPassword1);
-                        //MONGODB
-                        await updateUser(user._id, updatedDatas)
-                        Alert.alert('Mot de passe mis à jour avec succès.');
-                        setHasUploaded(true)
-                    } else {
-                        Alert.alert('Aucun utilisateur connecté.');
-                    }
-                }
-                else
-                {
-                    
-                }
-            }
-            else
-            {
-    
-            }
-
-            //Il me rste gerer les erreurs
-           
-            setIsPostLoading(false)
-        } catch (error) 
-        {
-            Alert.alert(error.message);
-            setIsPostLoading(false)
+      
+          formData.append('password', newPassword1);
+          const newUser = await updateUser(user._id, formData);
+          //console.log(newUser)
+          storeCache('user', {email:newUser.email, username:newUser.username, password:newUser.password})
+      
+          Alert.alert('Success', 'Mot de passe mis à jour avec succès.');
+          setHasUploaded(true);
+        } catch (error) {
+          if (error.code === 'auth/wrong-password') {
+            Alert.alert('Erreur', 'Votre ancien mot de passe est incorrect.');
+          } else if (error.code === 'auth/weak-password') {
+            Alert.alert('Erreur', 'Le nouveau mot de passe est trop faible.');
+          } else if (error.message) {
+            Alert.alert('Erreur', error.message);
+          } else {
+            Alert.alert('Erreur', 'Une erreur s\'est produite.');
+          }
+        } finally {
+          setIsPostLoading(false);
         }
-
-    }
+      };
+      
     return(
         <View style={[passwordChangeStyles.container]}>
             <View style={[passwordChangeStyles.inputBox]}>
@@ -212,6 +205,9 @@ const   PasswordChange = (props) => {
                         <ActivityIndicator color={appColors.secondaryColor1} size="large" />
                 }
             </View>
+
+            <CustomModalActivityIndicator onRequestClose={setIsPostLoading} isLoading={isPostLoading} size="large" color={appColors.secondaryColor1} message="Profil en cours de mise a jour..." />
+
         </View>
     )
 }

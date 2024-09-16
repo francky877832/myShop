@@ -12,10 +12,10 @@ import { productDetailsStyles } from '../../styles/productDetailsStyles';
 import { datas } from '../../utils/sampleDatas';
 import { appColors, customText } from '../../styles/commonStyles';
 
-import { sinceDate, formatMoney, formatDateToLitteral, capitalizeFirstLetter } from '../../utils/commonAppFonctions'
+import { sinceDate, formatMoney, formatDateToLitteral, capitalizeFirstLetter, } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useIsFocused } from '@react-navigation/native';
 
 import RenderNotificationItem from '../common/RenderNotificationItem';
 import { OrdersContext } from '../../context/OrdersContext';
@@ -25,16 +25,25 @@ import { productsImagesPath } from '../../remote/server';
 
 
 const Orders = (props) => {
-    //const { user } = useContext(UserContext)
-    const user = {_id : "668fdfc6077f2a5c361dd7fc",}
+    const { user } = useContext(UserContext)
+    //const user = {_id : "668fdfc6077f2a5c361dd7fc",}
     const [isLoading, setIsLoading] = useState(false)
 
     const navigation = useNavigation()
     const route = useRoute()
+    const isFocused = useIsFocused()
     const {orders, getOrders, page, sold, bought } = useContext(OrdersContext)
     const { groupOrder } = route.params
- 
+ /*   
+    useEffect(() => {
+        console.log("USEEFFECT")
+        const fetchData = async () => {  
+            await getOrders(user, page)
+          }
 
+          fetchData()
+    }, [isFocused])
+*/
     const RenderOrder = (props) => {
         const { order  } = props
        //console.log(order.length)
@@ -43,7 +52,7 @@ const Orders = (props) => {
         'payment_pending' : {color:appColors.yellow, iconName:'timer-outline', iconType:'ionicon'},
         'payment_successfull' : {color:appColors.green, iconName:'checkmark-shap', iconType:'ionicon'},
         'pending' : {color:appColors.yellow, iconName:'timer-outline', iconType:'ionicon'},
-        'shipping' : {color:appColors.secondaryColor1, iconName:'', iconType:''},
+        'shipping' : {color:appColors.secondaryColor1, iconName:'truck-delivery', iconType:'material-community'},
         'delivered' : {color:appColors.green, iconName:'checkmark-shap', iconType:'ionicon'},
         'canceled' : {color:appColors.red, iconName:'close', iconType:'ionicon'},
         'completed' : {color:appColors.green, iconName:'checkmark-circle', iconType:'ionicon'},

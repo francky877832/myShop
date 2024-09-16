@@ -82,7 +82,7 @@ const OffersNotifications = (props) => {
 const openOffer = async (user, item) => {
     try
     {     
-        navigation.navigate("Offers", {product:item.product, notificationsOffers:item.offers})
+        navigation.navigate("Offers", {product:item.product, notificationUsers:{seller:item.seller, buyer:item.buyer}, notificationsOffers:item.offers})
         if(item.read==0)
         {
             await updateOfferRead(item)

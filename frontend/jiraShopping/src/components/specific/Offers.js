@@ -146,7 +146,7 @@ const   OffersItem = (props) => {
 const Offers = (props) => {
     const navigation = useNavigation()
     const route = useRoute()
-    const { product } = route.params
+    const { product, notificationUsers } = route.params
     //const _getLastOffers
     //console.log(product.offers)
     //console.log(route.params.notificationsOffers)
@@ -216,8 +216,8 @@ const addOffer = async ()=>{
         //console.log(price)
         
         const offer = {
-            seller : product.seller._id, //A supprime
-            buyer : user._id,
+            seller : notificationUsers.seller._id, //A supprime
+            buyer : notificationUsers.buyer._id,
             product : product._id,
             realPrice : realPrice,
             offers : { price:price, from:user._id, hasGotResponse:2 },
@@ -241,7 +241,7 @@ const addOffer = async ()=>{
                 throw new Error('Erreur lors de la requête' + data);
             }
 
-            Alert.alert("Offre ajouté avec succes")
+            Alert.alert("Offres","Offre ajouté avec succes")
             setIsPriceLoading(false)
             setIsLoading(true)
             setHasResponse(prev=>!prev)
@@ -255,8 +255,8 @@ const addOffer = async ()=>{
 const fetchUserOffers = async()=>{
     //console.log("Callback")
     const offer = {
-            seller : product.seller._id,
-            buyer : user._id,
+        seller : notificationUsers.seller._id, //A supprime
+        buyer : notificationUsers.buyer._id,
             product : product._id,
     }
     try{
@@ -280,8 +280,8 @@ const fetchUserOffers = async()=>{
 const setHasGotResponse = async(bool)=>{
     setIsConfirmLoading(true)
     const offer = {
-        seller : product.seller._id,
-        buyer : user._id,
+        seller : notificationUsers.seller._id, //A supprime
+        buyer : notificationUsers.buyer._id,
         product : product._id,
         hasGotResponse : bool?1:0,
     }
@@ -344,8 +344,9 @@ useEffect(()=>{
         navigation.navigate({name:"ProductDetails", params:{ productDetails: product, },  key: Date.now().toString()});
     }
 
-    const handlePaymentButtonCliked = (product) => {
-        navigation.navigate('VerifyDeliveryInfos', {products:[product,]})
+    const handlePaymentButtonCliked = (product, price) => {
+        //console.log(price)
+        navigation.navigate('VerifyDeliveryInfos', {products:[{...product, newPrice:price, price:price}]})
     }
     return (
         <View style={[offersStyles.container]}>
@@ -431,15 +432,15 @@ useEffect(()=>{
                                 </Pressable>
                             </View>
                             :
-                                   offers[offers.length-1]?.hasGotResponse == 1
+                                   offers?.at(-1)?.hasGotResponse == 1
                                     ?
                                         <View style={[offersStyles.inputContainer, offersStyles.offerBottom,{flex:1,backgroundColor:appColors.white}]}>
                                             <Pressable style={[offersStyles.offersBottomConfirmationButtom,{}]}>
                                                 <Icon name='checkmark-circle' type='ionicon' size={24} color={appColors.green} />
                                                 <Text style={[customText.text,]}>Accepté</Text>
                                             </Pressable>
-                                        { user._id != product.seller &&
-                                            <Pressable onPress={()=>{ handlePaymentButtonCliked(product) }} style={[offersStyles.offersBottomConfirmationButtom,{}]}>
+                                        { user._id != product.seller._id &&
+                                            <Pressable onPress={()=>{ handlePaymentButtonCliked(product, offers?.at(-1).price) }} style={[offersStyles.offersBottomConfirmationButtom,{}]}>
                                                 <Icon name='cart-outline' type='ionicon' size={24} color={appColors.green} />
                                                 <Text style={[customText.text,]}>Acheter</Text>
                                             </Pressable>

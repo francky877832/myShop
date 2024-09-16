@@ -307,7 +307,7 @@ function displayGrilleBttom(origin, product){
 
                                 {product.price <= product.newPrice  
                                     ? 
-                                        <Text style={[customText.text, productStyles.price,{fontSize:14}]}>{formatMoney(product.price)} XAF</Text>
+                                        <Text style={[customText.text, productStyles.price,{fontSize:14}]}>{formatMoney(product.newPrice)} XAF</Text>
                                     :
                                         <View style={{ flexDirection:"row", justifyContent:"flex-start", flexWrap:'wrap' }} >
                                             <Text numberOfLines={2} style={[customText.text, productStyles.price, {textDecorationLine:"line-through", color:"red",fontSize:12}]}>{formatMoney(product.price)} </Text>

@@ -34,14 +34,20 @@ const LoaderPage = (props) => {
                 if(!!token)
                 {
                     const user = JSON.parse(await SecureStore.getItemAsync('user'));
-                    //console.log(user)
+                    //console.log(typeof user)
                     //A remplace par user.email...
                     ///await loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
-                    loginUserWithEmailAndPassword(user.email, user.username, user.password).then(()=>{
+                    loginUserWithEmailAndPassword(user.email, user.username, user.password).then((user)=>{
                         //Chargement des données de l'Appli
+                        if(!user)
+                        {   
+                            throw new Error("Nous n'avons pas pu vous connecter automatiquement.")
+                        }
                         navigation.replace('Preferences');
+
                         return;
-                    }).cacth((error) => {
+                    }).catch((error) => {
+                        console.log("TOKEN")
                         navigation.replace('UserLogin');
                         return;
                     })
@@ -54,6 +60,8 @@ const LoaderPage = (props) => {
             catch(error)
             {
                 console.log(error)
+                console.log("NOT TOKEN")
+                navigation.replace('UserLogin');
                 setIsAuthenticated(false);
             }
         }

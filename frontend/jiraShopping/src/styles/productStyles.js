@@ -56,7 +56,7 @@ export const productStyles = StyleSheet.create({
     {
         width : "100%",
         //height: 300 * 1.2,
-        borderRadius: 8,
+        borderRadius: 0,
     },
 
 
@@ -69,7 +69,7 @@ export const productStyles = StyleSheet.create({
     {
         width : "100%",
         height: cardWidth * 1.2,
-        borderRadius: 8,
+        borderRadius: 0,
     },
     text : 
     {
@@ -119,7 +119,7 @@ export const productStyles = StyleSheet.create({
     bottom :
     {
         top : 5,
-        borderRadius: 8,
+        borderRadius: 0,
         padding : 5,
         borderWidth : 1,
         borderColor : appColors.secondaryColor1,

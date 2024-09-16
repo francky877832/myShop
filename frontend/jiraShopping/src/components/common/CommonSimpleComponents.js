@@ -14,7 +14,7 @@ import { CheckBox } from '@rneui/themed';
 
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
-import { formatMoney, pluralize, formatLikes } from '../../utils/commonAppFonctions';
+import { formatMoney, pluralize, formatLikes, calculateTotalPrice } from '../../utils/commonAppFonctions';
 import { choosePrice, hasPropositionPrice } from '../../utils/commonAppFonctions';
 //contexte
 import { useSelector, useDispatch } from 'react-redux';
@@ -82,7 +82,7 @@ exports.LikeButton = (props) => {
             { item.likes > 0 && !noText &&
                     <View style={[{flexDirection:'row'}]}>
                     <View style={{width:5,}}></View>
-                        <Text style={[customText.text, {color:style.color}, {fontSize:14,fontWeight:styles.fontWeight || 'bold'}]}>{formatLikes(item.likes) || 1}</Text> 
+                        <Text style={[customText.text, {color:style.color}, {fontSize:12,fontWeight:styles.fontWeight || 'bold'}]}>{formatLikes(item.likes) || 1}</Text> 
                     </View>
             }
         </Pressable>
@@ -249,10 +249,7 @@ exports.PriceDetails = (props) => {
     const {products, title, closePriceDetails} = props
     let product; 
  
-        const totalPrice = products.reduce((total, product) =>{
-            const priceToPay = choosePrice(product)
-            return total+parseInt(priceToPay)*(product.orderQuantity||1)
-        }, 0)
+        const totalPrice = calculateTotalPrice(products)
 
         let passed_products = []
         const kargoPrice = products.reduce((total, prod) =>{

@@ -25,7 +25,7 @@ export const appColors = {
     lightBlack : "rgba(0, 0, 0, 0.2)",
     black : "rgba(0, 0, 0, 0.9)",
     clearBlack : "rgba(0, 0, 0, 0.7)",
-    lightWhite : "rgb(240, 240, 240)",
+    lightWhite : "rgba(240, 240, 240, 1)",
     //lightWhite2 : "rgba(240, 240, 240, 0.02)",
 }
 
@@ -33,7 +33,7 @@ export const appFont = {
     mainFontFamily : Platform.select({
         ios: 'Helvetica',
         android: 'Roboto',
-      }),
+    }),
     secondaryFontFamily1 :  "Arial",
     secondaryFontFamily2 : "Georgia",
     secondaryFontFamily3 : this.mainFontFamily,

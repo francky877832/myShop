@@ -435,8 +435,13 @@ export const formatLikes = (likes) => {
 //ORDERS
 
 exports.formatPhoneNumber = (phone) => {
-
+    return phone
 }
+
+exports.deFormatPhoneNumber = (phone) => {
+    return phone
+}
+
 
 exports.generateOrderNo = (prefixe = "CMD") => {
     const date = new Date();
@@ -448,7 +453,7 @@ exports.generateOrderNo = (prefixe = "CMD") => {
     const codeCommande = `${prefixe}-${annee}${mois}${jour}-${nombreAleatoire}`;
     return codeCommande;
 }
-exports.choosePrice = (product) => {
+export const choosePrice = (product) => {
     if(product.hasOwnProperty('offers') && Object.keys(product.offers)?.length>0 && product.offers?.offers?.length>0 && product.offers?.offers?.at(-1)?.hasGotResponse==1 )
     {
         return product.offers?.offers?.at(-1)?.price
@@ -456,10 +461,37 @@ exports.choosePrice = (product) => {
     return product.newPrice
 }
 
+exports.choosePrice = choosePrice
+
 exports.hasPropositionPrice = (product) => {
     //console.log(product)
     return product.hasOwnProperty('offers') && Object.keys(product?.offers)?.length>0 && product?.offers?.offers?.length>0 && product?.offers?.offers?.at(-1)?.hasGotResponse==1
 }
+
+export const calculateTotalPrice = (products) => {
+    const totalPrice = products.reduce((total, product) =>{
+        const priceToPay = choosePrice(product)
+        return total+parseInt(priceToPay)*(product.orderQuantity||1)
+    }, 0)
+    return totalPrice
+}
+exports.calculateTotalPrice = calculateTotalPrice
+
+
+exports.formDataToJSON = (formData) => {
+    const jsonObject = {};
+    console.log("   FORM DATAS")
+    console.log(formData)
+    if (formData instanceof FormData) {
+      for (const [key, value] of formData.entries()) {
+        jsonObject[key] = value;
+      }
+    } else {
+      throw new Error('Provided data is not an instance of FormData');
+    }
+    
+    return JSON.stringify(jsonObject);
+  }
 
 
 

@@ -38,22 +38,29 @@ exports.signupUser = (req, res, next) => {
     console.log("LOGIN")
     let validePassword=false;
     
-    User.findOne({ username: req.query.username })
+    User.findOne({ email: req.query.email })
         .populate('followers')
         .populate('followings')
         .populate('favourites')
         .then( async (user) => {
+          
+          console.log(req.query)
             if (!user) {
-                return res.status(401).json({ error: 'auth/user-not-found' });
+                return res.status(401).json({ error: 'auth/user-not-found--' });
             }
-
+            //user.password = await bcrypt.hash('00000000', 10)
+            //user.save()
+            //console.log(req.query.password)
+            //console.log(user.password)
             if(!isBcryptHash(req.query.password))
             {
               validePassword = await bcrypt.compare(req.query.password, user.password)
+              console.log("validePassword")
             }
             else
             {
               validePassword = req.query.password.toString() === user.password.toString()
+              console.log(" not validePassword")
             }
               
             if (!validePassword) {
@@ -75,16 +82,19 @@ exports.signupUser = (req, res, next) => {
   const imageFiles = req.files || []
   try
   {
+    console.log(req.body.password)
     let password;
     if(Object.keys(req.body).includes('password'))
     {
-      password = bcrypt.hash(req.body.password, 10)
+      password = await bcrypt.hash(req.body.password, 10)
+      updatedDatas = {...req.body, password:password}
+      console.log(password)
     }
 
     const images = imageFiles.map((file)=> {return `${file.filename}`})
     if(images.length>0)
     {
-      updatedDatas = {...req.body, image:images[0]}
+      updatedDatas = {...updatedDatas, image:images[0]}
     }
     const updatedUser = await User.findOneAndUpdate(
       { _id: new mongoose.Types.ObjectId(userId) }, 
@@ -97,7 +107,7 @@ exports.signupUser = (req, res, next) => {
     }
     else
     {
-      res.status(200).json({ success: true, message: 'Informations mises à jour avec succès.', data: updatedUser});
+      res.status(200).json({ success: true, message: 'Informations mises à jour avec succès.', user: updatedUser});
     }
 
   

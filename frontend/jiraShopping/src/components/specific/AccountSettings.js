@@ -125,6 +125,7 @@ useEffect(()=>{
                     setShowPasswordInput(false)
                     //MONGODB
 
+
                 }
             }catch(error)
             {
@@ -146,30 +147,38 @@ useEffect(()=>{
         
         const img = await pickImages(MAX_IMAGES, MIN_IMAGES, [])
     //console.log(img)
-        setPp((prevImages)=>{
-                return [
-                    img[0].uri,
-                ]
-            }
-        )
-        setPpImage(img)
+        if(img)
+        {
+            setPp((prevImages)=>{
+                    return [
+                        img[0].uri,
+                    ]
+                }
+            )
+            setPpImage(img)
+        }
         setCameraOrGalery(false)  
     }
 
     const takeUpPhoto = async () => {
         const img = await takePhoto(MAX_IMAGES, MIN_IMAGES, pp)
-        setPp((prevImages) => [img.uri]);
-        setPpImage(img)
+        if(img)
+        {
+            setPp((prevImages) => [img.uri]);
+            setPpImage(img)
+        }
         setCameraOrGalery(false)
     }
 
     const verifyEmail = async (email, password)=> {
         //const myEmail = "francky877832@gmail.com"
         //const myPassword = "0000000"
+        //console.log(email, password)
         setIsEmailLoading(true)
             try 
             {
                 const userCredential = await signInWithEmailAndPassword(email, password)
+                console.log(userCredential)
                 if (!userCredential.user.emailVerified)
                 {
                     await userCredential.user.sendEmailVerification();
@@ -196,7 +205,7 @@ const updateProfil = async () => {
         phone : tel,
         email : email,
         slogan : slogan,
-        isEmailVerified : isEmailVerified,
+        isEmailVerified : isEmailVerified?1:0,
     }
 
     for (const key in newInfos) {
@@ -290,8 +299,8 @@ const updateProfil = async () => {
                             }
                         </View>
 
-                        <Input placeholder="EX : thestyle@gmail.com" value={email} onChangeText={(name)=>{setEmail(name)}}
-                            inputMode='text'
+                        <Input placeholder="EX : thestyle@gmail.com" value={email} onChangeText={(email)=>{setEmail(email)}}
+                            inputMode='email'
                             multiline={false}
                             maxLength={100}
                             placeholderTextColor={appColors.secondaryColor3}
@@ -320,6 +329,8 @@ const updateProfil = async () => {
                                             containerStyle={ []}
                                             inputContainerStyle = {[searchBarStyles.inputContainer, isPasswordFocused && searchBarStyles.inputContainerFocused,  addProductStyles.inputContainer]}
                                         />
+                        {
+                        hasSentEmail ?
                             <Pressable style={[accountSettingsStyles.confirmPassword]} onPress={() => {verifyEmail(email, password)}}>
                               { !isEmailLoading ?
                                     <Text style={[{color:appColors.white, fontWeight:'bold',}]}>Envoyer L'email</Text>        
@@ -327,6 +338,11 @@ const updateProfil = async () => {
                                     <ActivityIndicator color={appColors.white} size="small" />
                               }
                             </Pressable>
+                            :
+                            <Pressable style={[accountSettingsStyles.confirmPassword,  {backgroundColor:appColors.green}]} onPress={() => {setCheckEmail(rev=>!prev)}}>
+                                <Text style={[{color:appColors.white, fontWeight:'bold',}]}>J'ai Déja Validé Mon Email</Text>        
+                          </Pressable>
+                        }
                             
                           <View style={{height:20}}></View>
                         </View>

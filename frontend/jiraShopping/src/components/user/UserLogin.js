@@ -40,10 +40,15 @@ const UserLogin = (props) =>
 
 //console.log(user)   
 const loginUser = async (email, username, password) => {
-    loginUserWithEmailAndPassword(email, username, password).then(()=>{
+    loginUserWithEmailAndPassword(email, username, password).then((user)=>{
+        if(!user)
+        {   
+            throw new Error("Aucun utilisateur ne correspond a vos identifiants.")
+        }
         navigation.replace('Preferences');
         return;
-    }).cacth((error) => {
+    }).catch((error) => {
+        console.log(error)
         return;
     })
 }
