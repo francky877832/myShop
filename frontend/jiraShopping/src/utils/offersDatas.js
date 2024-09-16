@@ -45,6 +45,11 @@ export const settings = [
 		component : "OpenShop",
 		available : false,
 	},
+	{
+		name : "Admin",
+		component : "AdminPanel",
+		available : true,
+	},
 ]
 
 

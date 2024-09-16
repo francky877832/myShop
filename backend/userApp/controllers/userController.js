@@ -14,6 +14,9 @@ const generateToken = (userId) => {
     return token;
 };
 
+function isBcryptHash(password) {
+  return typeof password === 'string' && password.startsWith('$2') && password.length === 60;
+}
 
 exports.signupUser = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
@@ -33,26 +36,37 @@ exports.signupUser = (req, res, next) => {
 
   exports.loginUser =  (req, res, next) => {
     console.log("LOGIN")
+    let validePassword=false;
+    
     User.findOne({ username: req.query.username })
         .populate('followers')
         .populate('followings')
         .populate('favourites')
-        .then(user => {
+        .then( async (user) => {
             if (!user) {
                 return res.status(401).json({ error: 'auth/user-not-found' });
             }
-            bcrypt.compare(req.query.password, user.password)
-                .then((valid) => {
-                    if (!valid) {
-                        return res.status(401).json({ error: 'auth/incorrect-password' });
-                    }
-                    
-                    const token = generateToken(user._id);
-                    res.status(200).json({ token:token, user : user });
-                })
-                .catch(error => res.status(500).json({ error : error }));
+
+            if(!isBcryptHash(req.query.password))
+            {
+              validePassword = await bcrypt.compare(req.query.password, user.password)
+            }
+            else
+            {
+              validePassword = req.query.password.toString() === user.password.toString()
+            }
+              
+            if (!validePassword) {
+              return res.status(401).json({ error: 'auth/incorrect-password' });
+            }
+            else
+            {
+              const token = generateToken(user._id);
+              res.status(200).json({ token:token, user : user });
+            }    
+
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(500).json({ error: error }));
  };
 
  exports.updateUser = async (req, res, next) => {

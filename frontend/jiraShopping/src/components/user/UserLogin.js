@@ -38,47 +38,11 @@ const UserLogin = (props) =>
     const [isUsernameCorrect, setIsUsernameCorrect] = useState("")
 
 
-//console.log(user)
-    
+//console.log(user)   
+const loginUser = async (email, username, password) => {
+    await loginUserWithEmailAndPassword(email, username, password)
+}
 
-useEffect(() => {
-    const checkToken = async () => {
-        //await SecureStore.deleteItemAsync('user');
-        //await SecureStore.deleteItemAsync('authToken');
-//console.log("oj")
-        try{
-            const token = await SecureStore.getItemAsync('authToken');
-            
-            if(!!token)
-            {
-                const user = JSON.parse(await SecureStore.getItemAsync('user'));
-                //A remplace par user.email...
-                await loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
-                
-                //setIsAuthenticated(true);
-                return;
-            }
-        }
-        catch(error)
-        {
-            console.log(error)
-            setIsAuthenticated(false);
-        }
-    }
-        checkToken();
-}, []);
-    
-      useEffect(() => {
-        if (isAuthenticated) {
-          // Naviguer vers une autre page si l'utilisateur est authentifié
-          navigation.replace('Preferences');
-        }
-      }, [isAuthenticated, navigation]);
-    
-    
-
-/*if(!isAuthenticated)
-{*/
     return(
 <KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
         <View style={[userLoginStyles.container]}>
@@ -96,7 +60,7 @@ useEffect(() => {
 
             <View style={[userLoginStyles.infoContainer]}>
                 <View style={[userLoginStyles.credentialContainers]}>
-                    <Input placeholder="Votre Email" onChangeText={(text)=>{checkEmail(text)}}
+                    <Input placeholder="Votre Email" onChangeText={(text)=>{setEmail(text)}}
                             multiline={false}
                             numberOfLines={1}
                             placeholderTextColor={appColors.lightWhite}
@@ -128,7 +92,7 @@ useEffect(() => {
                 </View>
 
                 <View style={[userLoginStyles.credentialContainers]}>
-                    <Input placeholder="Nom De Votre Boutique" onChangeText={(shop)=>{checkUsername(shop)}}
+                    <Input placeholder="Nom De Votre Boutique" onChangeText={(shop)=>{setUsername(shop)}}
                             multiline={false}
                             numberOfLines={1}
                             placeholderTextColor={appColors.lightWhite}
@@ -155,13 +119,12 @@ useEffect(() => {
                                 :
                                 false
                             }
-                            value={password}
-                            secureTextEntry
+                            value={username}
                         />   
                 </View> 
 
                 <View style={[userLoginStyles.credentialContainers]}>
-                    <Input placeholder="Votre Mot De Passe" onChangeText={(pwd)=>{checkPassword(pwd)}}
+                    <Input placeholder="Votre Mot De Passe" onChangeText={(pwd)=>{setPassword(pwd)}}
                             multiline={false}
                             numberOfLines={1}
                             placeholderTextColor={appColors.lightWhite}
@@ -193,7 +156,7 @@ useEffect(() => {
                         />   
                 </View>                    
             
-            <CustomButton text="Valider" onPress={loginUserWithEmailAndPassword} color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable: userLoginStyles.pressable, text:userLoginStyles.text}} />
+            <CustomButton text="Valider" onPress={()=>{loginUser(email, username, password)}} color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable: userLoginStyles.pressable, text:userLoginStyles.text}} />
            
             </View>
               <Text>{/* <Button title="Sign Up" onPress={()=>{navigation.navigate("UserSignup")}} /> */}</Text>

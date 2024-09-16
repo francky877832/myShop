@@ -47,14 +47,14 @@ const UserProvider = ({children}) => {
 
       const loginUserWithEmailAndPassword = async (email, username, password) => {
         const user = {
-            email : "francky877832@gmail.com",
-            username : "francky877832",
-            password : "0000000",
+            email : email, //"francky877832@gmail.com",
+            username : username, //"francky877832",
+            password : password, //"0000000",
         }
     // console.log(JSON.stringify(user))
         try
         {
-            console.log(server)
+            //console.log(server)
             const response = await fetch(`${server}/api/auth/login?${serialize(user)}`, {
                 method: 'GET',
                 headers : {
@@ -70,13 +70,14 @@ const UserProvider = ({children}) => {
                 const user = loggedUser.user
                 //Mis a jour de async storage
                 await SecureStore.setItemAsync('authToken', token);
-                await SecureStore.setItemAsync('user', JSON.stringify({email:user.email, username:user.username,password:user.password}));
-                //console.log(loggedUser.user.email)
+                await SecureStore.setItemAsync('user', JSON.stringify({email:user.email, username:user.username, password:user.password}));
+                //console.log(loggedUser)
                 
                 //Mis a jour du contexte User
                 setUser(user)
                 setTemporaryAddress({address:user.address, phone:user.phone})
                 setIsAuthenticated(true);
+                return user
 
             }
             else
@@ -90,8 +91,9 @@ const UserProvider = ({children}) => {
         catch(error)
         {
             console.log(error)
-            Alert.alert("Une erreur est survenue", `${error.message} => Verifier votre connexion Internet.`)
+            Alert.alert("Une erreur est survenue", `${error.message} => Verifier vos identifiants.`)
             setIsAuthenticated(false);
+            return false
         }
     }
 

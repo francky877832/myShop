@@ -29,8 +29,9 @@ import VerifyDeliveryInfos from '../components/specific/VerifyDeliveryInfos';
 import Address from '../components/specific/Address';
 import ConfirmDeliveryInfos from '../components/specific/ConfirmDeliveryInfos';
 import ValidatePayment from '../components/specific/ValidatePayment';
-import HeaderNavigation from '../components/common/HeaderNavigation';
+import LoaderPage from '../components/user/LoaderPage';
 
+import HeaderNavigation from '../components/common/HeaderNavigation';
 import HomeNavigation from '../navigation/HomeNavigation';
 
 //Contexts
@@ -64,7 +65,7 @@ export default function MainNavigation() {
             <OrdersProvider>
             <CommentsProvider>
             <Stack.Navigator
-              initialRouteName="UserLogin"
+              initialRouteName="LoaderPage"
               screenOptions={annimatedStackTransition(0.9, 250, 200)}
             >
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />
@@ -90,7 +91,8 @@ export default function MainNavigation() {
                 <Stack.Screen name="ConfirmDeliveryInfos" component={ConfirmDeliveryInfos} options={{ title: 'Confirmer Les Informations', headerShown : true, tabBarVisible: true }} />
                 <Stack.Screen name="ValidatePayment" component={ValidatePayment} options={{ title: 'Validation De Payement', headerShown : true, tabBarVisible: true }} />
 
-                
+
+                <Stack.Screen name="LoaderPage" component={LoaderPage}  options={{ title: <HeaderNavigation title="Laoder"/>, headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="UserSignup" component={UserSignup}  options={{ title: <HeaderNavigation title="Sign Up"/>, headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="PhoneAuth" component={PhoneAuth}  options={{ title: <HeaderNavigation title="PhoneAuth"/>, headerShown : true, tabBarVisible: false, }} />

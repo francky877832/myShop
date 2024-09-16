@@ -81,12 +81,16 @@ const   Account = (props) => {
             <View style={[accountStyles.settings,]}>
                 <FlatList
                             data={settings}
-                            renderItem={ ({item}) => { return(
+                            renderItem={ ({item}) => { 
+                                if(user.role!='admin' && item.name.toLowerCase()=='admin')
+                                    return;
+                                
+                                return(
                                 <Pressable style={[accountStyles.settingsElement, !item.available?accountStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`)}} disabled={!item.available}> 
                                     <Text style={[accountStyles.text,{fontSize:18,},!item.available?accountStyles.unavailable:false]}>{item.name}</Text>
-                                    { item.available &&
-                                        <Icon type="font-awesome" name="angle-right" size={30} color={appColors.secondaryColor1} />
-                                    }
+                                        { item.available &&
+                                            <Icon type="font-awesome" name="angle-right" size={30} color={appColors.secondaryColor1} />
+                                        }
                                     </Pressable>
                                 )
                              } }

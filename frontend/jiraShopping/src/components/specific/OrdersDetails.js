@@ -45,7 +45,7 @@ const OrdersDetails = (props) => {
     
         const statusItem = {
             'payment_pending' : {color:appColors.yellow, iconName:'timer-outline', iconType:'ionicon'},
-            'payment_successfull' : {color:appColors.green, iconName:'checkmark-shap', iconType:'ionicon'},
+            'payment_successful' : {color:appColors.green, iconName:'checkmark-shap', iconType:'ionicon'},
             'pending' : {color:appColors.yellow, iconName:'timer-outline', iconType:'ionicon'},
             'shipping' : {color:appColors.secondaryColor1, iconName:'', iconType:''},
             'delivered' : {color:appColors.green, iconName:'checkmark-shap', iconType:'ionicon'},
