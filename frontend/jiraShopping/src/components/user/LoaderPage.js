@@ -15,27 +15,13 @@ import { CustomButton } from '../common/CommonSimpleComponents';
 
 import { server } from '../../remote/server';
 import { serialize } from '../../utils/commonAppFonctions'
-
 import { UserContext } from '../../context/UserContext';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchUserFavourites } from '../../store/favourites/favouritesSlice'; 
-import { fetchUserBasket } from '../../store/baskets/basketsSlice';
-import { debouncer } from '../../utils/commonAppFonctions';
-import { OrdersContext } from '../../context/OrdersContext';
-import { ProductContext } from '../../context/ProductContext'
 
 const LoaderPage = (props) => {
 
     const route = useRoute()
     const navigation = useNavigation()
-    const dispatch = useDispatch();
     const {checkEmail, checkPassword, checkUsername, user, setUser, isAuthenticated, setIsAuthenticated, loginUserWithEmailAndPassword} = useContext(UserContext)
-    const { getProducts , loadMoreData, products, isLoading, hasMore, page, setIsLoading, refreshKey} = useContext(ProductContext)
-    const {getOrders, page:order_page} = useContext(OrdersContext)
-
-    const Fav_page = useSelector((state) => state.favourites.page);
-    const { favourites, liked } = useSelector(state => state.favourites);
-    const timeoutRef = useRef(null);
 
     useEffect(() => {
         const checkToken = async () => {
@@ -49,55 +35,12 @@ const LoaderPage = (props) => {
                 {
                     const user = JSON.parse(await SecureStore.getItemAsync('user'));
                     //console.log(user)
-    
                     //A remplace par user.email...
                     ///await loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
-                    loginUserWithEmailAndPassword(user.email, user.username, user.password).then(async (user)=>{
-
+                    loginUserWithEmailAndPassword(user.email, user.username, user.password).then(()=>{
                         //Chargement des données de l'Appli
-                            const fetchOrdersDatas = async () => {  
-                              await getOrders(user, order_page)
-                            } ;
-
-                            const fetchProductsDatas = async () => {
-                                await loadMoreData({user:user, resetPage:true, isInitial:true})
-                            };
-
-                            const fetchUserDatas = async () => {
-                                try
-                                {
-                                    dispatch(fetchUserFavourites({user:user._id, page:Fav_page})); //reset:true
-                                    dispatch(fetchUserBasket(user._id));
-                                    await getOrders(user, order_page)
-                                    await loadMoreData({user:user, resetPage:true, isInitial:true})
-                                }
-                                catch(error)
-                                {
-
-                                }
-                            }
-                        
-
-                      
-                            if (user)
-                            {
-                                fetchUserDatas().then(() => {
-                                    navigation.replace('Preferences');
-                                })
-                                
-                                console.log("PREFERENCE BASKET AND FAVOURITES")
-                            }
-                            else
-                            {
-                                navigation.replace('UserLogin');
-                            }
-                          
-                      
+                        navigation.replace('Preferences');
                         return;
-
-
-
-
                     }).cacth((error) => {
                         navigation.replace('UserLogin');
                         return;

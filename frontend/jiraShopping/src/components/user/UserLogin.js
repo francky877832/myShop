@@ -40,7 +40,12 @@ const UserLogin = (props) =>
 
 //console.log(user)   
 const loginUser = async (email, username, password) => {
-    await loginUserWithEmailAndPassword(email, username, password)
+    loginUserWithEmailAndPassword(email, username, password).then(()=>{
+        navigation.replace('Preferences');
+        return;
+    }).cacth((error) => {
+        return;
+    })
 }
 
     return(

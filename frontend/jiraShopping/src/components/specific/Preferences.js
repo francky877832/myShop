@@ -21,6 +21,8 @@ import ProductsListWithFilters from '../common/ProductsListWithFilters';
 
 import { server } from '../../remote/server';
 import { Button } from 'react-native-elements';
+import { UserContext } from '../../context/UserContext';
+import { ProductContext } from '../../context/ProductContext'
 import { useNavigation } from '@react-navigation/native';
 import { ProductItemContext } from '../../context/ProductItemContext';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
@@ -31,8 +33,6 @@ import { fetchUserFavourites } from '../../store/favourites/favouritesSlice';
 import { fetchUserBasket } from '../../store/baskets/basketsSlice';
 import { debouncer } from '../../utils/commonAppFonctions';
 import { OrdersContext } from '../../context/OrdersContext';
-import { UserContext } from '../../context/UserContext';
-import { ProductContext } from '../../context/ProductContext'
 
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
@@ -108,8 +108,8 @@ const Preferences = (props) => {
     }) // [isLoading, hasMore, page])
 
 
-  /*
-  useEffect(() => {
+    
+    useEffect(() => {
       //console.log(loggedUserId)
 
       const fetchData = async () => {  
@@ -127,10 +127,7 @@ const Preferences = (props) => {
     
 
   }, []);
-  */
-useEffect(()=>{
-    //loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
-}, [])
+  
 
 /*
 useEffect( () => {
@@ -152,8 +149,6 @@ useEffect( () => {
   }, [isFocused])
 
   */
-
-  /*
   useEffect( () => {
     //console.log("****************")
     const fetchData = async () => {
@@ -168,7 +163,7 @@ useEffect( () => {
 
     
   }, [])
-*/
+
 //console.log(user)
 
 useEffect(()=>{

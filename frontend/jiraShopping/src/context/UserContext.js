@@ -77,7 +77,7 @@ const UserProvider = ({children}) => {
                 setUser(user)
                 setTemporaryAddress({address:user.address, phone:user.phone})
                 setIsAuthenticated(true);
-                return user
+                //return user
 
             }
             else
