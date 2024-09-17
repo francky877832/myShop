@@ -12,3 +12,7 @@ https://www.tutorialspoint.com/react_native/react_native_app.htm
 quick guide for pure RN
 
 https://www.tutorialspoint.com/react_native/react_native_app.htm
+
+
+
+git subtree push --prefix backend heroku master  # ou main selon votre branche
