@@ -16,3 +16,4 @@ https://www.tutorialspoint.com/react_native/react_native_app.htm
 
 
 git subtree push --prefix backend heroku master  # ou main selon votre branche
+git remote add heroku https://git.heroku.com/jirashopping.git
