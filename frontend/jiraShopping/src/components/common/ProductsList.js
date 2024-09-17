@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView, Dimensions,
 //custom component
 import Product from './Product';
 import { CustomActivityIndicator } from '../common/CommonSimpleComponents'
-
+import { ProductRenderSkeleton } from './FlatListCommonComponent'
 //custom styles
 import { productsListStyles } from '../../styles/productsListStyles';
 import { numProduct } from '../../styles/productStyles';
@@ -20,15 +20,28 @@ const ProductsList = React.forwardRef((props, ref) => {
     const { datas, horizontal, styles, onEndReached, onScroll, name, isLoading, replace, hasMore, onEndReachedThreshold,
          minified, updateProfileLike, origin
         } = props;
+        const [firstLoading, setFirstLoading] = useState(true)
     //console.log(datas[0].product)
     
     useEffect(()=>{
         //console.log(datas)
+        
+        /*if(isLoading)
+        {
+            setFirstLoading(false)
+        }*/
     }, [])
-
-
+    if(datas.length <= 0)
+    {
+        return(
+            <ProductRenderSkeleton isLoading={isLoading} width={300} height={300} marginBottom={20} />
+        )
+    }
+    
     return(
             <View style={[productsListStyles.container, horizontal ? productsListStyles.containerHorizontal : false, styles.productContainer]}>
+                    
+                    
                     <FlatList
                         data={datas}
                         nestedScrollEnabled={true}
@@ -46,10 +59,7 @@ const ProductsList = React.forwardRef((props, ref) => {
                         scrollEventThrottle={16}
                         ListFooterComponent={isLoading ? <ActivityIndicator size="large" color={appColors.secondaryColor1} /> : null}
                     />
-                    {/*isLoading && 
-                        <CustomActivityIndicator styles={{}} /> 
-                        */
-                    }
+                 
             </View>
     )
 })

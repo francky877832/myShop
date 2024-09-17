@@ -4,10 +4,10 @@ import { appColors, appFont } from "./commonStyles";
 export const numProduct = 2
 export const paddingForProductContainer = { horizontal : 10, vertical : 10, }
 
-const marginHorizontal = 5
-const marginVertical = 5
+export const marginHorizontal = 5
+export const marginVertical = 5
 export const screenWidth = Dimensions.get('window').width;
-const cardWidth = (screenWidth/numProduct) - marginHorizontal - paddingForProductContainer.horizontal;
+export const cardWidth = (screenWidth/numProduct) - marginHorizontal - paddingForProductContainer.horizontal;
 
 export const productStyles = StyleSheet.create({
     container : 
