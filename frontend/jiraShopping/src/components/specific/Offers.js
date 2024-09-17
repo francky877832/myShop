@@ -257,8 +257,9 @@ const fetchUserOffers = async()=>{
     const offer = {
         seller : notificationUsers.seller._id, //A supprime
         buyer : notificationUsers.buyer._id,
-            product : product._id,
+        product : product._id,
     }
+    console.log(offer)
     try{
         //console.log("Ok")
             const response = await fetch(`${server}/api/datas/offers/offer/get?${serialize(offer)}`);            

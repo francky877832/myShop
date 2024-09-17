@@ -78,7 +78,7 @@ const UserProvider = ({children}) => {
                 
                 //Mis a jour du contexte User
                 setUser(user)
-                setTemporaryAddress({address:user.address, phone:user.phone})
+                setTemporaryAddress({address:user.address, phone:user.phone, name:user.name})
                 setIsAuthenticated(true);
                 return user
             }
@@ -125,10 +125,10 @@ const UserProvider = ({children}) => {
            // const newDatas = formDataToJSON(updatedFormData)
             
 
-            console.log('Réponse du serveur:', responseData);
+            //console.log('Réponse du serveur:', responseData);
     
             if (responseData.success) {
-                console.log('Informations mises à jour avec succès:', responseData.user);
+                //console.log('Informations mises à jour avec succès:', responseData.user);
             }
             return responseData.user
         } catch (error) {

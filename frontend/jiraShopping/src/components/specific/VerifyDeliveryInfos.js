@@ -11,7 +11,7 @@ import { appColors, customText, appFont } from '../../styles/commonStyles';
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
 import { productStyles } from '../../styles/productStyles';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 
 import { verifyInfosStyles } from '../../styles/verifyInfosStyles';
 import { UserContext } from '../../context/UserContext';
@@ -23,6 +23,7 @@ import { orderPhone } from '../../remote/server';
 const VerifyDeliveryInfos = (props) => {
     const route = useRoute()
     const navigation = useNavigation()
+    const isFocused = useIsFocused()
     const { user, temporaryAddress, setTemporaryAddress } = useContext(UserContext)
     const { addNewOrder, isLoading, setIsLoading } = useContext(OrdersContext)
     const {products} = route.params
@@ -32,8 +33,8 @@ const VerifyDeliveryInfos = (props) => {
     
     //const user = {address:{title:'Ndokoti'}, phone:'677127907'}
     //const [temporaryAddress, setTemporaryAddress] = useState({address:{title:'Ndokoti'},})
-
-    const [addressTitle, setAdressTitle] = useState(temporaryAddress.address.title)
+    //console.log(temporaryAddress.address.completeAddress)
+    const [addressTitle, setAdressTitle] = useState(temporaryAddress.address.completeAddress)
     const [phone, setPhone] = useState(user.phone)
 
     const [showPriceDetails, setShowPriceDetails] = useState(false)
@@ -45,12 +46,12 @@ const VerifyDeliveryInfos = (props) => {
 
     useEffect(() => {
         setTotalPrice(calculateTotalPrice(products))
-
-    }, [])
+        setAdressTitle(temporaryAddress.address.completeAddress)
+    }, [isFocused])
 
     const handleAddressCliked = () => 
     {
-        navigation.navigate('VerifyDeliveryInfosAddress', {page:'VerifyDeliveryInfos', })
+        navigation.navigate('VerifyDeliveryInfosAddress', {page:'VerifyDeliveryInfos', products:products })
     }
 
     const handleContratPressed = () => {

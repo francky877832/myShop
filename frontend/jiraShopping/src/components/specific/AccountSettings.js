@@ -224,8 +224,13 @@ const updateProfil = async () => {
 
    try {
        
-       await updateUser(user._id, formData)
+        const newUser = await updateUser(user._id, formData)
+        //MISE EN CACHE
+        storeCache('user', {email:newUser.email, username:newUser.username, password:newUser.password})
+        setUser(newUser)
+
        setHasUploaded(true)
+
     } catch (error) {
         console.error('Erreur lors de la requête:', error);
         setIsPostLoading(false)

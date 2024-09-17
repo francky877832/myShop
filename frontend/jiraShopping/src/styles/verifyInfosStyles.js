@@ -78,10 +78,11 @@ export const verifyInfosStyles = StyleSheet.create({
     radiocontainers :
     {
         backgroundColor : appColors.lightWhite,
-        position : "absolute",
+        //position : "absolute",
         left : 0,
         right : 0,
-        bottom : 200,
+        //bottom : 0,
+        top : 50,
         padding : 0,
     },
     radioContents :

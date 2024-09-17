@@ -463,11 +463,10 @@ const handleSellerBrandPressed = (product) => {
                     {
                     (user._id!=data.seller._id && data.sold===0) 
                            ?
-                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data, inputFocused:true, notificationUsers:{seller:data.offers?.seller||data.seller, buyer:data.offers?.buyer||user}, notificationsOffers:Object.keys(data.offers).length>0 ? data.offers.offers : defaultOffer}) } }>
-                            <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{"Proposer"}</Text>
-                            { hasPropositionPrice(data) &&
-                                <Text numberOfLines={1} style={[customText.text, {color:appColors.white,fontWeight:"bold"}]}>{"Accepté"}</Text>
-                            }
+                        <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Offers", {product:data, inputFocused:true, notificationUsers:{seller:data.seller, buyer:user}, notificationsOffers:Object.keys(data.offers).length>0 ? data.offers.offers : defaultOffer}) } }>
+                            
+                                <Text numberOfLines={1} style={[customText.text, {color:appColors.secondaryColor1,fontWeight:"bold"}]}>{"Proposer"}</Text>
+    
                         </Pressable>
                         :
                         <Pressable  style={[ productDetailsStyles.button,]} onPress = { ()=>{navigation.navigate("Notifications", {key:1}) } }>

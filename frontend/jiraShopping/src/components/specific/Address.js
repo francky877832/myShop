@@ -4,7 +4,7 @@ import { Input, Icon } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import {CustomButton} from '../common/CommonSimpleComponents'
+import {CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpleComponents'
 
 import { appColors, customText, appFont } from '../../styles/commonStyles';
 import { searchBarStyles } from '../../styles/searchBarStyles';
@@ -14,6 +14,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { storeCache, getCache } from '../../cache/cacheFunctions';
 import { UserContext } from '../../context/UserContext';
 import { setIsLoading } from '../../store/favourites/favouritesSlice';
+import { debouncer } from '../../utils/commonAppFonctions';
 
 
 const GEO_NAMES_USERNAME = 'francky877832';
@@ -86,13 +87,13 @@ const   Address = (props) => {
     //const [temporaryAddress, setTemporaryAddress] = useState({})
     const [allowBack, setAllowBack] = useState(false);
 
-
-    const [addressTitle, setAdressTitle] = useState(temporaryAddress.title)
-    const [completeName, setCompleteName] = useState(user.name)
-    const [tel, setTel] = useState(user.phone)
-    const [selectedCity, setSelectedCity] = useState(temporaryAddress.city);
-    const [quater, setQuater] = useState(temporaryAddress.quater);
-    const [completeAddress, setCompleteAddress] = useState(temporaryAddress.completeAddress)
+//console.log(temporaryAddress)
+    const [addressTitle, setAdressTitle] = useState(temporaryAddress.address.title)
+    const [completeName, setCompleteName] = useState(temporaryAddress.name)
+    const [tel, setTel] = useState(temporaryAddress.phone)
+    const [selectedCity, setSelectedCity] = useState(temporaryAddress.address.city);
+    const [quater, setQuater] = useState(temporaryAddress.address.quater);
+    const [completeAddress, setCompleteAddress] = useState(temporaryAddress.address.completeAddress)
 
 
     const [isAddressTitleFocused, setIsAddressTitleFocused] = useState(false)
@@ -145,62 +146,81 @@ useEffect(()=>{
      const handleTemporaryAddress = (temporaryAddress) =>
     {
         setTemporaryAddress(temporaryAddress)
-        navigation.navigate('VerifyDeliveryInfos', {page:'VerifyDeliveryInfosAddress'})
+        debouncer(navigation.navigate, 10)('VerifyDeliveryInfos', {page:'VerifyDeliveryInfosAddress', products:route.params.products})
     }
 
-    const updateAddress = async ()=>{
-        setIsPostLoading(true)
+const updateAddress = async ()=>{
+    
+    try
+    {
+            setIsPostLoading(true)
+            const formData = new FormData();
 
-        const newAddress = {
-            quater: quater,
-            city: selectedCity,
-            country: 'Cameroon',
-            title: addressTitle,
-            completeAddress : completeAddress
-        }
-       //const userPhone = {phone:tel}
+            const newAddress = {
+                quater: quater,
+                city: selectedCity,
+                country: 'Cameroon',
+                title: addressTitle,
+                completeAddress: completeAddress
+            };
+            
+            const updatedDatas = {
+                address: JSON.stringify(newAddress), 
+                phone: tel,
+                name : completeName
+            };
+            
+            // Ajouter les données à formData
 
-        const updatedDatas = {address:newAddress, phone:tel}
+            for (const key in updatedDatas) {
+                //console.log(key)
+                formData.append(key, updatedDatas[key]);
+            }
 
-        const updateUserInfos = async (infos) => 
-        {
-            try
+            const updateUserInfos = async () => 
             {
+                setIsPostLoading(true)
+           
                 //MONGODB
+                const newUser = await updateUser(user._id, formData);
+                setUser(newUser)
+                setTemporaryAddress({...updatedDatas, address:newUser.address})
 
                 //Mise en cahce des donnee
 
-                //actions
+                 //actions
                 setHasUploaded(true)
-                if(route.params?.page=='VerifyDeliveryInfos'){
-                    navigation.navigate('VerifyDeliveryInfos', {page:'VerifyDeliveryInfosAddress'})
+                if(route.params?.page=='VerifyDeliveryInfos')
+                {
+                    navigation.navigate('VerifyDeliveryInfos', {page:'VerifyDeliveryInfosAddress', products:route.params.products})
                 }
+
             }
-            catch(error)
+
+            if(route.params?.page=='VerifyDeliveryInfos')
             {
-
-            }finally{
-                setIsPostLoading(false)  
+                Alert.alert(
+                    "Modification De L'adresse",
+                    "Voulez Vous définitivement changer d'adresse ou uniquement pour cette livraison ?",
+                    [
+                        { text: "Non", onPress: () => handleTemporaryAddress({...updatedDatas, address:JSON.parse(updatedDatas.address)}), style: "cancel" },
+                        { text: "Oui", onPress: async () => { await updateUserInfos(formData)} }
+                    ]
+                );
             }
-        }
-
-        if(route.params?.page=='VerifyDeliveryInfos')
-        {
-            Alert.alert(
-                "Modification De L'adresse",
-                "Voulez Vous définitivement changer d'adresse ou uniquement pour cette livraison ?",
-                [
-                { text: "Non", onPress: () => handleTemporaryAddress(), style: "cancel" },
-                { text: "Oui", onPress: async () => { await updateUserInfos(updatedDatas)} }
-                ]
-            );
-        }
-        else
-        {
-            await updateUserInfos(updatedDatas)
-        }
-
+            else
+            {
+                await updateUserInfos(formData)
+            }
     }
+    catch(error)
+    {
+        console.log(error)
+    }finally{
+        setIsPostLoading(false)  
+    }
+
+}
 
     return (
 <View style={[adressStyles.container]}>
@@ -297,7 +317,7 @@ useEffect(()=>{
 
             <View style={[addProductStyles.addProductSubmitView,{}]}>
                 { !isPostLoading ?
-                        <CustomButton text="Enregistrer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={updateAddress} />
+                        <CustomButton text="Enregistrer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={()=>{updateAddress()}} />
                         :
                         <ActivityIndicator color={appColors.secondaryColor1} size="large" />
                 }
@@ -305,6 +325,9 @@ useEffect(()=>{
         </ScrollView>
     </TouchableWithoutFeedback>
     </KeyboardAwareScrollView>
+
+    <CustomModalActivityIndicator onRequestClose={setIsPostLoading} isLoading={isPostLoading} size="large" color={appColors.secondaryColor1} message="Mise a jour de votre addresse..." />
+
 </View>
     )
 }
