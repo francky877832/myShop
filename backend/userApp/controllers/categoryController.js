@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const Category = require('../models/CategoryModel');
+const Category = require('../models/categoryModel');
 
 
 exports.getCategories = (req, res, next) => {

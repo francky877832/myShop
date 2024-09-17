@@ -55,6 +55,9 @@ const UserProvider = ({children}) => {
         try
         {
             //console.log(server)
+            //const response = await fetch(`${server}/api/auth/login?${serialize(user)}`, {
+            //https://jirashopping-25ee1eaa49ff.herokuapp.com/api/auth/login?email=francky877832%40gmail.com&username=&password=00000000000
+            //const response = await fetch(`https://jirashopping-25ee1eaa49ff.herokuapp.com/api/auth/login?email=francky877832%40gmail.com&username=&password=000000000`, {
             const response = await fetch(`${server}/api/auth/login?${serialize(user)}`, {
                 method: 'GET',
                 headers : {

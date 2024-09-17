@@ -179,7 +179,7 @@ exports.reshapeBasketProducts = (p) => {
 
 
 const serialize = (obj, prefix) => {
-    const str = [];
+    /*const str = [];
     for (const p in obj) {
       if (obj.hasOwnProperty(p)) {
         const k = prefix ? `${prefix}[${p}]` : p;
@@ -190,8 +190,11 @@ const serialize = (obj, prefix) => {
           str.push(`${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
         }
       }
-    }
-    return str.join('&');
+    }*/
+    const params = new URLSearchParams(obj);
+    const queryString = params.toString();
+    //console.log(queryString)
+    return queryString
   }
 exports.serialize = serialize
 

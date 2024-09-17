@@ -3,7 +3,7 @@ const PointsHistory = require('../models/pointsHistoryModel');
 
 const Session = require('../models/sessionModel');
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
@@ -14,7 +14,9 @@ const generateToken = (userId) => {
     return token;
 };
 
-function isBcryptHash(password) {
+function isBcryptHash(pass) {
+  const password = pass
+  //console.log(password)
   return typeof password === 'string' && password.startsWith('$2') && password.length === 60;
 }
 
