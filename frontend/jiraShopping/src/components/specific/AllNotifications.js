@@ -26,6 +26,8 @@ import { getCache, storeCache } from '../../cache/cacheFunctions';
 
 
 import RenderNotificationItem from '../common/RenderNotificationItem';
+import EmptyList from '../common/EmptyList';
+import { NotificationsSkeleton } from '../common/CommonSimpleComponents'
 
 const initialLayout = { width: Dimensions.get('window').width };
 
@@ -53,7 +55,7 @@ const AllNotifications = () => {
 
 
 const sendNotif = async (username, source, model, type) => {
-    setIsLoading(true)
+    //setIsLoading(true)
     const response = await sendNotifications({username:username, source:source, model:model, type:type})
     if(response)
     {
@@ -63,7 +65,7 @@ const sendNotif = async (username, source, model, type) => {
     {
       Alert.alert('Notif','Verifier votre connexion Internet.')
     }
-    setIsLoading(false)
+    //setIsLoading(false)
 }
 
 /*const updateNotif = async (username, id) => {
@@ -159,8 +161,25 @@ const openNotif = async (user, item) => {
 
   useEffect(()=>{
       setNotifications(datas)
-  }, [datas])
+      //console.log(loading)
+  }, [datas, loading])
+//console.log(loading)
 
+    if(notifications?.length <= 0 && !loading)
+    {
+        const message= "Pas de notifications disponibles pour l'instant."
+        return(
+            <View style={[{flex:1,paddingBottom:100,backgroundColor:appColors.white}]}>
+                <EmptyList iconType='font-awesome-5' iconName="box-open" iconSize={100} iconColor={appColors.secondaryColor1} text={message} />
+            </View>
+        )
+    }
+    else if(notifications?.length <= 0 && loading)
+    {
+      return <NotificationsSkeleton number={5} />
+    }
+
+   
     return(
         <View style={[notificationsStyles.sceneContainers]}>
             <FlatList

@@ -220,8 +220,8 @@ useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
     
     ?
 
-        <View style={[allCommetsStyles.container,{}]}>
-            <EmptyList iconType='font-awesome' iconName="commenting-o" iconSize={50} iconColor={appColors.secondaryColor1} text="Ce produit n'a pas encore reçu de commentaires. Soyez le premier a commenter pour garantir votre achat." />
+        <View style={[allCommetsStyles.container,{paddingBottom:100}]}>
+            <EmptyList iconType='font-awesome' iconName="commenting-o" iconSize={100} iconColor={appColors.secondaryColor1} text="Ce produit n'a pas encore reçu de commentaires. Soyez le premier a commenter pour garantir votre achat." />
         </View>
 
     :

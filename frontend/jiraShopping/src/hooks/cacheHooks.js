@@ -48,20 +48,23 @@ export const useCacheWithDatas = (cacheKey, getCache, loadDatas, parameters) => 
   const [datas, setDatas] = useState([]);
   const [params, setParams] = useState({})
   const isCacheLoaded = useRef(false);
-
+  
   const [isLoading, setIsLoading] = useState(false)
+  const [willProccessed, setWillProccessed] = useState(true)
   const [page, setPage] = useState(1);
   const limit = 100
   const [hasMore, setHasMore] = useState(true)
-    
+    //const a = useRef(0)
   const loadMore = useCallback(async () => {
-      if (isLoading || !hasMore) return;
+   // a.current += 1
     
-      setIsLoading(true);
-
+      if (isLoading || !hasMore) return; //isLoading || 
+  
       try 
       {
-        loadDatas(...parameters, page, limit).then((newData)=>{
+        setIsLoading(true);
+      
+       const newData =  await loadDatas(...parameters, page, limit)
           if (newData.length > 0) 
           {
                 if(isCacheLoaded.current)
@@ -77,33 +80,32 @@ export const useCacheWithDatas = (cacheKey, getCache, loadDatas, parameters) => 
                   //console.log('333')
                 }
                 setPage((prevPage) => prevPage + 1);
+                setWillProccessed(false)
+                //setDatas([])
 
           } else 
           {
               setHasMore(false);
           }
-        }).catch((error) => {
-          setIsLoading(false);
-          console.error('Erreur lors de la récupération des données:', error);
-        })
 
       } catch (error) {
           console.error('Erreur lors de la récupération des données:', error);
       } finally {
+        //console.log("HERE")
           setIsLoading(false);
       }    
-    }, [page, isLoading, hasMore])
+    }, [page, isLoading, hasMore, willProccessed])
 
     useEffect(() => {
       async function fetchDatas()
       {
-        let offersCache = await getCache(cacheKey);
+        /*let offersCache = await getCache(cacheKey);
       
         if (offersCache) {
           setDatas(offersCache);
           isCacheLoaded.current = true; 
           //console.log('111')
-        }
+        }*/
   
         await loadMore();
       }
@@ -111,8 +113,8 @@ export const useCacheWithDatas = (cacheKey, getCache, loadDatas, parameters) => 
         fetchDatas()
 
     }, []);
-
+//console.log("loading", cacheKey=="OFFERS_NOTIFICATIONS" ? isLoading : null)
   
-  return { datas, loadMore, loading:isLoading, hasMore };
+  return { datas, loadMore, loading:isLoading, willProccessed, hasMore };
 };
 

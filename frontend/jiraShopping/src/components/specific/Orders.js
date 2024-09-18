@@ -20,6 +20,7 @@ import { useNavigation, useRoute, useIsFocused } from '@react-navigation/native'
 import RenderNotificationItem from '../common/RenderNotificationItem';
 import { OrdersContext } from '../../context/OrdersContext';
 import SellerBrand from '../common/SellerBrand';
+import EmptyList from '../common/EmptyList';
 import { productsImagesPath } from '../../remote/server';
 
 
@@ -145,6 +146,17 @@ const Orders = (props) => {
 const handleSellerBrandPressed = (product) => {
     navigation.navigate('Preferences', {screen: 'MyShop',params:undefined})
 }
+
+
+    if(groupOrder.length <= 0)
+    {
+        const message= route.params.page==='sold' ? "Vous n'avez pas encore effectué de ventes. Soyez patients, la premier vente n'est pas toujours facile." : "Vous n'avez pas encore effectué une commande. Dépéchez de visiter les produits et de passer votre premier commande."
+        return(
+            <View style={[{flex:1,paddingBottom:100,backgroundColor:appColors.white}]}>
+                <EmptyList iconType='font-awesome-5' iconName="box-open" iconSize={100} iconColor={appColors.secondaryColor1} text={message} />
+            </View>
+        )
+    }
 
     return (
         <View style={[ordersStyles.container]}>

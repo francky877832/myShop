@@ -20,6 +20,7 @@ import { choosePrice, hasPropositionPrice } from '../../utils/commonAppFonctions
 import { useSelector, useDispatch } from 'react-redux';
 import { addFavourite, addFavouriteContext, setLikedIcon, updateLocalFavourites, isProductFavourite, addLocalFavourite, removeLocalFavourite} from '../../store/favourites/favouritesSlice'; 
 import { productsImagesPath } from '../../remote/server';
+import { Facebook } from 'react-content-loader/native';
 
 exports.LikeButton = (props) => {
     const dispatch = useDispatch();
@@ -112,6 +113,23 @@ exports.ShareButton = (props) => {
     )
 }
 
+
+exports.NotificationsSkeleton = (props) => {
+    const {number} = props
+    return (
+        <View style={[{flex:1,paddingHorizontal:10}]}>
+        {
+          (new Array(number).fill(1)).map((_,key) => {
+            return (
+              <View key={key}>
+                <Facebook backgroundColor={appColors.skeletonBackgroundColor} foregroundColor={appColors.skeletonForegrundColor} />
+              </View>
+            )
+          })
+       }
+      </View>
+    )
+}
 
 
 exports.ConditionChoice = (props) => {

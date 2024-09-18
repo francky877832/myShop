@@ -23,11 +23,11 @@ const   Account = (props) => {
     
     //console.log(bought)
     const handleBoughtClicked = () => {
-        navigation.navigate('Orders', {groupOrder:bought})
+        navigation.navigate('Orders', {groupOrder:bought,page:'bought'})
     }
 
     const handleSoldClicked = () => {
-        navigation.navigate('Orders', {groupOrder:sold})
+        navigation.navigate('Orders', {groupOrder:sold,page:'sold'})
     }
 
     return(

@@ -22,9 +22,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useCacheBeforeRemove, useCacheWithDatas } from '../../hooks/cacheHooks';
 
 import RenderNotificationItem from '../common/RenderNotificationItem';
-
+import EmptyList from '../common/EmptyList';
 
 import { storeCache, getCache } from '../../cache/cacheFunctions';
+import { NotificationsSkeleton } from '../common/CommonSimpleComponents'
 
 
 const OffersNotifications = (props) => {
@@ -33,7 +34,7 @@ const OffersNotifications = (props) => {
       //GESTION DE LA CACHE ET DU SIDE EFFECT SIMULTANNEMENT
   useCacheBeforeRemove(navigation, storeCache, ['OFFERS_NOTIFICATIONS', offers])
   //(cacheKey, getCache, loadMoreDatas, parameters)
-  const { datas, loadMore, loading, hasMore } = useCacheWithDatas('OFFERS_NOTIFICATIONS', getCache, getOffers, [user] ) 
+  const { datas, loadMore, loading, willProccessed, hasMore } = useCacheWithDatas('OFFERS_NOTIFICATIONS', getCache, getOffers, [user] ) 
     
     /*const [isLoading, setIsLoading] = useState(false)
     const [page, setPage] = useState(1);
@@ -101,7 +102,23 @@ const openOffer = async (user, item) => {
 
   useEffect(()=>{
       setOffers(datas)
-  }, [datas])
+      //console.log(datas)
+  }, [datas, loading])
+
+    if(offers.length <= 0 && loading)
+    {
+      return <NotificationsSkeleton number={5} />
+    }
+    else if(offers.length <= 0 && !loading)
+    {
+        const message= "Pas de notifications disponibles pour l'instant."
+        return(
+            <View style={[{flex:1,paddingBottom:100,backgroundColor:appColors.white}]}>
+                <EmptyList iconType='font-awesome-5' iconName="box-open" iconSize={100} iconColor={appColors.secondaryColor1} text={message} />
+            </View>
+        )
+    }
+    
 
     return (
         <View style={[notificationsStyles.sceneContainers]}>
@@ -123,6 +140,7 @@ const openOffer = async (user, item) => {
                     contentContainerStyle={[notificationsStyles.flatlist]}
                     onEndReached={()=>{}}
                     onEndReachedThreshold={0.5}
+                    ListEmptyComponent={() => {}}
             />
         </View>
     )

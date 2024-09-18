@@ -21,7 +21,10 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 
 import RenderNotificationItem from '../common/RenderNotificationItem';
+import EmptyList from '../common/EmptyList';
+
 import { OrdersContext } from '../../context/OrdersContext';
+import { NotificationsSkeleton } from '../common/CommonSimpleComponents'
 
 
 
@@ -89,6 +92,23 @@ useEffect(() => {
   const [read, setRead] = useState(0)
 //console.log(orders[1]?.products.read)
 //item.products._id.toString()
+
+
+
+    if(orders.length <= 0 && !isLoading)
+    {
+        const message= "Pas de notifications disponibles pour l'instant."
+        return(
+            <View style={[{flex:1,paddingBottom:100,backgroundColor:appColors.white}]}>
+                <EmptyList iconType='font-awesome-5' iconName="box-open" iconSize={100} iconColor={appColors.secondaryColor1} text={message} />
+            </View>
+        )
+    }
+    else if(orders.length <= 0 && isLoading)
+    {
+        return <NotificationsSkeleton number={5} />
+    }
+
     return (
         <View style={[notificationsStyles.sceneContainers]}>
             <FlatList

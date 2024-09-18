@@ -28,6 +28,9 @@ export const appColors = {
     lightWhite : "rgba(245, 245, 245, 1)",
     //lightWhite : "rgba(240, 240, 240, 1)",
     //lightWhite2 : "rgba(240, 240, 240, 0.02)",
+
+    skeletonBackgroundColor : "#fff2e0",
+    skeletonForegrundColor : "#ffffff"
 }
 
 export const appFont = {
