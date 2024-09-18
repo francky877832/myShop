@@ -137,7 +137,7 @@ const basketSlice = createSlice({
   initialState,
   reducers: {
     updateSelectedProducts: (state, action) => {
-      console.log(action.payload)
+      //console.log(action.payload)
       const { product, bool } = action.payload;
       
       const updatedSelectedProducts = {
@@ -150,7 +150,16 @@ const basketSlice = createSlice({
       Object.keys(updatedSelectedProducts).forEach(key => {
           const isSelected = updatedSelectedProducts[key];
           const item = state.basket.find((product) => product._id === key);
-          total += isSelected ? choosePrice(item)* ((state.selectedProducts[item._id]&&state.quantities[item._id]) || 1) : 0
+          if(isSelected && item)
+          {
+            
+            total +=  choosePrice(item)* ((state.selectedProducts[item._id]&&state.quantities[item._id]) || 1)
+          }
+          else
+          {
+            total += 0
+          }
+
       })
       state.totalPrice = total
       /*reduce((total, key) => {
@@ -200,7 +209,7 @@ const basketSlice = createSlice({
         const existingIndex = state.basket.findIndex(basketItem => basketItem._id === product._id);
   
         if (existingIndex === -1) {
-          state.basket.push(item);
+          state.basket.unshift(item);
         }
 
         

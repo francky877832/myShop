@@ -19,16 +19,12 @@ export const productDetailsStyles = StyleSheet.create({
         zIndex : 100,
         backgroundColor : appColors.lightBlack, //transparence sur limage
     },
-    similarContainer : 
+    likeContainer :
     {
         ...filtersStyles.similarContainer,
         top : 20,
         //paddingLeft : 1,
         paddingBottom :  20,
-        //backgroundColor : appColors.white,
-        //justifyContent : 'center',
-        //alignItems : 'center',
-        //width : '100%',
     },
     getBackPosition :
     {
@@ -247,6 +243,33 @@ export const productDetailsStyles = StyleSheet.create({
         color : appColors.white,
     },
     
+
+
+    //
+    similarContainer : 
+    {
+        ...filtersStyles.similarContainer,
+        top : 10,
+        paddingLeft : 1,
+        paddingBottom :  20,
+        backgroundColor : appColors.white,
+        flex : 1,
+        //justifyContent : 'center',
+        //alignItems : 'center',
+        //width : '100%',
+    },
+    similarTitleContainer :
+    {
+        paddingTop : 10
+    },
+    similarProducts :
+    {
+        flex:1,
+        top : 10,
+        backgroundColor : appColors.white,
+      
+        //height : '100%',
+    }
 
   
 })

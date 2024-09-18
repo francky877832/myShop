@@ -25,6 +25,7 @@ import { datas } from '../../utils/sampleDatas';
 import BadgeIcon from '../common/BadgeIcon';
 import ProductsList from '../common/ProductsList';
 import SellerBrand from '../common/SellerBrand';
+import HorizontalProductsList from '../common/HorizontalProductsList'
 import { screenHeight, screenWidth } from '../../styles/commentsStyles';
 import { capitalizeFirstLetter, convertWordsToNumbers, containsEmail, reshapeComments,  } from '../../utils/commonAppFonctions';
 import { FavouritesContext } from '../../context/FavouritesContext';
@@ -33,6 +34,8 @@ import { CommentsContext } from '../../context/CommentsContext';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { isProductFavourite } from '../../store/favourites/favouritesSlice'; 
+import { addToBasket, removeFromBasket, fetchUserBasket, updateSelectedProducts, setSelectedSeller, isProductBasket, updateLocalBasket } from '../../store/baskets/basketsSlice';
+
 import { ActivityIndicator } from 'react-native-paper';
 import { UserContext } from '../../context/UserContext';
 import { ProductContext } from '../../context/ProductContext';
@@ -62,14 +65,15 @@ const ProductDetails = (props) => {
     const [comments, setComments] = useState(data.comments)
     const [description, setDescription] = useState(truncateText(data.description, numChars));
     //const {favourites, addFavourite, removeFavourite, hasLiked} = useContext(FavouritesContext)
-    //const favourites = useSelector((state) => state.favourites.favourites);
-    const favourites = []
+    const favourites = useSelector((state) => state.favourites.favourites);
+    //const favourites = []
     const timeoutRef = useRef(null);
 
     //const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
 
 
-   
+    const emptyMessage="Pas de produits similaires trouvés."
+    const emptyIcon = {type:"font-awesome-5", name:"box-open", size:50, color:appColors.secondaryColor1, message:emptyMessage}
 
 
 
@@ -123,6 +127,8 @@ useEffect(()=>{
     const [like, setLikeIcon ] = useState(isFavourite)
     const [numLike, setNumLike] = useState(data.likes>=0?data.likes:0)
     const [likeAdders, setLikeAdders] = useState(data.favourites)
+    const [isBasketPresent, setIsBasketPresent] = useState(useSelector((state) => isProductBasket(state, data._id)));
+
 //console.log(data.favourites)
     //hasLikedItem={hasLiked(item)}
     const _handleLikePressed = useCallback((product) => {
@@ -170,6 +176,35 @@ const handleSellerBrandPressed = (product) => {
         navigation.navigate('Preferences', {screen: 'MyShop',params:undefined})
     }
 }
+
+
+const handleBasketPressed = (product) => {
+        
+        
+    if(isBasketPresent)
+    {
+        navigation.navigate("Basket")
+    }
+    else
+    {
+        setIsBasketPresent(!isBasketPresent)
+        const isAdding = true
+        dispatch(updateLocalBasket({product:data, isAdding:true}));
+
+        //console.log("BASKET")
+        
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        timeoutRef.current = setTimeout(() => {
+            dispatch(addToBasket({product:data, user:user})); 
+        }, 1000)
+    }
+
+
+    // Configurer un nouveau timeout
+   
+}//,[timeoutRef, isBasketPresent, navigation])
 
 
  const MIN_HEIGHT = 0;
@@ -256,9 +291,20 @@ const handleSellerBrandPressed = (product) => {
                     </View>
 
                     <View style={[productDetailsStyles.name]}>
+                       
                         <Text numberOfLines={2} style={[customText.text, { fontWeight: "bold" }]}>@{capitalizeFirstLetter(data.seller.username)}</Text>
-                        <View style={{ flexDirection: "row", top: 0 }}>
-                            <Text style={[customText.text,{fontWeight:"bold",fontSize:15,color:appColors.gray}]}>{data.category.replace(/\//g, ' | ')}</Text>
+                        <View style={[{flexDirection:'row', justifyContent:'space-betwee',alignItems:'center'}]}>
+                                <Text style={[customText.text,{fontWeight:"bold",fontSize:15,color:appColors.gray}]}>{data.category.replace(/\//g, ' | ')}</Text>
+                            
+                                <View style={[{width:20}]}></View>
+                            <Pressable onPress={handleBasketPressed} style={[{width:35,height:35,padding:2,borderWidth:1,borderRadius:17,borderColor:appColors.secondaryColor1,justifyContent:'center',alignItems:'center'}]}>
+                                {isBasketPresent ?
+                                    <Icon name='shopping-basket-remove' type='fontisto' size={20} color={appColors.secondaryColor1} />
+                                    :
+                                    <Icon name='shopping-basket-add' type='fontisto' size={20} color={appColors.secondaryColor1} />
+                                }
+                            </Pressable>                                
+                           
                         </View>
                     </View>
 
@@ -342,7 +388,8 @@ const handleSellerBrandPressed = (product) => {
                     ?
                                 <ActivityIndicator color={appColors.secondaryColor1} size="small" styles={{}} /> 
                                 :
-                <View style={[productDetailsStyles.similarContainer]}>
+        <>
+                <View style={[productDetailsStyles.likeContainer]}>
                         <View style={{height:20}}></View>
                     <Pressable style={[productDetailsStyles.likeAdders]} onPress={()=>{likeAdders.length>0?navigation.navigate({name:"Followers", params:{seller:data.seller, favourites:likeAdders, who:'favourites'}, key:Date.now().toString()}):false}}>
                         <View style={[productDetailsStyles.likeTitle]}>
@@ -385,15 +432,18 @@ const handleSellerBrandPressed = (product) => {
                     </Pressable>
 
             <View style={{height:20}}></View>
-                    <View>
+            </View>
+            
+            <View style={[productDetailsStyles.similarContainer]}>
+                    <View style={[productDetailsStyles.similarTitleContainer]}>
                         <Text style={[customText.text, productDetailsStyles.someText ]}>Produits Similaires</Text>
                     </View>
                     
-                    <View>
-                        <ProductsList datas={favourites} horizontal={true} replace={true} styles={{}} />
+                    <View style={[productDetailsStyles.similarProducts]}>
+                        <HorizontalProductsList bottomIcon={true} emptyIcon={emptyIcon} datas={favourites} horizontal={true} replace={true} styles={{productContainer:{backgroundColor:appColors.white}, flatlist:{backgroundColor:appColors.white}}} />
                     </View>
-        
-                </View>
+            </View>
+    </>
         }
                 
 </View>

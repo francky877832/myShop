@@ -53,6 +53,10 @@ const ProfilShop = (props) => {
     const flatListRef = useRef(null);
     const timeoutRef = useRef(null);
 
+    const emptyMessage="Votre boutique est vide pour le moment. Cliquez sur 'Ajouter un product' ci bas ou faites un achat pour obtenir des points."
+    const emptyIcon = {type:"font-awesome-5", name:"box-open", size:100, color:appColors.secondaryColor1, message:emptyMessage}
+
+
     //verifier si le seller est dans la liste de following de users
 
     const maxTop = 180;
@@ -336,7 +340,7 @@ const setFollowers = async (follower, following) => {
                     
 
                         <View style={{flex:1, paddingBottom:(user._id === seller._id)?40:0}} {...panResponder.panHandlers}>
-                            <ProductsListWithFilters origin="profileShop" updateProfileLike={setNumLikes} minified={true} isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products?.length} ${products?.length > 1 ? 'Produits' : 'Produit'}`} />
+                            <ProductsListWithFilters emptyIcon={emptyIcon} origin="profileShop" updateProfileLike={setNumLikes} minified={true} isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products?.length} ${products?.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
 
                     {(user._id === seller._id) &&

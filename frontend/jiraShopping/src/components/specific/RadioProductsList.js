@@ -18,6 +18,7 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 import { Icon } from 'react-native-elements';
 import { CustomButton, Counter, DisplayPrice } from '../common/CommonSimpleComponents'
 import { CheckBox } from 'react-native-elements';
+import EmptyLit from '../common/EmptyList';
 
 import { BasketContext } from '../../context/BasketContext';
 
@@ -88,7 +89,7 @@ const handleRemoveFromBasket = useCallback((product) => {
             },
             {
                 text: "Oui", onPress: () => {
-                    dispatch(updateSelectedProducts({itemId:product._id, bool:"remove"}));
+                    dispatch(updateSelectedProducts({product:product, bool:true}));
                     dispatch(updateLocalBasket({product:product, isAdding:false}));
                 
                         timeoutRef.current = setTimeout(() => {
@@ -104,6 +105,7 @@ const handleRemoveFromBasket = useCallback((product) => {
 
   const handleSelectedSeller = useCallback((val) => {dispatch(setSelectedSeller(val)) },[]);
   const handleUpdateSelectedProducts  = useCallback((product, bool) => {dispatch(updateSelectedProducts({product:product, bool:bool}))},[])
+
   const  updateQuantitiesAndPrice = useCallback((product, num) => {
     dispatch(updateQuantities({id:product._id, quantity: num}))
     handleUpdateSelectedProducts({product:product, bool:false})
@@ -274,7 +276,11 @@ const RadioProduct = (props) => {
             </View>
         )
     }
+
+    
+
     const products = [{products:datas}]
+
     return(
             <View style={[radioProductsListtStyles.container,]}>
 

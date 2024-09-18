@@ -2,32 +2,39 @@ import React, { useState, forwardRef } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-
+import { Icon } from 'react-native-elements';
 
 import { topStyles } from '../../styles/topStyles';
-import { appColors, appFont } from '../../styles/commonStyles';
+import { appColors, appFont, customText, screenHeight } from '../../styles/commonStyles';
 
 const EmptyLit = forwardRef((props, ref) => {
-    const {text, giveFocus,} = props
-    let message = text.split("|");
+    const {text, giveFocus, iconName, iconType, iconColor, iconSize} = props
+    //console.log(text)
+    let message = (text+"")?.split("|");
     return(
         <View style={[emptyListStyles.container, ]} >
-            <FontAwesome5 name="sad-cry" size={50} color={appColors.secondaryColor1} style={[emptyListStyles.icon, ]} />
+            <Icon type={iconType} name={iconName} size={iconSize} color={iconColor} style={[emptyListStyles.icon, ]} />
             <Text style={[emptyListStyles.text,emptyListStyles.text1 ]} >{message[0]}</Text>
-            <Pressable style={[emptyListStyles.pressable, ]} onPress={()=>{giveFocus();}}>
-                <Text style={[emptyListStyles.text, emptyListStyles.text2,]} >{message[1]}</Text>
-            </Pressable>
+            {giveFocus &&
+                <Pressable style={[emptyListStyles.pressable, ]} onPress={()=>{giveFocus();}}>
+                    <Text style={[emptyListStyles.text, emptyListStyles.text2,]} >{message[1]}</Text>
+                </Pressable>
+            }
         </View>
     )})
 
 const emptyListStyles = StyleSheet.create({
     container :
     {
-        flex : 1,
+        //flexGrow : 1,
+        width : '100%',
+        height : '100%',
         justifyContent : "center",
         alignItems : "center",
-        paddingVertical : 50,
-        marginRight : 20,
+        paddingHorizontal : 20,
+        //marginRight : 20,
+        backgroundColor : appColors.white,
+        paddingVertical : 20,
     },
     icon :
     {
@@ -45,10 +52,14 @@ const emptyListStyles = StyleSheet.create({
     },
     text :
     {
+        ...customText.text,
         fontFamily : appFont.secondaryFontFamily3,
+        textAlign : 'center',
+        fontWeight : 'bold',
     },
     text1:
     {
+        ...customText.text,
         marginTop : 10,
     },
     text2 :
@@ -56,4 +67,4 @@ const emptyListStyles = StyleSheet.create({
         color : appColors.white,
     },
 })
-export default EmptyLit
+export default React.memo(EmptyLit)

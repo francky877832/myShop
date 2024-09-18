@@ -248,7 +248,7 @@ const handlePress = async (item) => {
 
                         <View style={[searchStyles.historyFlatlist, {flex:1,}]}>
                            <FlatList
-                                data={historique}
+                                data={[]}
                                 renderItem={ ({item}) => {  return (
                                     <Pressable style={[ searchStyles.history,  ]} onPress={()=>{/*resetAllFiltersWithoutFecthingDatas();*/handlePress(item)}} >
                                         <Pressable style={{}} onPress={()=>{removeUserHistorique(item);}}>
@@ -262,7 +262,7 @@ const handlePress = async (item) => {
                                 horizontal={false}
                                 showsHorizontalScrollIndicator={false}
                                 contentContainerStyle={{}}
-                                ListEmptyComponent={<EmptyLit giveFocus={_handleFocusTextInput} text="Historique de recherche vide.|Effectuer une recherche." />}
+                                ListEmptyComponent={<EmptyLit iconType='font-awesome' iconName="history" iconSize={50} iconColor={appColors.secondaryColor1} giveFocus={_handleFocusTextInput} text="Historique de recherche vide.|Effectuer une recherche." />}
                             />
                     {isLoading && 
                         <CustomActivityIndicator styles={{}} /> 

@@ -32,7 +32,7 @@ const username = "Franck"
 //const user = {_id:loggedUserId, username:loggedUser}
 
 const Product = (props) => { 
-    const { item, horizontal, replace, minified, updateProfileLike, origin} = props;
+    const { item, horizontal, replace, minified, updateProfileLike, origin, bottomIcon} = props;
     const navigation = useNavigation()
     const {user} = useContext(UserContext)
     const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
@@ -107,14 +107,14 @@ const Product = (props) => {
         {
             setIsBasketPresent(!isBasketPresent)
             const isAdding = true
-            
+            dispatch(updateLocalBasket({product, isAdding}));
+
             //console.log("BASKET")
             
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
             }
             timeoutRef.current = setTimeout(() => {
-                dispatch(updateLocalBasket({product, isAdding}));
                 dispatch(addToBasket({product, user})); 
             }, 1000)
         }
@@ -131,9 +131,9 @@ const Product = (props) => {
         console.log(favouritesState.addLike)
         */
         if (replace) {//replace for ...?
-          navigation.replace({name:"ProductDetails", params:{ productDetails: product, },  key: Date.now().toString()});
+          navigation.navigate({name:"ProductDetails", params:{ productDetails: product, },  key: Math.random().toString()});
         } else {
-          navigation.navigate({name:"ProductDetails", params:{ productDetails: product, },  key: Date.now().toString()});
+          navigation.navigate({name:"ProductDetails", params:{ productDetails: product, },  key: Math.random().toString()});
         }
       }//,[navigation]);
 
@@ -317,11 +317,14 @@ function displayGrilleBttom(origin, product){
 
                             </View>
              <View style={{height:10,}}></View>
-                            <View style={productStyles.bottomIcons}>
+                            {
+                                !bottomIcon &&
+                                <View style={productStyles.bottomIcons}>
                                 {
                                     printBottomIcon(product)
                                 }
-                            </View>
+                                </View>
+                            }
 
                         {
                            (!minified || user._id!=product.seller._id) 

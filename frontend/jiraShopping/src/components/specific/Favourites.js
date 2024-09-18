@@ -36,6 +36,12 @@ const Favourites = (props) => {
     const [datas, setDatas] = useState([])
 //console.log(favourites)
     const [isSearch, setIsSearch] = useState(true) //Je ne crois pas avoir besoin de Search
+
+    const emptyMessage="Votre liste de favoris est vide. Depechez-vous pour visiter les produits que vous porriez aimer !"
+    const emptyIcon = {type:"font-awesome-5", name:"heart-broken", size:100, color:appColors.secondaryColor1, message:emptyMessage}
+
+
+
     
     const loadMoreFavouriteProducts = useCallback(() => {
         //dispatch(fetchUserFavourites({user:user._id, page:page}));
@@ -56,7 +62,7 @@ const Favourites = (props) => {
                         <Top />
                     </View>
                     <View style={[{flex:1,paddingBottom:0,}]}>
-                        <ProductsListWithFilters basket={basket} isLoading={isLoading} onEndReached={loadMoreFavouriteProducts} onEndReachedThreshold={100} filters={false} datas={favourites} horizontal={false} title="Mes Favoris" />
+                        <ProductsListWithFilters emptyIcon={emptyIcon} basket={basket} isLoading={isLoading} onEndReached={loadMoreFavouriteProducts} onEndReachedThreshold={100} filters={false} datas={favourites} horizontal={false} title="Mes Favoris" />
                     </View>
         </View>
     )

@@ -38,6 +38,10 @@ const CategoryResults = (props) => {
         selectedBrandFromContext, selectedConditionsFromContext, filterUpdated
     } = useContext(FilterContext)
 
+    const emptyMessage="Cette catégorie ne contient pas encore de produits. Nous travaillons pour vous fournir les meilleurs services."
+    const emptyIcon = {type:"font-awesome-5", name:"box-open", size:100, color:appColors.secondaryColor1, message:emptyMessage}
+
+
     
     //console.log(selectedCategories)
         //const {selectedCategory,  } = useContext(ProductItemContext)
@@ -129,7 +133,7 @@ const title = `Resultats de recherche "${searchText}"`
                         </View>
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters previousScreen="CategoryResults" name="CategoryResults" search={false} onExit={onExit} setOnExit={setOnExit} selectedCategory={category} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false,}} searchText={searchText} category={category} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters emptyIcon={emptyIcon} previousScreen="CategoryResults" name="CategoryResults" search={false} onExit={onExit} setOnExit={setOnExit} selectedCategory={category} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} notDisplayFilters={{"categories":false,}} searchText={searchText} category={category} datas={products} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )

@@ -96,6 +96,8 @@ const Preferences = (props) => {
 
     const [initialLoad, setInitialLoad] = useState(true); // Variable pour empêcher le premier appel
     
+    const emptyMessage="Pas de produits a afficher pour le moment. Nous vous preparons pour une mise a jour spectaculaire."
+    const emptyIcon = {type:"font-awesome-5", name:"box-open", size:100, color:appColors.secondaryColor1, message:emptyMessage}
 
     const loadMoreData_ = useCallback(async () => {
       /*console.log("initLoad")
@@ -191,7 +193,7 @@ const renderScene = ({ route }) => {
           //return <ProductsListWithFilters_ onEndReached={loadMoreData} isLoading={isLoading} hasMore={hasMore} data={products} />;
           return (
             <View style={{flex:1,}}>
-                <ProductsListWithFilters name="Preference" onEndReached={loadMoreData_} onEndReachedThreshold={0.1} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
+                <ProductsListWithFilters emptyIcon={emptyIcon} name="Preference" onEndReached={loadMoreData_} onEndReachedThreshold={0.1} isLoading={isLoading} hasMore={hasMore} filters={false} datas={products} horizontal={false} styles={preferencesStyles} title={false} />
             </View>
           )
         case 'categories':

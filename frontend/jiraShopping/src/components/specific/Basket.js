@@ -24,6 +24,7 @@ import { selectBasket, selectIsLoading, selectError, fetchUserBasket } from '../
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
 import { debouncer } from '../../utils/commonAppFonctions';
+import EmptyLit from '../common/EmptyList';
 
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
@@ -49,6 +50,15 @@ const Basket = (props) => {
         }
       }, [isFocused]);
 */
+
+    if(basket.length <= 0)
+    {
+        return(
+            <View style={[{flex:1}]}>
+                <EmptyLit iconType='font-awesome-5' iconName="shopping-cart" iconSize={50} iconColor={appColors.secondaryColor1} text="Votre panier est vide pour le moment. Parcourez les produits et faites des acahts pour gagner plus de points." />
+            </View>
+        )
+    }
     return(
         <View style={[basketStyles.container,]}>
             <View style={[{flex:1,}]}>

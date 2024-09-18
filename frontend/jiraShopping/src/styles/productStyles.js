@@ -93,7 +93,7 @@ export const productStyles = StyleSheet.create({
         color : appColors.secondaryColor5,
         //paddingTop : 7,
         alignSelf : "center",
-        fontSize: 16,
+        fontSize: 15,
     },
     price :
     {

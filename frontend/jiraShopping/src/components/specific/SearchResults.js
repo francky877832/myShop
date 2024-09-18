@@ -38,6 +38,8 @@ const SearchResults = (props) => {
         selectedBrandFromContext, selectedConditionsFromContext, filterUpdated, resetAllFilters,
     } = useContext(FilterContext)
 
+    const emptyMessage="Votre recherche n'est pas fructueuse. Essayez avec d'autre terme."
+    const emptyIcon = {type:"font-awesome-5", name:"box-open", size:100, color:appColors.secondaryColor1, message:emptyMessage}
     
     //console.log(selectedCategories)
         //const {selectedCategory,  } = useContext(ProductItemContext)
@@ -98,7 +100,7 @@ const title = `Resultats de recherche "${searchText}"`
                         
                     }
     <View style={[{flex:1,}]}>
-        <ProductsListWithFilters previousScreen="SearchResults" name="SearchResults" search={true} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} searchText={searchText} datas={searchedProducts} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
+        <ProductsListWithFilters emptyIcon={emptyIcon} previousScreen="SearchResults" name="SearchResults" search={true} getDatas={getDatas} onEndReached={loadMoreData_} onEndReachedThreshold={0.5} isLoading={isLoading} filters={true} searchText={searchText} datas={searchedProducts} horizontal={false} styles={preferencesStyles} title={title} display="category"/>
     </View>
                 </View>
         )
