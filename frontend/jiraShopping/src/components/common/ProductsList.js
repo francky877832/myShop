@@ -8,7 +8,7 @@ import { ProductRenderSkeleton } from './FlatListCommonComponent'
 //custom styles
 import { productsListStyles } from '../../styles/productsListStyles';
 import { numProduct } from '../../styles/productStyles';
-import EmptyLit from './EmptyList';
+import EmptyList from './EmptyList';
 //Contexte
 import { FavouritesContext } from '../../context/FavouritesContext';
 import { ProductContext } from '../../context/ProductContext';
@@ -64,7 +64,7 @@ const ProductsList = React.forwardRef((props, ref) => {
                             if(data.length <= 0 && isLoading)
                                 return <ProductRenderSkeleton isLoading={isLoading} width={300} height={300} marginBottom={20} /> 
                             else if(data.length <= 0 && !isLoading)
-                                return <EmptyLit iconType={emptyIcon?.type} iconName={emptyIcon?.name} iconSize={emptyIcon?.size} iconColor={emptyIcon?.color} text={emptyIcon?.message} />
+                                return <EmptyList iconType={emptyIcon?.type} iconName={emptyIcon?.name} iconSize={emptyIcon?.size} iconColor={emptyIcon?.color} text={emptyIcon?.message} />
                         }}
                         //ListEmptyComponent={<EmptyLit iconType={emptyIcon.type} iconName={emptyIcon.name} iconSize={emptyIcon.size} iconColor={emptyIcon.color} text={emptyIcon.message} />}
                         ListFooterComponent={isLoading && data.length > 0 && <ActivityIndicator size="large" color={appColors.secondaryColor1} /> }

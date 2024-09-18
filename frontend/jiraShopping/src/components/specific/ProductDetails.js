@@ -416,7 +416,7 @@ const handleBasketPressed = (product) => {
                                 ListEmptyComponent={() => (
                                     <View style={[{alignItems:'center', justifyContent:'center',}]}>
                                         <Icon name="heart-dislike-outline" type="ionicon" color={appColors.secondaryColor1} size={50} />
-                                        <Text style={[customText.text,  productDetailsStyles.someText, {color:appColors.gray,fontSize:16,fontWeight:'normal'}]}>Pas de likes actuellement</Text>
+                                        <Text style={[customText.text,  productDetailsStyles.someText, {color:appColors.secondaryColor5,fontSize:16,fontWeight:'normal'}]}>Pas de likes actuellement</Text>
                                     </View>
                                 )}
                                 contentContainerStyle={[{justifyContent:'center', alignItems:'center'}]}

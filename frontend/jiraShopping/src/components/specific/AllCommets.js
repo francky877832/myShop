@@ -6,6 +6,7 @@ import { Input, Icon } from 'react-native-elements';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Comments from './Comments';
+import EmptyList from '../common/EmptyList';
 import { CustomActivityIndicator } from "../common/CommonSimpleComponents";
 
 import { commentsStyles } from '../../styles/commentsStyles';
@@ -53,7 +54,7 @@ useEffect(()=>{
     const task = InteractionManager.runAfterInteractions(() => {
         if (inputRef.current && route.params.inputFocused)
         {
-            //inputRef.current.focus()
+            inputRef.current.focus()
         }
     })
 
@@ -215,10 +216,21 @@ useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
 
     return(
 <View style={{ flex: 1 }}>
+    { reshapedComments.length <= 0 
+    
+    ?
+
+        <View style={[allCommetsStyles.container,{}]}>
+            <EmptyList iconType='font-awesome' iconName="commenting-o" iconSize={50} iconColor={appColors.secondaryColor1} text="Ce produit n'a pas encore reçu de commentaires. Soyez le premier a commenter pour garantir votre achat." />
+        </View>
+
+    :
+
         <View  style={[allCommetsStyles.container,{}]} >
             <Comments navigation={navigation} user={user} setUserToResponse={setUserToResponse} flatListRef={flatListRef} inputRef={inputRef} setters={{inputValue:inputValue, setInputValue:setInputValue, setIsResponseTo:setIsResponseTo}}  all={true} reshapedComments={reshapedComments} product={product}/>
         </View>
-
+    }
+       
         <View style={[allCommetsStyles.inputContainer]}>
             
             {!!userToResponse &&
@@ -239,8 +251,7 @@ useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
                     </View>
                 </View>
             }
-
-            <Input
+        <Input
                 placeholder="Posez une question"
                 onChangeText={handleChangeText}
                 multiline={true}
@@ -296,6 +307,7 @@ const allCommetsStyles = StyleSheet.create({
         borderTopWidth : 1,
         borderColor : appColors.lightWhite,
         paddingHorizontal : 5,
+        zIndex:99
     },
     isResponseTo:
     {

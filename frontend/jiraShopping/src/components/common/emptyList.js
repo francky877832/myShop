@@ -7,7 +7,7 @@ import { Icon } from 'react-native-elements';
 import { topStyles } from '../../styles/topStyles';
 import { appColors, appFont, customText, screenHeight } from '../../styles/commonStyles';
 
-const EmptyLit = forwardRef((props, ref) => {
+const EmptyList = forwardRef((props, ref) => {
     const {text, giveFocus, iconName, iconType, iconColor, iconSize} = props
     //console.log(text)
     let message = (text+"")?.split("|");
@@ -61,10 +61,11 @@ const emptyListStyles = StyleSheet.create({
     {
         ...customText.text,
         marginTop : 10,
+        color : appColors.secondaryColor5,
     },
     text2 :
     {
         color : appColors.white,
     },
 })
-export default React.memo(EmptyLit)
+export default React.memo(EmptyList)

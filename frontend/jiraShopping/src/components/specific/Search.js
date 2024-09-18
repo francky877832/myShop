@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 //custom component
 import SearchBar from '../common/SearchBar';
-import EmptyLit from '../common/EmptyList';
+import EmptyList from '../common/EmptyList';
 import { ScreenHeight } from 'react-native-elements/dist/helpers';
 //custom styles
 import { appColors, appFont } from '../../styles/commonStyles';
@@ -262,7 +262,7 @@ const handlePress = async (item) => {
                                 horizontal={false}
                                 showsHorizontalScrollIndicator={false}
                                 contentContainerStyle={{}}
-                                ListEmptyComponent={<EmptyLit iconType='font-awesome' iconName="history" iconSize={50} iconColor={appColors.secondaryColor1} giveFocus={_handleFocusTextInput} text="Historique de recherche vide.|Effectuer une recherche." />}
+                                ListEmptyComponent={<EmptyList iconType='font-awesome' iconName="history" iconSize={50} iconColor={appColors.secondaryColor1} giveFocus={_handleFocusTextInput} text="Historique de recherche vide.|Effectuer une recherche." />}
                             />
                     {isLoading && 
                         <CustomActivityIndicator styles={{}} /> 
