@@ -195,6 +195,7 @@ const FilterProvider = ({children}) => {
        
         const filters = {
             name : searchText?.trim(),
+            user : user._id,
             customFilters : {
                 categories : categories || [],
                 brands : brands || [],
@@ -286,7 +287,8 @@ const FilterProvider = ({children}) => {
         //console.log("hasMore")
         //console.log(hasMore)
         //console.log(isLoading)
-        
+
+        //SEARCH CEST POUR
         if (!resetPage && (isLoading || !hasMore)) return;
         //if (isLoading) return;
     

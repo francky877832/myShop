@@ -74,17 +74,17 @@ useEffect(()=>{
     //console.log(searchText)
     cat_reminder = selectedCategories
 },[])
-        async function getDatas({searchText, selectedModalCategories, selectedCategory={}, selectedBrands, conditions, orderBy, resetPage})
+        async function getDatas({searchText, selectedModalCategories, selectedCategory={}, selectedBrands, conditions, orderBy, resetPage, search})
         {
             //console.log("GETDATAS")
             //console.log({searchText, selectedModalCategories, selectedCategories, selectedBrands, conditions, orderBy})
             
-            await loadMoreDataWithFilters({searchText:searchText, selectedCategory:selectedCategory, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, resetPage:resetPage})
+            await loadMoreDataWithFilters({searchText:searchText, selectedCategory:selectedCategory, selectedModalCategories:selectedModalCategories, selectedBrands:selectedBrands, conditions:conditions, orderBy:orderBy, resetPage:resetPage,search:search})
                             //{searchText:" ", orderBy:selectedOrderBy, selectedCategories:selectedCategories})    
         }
 
         async function loadMoreData_(){
-            await loadMoreDataWithFilters({searchText:searchText, selectedCategory:category, selectedModalCategories:selectedModalCategoriesFromContext, selectedBrands:selectedBrandFromContext, conditions:selectedConditionsFromContext, orderBy:selectedOrderBy, resetPage:false})
+            await loadMoreDataWithFilters({searchText:searchText, selectedCategory:category, selectedModalCategories:selectedModalCategoriesFromContext, selectedBrands:selectedBrandFromContext, conditions:selectedConditionsFromContext, orderBy:selectedOrderBy, resetPage:false, search:false})
         }
   /*  
 useFocusEffect(
@@ -105,7 +105,7 @@ useEffect(()=>{
     //console.log('OK')
     setProducts([])
     //console.log(selectedBrandFromContext)
-    getDatas({searchText:" ", selectedCategory:category, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy, resetPage:true})
+    getDatas({searchText:" ", selectedCategory:category, selectedModalCategories:{}, selectedBrands: {}, conditions:{}, orderBy:selectedOrderBy, resetPage:true, search:false})
 
     }, [searchText, filterUpdated])
 

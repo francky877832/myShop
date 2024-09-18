@@ -54,11 +54,13 @@ const UserProvider = ({children}) => {
     //console.log(JSON.stringify(user))
         try
         {
+            const params = new URLSearchParams(user);
+            const queryString = params.toString();
             //console.log(server)
             //const response = await fetch(`${server}/api/auth/login?${serialize(user)}`, {
             //https://jirashopping-25ee1eaa49ff.herokuapp.com/api/auth/login?email=francky877832%40gmail.com&username=&password=00000000000
             //const response = await fetch(`https://jirashopping-25ee1eaa49ff.herokuapp.com/api/auth/login?email=francky877832%40gmail.com&username=&password=000000000`, {
-            const response = await fetch(`${server}/api/auth/login?${serialize(user)}`, {
+            const response = await fetch(`${server}/api/auth/login?${queryString}`, {
                 method: 'GET',
                 headers : {
                     'Content-Type': 'application/json',

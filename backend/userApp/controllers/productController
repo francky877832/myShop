@@ -340,14 +340,14 @@ exports.updateProductViews = async (req, res, next) => {
 exports.getSearchedProducts = async (req, res, next) => {
   //console.log("SERAHC PRODUCTS")
   //console.log(req.query)
-  const { name, customFilters } = req.query;
-  console.log(customFilters)
+  const { name, customFilters, user } = req.query;
+  //console.log(customFilters)
   const page = parseInt(customFilters['page']) || 1; // Page actuelle, par défaut 1
   const limit = parseInt(customFilters['limit']) || 5; // Nombre d'éléments par page, par défaut 20
   const skip = (page - 1) * limit;
   //console.log(req.query.page)
   //console.log(customFilters)
-
+//console.log(customFilters['categories'])
   /* Product.find().skip(skip).limit(limit).exec()
     .then (async(products) => {
     //console.log("ok");
@@ -370,16 +370,19 @@ exports.getSearchedProducts = async (req, res, next) => {
             let sortValue = {[filed]:parseInt(customFilters.orderBy[filed])}
             //console.log(sortValue)
 
-            const pipeline = getPipeLineForProducts(undefined, 0, 0, sortValue)
+            const pipeline = getPipeLineForProducts(undefined, 0, 0, sortValue, user)
             products = await Product.aggregate(pipeline).exec();
             //conserver l'ordre de sortValue
             products.forEach((product, index) => {
               product.sortIndex = index;
             });
+
+            
+
         }
         else
         {
-          const pipeline = getPipeLineForProducts(undefined, 0, 0, {updatedAt:-1})
+          const pipeline = getPipeLineForProducts(undefined, 0, 0, {updatedAt:-1}, user)
           products = await Product.aggregate(pipeline).exec()
         }
 
@@ -410,6 +413,7 @@ exports.getSearchedProducts = async (req, res, next) => {
     //console.log(filteredResult)
     //console.log(customFilters.minPrice)
     if (customFilters.categories?.length > 0) {
+      //console.log("THAT")
       filteredResult = filteredResult.filter(product => {
         
           if(customFilters.categories[0].split('/').length == 2)
@@ -426,6 +430,7 @@ exports.getSearchedProducts = async (req, res, next) => {
           }
       
       })
+      //console.log(filteredResult.length)
     }
     if (customFilters.brands?.length > 0) {
       filteredResult = filteredResult.filter(product => customFilters.brands.includes(product.brand));
@@ -462,6 +467,8 @@ exports.getSearchedProducts = async (req, res, next) => {
     });
 */
     // Étape 6 : Appliquer la pagination
+    //console.log(filteredResult.length)
+    //console.log(skip, skip+limit)
     const paginatedResult = filteredResult.slice(skip, skip + limit);
     
 
