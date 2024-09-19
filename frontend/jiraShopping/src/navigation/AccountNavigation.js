@@ -12,6 +12,7 @@ import Address from '../components/specific/Address';
 import Referral from '../components/specific/Refferal';
 import ReferralDetails from '../components/specific/referralDetails';
 import AboutUs from '../components/specific/AboutUs';
+import AdminPanel from '../components/admin/AdminPanel';
 import HeaderNavigation from '../components/common/HeaderNavigation';
 
 import {annimatedStackTransition} from './commonNavigationFonctions'
@@ -30,9 +31,13 @@ export default function AccountNavigation() {
             <Stack.Screen name="AccountSettings" component={AccountSettings} options={{ title: 'Parametre Du Compte', headerShown : true, tabBarVisible: true }} />
             <Stack.Screen name="PasswordChange" component={PasswordChange} options={{ title: 'Changer De Mot De Passe', headerShown : true, tabBarVisible: true }} />
             <Stack.Screen name="Address" component={Address} options={{ title: 'Mon Adresse', headerShown : true, tabBarVisible: true }} />
+
             <Stack.Screen name="Referral" component={Referral} options={{ title: 'Parrainage', headerShown : true, tabBarVisible: true }} />
             <Stack.Screen name="ReferralDetails" component={ReferralDetails} options={{ title: 'Parrainage', headerShown : true, tabBarVisible: true }} />
+            
+            <Stack.Screen name="AdminPanel" component={AdminPanel} options={{ title: 'Panel Admin', headerShown : true, tabBarVisible: true }} />
             <Stack.Screen name="AboutUs" component={AboutUs} options={{ title: 'A Propos De Nous', headerShown : true, tabBarVisible: true }} />
+        
         </Stack.Navigator>
   )
 }

@@ -58,6 +58,8 @@ export const accountStyles = StyleSheet.create({
     {
         backgroundColor : appColors.white,
         padding : 20,
+        paddingTop : 2,
+        flex:1,
     },
 
     settingsElement: 

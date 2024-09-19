@@ -680,6 +680,36 @@ exports.getUserOrders = async (req, res, next) => {
 };
 
 
+exports.getOrderFromAdmin = async (req, res, next) => {
+  try {
+    const { orderNo } = req.params;
+
+    // Récupérer le GroupOrder en fonction du numéro de commande (orderNo)
+    const groupOrder = await GroupOrder.findOne({ no: orderNo });
+
+    if (!groupOrder) {
+      return res.status(404).json({
+        success: false,
+        message: 'GroupOrder non trouvé'
+      });
+    }
+
+   
+    const orders = await Order.find({ group: groupOrder._id }).populate('group');
+
+    if (orders.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Aucune commande trouvée pour ce GroupOrder'
+      });
+    }
+    //console.log(orders)
+      return res.status(200).json({ success: true, datas: { orders:orders, group: groupOrder } });
+
+    } catch (error) {
+      return res.status(500).json({ success: false, message: 'Erreur lors de la récupération des données',error: error.message});
+    }
+}
   
   
 

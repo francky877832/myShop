@@ -38,7 +38,7 @@ export const settings = [
 	{
 		name : "Parrainage",
 		component : "Referral",
-		available : true,
+		available : false,
 	},
 	{
 		name : "Devenir Une Boutique Pro",
@@ -50,6 +50,21 @@ export const settings = [
 		component : "AdminPanel",
 		available : true,
 	},
+	/*{
+		name : "Admina",
+		component : "AdminPanel",
+		available : true,
+	},
+	{
+		name : "Admin",
+		component : "AdminPanel",
+		available : true,
+	},
+	{
+		name : "Admin",
+		component : "AdminPanel",
+		available : true,
+	},*/
 ]
 
 

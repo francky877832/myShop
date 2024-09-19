@@ -168,12 +168,34 @@ const getOrders = useCallback(async (user, page, limit) => {
         
     }
 
+
+
+
  
+    const getOrderFromAdmin = async (orderNo) => {
+        console.log(orderNo)
+        try{
+            
+            const response = await fetch(`${server}/api/datas/orders/admin/get/${encodeURIComponent(orderNo)}`);            
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+       
+            return data.datas
+        }catch(error){
+            console.log(error)
+            console.log("Get Admin Orders", "Une erreur est survenue! "+ error,)
+            return []
+        }
+    }
+
 
    
     const favouritesStateVars = { orders, sold, bought, isLoading, hasMore, page,}
     const favouritesStateStters = { setIsLoading,  setHasMore, setPage, setOrders, setIsNewDatas }
-    const utilsFunctions = { getOrders, updateOrderRead, updateOrderStatus, addNewOrder,   }
+    const utilsFunctions = { getOrders, getOrderFromAdmin, updateOrderRead, updateOrderStatus, addNewOrder,   }
     return (
         <OrdersContext.Provider value={{...favouritesStateVars, ...favouritesStateStters, ...utilsFunctions}}>
             {children}

@@ -98,11 +98,14 @@ const   Account = (props) => {
                             ItemSeparatorComponent={ (item) => { return <View style={{height:5,}}></View> }}
                             contentContainerStyle={{}}
                         />
+
+            
             </View>
             
-            <View style={{padding : 10,}}>
+            <View style={{padding : 2,}}>
                 <Text style={[accountStyles.text,{fontSize:18,color:appColors.gray}]}>Version 1.0.0</Text>
             </View>
+         
 
         </View>
 
