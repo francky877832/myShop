@@ -141,11 +141,16 @@ const OrdersDetails = (props) => {
                     order.buyerConfirmation!=1 && (user._id == ordersDetails.buyer._id) &&
                     <View style={[{}]}>
                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={[{flexDirection:'row',justifyContent:'center'}]}>
-                            <CustomButton text="J'ai reçu ce produit"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20}, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ openWhatsApp(ordersDetails.group.orderPhone||orderPhone, '*NE MODIFIEZ PAS CE MESSAGE!!!!*\n\n'+whatsappMessage(ordersDetails.buyer.username, order.product.seller.username, "buyer-delivered", ordersDetails.group.no, ordersDetails.group._id, order.product._id)) }} />
+                            <CustomButton text="Je confirme la réception"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20}, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ openWhatsApp(ordersDetails.group.orderPhone||orderPhone, '*NE MODIFIEZ PAS CE MESSAGE!!!!*\n\n'+whatsappMessage(ordersDetails.buyer.username, order.product.seller.username, "buyer-delivered", ordersDetails.group.no, ordersDetails.group._id, order.product._id)) }} />
+                        { /* 
+                            <View style={{width:5}}></View>
+                            <CustomButton text="Je retourne le produit"  styles={{ pressable: {...ordersDetailsStyles.button, borderRadius:20}, text: ordersDetailsStyles.buttonText,  }} color={appColors.white} backgroundColor={appColors.secondaryColor5} onPress={()=>{ openWhatsApp(ordersDetails.group.orderPhone||orderPhone, '*NE MODIFIEZ PAS CE MESSAGE!!!!*\n\n'+whatsappMessage(ordersDetails.buyer.username, order.product.seller.username, "buyer-return-product", ordersDetails.group.no, ordersDetails.group._id, order.product._id)) }} />
+                        */
+                        }
                         </ScrollView>
 
                         <View style={[{}]}>
-                            <Text style={[{fontSize:11,fontStyle:'italic'}]}>Confirmez lorsque vous avez reçu ce produit. Néamoins le confirmation est automatique 2 heures apres la réception du collis.</Text>
+                            <Text style={[{fontSize:11,fontStyle:'italic'}]}>Confirmez lorsque vous avez reçu ce produit. Néamoins le confirmation est automatique 12 heures apres la réception du collis.</Text>
                         </View>
                     </View>
                 }

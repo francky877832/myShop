@@ -2,7 +2,7 @@ const Order = require('../models/orderModel');
 const GroupOrder = require('../models/groupOrderModel');
 const Product = require('../models/productModel');
 const notificaitonCtrl = require('../controllers/notificationController');
-
+const { sendEmail } = require('../utils/utilsFonctions')
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 require('dotenv').config({ path: '.../../shared/.env' });
@@ -42,12 +42,35 @@ exports.updatePaymentStatus = async (req, res, next) => {
         if (updatedOrder) {
             //marquer les produit en sold
             const order_ = await Order.findOneAndDelete({ group: new mongoose.Types.ObjectId(external_reference) })
-            const productIds = order_.products.map(item => new mongoose.Types.ObjectId(item.product))
+            
+            const products = order_.products.map(item => ({
+              _id: new mongoose.Types.ObjectId(item.product),
+              quantity: item.quantity
+            }));
+            
+            const bulkOperations = products.map(product => ({
+              updateOne: {
+                filter: { _id: product._id },
+                update: [
+                  {
+                    $set: {
+                      stock: { $max: [{ $subtract: ['$stock', product.quantity] }, 0] }, // stock -= quantity, minimum 0
+                      sold: { $cond: { if: { $eq: [{ $subtract: ['$stock', product.quantity] }, 0] }, then: 1, else: '$sold' } }, // sold = 1 if stock becomes 0
+                      visibility: { $cond: { if: { $eq: [{ $subtract: ['$stock', product.quantity] }, 0] }, then: 0, else: '$visibility' } } // visibility = 0 if stock becomes 0
+                    }
+                  }
+                ]
+              }
+            }));
+        
+            await Product.bulkWrite(bulkOperations);
+          
 
-            await Product.updateMany( { _id: { $in: productIds }, stock:0 }, { $set: { sold: 1, visibility:0 } } )
-
-            //Envoyer la notification
+            //Envoyer la notification et/email aux sellers et au buyer
             //La notification est automatique comme orders fais partir du systeme de notifications
+         
+          //sendEmail()
+
           return res.status(200).json({ success: true, message: 'Order updated successfully', order: updatedOrder });
         } else {
           return res.status(404).json({ success: false, message: 'Order not found' });
@@ -58,7 +81,8 @@ exports.updatePaymentStatus = async (req, res, next) => {
   
         if (deletedOrder && deletedGroupOrder) {
 
-          const notification = {
+          //notification et/ou email au buyer
+          /*const notification = {
             ...req,
             params : {user:deletedOrder.buyer},
             body :
@@ -75,6 +99,10 @@ exports.updatePaymentStatus = async (req, res, next) => {
             }
         }
           await notificaitonCtrl.updateUserNotifications(notification, res, next)
+        */
+
+          //sendEmail()
+          
 
           return res.status(200).json({ success: true, message: 'Order deleted due to payment failure', deletedOrder: deletedOrder, deletedGroupOrder:deletedGroupOrder });
         } else {
@@ -615,7 +643,7 @@ exports.getUserOrders = async (req, res, next) => {
 
        
 
-      const sold_products = [] //orders.flatMap((item)=> { return {...item, seller:userId, products : item.products.filter((el) => el.product?.seller?._id == userId && item.buyer._id != userId)}})
+      let sold_products = [] //orders.flatMap((item)=> { return {...item, seller:userId, products : item.products.filter((el) => el.product?.seller?._id == userId && item.buyer._id != userId)}})
       const bought_products =  orders.filter((item) => item.buyer._id == userId)
       for(let order of orders)
       {

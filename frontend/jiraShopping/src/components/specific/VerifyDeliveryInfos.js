@@ -130,6 +130,7 @@ const VerifyDeliveryInfos = (props) => {
     
 
     return (
+    <View style={[verifyInfosStyles.container]}>
         <ScrollView contentContainerStyle={[verifyInfosStyles.container]}>
             <View style={[{height:10}]}></View>
             <View style={[verifyInfosStyles.containers]}> 
@@ -204,16 +205,18 @@ const VerifyDeliveryInfos = (props) => {
                     </View>
                 </RadioButton.Group>
             </View>
-
-            <View style={[{height:20}]}></View>
+        </ScrollView>
+            
 
 
 
             {showPriceDetails &&
-                <View style={[verifyInfosStyles]}>
+                <View style={[verifyInfosStyles, {paddingBottom : 50,}]}>
                     <PriceDetails products={products} closePriceDetails={setShowPriceDetails} title="Informations Sur La Vente"/>
                 </View>
             }
+
+<View style={[{height:20}]}></View>
 
             <View style={[verifyInfosStyles.bottom]}> 
                 <Pressable style={[verifyInfosStyles.button, verifyInfosStyles.price]} onPress={()=>{setShowPriceDetails(!showPriceDetails)}}>
@@ -236,7 +239,8 @@ const VerifyDeliveryInfos = (props) => {
     
             <CustomModalActivityIndicator onRequestClose={setIsLoading} isLoading={isLoading} size="large" color={appColors.secondaryColor1} message="Commande en cours de preparation..." />
 
-        </ScrollView>
+        
+    </View>
     )
 }
 

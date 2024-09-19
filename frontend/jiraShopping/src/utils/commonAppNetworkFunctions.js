@@ -260,3 +260,43 @@ exports.getLocalOrders = async (type) => {
         default : break
     }
 }
+
+
+
+
+
+//SEND EMAIL
+
+exports.sendEmail = async (email, senderEmail, senderName, receivers, subject, htmlMessage) => {
+    const apiKey = 'API_KEY';
+    const apiUrl = 'https://api.brevo.com/v3/smtp/email';
+  
+    const emailData = {
+      sender: { email: sender, name: senderName },
+      //to: [{ email: reveiverEmail, name: receiverName }],
+      to: receivers,
+      subject: subject,
+      htmlContent: htmlMessage,
+    };
+  
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': apiKey,
+        },
+        body: JSON.stringify(emailData),
+      });
+  
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('Email envoyé avec succès:', responseData);
+      } else {
+        const errorData = await response.json();
+        console.error('Erreur lors de l\'envoi de l\'email:', errorData);
+      }
+    } catch (error) {
+      console.error('Erreur de la requête:', error);
+    }
+  }
