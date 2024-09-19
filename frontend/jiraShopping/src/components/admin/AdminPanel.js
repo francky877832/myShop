@@ -5,7 +5,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { Icon, Input } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 
-import { CustomButton } from '../common/CommonSimpleComponents'
+import { CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpleComponents'
 
 import { topStyles } from '../../styles/topStyles';
 import { appColors, appFont, customText, screenHeight } from '../../styles/commonStyles';
@@ -14,23 +14,27 @@ import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
 import { OrdersContext } from '../../context/OrdersContext';
 import { ScrollView } from 'react-native-gesture-handler';
+import { formatDateToLitteral } from '../../utils/commonAppFonctions';
 
 const AdminPanel = (props, ref) => {
     const { } = props
-    const { getOrderFromAdmin } = useContext(OrdersContext)
+    const { getOrderFromAdmin, updateOrderFromAdmin } = useContext(OrdersContext)
 
-    const [productsStatus, setProductsStatus] = useState({status:{}, buyerConfirmation:{}, delivererConfirmation:{}, deliveryDate:{}})
-    const [groupStatus, setGroupStatus] = useState("java")
-    const [paymentStatus, setPaymentStatus] = useState("java")
+    const [isPostLoading, setIsPostLoading] = useState(false)
 
     //const [deliveryDate]
 
     const [orderNo, setOrderNo] = useState("")
-    const [orders, setOrders] = useState([])
-    const [group, setGroup] = useState([])
+    const [orders, setOrders] = useState({})
+    const [group, setGroup] = useState({})
 
-    const obj=15;
+    //const obj=15;
     const [isOrderNoFocused, setIsOrderNoFocused] = useState(false)
+
+    const [groupStatus, setGroupStatus] = useState(group?.status)
+    const [paymentStatus, setPaymentStatus] = useState(group?.paymentStatus)
+    const [productsStatus, setProductsStatus] = useState({status:{}, buyerConfirmation:{}, delivererConfirmation:{}, deliveryDate:{}})
+
     
     const updateProductsStatus = (label, product, value) => {
         setProductsStatus(prev => {
@@ -42,21 +46,53 @@ const AdminPanel = (props, ref) => {
     }
 
     const getOrder = async (orderNo) => {
+        //console.log(orderNo)
         try
         {
+            setIsPostLoading(true)
+
             const datas = await getOrderFromAdmin(orderNo)
-            setOrders(datas.orders[0])
-            setGroup(datas.group[0])
             //console.log(datas)
+           let status = {}
+            datas?.orders[0]?.products?.forEach(item => {
+                    let product = item.product
+                    status = {
+                        "status":{...status["status"], [product]:item?.status},
+                        "delivererConfirmation":{...status["delivererConfirmation"], [product]:item?.delivererConfirmation},
+                        "buyerConfirmation":{...status["buyerConfirmation"], [product]:item?.buyerConfirmation},
+                        "deliveryDate":{...status["deliveryDate"], [product]:item?.deliveryDate}
+                    }
+                
+            })
+
+            /*const obj = ps?.reduce((acc, value, index) => {
+                acc[index] = value;
+                acc = {acc, value}
+                return acc;
+            }, {});*/
+
+            //console.log(obj)
+            setProductsStatus(status)
+            setOrders(datas.orders[0])
+            setGroup(datas.group)
+            setGroupStatus(datas.group.status)
+            setPaymentStatus(datas.group.paymentStatus)
+            //console.log(ps)
+        
+
         }catch(error){
             console.log(error)
             return []
+        }finally {
+            setIsPostLoading(false)
         }
     }
 
-    const setOrder = async (orderNo) => {
+    const updateOrder = async (orders, group) => {
         try
         {
+            setIsPostLoading(true)
+
             const orderDatas = {
                 ...orders,
                 products : orders.products.map(el => {
@@ -65,7 +101,6 @@ const AdminPanel = (props, ref) => {
                         status : productsStatus["status"][el.product] || el.status,
                         buyerConfirmation : productsStatus["buyerConfirmation"][el.product] || el.buyerConfirmation,
                         delivererConfirmation : productsStatus["delivererConfirmation"][el.product] || el.delivererConfirmation,
-                        //deliveryDate : productsStatus["deliveryDate"][el.product] || el.deliveryDate,
                         deliveryDate : productsStatus["deliveryDate"][el.product] ?  new Date().toISOString() : null,
 
                         //deliveryNo : productsStatus["deliveryNo"][el.product],
@@ -73,16 +108,26 @@ const AdminPanel = (props, ref) => {
                     }
                 })
             }
-            //console.log(orderDatas)
+
+            const groupDatas = {
+                ...group,
+                status : groupStatus,
+                paymentStatus : paymentStatus
+            }
+            
+            await updateOrderFromAdmin(orderDatas, groupDatas)
+
         }catch(error){
             console.log(error)
             return []
+        }finally {
+            setIsPostLoading(false)
         }
     }
 
     useEffect(() => {
         const fetchDatas = async () => {
-            await getOrder("JW-20240919-2976")
+            await getOrder(orderNo)
         }
 
         fetchDatas()
@@ -90,9 +135,11 @@ const AdminPanel = (props, ref) => {
 
     const OrderProduct = (props) => {
         const { item, key } = props
-        return (
-            <View  style={[adminPannelStyles.contents,{borderBottomWidth:1,borderColor:appColors.lightWhite}]} key={key}>
 
+    
+
+        return (
+            <View  style={[adminPannelStyles.contents, {borderBottomWidth:1,borderColor:appColors.lightWhite}]} key={key}>
                     <View styles={[adminPannelStyles.titles,]}>
                         <Text>Product : {item.product}</Text>
                     </View>
@@ -163,7 +210,7 @@ const AdminPanel = (props, ref) => {
                         </Pressable>
                         :
                         <View>
-                            <Text>{item.deliveryDate}</Text>
+                            <Text>{formatDateToLitteral(item.deliveryDate)}</Text>
                         </View>
                     }
                     
@@ -193,10 +240,13 @@ const AdminPanel = (props, ref) => {
             </View>
 
             <View style={[adminPannelStyles.addProductSubmitView,{}]}>
-                <CustomButton text="Chercher" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={adminPannelStyles} onPress={() => {getOrder()}} />
+                <CustomButton text="Chercher" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={adminPannelStyles} onPress={() => {getOrder(orderNo)}} />
             </View>
 
 
+
+{ Object.keys(group).length>0 && Object.keys(orders).length>0 &&
+    <>
             <View style={[adminPannelStyles.containers,{}]}>
                 <View style={[adminPannelStyles.group,{}]}>
                     <View style={[adminPannelStyles.titles,{}]}>
@@ -242,16 +292,22 @@ const AdminPanel = (props, ref) => {
                         return( 
                             <>
                                 <OrderProduct item={item} key={key} />
-                                <View style={{height:20}}></View>
+                                <View style={{height:10}}></View>
                             </>
                     )})
                 }
 
                 </View>    
             </View>
+
                 <View style={[adminPannelStyles.addProductSubmitView,{}]}>
-                    <CustomButton text="Valider" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={adminPannelStyles} onPress={() => {setOrder()}} />
+                    <CustomButton text="Mettre A Jour" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={adminPannelStyles} onPress={() => {updateOrder(orders, group)}} />
                 </View>
+    </>
+}
+
+<CustomModalActivityIndicator onRequestClose={setIsPostLoading} isLoading={isPostLoading} size="large" color={appColors.secondaryColor1} message="Chargement en cours..." />
+
         </ScrollView>
     )
 }

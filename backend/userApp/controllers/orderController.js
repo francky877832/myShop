@@ -683,9 +683,10 @@ exports.getUserOrders = async (req, res, next) => {
 exports.getOrderFromAdmin = async (req, res, next) => {
   try {
     const { orderNo } = req.params;
-
+console.log(orderNo)
     // Récupérer le GroupOrder en fonction du numéro de commande (orderNo)
     const groupOrder = await GroupOrder.findOne({ no: orderNo });
+    //console.log(groupOrder)
 
     if (!groupOrder) {
       return res.status(404).json({
@@ -693,7 +694,6 @@ exports.getOrderFromAdmin = async (req, res, next) => {
         message: 'GroupOrder non trouvé'
       });
     }
-
    
     const orders = await Order.find({ group: groupOrder._id }).populate('group');
 
@@ -703,12 +703,60 @@ exports.getOrderFromAdmin = async (req, res, next) => {
         message: 'Aucune commande trouvée pour ce GroupOrder'
       });
     }
-    //console.log(orders)
+    
       return res.status(200).json({ success: true, datas: { orders:orders, group: groupOrder } });
 
     } catch (error) {
       return res.status(500).json({ success: false, message: 'Erreur lors de la récupération des données',error: error.message});
     }
+}
+
+exports.updateOrderFromAdmin = async (req, res, next) => {
+  try {
+      console.log("HERE WE GO")
+      const { order, group } = req.body;
+      const updatedOrder = await Order.findOneAndUpdate(
+          { _id: order._id },
+          {
+              $set: {
+                  products: order.products,
+                  updatedAt: Date.now(),
+              }
+          },
+          { new: true }
+      );
+
+      if (!updatedOrder) {
+          return res.status(404).json({ message: 'Commande non trouvée' });
+      }
+console.log(group._id)
+      const updatedGroup = await GroupOrder.findOneAndUpdate(
+          { _id: group._id },
+          {
+              $set: {
+                  ...group,
+                  updatedAt: Date.now(),
+              }
+          },
+          { new: true }
+      );
+
+      if (!updatedGroup) {
+          return res.status(404).json({ message: 'Groupement non trouvé' });
+      }
+
+      console.log(updatedOrder, updatedGroup)
+
+      res.status(200).json({
+          message: 'Commande et groupement mis à jour avec succès',
+          order: updatedOrder,
+          group: updatedGroup
+      });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erreur lors de la mise à jour de la commande et du groupement' });
+    }
+
 }
   
   

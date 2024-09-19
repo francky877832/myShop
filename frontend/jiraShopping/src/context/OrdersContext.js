@@ -173,7 +173,7 @@ const getOrders = useCallback(async (user, page, limit) => {
 
  
     const getOrderFromAdmin = async (orderNo) => {
-        console.log(orderNo)
+        //console.log(orderNo)
         try{
             
             const response = await fetch(`${server}/api/datas/orders/admin/get/${encodeURIComponent(orderNo)}`);            
@@ -191,11 +191,35 @@ const getOrders = useCallback(async (user, page, limit) => {
         }
     }
 
+    const updateOrderFromAdmin = async (order, group) => {
+        //console.log(orderNo)
+        try{
+            
+            const response = await fetch(`${server}/api/datas/orders/admin/update`,{
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({order, group})
+            });
+    
+            const result = await response.json();
+            if (response.ok) {
+                console.log('Mise à jour réussie:', result);
+            } else {
+                console.error('Erreur lors de la mise à jour:', result);
+            }
+        } catch (error) {
+            console.error('Erreur réseau:', error);
+        };            
+            
+    }
+
 
    
     const favouritesStateVars = { orders, sold, bought, isLoading, hasMore, page,}
     const favouritesStateStters = { setIsLoading,  setHasMore, setPage, setOrders, setIsNewDatas }
-    const utilsFunctions = { getOrders, getOrderFromAdmin, updateOrderRead, updateOrderStatus, addNewOrder,   }
+    const utilsFunctions = { getOrders, getOrderFromAdmin, updateOrderFromAdmin, updateOrderRead, updateOrderStatus, addNewOrder,   }
     return (
         <OrdersContext.Provider value={{...favouritesStateVars, ...favouritesStateStters, ...utilsFunctions}}>
             {children}

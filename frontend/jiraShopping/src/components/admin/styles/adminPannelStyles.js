@@ -23,6 +23,7 @@ export const adminPannelStyles  = StyleSheet.create({
     containers :
     {
         //paddingHorizontal : 20,
+        //paddingTop : 20,
     },
     contents :
     {
