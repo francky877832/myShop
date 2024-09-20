@@ -1,0 +1,25 @@
+# Ignore Node modules
+node_modules
+
+# Ignore build directories
+build
+dist
+
+# Ignore Expo-related files
+.expo
+.expo-shared
+
+# Ignore local configuration files
+.env
+.env.local
+
+# Ignore logs
+logs
+*.log
+
+# Ignore temporary files
+tmp
+temp
+*.tmp
+
+# Ignore any other files or directories you want to exclude
