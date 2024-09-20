@@ -1,3 +1,17 @@
 npm install -D @expo/cli
 npx expo init MonNouveauProjet
   $ expo init is not supported in the local CLI, please use npx create-expo-app instead
+
+
+
+
+
+eas build --profile development --platform android
+git rep need to be up to date
+
+//git subtree push --prefix backend heroku master  # ou main selon votre branche
+git remote add heroku https://git.heroku.com/jirashopping.git
+git push heroku master
+heroku restart
+git remote -v
+

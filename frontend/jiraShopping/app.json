@@ -53,6 +53,16 @@
             "host": "www.winkelapp.com",
             "pathPrefix": "/product/"
           }
+        },
+
+        {
+          "action": "VIEW",
+          "category": ["BROWSABLE", "DEFAULT"],
+          "data": {
+            "scheme": "https",
+            "host": "jirashopping-25ee1eaa49ff.herokuapp.com",
+            "pathPrefix": "/product/"
+          }
         }
       ]
     },

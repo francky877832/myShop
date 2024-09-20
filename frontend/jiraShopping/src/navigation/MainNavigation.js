@@ -60,7 +60,7 @@ export default function MainNavigation() {
   const prefix = Linking.createURL("/");
 
   const linking = {
-    prefixes: ['winkelapp://', 'https://www.winkelapp.com'],
+    prefixes: ['winkelapp://', 'https://www.winkelapp.com', 'https://jirashopping-25ee1eaa49ff.herokuapp.com'],
     config: {
       screens: {
         ProductDetails: 'product/:id',
