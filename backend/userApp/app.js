@@ -32,17 +32,15 @@ app.get('/userApp/assets/images/:imageName', (req, res) => {
 });
 
 
-
-app.get('/.well-known/apple-app-site-association', (req, res) => {
+/*
+app.get('/apple-app-site-association', (req, res) => {
   res.type('application/json');
-  res.sendFile(path.join(__dirname, '.well-known', 'apple-app-site-association'));
+  res.sendFile(path.join(__dirname, 'apple-app-site-association'));
 });
-
+*/
 // Route pour assetlinks.json
-app.get('/.well-known/assetlinks.json', (req, res) => {
-  res.type('application/json');
-  res.sendFile(path.join(__dirname, '.well-known', 'assetlinks.json'));
-});
+app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
+
 
 
 
