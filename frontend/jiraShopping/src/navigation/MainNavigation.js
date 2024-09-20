@@ -60,10 +60,10 @@ export default function MainNavigation() {
   const prefix = Linking.createURL("/");
 
   const linking = {
-    prefixes: [prefix, 'winkelapp://'],
+    prefixes: ['winkelapp://', 'https://www.winkelapp.com'],
     config: {
       screens: {
-        ProductDetails: "product/:id",
+        ProductDetails: 'product/:id',
       },
     },
   };
