@@ -208,28 +208,15 @@ const getProductsFromCategories = async () =>{
     }
 
 
-    const getAProduct = (id) => {
-      const productId = 'votre_product_id'; // Remplacez par l'ID de votre produit
-      const url = `https://votre_api.com/api/datas/products/get/${productId}`;
-      
-      fetch(url)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Erreur lors de la récupération du produit');
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (data.success) {
-            console.log('Produit récupéré:', data.datas);
-          } else {
-            console.error('Erreur:', data.message);
-          }
-        })
-        .catch(error => {
-          console.error('Erreur de requête:', error);
-        });
-    }
+  const getAProduct = async (productId) => {
+    //router.get('/get/:productId', prodCtrl.getProduct);
+      const response = await fetch(`${server}/api/datas/products/get/${encodeURIComponent(productId)}`);
+      if (!response.ok) {
+        throw new Error('Erreur de récupération du produit');
+      }
+      let datas = await response.json();
+      return datas.datas
+  }
 
     const productStateVars = {products, isLoading, refreshKey}
     const productStateStters = {setIsLoading}

@@ -78,7 +78,7 @@ const ProductDetails = (props) => {
 
         if(route.params.hasOwnProperty("id"))
         {
-                
+                console.log("OK")
         }
     })
 

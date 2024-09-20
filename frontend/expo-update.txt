@@ -15,3 +15,10 @@ git push heroku master
 heroku restart
 git remote -v
 
+
+
+
+https://developers.google.com/digital-asset-links/tools/generator
+
+
+5311020254291827
