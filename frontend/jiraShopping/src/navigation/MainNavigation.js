@@ -47,17 +47,32 @@ import { GeneralProvider } from '../context/GeneralContext';
 
 import { annimatedStackTransition } from './commonNavigationFonctions'
 
+import * as Linking from "expo-linking";
+
+
 const Stack = createStackNavigator();
+
 
 
 export default function MainNavigation() {
   const hide = false
 
+  const prefix = Linking.createURL("/");
+
+  const linking = {
+    prefixes: [prefix, 'winkelapp://'],
+    config: {
+      screens: {
+        ProductDetails: "product/:id",
+      },
+    },
+  };
+//fallback={<Text>Loading...</Text>}
   return ( 
 <SafeAreaView style={{ flex: 1 }}>
  <UserProvider>
   <FilterProvider>
-  <NavigationContainer> 
+  <NavigationContainer linking={linking}> 
  
   <ProductProvider>
     <ProductItemProvider>

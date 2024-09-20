@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "winkelapp",
     "name": "jiraShopping",
     "slug": "jiraShopping",
     "version": "1.0.0",
@@ -10,12 +11,18 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+      
     },
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "This app needs access to your camera to take photos.",
-        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to select photos."
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to select photos.",
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["winkelapp"]
+          }
+        ]
       },
       "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.jira877832.jiraShopping"
@@ -31,7 +38,18 @@
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
       ],
-      "package": "com.jira877832.jiraShopping"
+      "package": "com.jira877832.jiraShopping",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "category": ["BROWSABLE", "DEFAULT"],
+          "data": {
+            "scheme": "winkelapp",
+            "host": "product",
+            "pathPrefix": "/"
+          }
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
