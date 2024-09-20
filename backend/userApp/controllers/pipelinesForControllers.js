@@ -1,7 +1,7 @@
 const mongoose = require('../../shared/db').mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
-exports.getPipeLineForProducts = ( userId=undefined, skip=0, limit=100, sort={_id:1}, userId2=undefined ) => {
+exports.getPipeLineForProducts = ( userId=undefined, skip=0, limit=100, sort={_id:1}, userId2=undefined, productId=undefined ) => {
   //This piepline is used for Seach, getProducts and getUserProducts, so be conscious when modified it
     let match; //console.log(userId2)
     if(userId) 
@@ -9,11 +9,15 @@ exports.getPipeLineForProducts = ( userId=undefined, skip=0, limit=100, sort={_i
       //getUserProducts
       match = { seller: new mongoose.Types.ObjectId(userId), }
     }
-    else
+    else if(userId2) 
     {
       //getProducts
       match = { seller:{$ne: new mongoose.Types.ObjectId(userId2)}, sold : 0, visibility : 1} //on recupere les produit non vendu et visible
     }
+    else if(productId)
+    {
+      match = { _id: new mongoose.Types.ObjectId(productId), }
+    } 
    /* else
     {
       //getSearchedProducts

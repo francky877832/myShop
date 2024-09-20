@@ -53,6 +53,8 @@ const ProductDetails = (props) => {
     const route = useRoute()
     const dispatch = useDispatch();
     const {user} = useContext(UserContext)
+
+    
     //On utilise la version la plus a jour du produit!!!! 
     const [showPriceDetails, setShowPriceDetails] = useState(false)
     const modifiedProducts = useSelector(state => state.favourites.modifiedProducts);
@@ -71,6 +73,14 @@ const ProductDetails = (props) => {
 
     //const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
 
+    useEffect(() => {
+
+
+        if(route.params.hasOwnProperty("id"))
+        {
+                
+        }
+    })
 
     const emptyMessage="Pas de produits similaires trouvés."
     const emptyIcon = {type:"font-awesome-5", name:"box-open", size:50, color:appColors.secondaryColor1, message:emptyMessage}

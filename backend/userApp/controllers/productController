@@ -180,18 +180,21 @@ exports.getProducts = async (req, res, next) => {
 
 
 
-exports.getProduct  = (req, res, next) => {
-  
-  Product.findOne({ _id : req.params.id })
-  .then( (product) => { 
-    //console.log("*******Ok********")
-    //console.log(product)
-      res.status(200).json(product);
-   })
-  .catch( (error) => { 
-      //res.end("erreur");
-      res.status(400).json({ error: error, message : "go" });
-   });
+exports.getProduct  = async (req, res, next) => {
+
+  const { productId } = req.params
+
+  try {
+   
+    const pipeline = getPipeLineForProducts(undefined, 0, 1, { _id: -1 }, undefined, productId)
+    const productsWithComments = await Product.aggregate(pipeline).exec();
+
+    res.status(200).json({ success : true, datas: productsWithComments[0],});
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ success:false,  message : error.message });
+  }
+
 };
 
 exports.getProductsFromCategories  =async  (req, res, next) => {

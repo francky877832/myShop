@@ -33,4 +33,17 @@ app.get('/userApp/assets/images/:imageName', (req, res) => {
 
 
 
+app.get('/.well-known/apple-app-site-association', (req, res) => {
+  res.type('application/json');
+  res.sendFile(path.join(__dirname, '.well-known', 'apple-app-site-association'));
+});
+
+// Route pour assetlinks.json
+app.get('/.well-known/assetlinks.json', (req, res) => {
+  res.type('application/json');
+  res.sendFile(path.join(__dirname, '.well-known', 'assetlinks.json'));
+});
+
+
+
 module.exports = app;

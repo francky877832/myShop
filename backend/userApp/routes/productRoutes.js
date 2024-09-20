@@ -14,7 +14,7 @@ router.get('/get/user/:user', prodCtrl.getProductsUser);
 router.get('/search', prodCtrl.getSearchedProducts);
 router.get('/likes/get/:id', prodCtrl.getProductNumLikes);
 router.get('/categories', prodCtrl.getProductsFromCategories);
-router.get('/get/:id', prodCtrl.getProduct);
+router.get('/get/:productId', prodCtrl.getProduct);
 
 router.post('/product-sold', prodCtrl.productHasBeenSold);
 router.post('/update-views', prodCtrl.updateProductViews);

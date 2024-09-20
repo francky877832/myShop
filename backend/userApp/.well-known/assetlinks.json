@@ -1,0 +1,13 @@
+[
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.jira877832.jiraShopping",
+        "sha256_cert_fingerprints": [
+          "1F:B4:24:E5:7D:2A:62:EA:8B:BF:53:55:E7:3D:69:CE:90:1B:FD:FB:CC:06:B7:96:97:BF:83:EF:7D:4E:6D:F5",
+          "6B:F5:C1:95:67:81:F0:4B:10:A7:50:1D:4A:F5:B2:16:7F:7E:3D:9D:16:96:35:64:F4:96:2F:72:82:B8:F2:FB"
+        ]
+      }
+    }
+  ]
