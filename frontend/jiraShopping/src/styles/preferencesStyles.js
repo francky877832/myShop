@@ -27,4 +27,36 @@ export const preferencesStyles = StyleSheet.create({
         backgroundColor : appColors.lightWhite,
     },
 
+
+    topAnimationBox :
+    {
+        flexDirection : 'row',
+        alignItems :'center',
+        backgroundColor : appColors.lightWhite,
+        height : 25,
+    },
+    topAnimation :
+    {
+        backgroundColor : 'transparent',
+    },
+    animatedText :
+    {
+        color : appColors.black,
+        fontWeight : 'bold',
+    },
+    winkelBox :
+    {
+        //position : 'absolute',
+        width : '100%',
+        justifyContent : 'center',
+        alignItems : 'center',
+        //backgroundColor : appColors.lightOrange3,
+        //left : -20, // en rapport VE L'ANNİMATION from
+    },
+    winkelText :
+    {
+        color : appColors.white,
+        fontWeight : 'bold',
+        fontStyle : 'italic',
+    }
 })

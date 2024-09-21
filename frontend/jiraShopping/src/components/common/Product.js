@@ -115,14 +115,14 @@ const Product = (props) => {
                 clearTimeout(timeoutRef.current);
             }
             timeoutRef.current = setTimeout(async () => {
-                dispatch(addToBasket({product, user})); 
-                //ENVOİE DES NOTIFS
+                dispatch(addToBasket({product, user}));
+
+                //ENVOİE DES NOTIFS LOCALES
                 const notificationId = await cancelAndSendNotificationAfterAction(notifications, 'basket', "ON_BASKET_ADD", 3600*12 )
                 if(notificationId)
                 {
                     dispatch(updateNotifications({name:"ON_BASKET_ADD", id:notificationId}))
                 }
-
             }, 1000)
         }
 

@@ -15,7 +15,7 @@ import SearchResults from './SearchResults';
 import { screenHeight, screenWidth } from '../../styles/commonStyles';
 //custom app datas
 import { datas } from '../../utils/sampleDatas';
-import { appColors } from '../../styles/commonStyles';
+import { appColors, customText } from '../../styles/commonStyles';
 import ProductsListWithFilters from '../common/ProductsListWithFilters';
 
 
@@ -33,6 +33,7 @@ import { fetchUserFavourites } from '../../store/favourites/favouritesSlice';
 import { fetchUserBasket } from '../../store/baskets/basketsSlice';
 import { debouncer } from '../../utils/commonAppFonctions';
 import { OrdersContext } from '../../context/OrdersContext';
+import { LeftToRightViewBox, RightToLeftViewBox } from '../common/AnimatedComponents';
 
 const loggedUser = "Francky"
 const loggedUserId = "66715deae5f65636347e7f9e"
@@ -224,13 +225,71 @@ const renderTabBar = (props) => (
     />
   )
 
+
+  const [show1, setShow1] = useState(true)
+  const [show2, setShow2] = useState(false)
+  const [show3, setShow3] = useState(false)
+
+
+  const animationSet = {  }
+  const animationIndex = useRef(0)
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    animationSet['show1'] = setShow1
+    animationSet['show2'] = setShow2
+    animationSet['show3'] = setShow3
+  }, [])
+
+  const animationToDisplay = () =>{
+    //console.log('item', item)
+    animationSet[Object.keys(animationSet)[animationIndex.current]](false)
+
+    animationIndex.current = (animationIndex.current+1)%Object.keys(animationSet).length
+    
+    animationSet[Object.keys(animationSet)[animationIndex.current]](true)
+  }
+
+  useEffect(()=>{
+    intervalRef.current = setInterval(() => {
+      animationToDisplay()
+    }, 3000);
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [])
+
     return(
         <View style={preferencesStyles.container}>
-                    <View style={preferencesStyles.top}>
-                        <Top />
-                    </View>
+              <View style={preferencesStyles.top}>
+                  <Top />
+              </View>
+
+            <View style={[preferencesStyles.topAnimationBox, {backgroundColor:show3?appColors.secondaryColor1:null}]}>
+              <LeftToRightViewBox show={show1} duration={500} from={-1000} to={screenWidth/2} styles={{position : 'absolut'}}>
+                <View style={[preferencesStyles.topAnimation]}>
+                    <Text style={[customText.text, preferencesStyles.animatedText, {}]}>Commande facile</Text>
+                </View>
+              </LeftToRightViewBox>
+
+              <RightToLeftViewBox show={show2} duration={500} from={screenWidth+50} to={screenWidth/2} styles={{position : 'absolut',}}>
+                <View style={[preferencesStyles.topAnimation]}>
+                    <Text style={[customText.text, preferencesStyles.animatedText, {}]}>Payment sécurisé et en un clic</Text>
+                </View>
+              </RightToLeftViewBox>
+
+              <LeftToRightViewBox show={show3} duration={200} from={0} to={screenWidth/2} styles={{position : 'absolute',}}>
+                <View style={[preferencesStyles.winkelBox]}>
+                    <Text style={[customText.text, preferencesStyles.winkelText, {}]}>Winkel</Text>
+                </View>
+              </LeftToRightViewBox>
+                
+
+            </View>  
+
+          
+
             <View style={[{flex:1,}]}>
-                    
                     <View style={{flex:1}}>
                         <TabView  
                         lazy renderLazyPlaceholder={() => <View><Text>Loading...</Text></View>} navigationState={{ index, routes }} renderScene={renderScene} onIndexChange={setIndex} initialLayout={initialLayout} renderTabBar={renderTabBar} />

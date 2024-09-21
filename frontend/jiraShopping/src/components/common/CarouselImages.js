@@ -35,9 +35,9 @@ const CarouselImage = (props) =>
       if(product.feesBy=='seller') animationSet['showFreeKargo'] = setShowFreeKargo
     }, [])
  
-
-    const animationIndex = useRef(0)
+    
     //const image = "../../assets/images/product5.png"
+    const animationIndex = useRef(0)
     const intervalRef = useRef(null);
 
     const handleImagePress = (image) => {
@@ -58,10 +58,6 @@ const CarouselImage = (props) =>
     animationIndex.current = (animationIndex.current+1)%Object.keys(animationSet).length
     
     animationSet[Object.keys(animationSet)[animationIndex.current]](true)
-
-
-    
-
   }
 useEffect(()=>{
   intervalRef.current = setInterval(() => {
@@ -93,7 +89,7 @@ useEffect(() => {
 
         {
           (showViews && parseInt(product.views)>0) &&
-            <LeftToRightViewBox show={showViews} duration={1000} styles={paginationStyles.viewsBox}>
+            <LeftToRightViewBox show={showViews} duration={1000} to={0} from={-300} styles={paginationStyles.viewsBox}>
               <Text style={paginationStyles.viewsText}>
                 {formatLikes(product.views)} {pluralize(product.views, 'vue')}
               </Text>
@@ -102,7 +98,7 @@ useEffect(() => {
 
        {
         (showInBasket && parseInt(product.inBasket)>0) &&
-          <LeftToRightViewBox show={showInBasket} duration={1000} styles={paginationStyles.viewsBox}>
+          <LeftToRightViewBox show={showInBasket} duration={1000} to={0} from={-300} styles={paginationStyles.viewsBox}>
               <Text style={paginationStyles.viewsText}>
                   Ce produit est deja dans le panier de {formatLikes(parseInt(product.inBasket))} {pluralize(product.inBasket, 'personne')}!
               </Text>
@@ -111,7 +107,7 @@ useEffect(() => {
 
         {
         (showFreeKargo && product.feesBy==='seller') &&
-          <LeftToRightViewBox show={showFreeKargo} duration={1000} styles={paginationStyles.viewsBox}>
+          <LeftToRightViewBox show={showFreeKargo} duration={1000} to={0} from={-300} styles={paginationStyles.viewsBox}>
               <Text style={paginationStyles.viewsText}>
                  Frais de transport gratuits pour ce produit.
               </Text>
