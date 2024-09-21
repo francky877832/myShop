@@ -60,14 +60,14 @@ const OrdersDetails = (props) => {
                 <View style={[ordersDetailsStyles.top]}>
                     <View style={[ordersDetailsStyles.line]}>
                         <Text style={[customText.text, ordersDetailsStyles.textLeft,  {}]}>Date De Livraison : </Text>
-                        <Text style={[customText.text, ordersDetailsStyles.textRight, {color:order.deliveryDate?black:statusItem[order.status].color}]}>{order.deliveryDate ? formatDateToLitteral(order.deliveryDate) : ' en cours' }</Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {color:order.deliveryDate?appColors.black:statusItem[order.status].color}]}>{order.deliveryDate ? formatDateToLitteral(order.deliveryDate) : ' en cours' }</Text>
                     </View>
 
                     <View style={{height:5}}></View>
 
                     <View style={[ordersDetailsStyles.line]}>
                         <Text style={[customText.text, ordersDetailsStyles.textLeft,  {}]}>Numero De Livraion : </Text>
-                        <Text style={[customText.text, ordersDetailsStyles.textRight, {color:order.deliveryNo?black:statusItem[order.status].color}]}>{order.deliveryNo ? order.deliveryNo : ' en cours' }</Text>
+                        <Text style={[customText.text, ordersDetailsStyles.textRight, {color:order.deliveryNo?appColors.black:statusItem[order.status].color}]}>{order.deliveryNo ? order.deliveryNo : ' en cours' }</Text>
                     </View>
                 </View>
 
