@@ -1,6 +1,8 @@
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImageManipulator from 'expo-image-manipulator';
+import * as Notifications from 'expo-notifications';
+
 import { Alert } from 'react-native';
 //Demande de permission
 export const requestPermissions = async () => {
@@ -48,6 +50,7 @@ export const pickImages = async (MAX_IMAGES, MIN_IMAGES, images) => {
 };
 
 
+
 export const takePhoto = async (MAX_IMAGES, MIN_IMAGES, images) => {
     const hasPermissions = await requestPermissions();
     if (!hasPermissions) return;
@@ -91,3 +94,36 @@ export const resizeImages = async (images,IMG_MAX_HEIGHT,IMG_MAX_WIDTH) => {
     }));
   };
 
+
+
+  //LOCAL NOTIFS
+  export const requestNotificationPermissions = async () => {
+    const { status } = await Notifications.getPermissionsAsync();
+  
+    // Si les permissions sont déjà accordées, on renvoie true
+    if (status === 'granted') {
+      return true;
+    }
+  
+    // Sinon, on demande les permissions
+    const { status: newStatus } = await Notifications.requestPermissionsAsync();
+    
+    // On renvoie true si les permissions sont maintenant accordées, sinon false
+    return newStatus === 'granted';
+  };
+
+  const scheduleDailyNotification = async (notification, hour, minute, repeats) => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: notification.title,
+        body: notification.message,
+        component : notification.page,
+        datas: notification.datas,
+      },
+      trigger: {
+        hour: hour,
+        minute: minute,
+        repeats: repeats,
+      },
+    });
+  };

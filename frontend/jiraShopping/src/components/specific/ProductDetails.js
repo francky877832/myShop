@@ -41,7 +41,7 @@ import { UserContext } from '../../context/UserContext';
 import { ProductContext } from '../../context/ProductContext';
 import { addModifiedProduct } from '../../store/favourites/favouritesSlice';
 import { defaultOffer } from '../../utils/offersDatas';
-import { usersImagesPath } from '../../remote/server';
+import { server, usersImagesPath } from '../../remote/server';
 import { hasPropositionPrice, choosePrice } from '../../utils/commonAppFonctions'
 const loggedUserId = "668fdfc6077f2a5c361dd7fc"
 const loggedUser = "Francky"
@@ -73,14 +73,7 @@ const ProductDetails = (props) => {
 
     //const {basket, addBasket, isBasketPresent} = useContext(BasketContext)
 
-    useEffect(() => {
 
-
-        if(route.params.hasOwnProperty("id"))
-        {
-                console.log("OK")
-        }
-    })
 
     const emptyMessage="Pas de produits similaires trouvés."
     const emptyIcon = {type:"font-awesome-5", name:"box-open", size:50, color:appColors.secondaryColor1, message:emptyMessage}
@@ -251,10 +244,10 @@ const handleBasketPressed = (product) => {
             <View style={productDetailsStyles.buttonContainer}>
                 <PrevButton styles={productDetailsStyles.prevButton} />
                 <View style={productDetailsStyles.buttonContainerLeft}>
-                    <ShareButton styles={productDetailsStyles.shareButton} />
+                    <ShareButton color={appColors.white} size={24} styles={productDetailsStyles.shareButton} link={`${server}/product/${data._id}`} />
                     <View style={{ width: 10 }}></View>
                             
-                    <LikeButton _handleLikePressed={_handleLikePressed} noText={true} hasLikedItem={like} user={user} synchro={true} item={data} styles={{ color: appColors.white }} isCard={false} />
+                    <LikeButton  _handleLikePressed={_handleLikePressed} noText={true} hasLikedItem={like} user={user} synchro={true} item={data} styles={{ color: appColors.white }} isCard={false} />
                 </View>
             </View>
             

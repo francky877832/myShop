@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, Pressable, ActivityIndicator, Image, Modal } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ActivityIndicator, Image, Modal, Share  } from 'react-native';
 
 import { Input } from 'react-native-elements';
 import BadgeIcon from './BadgeIcon';
@@ -21,6 +21,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addFavourite, addFavouriteContext, setLikedIcon, updateLocalFavourites, isProductFavourite, addLocalFavourite, removeLocalFavourite} from '../../store/favourites/favouritesSlice'; 
 import { productsImagesPath } from '../../remote/server';
 import { Facebook } from 'react-content-loader/native';
+
 
 exports.LikeButton = (props) => {
     const dispatch = useDispatch();
@@ -104,14 +105,36 @@ exports.PrevButton = (props) => {
     )
 }
 
+/*
 exports.ShareButton = (props) => {
-    
+    const { link, size, color } = props
     return(
         <Pressable style={[commonSimpleComponentsStyles.shareButton,]} onPress = { ()=>{ console.log("share"); }}>
-            <BadgeIcon name="share-social-sharp" size={24} color="#fff" styles={{}} />
+            <BadgeIcon name="share-social-sharp" size={size} color={color} styles={{}} />
         </Pressable>
     )
 }
+*/
+
+exports.ShareButton = (props) => {
+    const { link, size, color } = props
+    const handleSharePress = async (product) => {
+        try {
+            await Share.share({
+                message: link
+            });
+        } catch (error) {
+            console.error('Erreur lors du partage :', error);
+        }
+    }
+
+    return(
+        <Pressable style={[commonSimpleComponentsStyles.shareButton,]} onPress = { ()=>{ handleSharePress(link) }}>
+            <BadgeIcon name="share-social-sharp" size={size} color={color} styles={{}} />
+        </Pressable>
+    )
+}
+
 
 
 exports.NotificationsSkeleton = (props) => {

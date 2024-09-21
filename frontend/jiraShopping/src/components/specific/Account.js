@@ -15,6 +15,9 @@ import { UserContext } from '../../context/UserContext';
 import { OrdersContext } from '../../context/OrdersContext';
 import { truncateTextAndAddDots } from '../../utils/commonAppFonctions'
 
+import { ShareButton } from '../common/CommonSimpleComponents'
+import { appStoreUrl, server } from '../../remote/server';
+
 //const loggedUser = "Francky"
 const   Account = (props) => {
     const navigation = useNavigation()
@@ -31,7 +34,7 @@ const   Account = (props) => {
     }
 
     return(
-        <View style={[accountStyles.container,{}]}>
+        <ScrollView style={[accountStyles.container,{}]}>
             <View style={[accountStyles.top]}>
                 <View style={{height:10,}}></View>
 
@@ -79,27 +82,27 @@ const   Account = (props) => {
 
 
             <View style={[accountStyles.settings,]}>
-                <FlatList
-                            data={settings}
-                            renderItem={ ({item}) => { 
+            {
+              settings.map((item, key) => { 
                                 if(user.role!='admin' && item.name.toLowerCase()=='admin')
                                     return;
                                 
                                 return(
-                                <Pressable style={[accountStyles.settingsElement, !item.available?accountStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`)}} disabled={!item.available}> 
-                                    <Text style={[accountStyles.text,{fontSize:18,},!item.available?accountStyles.unavailable:false]}>{item.name}</Text>
-                                        { item.available &&
-                                            <Icon type="font-awesome" name="angle-right" size={30} color={appColors.secondaryColor1} />
-                                        }
+                                <View key={key}>
+                                    <Pressable style={[accountStyles.settingsElement, !item.available?accountStyles.unavailable:false]} onPress={()=>{navigation.navigate(`${item.component}`)}} disabled={!item.available}> 
+                                        <Text style={[accountStyles.text,{fontSize:18,},!item.available?accountStyles.unavailable:false]}>{item.name}</Text>
+                                            { item.available &&
+                                                <Icon type="font-awesome" name="angle-right" size={30} color={appColors.secondaryColor1} />
+                                            }
                                     </Pressable>
+                                </View>
                                 )
-                             } }
-                            keyExtractor={ (item) => { return item.name.toString(); } }
-                            ItemSeparatorComponent={ (item) => { return <View style={{height:5,}}></View> }}
-                            contentContainerStyle={{}}
-                        />
-
-            
+                             })
+                }
+                 <Pressable style={[accountStyles.settingsElement, ]} onPress={()=>{Linking.openURL(appStoreUrl)}} > 
+                    <Text style={[accountStyles.text,{fontSize:18,},]}>Partager l'Appli</Text>
+                    <ShareButton  size={30} color={appColors.secondaryColor1} styles={{}} link={appStoreUrl} />
+                </Pressable>
             </View>
             
             <View style={{padding : 2,}}>
@@ -107,7 +110,7 @@ const   Account = (props) => {
             </View>
          
 
-        </View>
+        </ScrollView>
 
     
     )
