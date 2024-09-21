@@ -11,14 +11,12 @@ export const notificationsDatas = {
       "ON_BASKET_ADD": {
         "title": "Produit ajouté au panier !",
         "message": "Votre article a été ajouté avec succès.",
-        "page": "Basket",
-        "datas": { "type": "basket_add" }
+        "data" : {"component" : "Preferences", "nestedComponent":"Basket", "datas":{}}
       },
       "ON_BASKET_REMOVE": {
         "title": "Produit retiré du panier !",
         "message": "Votre article a été retiré avec succès.",
-        "page": "BasketPage",
-        "datas": { "type": "basket_remove" }
+        "data" : {"component" : "Preferences", "nestedComponent":"Basket", "datas":{}}
       }
     },
 

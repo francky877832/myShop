@@ -4,6 +4,8 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import * as Notifications from 'expo-notifications';
 
 import { Alert, Platform } from 'react-native';
+import { notificationsDatas } from './systemNotificationsDatas';
+
 //Demande de permission
 export const requestPermissions = async () => {
     const { status: galleryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -132,11 +134,11 @@ export const scheduleDailyNotification = async (notification, time) => {
     const hasPermissions = await requestNotificationPermissions()
     if(!hasPermissions) return;
 
-      await Notifications.scheduleNotificationAsync({
+      const notificationId = await Notifications.scheduleNotificationAsync({
         content: {
           title: notification.title,
           body: notification.message,
-          datas: {component : notification.page, data : notification.datas},
+          data: notification.data
         },
         trigger: {
           hour: time.hour,
@@ -147,9 +149,11 @@ export const scheduleDailyNotification = async (notification, time) => {
           channelId: 'default',
         },
       });
+      return notificationId
   }catch(error)
   {
     console.log(error)
+    return false
   }
 };
 
@@ -163,7 +167,7 @@ export const scheduleNotificationAfterAction = async (notification, seconds) => 
       content: {
         title: notification.title,
         body: notification.message,
-        datas: {component : notification.page, data : notification.datas},
+        data: notification.data
       },
       trigger: { seconds : seconds},
       android: {
@@ -171,10 +175,43 @@ export const scheduleNotificationAfterAction = async (notification, seconds) => 
       },
     });
 
-    console.log(notificationId)
-
+    //console.log(notificationId)
+    return notificationId
   }catch(error)
   {
     console.log(error)
+    return false
   }
 };
+
+export const cancelNotification = async (notificationId) => {
+  try {
+    await Notifications.cancelScheduledNotificationAsync(notificationId);
+    console.log(`Notification avec l'ID ${notificationId} a été annulée.`);
+    return true
+  } catch (error) {
+    console.error("Erreur lors de l'annulation de la notification :", error);
+    return false
+  }
+};
+
+export const cancelAndSendNotificationAfterAction = async (notifDatas, model, PROPERTY, seconds) => {
+  try 
+  {
+      let notificationId=true;
+      //console.log(notifDatas)
+      if(notifDatas.hasOwnProperty(PROPERTY))
+      {
+          let cancel = await cancelNotification(notifDatas[PROPERTY])  
+          if(!cancel) return;        
+      }
+
+      notificationId = await scheduleNotificationAfterAction(notificationsDatas[model][PROPERTY], seconds)
+
+    return notificationId
+  } catch (error) {
+    console.error("Erreur lors de l'annulation de la notification :", error);
+    return false
+  }
+};
+

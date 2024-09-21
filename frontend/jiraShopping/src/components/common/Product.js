@@ -21,7 +21,6 @@ import {shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { isProductFavourite } from '../../store/favourites/favouritesSlice';
 import { addToBasket, removeFromBasket, fetchUserBasket, updateSelectedProducts, setSelectedSeller, isProductBasket, updateLocalBasket } from '../../store/baskets/basketsSlice';
 
-import  { updateBasketNotifications } from '../../store/notifications/notificationsSlice';
 
 import { Icon } from 'react-native-elements';
 import { ProductContext } from '../../context/ProductContext';
@@ -33,8 +32,11 @@ import { productsImagesPath } from '../../remote/server';
 //const user = {_id:loggedUserId, username:loggedUser}
 
 //notification
-import { scheduleNotificationAfterAction } from '../../utils/utilsFunctions';
+import  { updateNotifications  } from '../../store/notifications/notificationsSlice';
+import { scheduleNotificationAfterAction, cancelNotification, cancelAndSendNotificationAfterAction} from '../../utils/utilsFunctions';
 import { notificationsDatas } from '../../utils/systemNotificationsDatas';
+
+
 /*
     const loggedUser = "Francky"
     const loggedUserId = "66715deae5f65636347e7f9e"
@@ -50,16 +52,7 @@ const Product = (props) => {
 
     const {productHasBeenSold} = useContext(ProductContext)
 
-    //console.log("*********==============={...item}")
-    //console.log(product)
-   
-//console.log(item.images[0])
-    //const {favourites, addFavourite, hasLiked} = useContext(FavouritesContext)
-    //const {basket, addBasket} = useContext(BasketContext)
-    
-    /*const renderCount = useRef(0);
-    renderCount.current += 1;
-    console.log(renderCount.current)*/
+    const notifications = useSelector(state => state.notifications.notifications);
 
     useEffect(() => {
         
@@ -122,10 +115,14 @@ const Product = (props) => {
                 clearTimeout(timeoutRef.current);
             }
             timeoutRef.current = setTimeout(async () => {
-
-                await scheduleNotificationAfterAction(notificationsDatas['basket']['ON_BASKET_ADD'], 10)
-
                 dispatch(addToBasket({product, user})); 
+                //ENVOİE DES NOTIFS
+                const notificationId = await cancelAndSendNotificationAfterAction(notifications, 'basket', "ON_BASKET_ADD", 3600*12 )
+                if(notificationId)
+                {
+                    dispatch(updateNotifications({name:"ON_BASKET_ADD", id:notificationId}))
+                }
+
             }, 1000)
         }
 

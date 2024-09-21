@@ -50,6 +50,7 @@ import { annimatedStackTransition } from './commonNavigationFonctions'
 
 
 import DeepLinkHandler from './deeplinking/DeepLinkHandler';
+import NotificationsHandler from './notifications/NotificationsHandler';
 
 
 const Stack = createStackNavigator();
@@ -66,11 +67,14 @@ export default function MainNavigation() {
   <FilterProvider>
   <NavigationContainer> 
   <ProductProvider>
-  <DeepLinkHandler />
     <ProductItemProvider>
     <GeneralProvider>
             <OrdersProvider>
             <CommentsProvider>
+
+            <DeepLinkHandler />
+            <NotificationsHandler />
+            
             <Stack.Navigator
               initialRouteName="LoaderPage"
               screenOptions={annimatedStackTransition(0.9, 250, 200)}

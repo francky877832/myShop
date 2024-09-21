@@ -20,9 +20,9 @@ const notificationsSlice = createSlice({
 
       const updatedNotifications = {
         ...state.notifications,
-        name :  state.notifications[name]?.push(id)
+        [name] :  id
       }
-
+      //console.log( state.notifications)
       state.notifications = updatedNotifications
     },
 
