@@ -18,9 +18,7 @@ import { FavouritesContext } from '../../context/FavouritesContext';
 import { Icon } from 'react-native-elements';
 import { CustomButton, Counter, DisplayPrice } from '../common/CommonSimpleComponents'
 import { CheckBox } from 'react-native-elements';
-import EmptyList from '../common/EmptyList';
 
-import { BasketContext } from '../../context/BasketContext';
 
 import { formatMoney, pluralize, choosePrice, hasPropositionPrice } from '../../utils/commonAppFonctions';
 

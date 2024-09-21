@@ -3,7 +3,7 @@ import * as MediaLibrary from 'expo-media-library';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as Notifications from 'expo-notifications';
 
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 //Demande de permission
 export const requestPermissions = async () => {
     const { status: galleryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -102,28 +102,79 @@ export const resizeImages = async (images,IMG_MAX_HEIGHT,IMG_MAX_WIDTH) => {
   
     // Si les permissions sont déjà accordées, on renvoie true
     if (status === 'granted') {
-      return true;
+      //return true;
     }
   
     // Sinon, on demande les permissions
     const { status: newStatus } = await Notifications.requestPermissionsAsync();
     
     // On renvoie true si les permissions sont maintenant accordées, sinon false
-    return newStatus === 'granted';
+    if(newStatus === 'granted' && status === 'granted')
+    {
+      if (Platform.OS === 'android') {
+        await Notifications.setNotificationChannelAsync('default', {
+          name: 'Default',
+          importance: Notifications.AndroidImportance.MAX,
+          sound: 'default', // Tu peux spécifier d'autres sons ici si nécessaire
+          vibrationPattern: [0, 250, 250, 250], // Vibration pattern
+          lightColor: '#FF231F7C', // Couleur de la lumière du LED pour la notification
+        });
+      }
+      return true
+    }
   };
 
-  const scheduleDailyNotification = async (notification, hour, minute, repeats) => {
-    await Notifications.scheduleNotificationAsync({
+
+
+export const scheduleDailyNotification = async (notification, time) => {
+  try
+  {
+    const hasPermissions = await requestNotificationPermissions()
+    if(!hasPermissions) return;
+
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: notification.title,
+          body: notification.message,
+          datas: {component : notification.page, data : notification.datas},
+        },
+        trigger: {
+          hour: time.hour,
+          minute: time.minute,
+          repeats: time.repeats,
+        },
+        android: {
+          channelId: 'default',
+        },
+      });
+  }catch(error)
+  {
+    console.log(error)
+  }
+};
+
+export const scheduleNotificationAfterAction = async (notification, seconds) => {
+  try
+  {
+    const hasPermissions = await requestNotificationPermissions()
+    if(!hasPermissions) return;
+
+    const notificationId = await Notifications.scheduleNotificationAsync({
       content: {
         title: notification.title,
         body: notification.message,
-        component : notification.page,
-        datas: notification.datas,
+        datas: {component : notification.page, data : notification.datas},
       },
-      trigger: {
-        hour: hour,
-        minute: minute,
-        repeats: repeats,
+      trigger: { seconds : seconds},
+      android: {
+        channelId: 'default',
       },
     });
-  };
+
+    console.log(notificationId)
+
+  }catch(error)
+  {
+    console.log(error)
+  }
+};

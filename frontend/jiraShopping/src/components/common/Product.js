@@ -20,17 +20,26 @@ import { server } from '../../remote/server';
 import {shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { isProductFavourite } from '../../store/favourites/favouritesSlice';
 import { addToBasket, removeFromBasket, fetchUserBasket, updateSelectedProducts, setSelectedSeller, isProductBasket, updateLocalBasket } from '../../store/baskets/basketsSlice';
+
+import  { updateBasketNotifications } from '../../store/notifications/notificationsSlice';
+
 import { Icon } from 'react-native-elements';
 import { ProductContext } from '../../context/ProductContext';
 import { addModifiedProduct } from '../../store/favourites/favouritesSlice';
 
 import { productsImagesPath } from '../../remote/server';
 
-const loggedUser = "Francky"
-const loggedUserId = "66715deae5f65636347e7f9e"
-const username = "Franck"
+
 //const user = {_id:loggedUserId, username:loggedUser}
 
+//notification
+import { scheduleNotificationAfterAction } from '../../utils/utilsFunctions';
+import { notificationsDatas } from '../../utils/systemNotificationsDatas';
+/*
+    const loggedUser = "Francky"
+    const loggedUserId = "66715deae5f65636347e7f9e"
+    const username = "Franck"
+*/
 const Product = (props) => { 
     const { item, horizontal, replace, minified, updateProfileLike, origin, bottomIcon} = props;
     const navigation = useNavigation()
@@ -97,8 +106,6 @@ const Product = (props) => {
     })
 
     const handleBasketPressed = (product) => {
-        
-        
         if(isBasketPresent)
         {
             navigation.navigate("Basket")
@@ -114,7 +121,10 @@ const Product = (props) => {
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
             }
-            timeoutRef.current = setTimeout(() => {
+            timeoutRef.current = setTimeout(async () => {
+
+                await scheduleNotificationAfterAction(notificationsDatas['basket']['ON_BASKET_ADD'], 10)
+
                 dispatch(addToBasket({product, user})); 
             }, 1000)
         }

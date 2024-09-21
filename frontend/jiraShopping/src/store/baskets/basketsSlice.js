@@ -15,6 +15,7 @@ const initialState = {
   totalPrice: 0,
   isLoading: false,
   quantities : {},
+  basketNotifications : {}
 };
 
 // Thunks
@@ -136,9 +137,21 @@ const basketSlice = createSlice({
   name: 'basket',
   initialState,
   reducers: {
+    updateBasketNotifications: (state, action) => {
+      const { name, id } = action.payload;
+
+      const updatedBasketNotifications = {
+        ...state.basketNotifications,
+        name :  [...state.basketNotifications[name].push(id)]
+      }
+
+      state.basketNotifications = updatedBasketNotifications
+    },
+
     updateSelectedProducts: (state, action) => {
       //console.log(action.payload)
       const { product, bool } = action.payload;
+      
       
       const updatedSelectedProducts = {
         ...state.selectedProducts,

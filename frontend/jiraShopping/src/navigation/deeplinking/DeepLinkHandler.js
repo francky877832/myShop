@@ -21,7 +21,7 @@ function DeepLinkHandler() {
             const productData = await getAProduct(productId);
             navigation.navigate('ProductDetails', { productDetails: productData });
           } catch (error) {
-            
+
             //console.error('Erreur lors de la récupération des données :', error);
             if (Platform.OS === 'android') {
               Alert.alert(
@@ -52,7 +52,7 @@ function DeepLinkHandler() {
       return () => {
         linkingListener.remove();
       };
-    }, [navigation, getAProduct]);
+    }, []) // [navigation, getAProduct]);
   
     return (
       <CustomModalActivityIndicator onRequestClose={setIsProdcutLoading} isLoading={isProdcutLoading} size="large" color={appColors.secondaryColor1} message="Commande en cours de preparation..." />

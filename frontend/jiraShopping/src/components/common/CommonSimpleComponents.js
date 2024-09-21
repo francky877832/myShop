@@ -23,6 +23,7 @@ import { productsImagesPath } from '../../remote/server';
 import { Facebook } from 'react-content-loader/native';
 
 
+
 exports.LikeButton = (props) => {
     const dispatch = useDispatch();
     const { favourites, liked } = useSelector(state => state.favourites);

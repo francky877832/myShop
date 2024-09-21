@@ -19,6 +19,9 @@
         "NSCameraUsageDescription": "This app needs access to your camera to take photos.",
         "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to select photos.",
         
+        "UIBackgroundModes": ["fetch", "remote-notification"],
+
+
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": ["winkelapp"]
@@ -57,7 +60,15 @@
           ],
           "category": ["BROWSABLE", "DEFAULT"]
         }
-      ]
+      ],
+
+      "useNextNotificationsApi": true,
+      "notification": {
+        "icon": "./assets/icon.png",
+        "color": "#000000",
+        "priority": "high",
+        "channelId": "default"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
