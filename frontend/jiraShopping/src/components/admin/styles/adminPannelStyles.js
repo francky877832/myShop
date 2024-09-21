@@ -12,18 +12,37 @@ export const adminPannelStyles  = StyleSheet.create({
         paddingBottom: 20,
         //backgroundColor : 'red',
     },
+    subTitle :
+    {
+        //fontSize
+    },
+    subTitleText :
+    {
+        //fontSize
+    },
+    orderNoTitle : 
+    {
+
+    },
     titles :
     {
-        backgroundColor : appColors.lightWhite,
+       
         height : 50,
         flexDirection :"row",
         alignItems : "center",
-        paddingLeft : 20,
+        paddingLeft : 5,
+        backgroundColor : appColors.white,
+        borderBottomWidth : 1,
+        borderColor : appColors.lightWhite,
+    },
+    titlesText :
+    {
+        fontWeight : 'bold',
+        fontSize : 16,
     },
     containers :
     {
-        //paddingHorizontal : 20,
-        //paddingTop : 20,
+        top : 10,
     },
     contents :
     {
@@ -33,7 +52,9 @@ export const adminPannelStyles  = StyleSheet.create({
     },
     group :
     {
-        //paddingHorizontal : 20,
+        backgroundColor : appColors.white,
+        paddingHorizontal : 10,
+        paddingTop: 20,
     },
     products : 
     {

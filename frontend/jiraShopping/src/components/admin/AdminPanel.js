@@ -134,19 +134,19 @@ const AdminPanel = (props, ref) => {
     }, [])
 
     const OrderProduct = (props) => {
-        const { item, key } = props
+        const { item } = props
 
     
 
         return (
-            <View  style={[adminPannelStyles.contents, {borderBottomWidth:1,borderColor:appColors.lightWhite}]} key={key}>
-                    <View styles={[adminPannelStyles.titles,]}>
-                        <Text>Product : {item.product}</Text>
+            <View  style={[adminPannelStyles.contents, {borderBottomWidth:1,borderColor:appColors.lightWhite}]}>
+                    <View style={[adminPannelStyles.titles,]}>
+                        <Text style={[customText.text, adminPannelStyles.titlesText]}>Product : {item.product}</Text>
                     </View>
 
                 <View style={[adminPannelStyles.line,{}]}>
-                    <View styles={[adminPannelStyles.titles]}>
-                        <Text>Status</Text>
+                    <View style={[adminPannelStyles.subTitle]}>
+                        <Text style={[customText.text, adminPannelStyles.subTitleText]}>Status</Text>
                     </View>
 
                     <Picker selectedValue={productsStatus["status"][item.product]} style={adminPannelStyles.picker}  onValueChange={(itemValue, itemIndex) => updateProductsStatus("status", item.product, itemValue)}>
@@ -158,8 +158,8 @@ const AdminPanel = (props, ref) => {
                 </View>
 
                 <View style={[adminPannelStyles.line,{}]}>
-                    <View styles={[adminPannelStyles.titles]}>
-                        <Text>Deliverer Confirmation : </Text>
+                    <View style={[adminPannelStyles.subTitle]}>
+                        <Text style={[customText.text, adminPannelStyles.subTitleText]}>Deliverer Confirmation : </Text>
                     </View>
                     <Picker selectedValue={productsStatus["delivererConfirmation"][item.product]} style={adminPannelStyles.picker}  onValueChange={(itemValue, itemIndex) => updateProductsStatus("delivererConfirmation", item.product, itemValue)}>
                         <Picker.Item label="Failed" value="0" />
@@ -169,8 +169,8 @@ const AdminPanel = (props, ref) => {
                 </View>
 
                 <View style={[adminPannelStyles.line,{}]}>
-                    <View styles={[adminPannelStyles.titles]}>
-                        <Text>Buyer Confirmation</Text>
+                    <View style={[adminPannelStyles.subTitle]}>
+                        <Text style={[customText.text, adminPannelStyles.subTitleText]}>Buyer Confirmation</Text>
                     </View>
 
                     <Picker selectedValue={productsStatus["buyerConfirmation"][item.product]} style={adminPannelStyles.picker}  onValueChange={(itemValue, itemIndex) => updateProductsStatus("buyerConfirmation", item.product, itemValue)}>
@@ -181,36 +181,36 @@ const AdminPanel = (props, ref) => {
                 </View>
 
                 <View style={[adminPannelStyles.line,{}]}>
-                    <View styles={[adminPannelStyles.titles]}>
-                        <Text> Delivery No</Text>
+                    <View style={[adminPannelStyles.subTitle]}>
+                        <Text style={[customText.text, adminPannelStyles.subTitleText]}> Delivery No</Text>
                     </View>
                     
                     {!item.deliveryNo ?
                         <Pressable>
-                            <Text>Generate</Text>
+                            <Text style={[customText.text, adminPannelStyles.titlesLabel]}>Generate</Text>
                         </Pressable>
                         :
                         <View>
-                            <Text>{item.deliveryNo}</Text>
+                            <Text style={[customText.text, adminPannelStyles.titlesLabel]}>{item.deliveryNo}</Text>
                         </View>
                     }
                     
                 </View>
 
                 <View style={[adminPannelStyles.line,{}]}>
-                    <View styles={[adminPannelStyles.titles]}>
-                        <Text> Delivery Date</Text>
+                    <View style={[adminPannelStyles.subTitle]}>
+                        <Text style={[customText.text, adminPannelStyles.subTitleText]}> Delivery Date</Text>
                     </View>
                     
                     {!item.deliveryDate ?
                         <Pressable onPress={()=>{updateProductsStatus("deliveryDate", item.product, !productsStatus["deliveryDate"][item.product])}}
                             style={[adminPannelStyles.deliveryDate, {backgroundColor:productsStatus["deliveryDate"][item.product] ? appColors.green : appColors.gray }]}
                         >
-                            <Text style={[customText.text, {color:appColors.white}]}>{productsStatus["deliveryDate"][item.product] ? "Now" : "Not Now"}</Text>
+                            <Text style={[customText.text, adminPannelStyles.titlesLabel, {color:appColors.white}]}>{productsStatus["deliveryDate"][item.product] ? "Now" : "Not Now"}</Text>
                         </Pressable>
                         :
                         <View>
-                            <Text>{formatDateToLitteral(item.deliveryDate)}</Text>
+                            <Text style={[customText.text, adminPannelStyles.titlesLabel]}>{formatDateToLitteral(item.deliveryDate)}</Text>
                         </View>
                     }
                     
@@ -221,9 +221,9 @@ const AdminPanel = (props, ref) => {
 
     return(
         <ScrollView contentContainerStyle={[adminPannelStyles.container, ]}>
-            <View styles={[adminPannelStyles.containers]} >
-                <View styles={[adminPannelStyles.titles]}>
-                    <Text>Numero De Commande</Text>
+            <View style={[adminPannelStyles.contents]} >
+                <View style={[adminPannelStyles.orderNoTitle]}>
+                    <Text style={[customText.text, adminPannelStyles.titlesText]}>Numero De Commande</Text>
                 </View>
                 <Input placeholder="Numero de commande" value={orderNo} onChangeText={(no)=>{setOrderNo(no)}}
                             inputMode='text'
@@ -250,13 +250,13 @@ const AdminPanel = (props, ref) => {
             <View style={[adminPannelStyles.containers,{}]}>
                 <View style={[adminPannelStyles.group,{}]}>
                     <View style={[adminPannelStyles.titles,{}]}>
-                        <Text>Informations sur le groupe</Text>
+                        <Text style={[customText.text, adminPannelStyles.titlesText]}>Informations sur le groupe</Text>
                     </View>
 
                     <View style={[adminPannelStyles.contents,{}]}>
                         <View style={[adminPannelStyles.line,{}]}>
-                            <View>
-                                <Text>Status : </Text>
+                            <View style={[adminPannelStyles.subTitle]}>
+                                <Text style={[customText.text, adminPannelStyles.subTitleText]}>Status : </Text>
                             </View>
                            
                             <Picker selectedValue={groupStatus} style={adminPannelStyles.picker}  onValueChange={(itemValue, itemIndex) => setGroupStatus(itemValue)}>
@@ -270,8 +270,8 @@ const AdminPanel = (props, ref) => {
                         <View style={[{height:10}]}></View>
 
                         <View style={[adminPannelStyles.line,{}]}>
-                            <View>
-                                <Text>Payment Status : </Text>
+                            <View style={[adminPannelStyles.subTitle]}>
+                                <Text style={[customText.text, adminPannelStyles.subTitleText]}>Payment Status : </Text>
                             </View>
                             
                             <Picker selectedValue={paymentStatus} style={adminPannelStyles.picker}  onValueChange={(itemValue, itemIndex) => setPaymentStatus(itemValue)}>
@@ -290,10 +290,10 @@ const AdminPanel = (props, ref) => {
                 {
                     orders?.products?.map((item, key) => { 
                         return( 
-                            <>
-                                <OrderProduct item={item} key={key} />
+                            <View key={key}>
+                                <OrderProduct item={item}  />
                                 <View style={{height:10}}></View>
-                            </>
+                            </View>
                     )})
                 }
 
