@@ -253,11 +253,33 @@ const renderTabBar = (props) => (
   useEffect(()=>{
     intervalRef.current = setInterval(() => {
       animationToDisplay()
-    }, 3000);
+    }, 4000);
     return () => {
       clearInterval(intervalRef.current);
     };
   }, [])
+
+  //CENTER LE BOX EN FONCTION DE LA TAILLE DU TEXTE
+  const [text1Width, setText1Width] = useState(0);
+  const [text2Width, setText2Width] = useState(0);
+  const [text3Width, setText3Width] = useState(0);
+
+  // Définir la coordonnée X où vous souhaitez centrer le texte
+  const x = screenWidth/2
+
+  const onText1Layout = (event) => {
+    const { width } = event.nativeEvent.layout;
+    setText1Width(width);
+  };
+
+  const onText2Layout = (event) => {
+    const { width } = event.nativeEvent.layout;
+    setText2Width(width);
+  };
+  const onText3Layout = (event) => {
+    const { width } = event.nativeEvent.layout;
+    setText3Width(width);
+  };
 
     return(
         <View style={preferencesStyles.container}>
@@ -265,21 +287,27 @@ const renderTabBar = (props) => (
                   <Top />
               </View>
 
-            <View style={[preferencesStyles.topAnimationBox, {backgroundColor:show3?appColors.secondaryColor1:null}]}>
-              <LeftToRightViewBox show={show1} duration={500} from={-1000} to={screenWidth/2} styles={{position : 'absolut'}}>
-                <View style={[preferencesStyles.topAnimation]}>
-                    <Text style={[customText.text, preferencesStyles.animatedText, {}]}>Commande facile</Text>
-                </View>
+            <View style={[preferencesStyles.topAnimationBox, {backgroundColor:show3?appColors.secondaryColor1:preferencesStyles.topAnimationBox.backgroundColor}]}>
+              
+              
+              { show1 &&
+                <LeftToRightViewBox show={show1} duration={1000}  from={-screenWidth} to={(screenWidth-text1Width)/2} styles={{position : 'absolute',}}>
+                  <View onLayout={onText1Layout} style={[preferencesStyles.topAnimation]}>
+                      <Text style={[customText.text, preferencesStyles.animatedText, {}]}>Achats facile + négociation de prix...</Text>
+                  </View>
               </LeftToRightViewBox>
+              }
 
-              <RightToLeftViewBox show={show2} duration={500} from={screenWidth+50} to={screenWidth/2} styles={{position : 'absolut',}}>
-                <View style={[preferencesStyles.topAnimation]}>
-                    <Text style={[customText.text, preferencesStyles.animatedText, {}]}>Payment sécurisé et en un clic</Text>
+              { show2 &&
+              <RightToLeftViewBox show={show2} duration={1000} from={screenWidth} to={(screenWidth-text2Width)/2} styles={{position : 'absolute',}}>
+                <View onLayout={onText2Layout} style={[preferencesStyles.topAnimation]}>
+                    <Text style={[customText.text, preferencesStyles.animatedText, {}]}>Payment sécurisé et en un clic!</Text>
                 </View>
               </RightToLeftViewBox>
+              }
 
-              <LeftToRightViewBox show={show3} duration={200} from={0} to={screenWidth/2} styles={{position : 'absolute',}}>
-                <View style={[preferencesStyles.winkelBox]}>
+              <LeftToRightViewBox show={show3} duration={1000} from={-screenWidth} to={screenWidth/2} styles={{position : 'absolute',}}>
+                <View onLayout={onText3Layout} style={[preferencesStyles.winkelBox]}>
                     <Text style={[customText.text, preferencesStyles.winkelText, {}]}>Winkel</Text>
                 </View>
               </LeftToRightViewBox>

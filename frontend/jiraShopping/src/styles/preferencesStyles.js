@@ -32,7 +32,7 @@ export const preferencesStyles = StyleSheet.create({
     {
         flexDirection : 'row',
         alignItems :'center',
-        backgroundColor : appColors.lightWhite,
+        backgroundColor : appColors.yellow2,
         height : 25,
     },
     topAnimation :
@@ -41,8 +41,9 @@ export const preferencesStyles = StyleSheet.create({
     },
     animatedText :
     {
-        color : appColors.black,
-        fontWeight : 'bold',
+        color : appColors.clearBlack,
+        //fontWeight : 'bold',
+        fontSize : 13,
     },
     winkelBox :
     {

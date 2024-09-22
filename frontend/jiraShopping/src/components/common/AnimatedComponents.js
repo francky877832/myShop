@@ -31,7 +31,7 @@ export const LeftToRightViewBox = ({ show, children, duration, from, to, styles 
   
     useEffect(() => {
       // Animate to 0 when `show` is true, otherwise back to -300
-      translateX.value = withTiming(show ? to+20: from, { duration: duration });
+      translateX.value = withTiming(show ? to: from, { duration: duration });
     }, [show]);
   
     const animatedStyles = useAnimatedStyle(() => {
