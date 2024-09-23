@@ -14,7 +14,7 @@ import { CheckBox } from '@rneui/themed';
 
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
-import { formatMoney, pluralize, formatLikes, calculateTotalPrice } from '../../utils/commonAppFonctions';
+import { formatMoney, pluralize, formatLikes, calculateTotalPrice, handleSharePress } from '../../utils/commonAppFonctions';
 import { choosePrice, hasPropositionPrice } from '../../utils/commonAppFonctions';
 //contexte
 import { useSelector, useDispatch } from 'react-redux';
@@ -119,15 +119,7 @@ exports.ShareButton = (props) => {
 
 exports.ShareButton = (props) => {
     const { link, size, color } = props
-    const handleSharePress = async (product) => {
-        try {
-            await Share.share({
-                message: link
-            });
-        } catch (error) {
-            console.error('Erreur lors du partage :', error);
-        }
-    }
+    //console.log(link)
 
     return(
         <Pressable style={[commonSimpleComponentsStyles.shareButton,]} onPress = { ()=>{ handleSharePress(link) }}>

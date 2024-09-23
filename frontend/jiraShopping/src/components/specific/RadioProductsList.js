@@ -87,7 +87,8 @@ const handleRemoveFromBasket = useCallback((product) => {
             },
             {
                 text: "Oui", onPress: () => {
-                    dispatch(updateSelectedProducts({product:product, bool:true}));
+                    dispatch(updateSelectedProducts({product:product, bool:false}));
+
                     dispatch(updateLocalBasket({product:product, isAdding:false}));
                 
                         timeoutRef.current = setTimeout(() => {
@@ -101,8 +102,9 @@ const handleRemoveFromBasket = useCallback((product) => {
     
   },[]);
 
-  const handleSelectedSeller = useCallback((val) => {dispatch(setSelectedSeller(val)) },[]);
+  const handleSelectedSeller = useCallback((seller) => {dispatch(setSelectedSeller({seller})) },[]);
   const handleUpdateSelectedProducts  = useCallback((product, bool) => {dispatch(updateSelectedProducts({product:product, bool:bool}))},[])
+
 
   const  updateQuantitiesAndPrice = useCallback((product, num) => {
     dispatch(updateQuantities({id:product._id, quantity: num}))
@@ -157,7 +159,7 @@ const RadioProduct = (props) => {
 
         let passed_sellers = []
         let passed_product = []
-
+        let sellersProducts = {}
         //console.log(item)
         //const profile = item.productDetails.images[0] || require('../../assets/images/product5.png')
         const inBasket = 3
@@ -174,18 +176,26 @@ const RadioProduct = (props) => {
             }
         }, [navigation])
 // <SellerBrand pub={false} certified={true} username={product1.seller.username} route={route} navigation={navigation} closeNotif={true} /> 
-    
+//                <RadioButton.Group onValueChange={val => {handleSelectedSeller(val)}} value={selectedSeller} style={[radioProductStyles.radioGroup,radioProductStyles.radioGroup1,]}>
+//console.log(selectedSeller)
         return (
             <View styles={[radioProductStyles.container,{}]}>       
-                <RadioButton.Group onValueChange={val => {handleSelectedSeller(val)}} value={selectedSeller} style={[radioProductStyles.radioGroup,radioProductStyles.radioGroup1,]}>
                     {
                         item.products.map((product1, key) => {
-                               
+                            sellersProducts = sellersProducts[product1.seller._id] ? sellersProducts : {...sellersProducts, [product1.seller._id] : []}
+                            console.log(sellersProducts)
                             return(
                             <View style={[radioProductsListtStyles.seller,{}]} key={key}>
-                                { passed_sellers.includes(product1.seller._id) ? false :
+                                { passed_sellers.includes(product1.seller._id) ? null :
+                                
                                     <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer1]} >
-                                        <RadioButton value={product1.seller._id} />
+
+                                        <RadioButton 
+                                            status={selectedSeller.includes(product1.seller._id) ? 'checked' : 'unchecked'}
+                                           // value={product1.seller._id} 
+                                            onPress={() => handleSelectedSeller(product1.seller._id)}
+                                        />
+                                        
                                         <Pressable style={[radioProductStyles.sellerBrand]} onPress={()=>{ handleSellerBrandPressed(product1) }}>
                                             <Image source={{uri: `${usersImagesPath}/${product1.seller.image}`}} style={radioProductStyles.sellerImage} />
                                             <View style={{width:10}}></View>
@@ -200,6 +210,8 @@ const RadioProduct = (props) => {
                             if(product1.seller._id == product2.seller._id && !passed_product.includes(product2._id))
                             { 
                                 passed_product.push(product2._id)
+                                sellersProducts[product1.seller._id]?.push(product2._id)
+                                //sellersProducts = {...sellersProducts, [product1.seller._id]:sellersProducts[product1.seller._id].push(product2._id)}
                                 return(
                                     <View style={[radioProductStyles.radioProducts,{flexWrap:'wrap' }]} key={key}>
                                             <View style={[radioProductStyles.radioContainer, radioProductStyles.radioContainer2, {  }]} >
@@ -238,8 +250,18 @@ const RadioProduct = (props) => {
                                                 } 
                                                 containerStyle={[radioProductStyles.checkBoxContainer,{}]} 
                                                 textStyle={[customText.text,radioProductStyles.checkBoxText]} 
-                                                checked={selectedSeller==product2.seller._id && selectedProducts[product2._id]} 
-                                                onPress={() => {selectedSeller==product2.seller._id ? handleUpdateSelectedProducts(product2, true) : Alert.alert("Infos","Veillez d'abord selectionner le vendeur adéquat.") }} 
+                                                checked={selectedProducts[product2._id]} 
+                                                onPress={() => {
+                                                    const sellerSelectedPro = sellersProducts[product2.seller._id].filter(productId => selectedProducts[productId]) // && product2._id==productId)
+                                                    const cond2 =  selectedSeller?.includes(product2.seller._id) && sellerSelectedPro.length===1 && sellerSelectedPro[0]===product2._id
+
+                                                    if(!selectedSeller?.includes(product2.seller._id) || cond2 )
+                                                    {
+                                                        handleSelectedSeller(product1.seller._id)
+                                                    }
+                                                    
+                                                    handleUpdateSelectedProducts(product2, true)
+                                                }} 
                                             
                                                 />
 
@@ -270,12 +292,14 @@ const RadioProduct = (props) => {
                 }                        
                 
                 
-                </RadioButton.Group>
             </View>
         )
     }
 
     
+//                </RadioButton.Group>
+//                                                onPress={() => {selectedSeller==product2.seller._id ? handleUpdateSelectedProducts(product2, true) : Alert.alert("Infos","Veillez d'abord selectionner le vendeur adéquat.") }} 
+
 
     const products = [{products:datas}]
 

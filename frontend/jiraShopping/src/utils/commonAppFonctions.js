@@ -1,6 +1,24 @@
 import nlp from "compromise";
 const Fuse = require('fuse.js');
-import { Linking, Alert } from 'react-native';
+import { Linking, Share, Alert } from 'react-native';
+
+ 
+
+export const handleSharePress = async (link) => {
+    if (!link) {
+        console.error("Lien manquant pour le partage");
+        return false;
+    }
+    try {
+        await Share.share({
+            message: link
+        });
+        return true
+    } catch (error) {
+        console.error('Erreur lors du partage :', error);
+        return false
+    }
+}
 
 
 export const capitalizeFirstLetter = str => str ? str[0].toUpperCase() + str.slice(1).toLowerCase() : str;

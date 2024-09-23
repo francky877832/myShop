@@ -13,10 +13,12 @@ import { topStyles } from '../../styles/topStyles';
 import badgeIconStyles from '../../styles/badgeIconStyles';
 import { UserContext } from '../../context/UserContext';
 import { OrdersContext } from '../../context/OrdersContext';
-import { truncateTextAndAddDots } from '../../utils/commonAppFonctions'
+import { truncateTextAndAddDots, handleSharePress } from '../../utils/commonAppFonctions'
 
 import { ShareButton } from '../common/CommonSimpleComponents'
 import { storeUrl, server } from '../../remote/server';
+
+import * as Linking from "expo-linking"
 
 //const loggedUser = "Francky"
 const   Account = (props) => {
@@ -99,7 +101,7 @@ const   Account = (props) => {
                                 )
                              })
                 }
-                 <Pressable style={[accountStyles.settingsElement, ]} onPress={()=>{Linking.openURL(storeUrl)}} > 
+                 <Pressable style={[accountStyles.settingsElement, ]} onPress={()=>{ handleSharePress(storeUrl) }} > 
                     <Text style={[accountStyles.text,{fontSize:18,},]}>Partager l'Appli</Text>
                     <ShareButton  size={30} color={appColors.secondaryColor1} styles={{}} link={storeUrl} />
                 </Pressable>

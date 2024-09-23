@@ -11,7 +11,7 @@ import { choosePrice } from '../../utils/commonAppFonctions'
 const initialState = {
   basket: [],
   selectedProducts: {},
-  selectedSeller: '',
+  selectedSeller: [],
   totalPrice: 0,
   isLoading: false,
   quantities : {},
@@ -155,7 +155,7 @@ const basketSlice = createSlice({
       
       const updatedSelectedProducts = {
         ...state.selectedProducts,
-        [product._id]: bool && !state.selectedProducts[product._id] // bool !== 'remove' ? !state.selectedProducts[itemId] : false,
+        [product._id]: bool ? !state.selectedProducts[product._id] : false // bool !== 'remove' ? !state.selectedProducts[itemId] : false,
       };
       //console.log(state.selectedProducts)
       state.selectedProducts = updatedSelectedProducts;
@@ -165,7 +165,6 @@ const basketSlice = createSlice({
           const item = state.basket.find((product) => product._id === key);
           if(isSelected && item)
           {
-            
             total +=  choosePrice(item)* ((state.selectedProducts[item._id]&&state.quantities[item._id]) || 1)
           }
           else
@@ -182,7 +181,16 @@ const basketSlice = createSlice({
       }, 0);*/
     },
     setSelectedSeller: (state, action) => {
-      state.selectedSeller = action.payload;
+      const { seller } = action.payload;
+      let sellers = []
+
+        if (state.selectedSeller.includes(seller)) {
+          sellers = state.selectedSeller.filter(id => id != seller);
+        } else {
+          sellers = [...state.selectedSeller, seller];
+        }
+        //console.log(sellers, seller)
+        state.selectedSeller = [...sellers]
     },
 
     addOrRemoveLocalBasket(state, action) {
@@ -203,7 +211,7 @@ const basketSlice = createSlice({
           }
         } else {
           if (existingIndex !== -1) {
-
+            
             const updatedProduct = {
               ...product,
               inBasket : product.inBasket-1,
