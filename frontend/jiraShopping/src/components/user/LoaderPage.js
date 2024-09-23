@@ -11,7 +11,7 @@ import * as SecureStore from 'expo-secure-store';
 import { appColors, customText, appFont } from '../../styles/commonStyles';
 import { userLoginStyles } from './userLoginStyles';
 
-import { CustomButton } from '../common/CommonSimpleComponents';
+import { CustomButton, CustomModalActivityIndicator } from '../common/CommonSimpleComponents';
 
 import { server } from '../../remote/server';
 import { serialize } from '../../utils/commonAppFonctions'
@@ -25,6 +25,7 @@ const LoaderPage = (props) => {
 
     const route = useRoute()
     const navigation = useNavigation()
+    const [isLoading, setIsLoading] = useState(true)
     const {checkEmail, checkPassword, checkUsername, user, setUser, isAuthenticated, setIsAuthenticated, loginUserWithEmailAndPassword} = useContext(UserContext)
     const { countUnreadNotifications } = useContext(OrdersContext)
     useEffect(() => {
@@ -33,6 +34,7 @@ const LoaderPage = (props) => {
             //await SecureStore.deleteItemAsync('authToken');
     //console.log("oj")
             try{
+                setIsLoading(true)
                 const token = await SecureStore.getItemAsync('authToken');
                 
                 if(!!token)
@@ -68,10 +70,13 @@ const LoaderPage = (props) => {
                 console.log("NOT TOKEN")
                 navigation.replace('UserLogin');
                 setIsAuthenticated(false);
+                setIsLoading(false)
+            }finally{
+                
             }
         }
 
-        //checkToken();
+        checkToken();
 /*
         if (isAuthenticated) {
             // Naviguer vers une autre page si l'utilisateur est authentifié
@@ -90,17 +95,20 @@ const LoaderPage = (props) => {
     
       return (
         <View style={[loaderPageStyles.container]}>
-            <LottieView
-                source={require('../../assets/animations/loaderPage1.json')}
-                autoPlay
-                loop
-                style={[loaderPageStyles.animation]}
-            />
+            <CustomModalActivityIndicator onRequestClose={setIsLoading} isLoading={isLoading} size="large" color={appColors.secondaryColor1} message="Chargements des données..." />
         </View>
       )
 }
 
 
+/*
+ <LottieView
+                source={require('../../assets/animations/loaderPage1.json')}
+                autoPlay
+                loop
+                style={[loaderPageStyles.animation]}
+            />
+    */
 export default LoaderPage
 
 
