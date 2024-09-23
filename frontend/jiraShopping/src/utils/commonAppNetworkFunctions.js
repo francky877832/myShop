@@ -5,6 +5,10 @@ import { notifications } from './offersDatas';
 import { server } from '../remote/server';
 
 
+//
+
+
+
 exports.sendNotifications = async ({user, source, model, type, datas}) => {
     const notif = notifications[model]
     const message = notif[type].message

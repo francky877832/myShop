@@ -21,6 +21,7 @@ import { sinceDate } from '../../utils/commonAppFonctions'
 
 import { UserContext } from '../../context/UserContext';
 import { useNavigation } from '@react-navigation/native';
+import { OrdersContext } from '../../context/OrdersContext';
 
 const RenderNotificationItem = (props) =>{
     const {item, openNotif, user, from} = props
@@ -43,8 +44,10 @@ const RenderNotificationItem = (props) =>{
     },[])
 
     const handleOpenNotif = () => {
+       
         if(item.action!='none')
-        {
+        { 
+            //console.log(item.group)
             openNotif(user, item)
         }
         

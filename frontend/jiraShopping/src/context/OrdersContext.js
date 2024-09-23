@@ -26,6 +26,8 @@ const OrdersProvider = ({children}) => {
     const [sold, setSold] = useState([])
     const [bought, setBought] = useState([])
 
+    const [unreadNotifications, setUnreadNotifications] = useState(0)
+
     const reshapeOrders = (orders) => {
         const o1 = orders.map((el1) => {
             const o2 = orders.filter((el2) => {
@@ -58,14 +60,15 @@ const fetchUserOrders = async (user, page, limit) => {
         }
     }
     
-const updateOrderRead = async (itemId, productId) => {
+const updateOrderRead = async (groupId) => {
         const order = {
-            product : productId
+            group : groupId
         }
+        //console.log(groupId)
     
         try{
             
-            const response = await fetch(`${server}/api/datas/orders/update/read/${itemId}`, {
+            const response = await fetch(`${server}/api/datas/orders/update/read`, {
                 method: 'PUT',
                 body: JSON.stringify(order),
                 headers: {
@@ -216,10 +219,38 @@ const getOrders = useCallback(async (user, page, limit) => {
     }
 
 
+    const countUnreadNotifications = async (user) => {
+        try {
+          // Effectuer la requête avec fetch vers l'API
+          const response = await fetch(`${server}/api/datas/notifications/count/${encodeURIComponent(user._id)}`, {
+            method: 'GET', // Ou POST si l'API utilise POST
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+      
+         
+      
+          // Convertir la réponse en JSON
+          const data = await response.json();
+      
+          const unreadCount = data.total || 0;
+          setUnreadNotifications(unreadCount)
+      
+          console.log(`Nombre de GroupOrders non lus: ${unreadCount}`);
+          return unreadCount;
+      
+        } catch (error) {
+          console.error('Erreur lors de la récupération des GroupOrders non lus:', error);
+        }
+    }
+      
+
+
    
-    const favouritesStateVars = { orders, sold, bought, isLoading, hasMore, page,}
-    const favouritesStateStters = { setIsLoading,  setHasMore, setPage, setOrders, setIsNewDatas }
-    const utilsFunctions = { getOrders, getOrderFromAdmin, updateOrderFromAdmin, updateOrderRead, updateOrderStatus, addNewOrder,   }
+    const favouritesStateVars = { orders, sold, bought, isLoading, hasMore, page, unreadNotifications}
+    const favouritesStateStters = { setUnreadNotifications, setIsLoading,  setHasMore, setPage, setOrders, setIsNewDatas }
+    const utilsFunctions = { countUnreadNotifications, getOrders, getOrderFromAdmin, updateOrderFromAdmin, updateOrderRead, updateOrderStatus, addNewOrder,   }
     return (
         <OrdersContext.Provider value={{...favouritesStateVars, ...favouritesStateStters, ...utilsFunctions}}>
             {children}

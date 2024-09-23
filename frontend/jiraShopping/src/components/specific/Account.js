@@ -16,7 +16,7 @@ import { OrdersContext } from '../../context/OrdersContext';
 import { truncateTextAndAddDots } from '../../utils/commonAppFonctions'
 
 import { ShareButton } from '../common/CommonSimpleComponents'
-import { appStoreUrl, server } from '../../remote/server';
+import { storeUrl, server } from '../../remote/server';
 
 //const loggedUser = "Francky"
 const   Account = (props) => {
@@ -99,9 +99,9 @@ const   Account = (props) => {
                                 )
                              })
                 }
-                 <Pressable style={[accountStyles.settingsElement, ]} onPress={()=>{Linking.openURL(appStoreUrl)}} > 
+                 <Pressable style={[accountStyles.settingsElement, ]} onPress={()=>{Linking.openURL(storeUrl)}} > 
                     <Text style={[accountStyles.text,{fontSize:18,},]}>Partager l'Appli</Text>
-                    <ShareButton  size={30} color={appColors.secondaryColor1} styles={{}} link={appStoreUrl} />
+                    <ShareButton  size={30} color={appColors.secondaryColor1} styles={{}} link={storeUrl} />
                 </Pressable>
             </View>
             

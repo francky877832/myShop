@@ -1,6 +1,8 @@
 const Notification = require('../models/notificationModel');
 const mongoose = require('../../shared/db').mongoose;
 const ObjectId = mongoose.Types.ObjectId;
+const Offer = require('../models/offerModel')
+const Order = require('../models/orderModel')
 
 
 const createNotificationObject = (req) => ({
@@ -13,6 +15,71 @@ const createNotificationObject = (req) => ({
     datas: req.body.datas,
     title : req.body.title,
 });
+
+
+exports.countAllUnreadNotifications = async (req, res, next) => {
+
+    try {
+      const { user } = req.params
+
+      const unreadNotifications = await Notification.aggregate([
+        { $match: { user: new mongoose.Types.ObjectId(user) } },
+        { $unwind: "$notifications" }, 
+        { $match: { "notifications.read": 0 } }, 
+        { $count: "unreadCount" },
+        {
+          $addFields: {
+            unreadCount: { $ifNull: ["$unreadCount", 0] }
+          }
+        }
+      ]);
+
+      const unreadOffersCount = await Offer.aggregate([
+        { $match: {$or:[{ seller : new mongoose.Types.ObjectId(user)}, {buyer :  new mongoose.Types.ObjectId(user)}]} },
+        { $match: { read: 0 } }, // Filtrer où read = 0
+        { $count: "unreadCount" },
+        {
+          $addFields: {
+            unreadCount: { $ifNull: ["$unreadCount", 0] }
+          }
+        }
+      ]);
+
+      const unreadOrdersCount = await Order.aggregate([
+        // Jointure avec GroupOrder
+        {
+          $lookup: {
+            from: 'grouporders', // Le nom de la collection GroupOrder
+            localField: 'group',  // Champ dans Order pour la relation avec GroupOrder
+            foreignField: '_id',  // Champ dans GroupOrder
+            as: 'groupOrderDetails'
+          }
+        },
+        // Désanonymiser les documents GroupOrder liés
+        { $unwind: "$groupOrderDetails" },
+        // Filtrer les GroupOrder où read = 0
+        { $match: { "groupOrderDetails.read": 0 } },
+        // Compter le nombre de résultats
+        { $count: "unreadCount" },
+        {
+          $addFields: {
+            unreadCount: { $ifNull: ["$unreadCount", 0] }
+          }
+        }
+      ]);
+
+      //console.log(unreadOffersCount[0].unreadCount)
+      const notifCount = unreadNotifications.length > 0 ? unreadNotifications[0].unreadCount : 0
+      const offerCount = unreadOffersCount.length > 0 ? unreadOffersCount[0].unreadCount : 0
+      const orderCount = unreadOrdersCount.length > 0 ? unreadOrdersCount[0].unreadCount : 0
+      const total = notifCount + offerCount + orderCount
+      // Si aucune notification non lue n'est trouvée, renvoyer 0
+      return res.status(200).json({total : total});
+    } catch (error) {
+      console.error("Erreur lors du comptage des notifications non lues :", error);
+      return res.status(400).json({error});    }
+};
+  
 
 const productPipeline = (req, res, next) => {
     const pipeline = [

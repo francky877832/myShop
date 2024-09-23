@@ -8,10 +8,13 @@ import badgeIconStyles from '../../styles/badgeIconStyles';
 
 import { topStyles } from '../../styles/topStyles';
 import { appColors, appFont } from '../../styles/commonStyles';
+import { OrdersContext } from '../../context/OrdersContext';
 
 const Top = (props) => {
     const navigation = useNavigation()
     const {searchText, replaceNavigation} = props
+    const { unreadNotifications } = useContext(OrdersContext)
+
     const handleNavigation = () => {
         if(replaceNavigation)
         {
@@ -29,7 +32,7 @@ const Top = (props) => {
             </Pressable>
 
             <Pressable  style={[topStyles.notification, ]} onPress = { ()=>{ navigation.navigate("Notifications");} }>
-                <BadgeIcon name="notifications" size={24} color="black" badgeCount={5} styles={badgeIconStyles} />
+                <BadgeIcon name="notifications" size={24} color="black" badgeCount={unreadNotifications} styles={badgeIconStyles} />
             </Pressable>
         </View>
     )

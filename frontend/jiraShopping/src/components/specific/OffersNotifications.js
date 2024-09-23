@@ -26,11 +26,14 @@ import EmptyList from '../common/EmptyList';
 
 import { storeCache, getCache } from '../../cache/cacheFunctions';
 import { NotificationsSkeleton } from '../common/CommonSimpleComponents'
+import { OrdersContext } from '../../context/OrdersContext';
 
 
 const OffersNotifications = (props) => {
   const navigation = useNavigation()
     const { user } = useContext(UserContext)
+    const { setUnreadNotifications } = useContext(OrdersContext)
+
       //GESTION DE LA CACHE ET DU SIDE EFFECT SIMULTANNEMENT
   useCacheBeforeRemove(navigation, storeCache, ['OFFERS_NOTIFICATIONS', offers])
   //(cacheKey, getCache, loadMoreDatas, parameters)
@@ -86,6 +89,7 @@ const openOffer = async (user, item) => {
         navigation.navigate("Offers", {product:item.product, notificationUsers:{seller:item.seller, buyer:item.buyer}, notificationsOffers:item.offers})
         if(item.read==0)
         {
+            setUnreadNotifications(prev => prev-1)
             await updateOfferRead(item)
         }
         

@@ -215,26 +215,18 @@ exports.updateOrderStatus  = async (req, res, next) => {
   };
 
 exports.updateOrderRead = async (req, res, next) => {
-    const { product } = req.body; // Les données envoyées dans la requête
-  console.log("product")
+    const { group } = req.body; // Les données envoyées dans la requête
+    //console.log("product")
     try {
-  
-      const order = await Order.findOneAndUpdate(
-        { _id: new mongoose.Types.ObjectId(req.params.id), 'products.product':  new mongoose.Types.ObjectId(product) },
-        {
-          $set: {
-            'products.$.read': 1,
-            updatedAt: Date.now() // Met à jour la date de mise à jour
-          }
-        },
-        { new: true, runValidators: true } // Retourne le document mis à jour
-      );
-  
+      
+
+      const order = await GroupOrder.updateOne({ _id: new mongoose.Types.ObjectId(group) }, {read:1, updatedAt: Date.now()})
+      console.log(group)
       if (!order) {
         return res.status(404).json({ message: 'Commande ou produit non trouvé' });
       }
   
-      res.status(200).json(order);
+      res.status(200).json({order});
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Erreur du serveur', error });

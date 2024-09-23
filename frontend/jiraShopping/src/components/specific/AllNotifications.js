@@ -28,6 +28,7 @@ import { getCache, storeCache } from '../../cache/cacheFunctions';
 import RenderNotificationItem from '../common/RenderNotificationItem';
 import EmptyList from '../common/EmptyList';
 import { NotificationsSkeleton } from '../common/CommonSimpleComponents'
+import { OrdersContext } from '../../context/OrdersContext';
 
 const initialLayout = { width: Dimensions.get('window').width };
 
@@ -37,6 +38,8 @@ const initialLayout = { width: Dimensions.get('window').width };
 const AllNotifications = () => {
 
   const { user } = useContext(UserContext)
+  const { setUnreadNotifications } = useContext(OrdersContext)
+
   /*
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(1);
@@ -147,6 +150,7 @@ const openNotif = async (user, item) => {
 
       if(item.read==0)
       {
+          setUnreadNotifications(prev => prev-1)
           await updateNotificationsRead({user:user._id, id:item._id})
       }
    

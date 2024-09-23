@@ -9,7 +9,7 @@ router.get('/admin/get/:orderNo', orderCtrl.getOrderFromAdmin);
 
 router.post('/add', orderCtrl.addUserOrder);
 router.put('/update/update-payment-status', orderCtrl.updatePaymentStatus);
-router.put('/update/read/:id', orderCtrl.updateOrderRead);
+router.put('/update/read', orderCtrl.updateOrderRead);
 router.put('/update/status/:id', orderCtrl.updateOrderStatus);
 router.put('/admin/update', orderCtrl.updateOrderFromAdmin);
 

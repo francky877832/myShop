@@ -32,6 +32,7 @@ import { NotificationsSkeleton } from '../common/CommonSimpleComponents'
 
 const OrdersNotifications = (props) => {
     const { user } = useContext(UserContext)
+    const { setUnreadNotifications } = useContext(OrdersContext)
 
 
     const navigation = useNavigation()
@@ -45,9 +46,11 @@ const OrdersNotifications = (props) => {
 const openOrder = async (user, item) => {
     try
     {
-        if(item.products.read===0)
+        console.log(item.group)
+        if(item.group.read===0)
         {
-            await updateOrderRead(item._id, item.products.product)
+            setUnreadNotifications(prev => prev-1)
+            await updateOrderRead(item.group._id)
         }
             
         navigation.navigate("OrdersDetails", {ordersDetails:item})

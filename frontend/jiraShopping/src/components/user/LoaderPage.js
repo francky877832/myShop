@@ -16,13 +16,14 @@ import { CustomButton } from '../common/CommonSimpleComponents';
 import { server } from '../../remote/server';
 import { serialize } from '../../utils/commonAppFonctions'
 import { UserContext } from '../../context/UserContext';
+import { OrdersContext } from '../../context/OrdersContext';
 
 const LoaderPage = (props) => {
 
     const route = useRoute()
     const navigation = useNavigation()
     const {checkEmail, checkPassword, checkUsername, user, setUser, isAuthenticated, setIsAuthenticated, loginUserWithEmailAndPassword} = useContext(UserContext)
-
+    const { countUnreadNotifications } = useContext(OrdersContext)
     useEffect(() => {
         const checkToken = async () => {
             //await SecureStore.deleteItemAsync('user');
@@ -37,12 +38,13 @@ const LoaderPage = (props) => {
                     //console.log(typeof user)
                     //A remplace par user.email...
                     ///await loginUserWithEmailAndPassword("francky877832@gmail.com", "francky877832", "0000000")
-                    loginUserWithEmailAndPassword(user.email, user.username, user.password).then((user)=>{
+                    loginUserWithEmailAndPassword(user.email, user.username, user.password).then(async (user)=>{
                         //Chargement des données de l'Appli
                         if(!user)
                         {   
                             throw new Error("Nous n'avons pas pu vous connecter automatiquement.")
                         }
+                        await countUnreadNotifications(user)
                         navigation.replace('Preferences');
 
                         return;
