@@ -18,6 +18,9 @@ import { serialize } from '../../utils/commonAppFonctions'
 import { UserContext } from '../../context/UserContext';
 import { OrdersContext } from '../../context/OrdersContext';
 
+import LottieView from 'lottie-react-native';
+
+
 const LoaderPage = (props) => {
 
     const route = useRoute()
@@ -68,7 +71,7 @@ const LoaderPage = (props) => {
             }
         }
 
-        checkToken();
+        //checkToken();
 /*
         if (isAuthenticated) {
             // Naviguer vers une autre page si l'utilisateur est authentifié
@@ -86,11 +89,29 @@ const LoaderPage = (props) => {
       }, [isAuthenticated, navigation]);
     
       return (
-            <View>
-                <Text>Loader</Text>
-            </View>
+        <View style={[loaderPageStyles.container]}>
+            <LottieView
+                source={require('../../assets/animations/loaderPage1.json')}
+                autoPlay
+                loop
+                style={[loaderPageStyles.animation]}
+            />
+        </View>
       )
 }
 
 
 export default LoaderPage
+
+
+const loaderPageStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    animation: {
+        width: 100,
+        height: 100,
+    },
+})
