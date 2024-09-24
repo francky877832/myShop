@@ -515,5 +515,22 @@ exports.formDataToJSON = (formData) => {
     return JSON.stringify(jsonObject);
   }
 
+exports.getFirebaseErrorMessage = (errorCode) => {
+    switch (errorCode) {
+      case 'auth/invalid-email':
+        return "L'adresse e-mail est invalide.";
+      case 'auth/user-disabled':
+        return "Ce compte a été désactivé.";
+      case 'auth/user-not-found':
+        return "Aucun utilisateur trouvé avec cette adresse e-mail.";
+      case 'auth/wrong-password':
+        return "Le mot de passe est incorrect.";
+      case 'auth/too-many-requests':
+        return "Trop de tentatives de connexion. Réessayez plus tard.  Si vous ne voulez pas attendre réinitialisez votre mot de passe.";
+      default:
+        return "Une erreur inconnue s'est produite. Veuillez réessayer.";
+    }
+};
+
 
 

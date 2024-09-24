@@ -107,7 +107,7 @@ const UserProvider = ({children}) => {
 
    const  updateUser = async (userId, updatedFormData) => {
     try {
-            const response = await fetch(`${server}/api/auth/users/update/${userId}`, {
+            const response = await fetch(`${server}/api/auth/users/update/${encodeURIComponent(userId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'multipart/form-data',

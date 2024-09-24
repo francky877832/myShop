@@ -42,7 +42,7 @@ async function generateUniqueUsername() {
 
 
 const signupUser = async (req, res, next) => {
-  console.log(req.body)
+  //console.log(req.body)
   try
   {
    const hash = await bcrypt.hash(req.body.password, 10)
@@ -123,13 +123,15 @@ const signupUser = async (req, res, next) => {
   const imageFiles = req.files || []
   try
   {
-    console.log(req.body.password)
+    //console.log(req.body.password)
+    //console.log(userId)
+
     let password, address;
     if(Object.keys(req.body).includes('password'))
     {
       password = await bcrypt.hash(req.body.password, 10)
       updatedDatas = {...req.body, password:password}
-      console.log(password)
+      //console.log(password)
     }
 
     if(Object.keys(req.body).includes('address'))
@@ -147,7 +149,7 @@ const signupUser = async (req, res, next) => {
 
     let match;
    
-    if(mongoose.Types.ObjectId.isValid(id))
+    if(mongoose.Types.ObjectId.isValid(userId))
     {
       match = { _id: new mongoose.Types.ObjectId(userId) }
     }

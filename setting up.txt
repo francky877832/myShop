@@ -20,4 +20,6 @@ git remote add heroku https://git.heroku.com/jirashopping.git
 git push heroku master
 heroku restart
 
+$2a$10$i7kuGTSjqy4gyvTigwHLUudLUwRHWJi1p1gsWTw36/qP4VsnsBtXG
+
 

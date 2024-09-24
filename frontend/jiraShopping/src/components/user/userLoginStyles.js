@@ -43,7 +43,7 @@ export const userLoginStyles = StyleSheet.create({
         left : 0,
         right : 0,
         top : screenHeight/4,
-        height : 300,
+        //height : 300,
         backgroundColor : appColors.white,
         paddingHorizontal : 30,
         zIndex : 100,
@@ -56,7 +56,7 @@ export const userLoginStyles = StyleSheet.create({
         // Ombre sur Android
         elevation: 10,
         borderRadius: 10,
-        //paddingVertical : 30,
+        paddingVertical : 30,
     },
 
     credentialContainers :
@@ -89,9 +89,20 @@ export const userLoginStyles = StyleSheet.create({
         fontWeight : "bold",
     },
   
+    inputContainer :
+    {
+       // paddingLeft : 20,
+    },
     inputFocused :
     {
         borderColor : appColors.secondaryColor1,
+    },
+    input:
+    {
+        ...customText.text,
+        fontSize : 16,
+        left : 10,
+
     }
 
 })

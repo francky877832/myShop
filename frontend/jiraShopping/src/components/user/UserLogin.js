@@ -11,10 +11,13 @@ import * as SecureStore from 'expo-secure-store';
 import { appColors, customText, appFont, formErrorStyle } from '../../styles/commonStyles';
 import { userLoginStyles } from './userLoginStyles';
 
-import { CustomButton } from '../common/CommonSimpleComponents';
+import { CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpleComponents';
+
+import auth from '@react-native-firebase/auth';
+
 
 import { server } from '../../remote/server';
-import { serialize } from '../../utils/commonAppFonctions'
+import { serialize, getFirebaseErrorMessage } from '../../utils/commonAppFonctions'
 import { UserContext } from '../../context/UserContext';
 
 
@@ -26,17 +29,19 @@ const UserLogin = (props) =>
     const {  } = props
     const route = useRoute()
     const navigation = useNavigation()
-    const {checkEmail, checkPassword, checkUsername, user, setUser, isAuthenticated, setIsAuthenticated, loginUserWithEmailAndPassword} = useContext(UserContext)
+    const {checkEmail, checkPassword, checkUsername, user, setUser, updateUser, setIsAuthenticated, loginUserWithEmailAndPassword} = useContext(UserContext)
 
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
 
 
     const [isEmailFocused, setIsEmailFocused] = useState(false)
     const [isPasswordFocused, setIsPasswordFocused] = useState(false)
     const [isUsernameFocused, setIsUsernameFocused] = useState(false)
     
+    const [isPasswordShowed, setIsPasswordShowed] = useState(false)
 
     const [isEmailCorrect, setIsEmailCorrect] = useState("")
     const [isPasswordCorrect, setIsPasswordCorrect] = useState("")
@@ -51,13 +56,28 @@ const UserLogin = (props) =>
 const loginUser = async (email, username, password) => {
     try
     {
-        const form = {email, password}
+        setIsLoading(true)
+        const formData = new FormData()
+        const form = {email, password, username:email.split('.')[0]}
         await userValidationSchema.validate(form, { abortEarly: false });
 
-        const user = await loginUserWithEmailAndPassword(email, username, password)
-        if(!user)
+        const userCredential = await auth().signInWithEmailAndPassword(email, password);
+
+        const firebase_user = userCredential.user;
+
+        formData.append('password', password); //OR firebase_user.password
+        const newUser = await updateUser(email, formData);
+
+        const user = await loginUserWithEmailAndPassword(newUser.email, newUser.username, newUser.password)
+
+        if(!firebase_user || !user)
         {   
-            throw new Error("Aucun utilisateur ne correspond a vos identifiants.")
+            if(!newUser)
+            {
+                const error = new Error('Utilisateur non trouvé');
+                error.code = 'auth/user-not-found';
+                throw error;
+            }
         }
 
         navigation.replace('Preferences');
@@ -65,17 +85,30 @@ const loginUser = async (email, username, password) => {
     }
     catch(error)
     {
+        
         console.log(error)
 
-        if (error instanceof Yup.ValidationError) {
+        if (error instanceof Yup.ValidationError) 
+        {
             const formErrors = {};
             error.inner.forEach(err => {
                 formErrors[err.path] = err.message;
             });
                 //console.log(formErrors)
-        setErrors(formErrors);
+            setErrors(formErrors);
+        }
+        else
+        {
+            if(error.code)
+            {
+                Alert.alert("Erreur",getFirebaseErrorMessage(error.code))
+                return;
+            }
+            Alert.alert("Error", "Une erreur est sruvenue lors de la verificaiton de vos informations. Vérifiez les données fournies.")
         }
         return;
+    }finally{
+        setIsLoading(false)
     }
 }
 
@@ -113,10 +146,10 @@ const loginUser = async (email, username, password) => {
                             onFocus={() => setIsEmailFocused(true)}
                             onBlur={() => setIsEmailFocused(false)}
                             underlineColorAndroid='transparent'
-                            inputContainerStyle={[{borderBottomWidth:1},isEmailFocused && userLoginStyles.inputFocused,]}
+                            inputContainerStyle={[userLoginStyles.inputContainer, isEmailFocused && userLoginStyles.inputFocused,]}
                             leftIcon={ 
                                 <Pressable onPress={() => {}}>
-                                    <Icon name='mail-outline' type='ionicon' size={24} color={appColors.secondaryColor1} />
+                                    <Icon name='email' type='entypo' size={24} color={isEmailFocused?appColors.secondaryColor1:appColors.black} />
                                 </Pressable>
                             }
                             rightIcon={ 
@@ -134,7 +167,7 @@ const loginUser = async (email, username, password) => {
                             }
                             value={email}
                         /> 
-                        <Text style={[formErrorStyle.text]}>Erreur</Text>  
+                        {errors.email && <Text style={[formErrorStyle.text]}>{errors.email}</Text>}
                 </View>
 
                 <View style={{height:10}}></View>
@@ -151,25 +184,23 @@ const loginUser = async (email, username, password) => {
                             inputContainerStyle={[{borderBottomWidth:1},isPasswordFocused && userLoginStyles.inputFocused,]}
                             leftIcon={ 
                                 <Pressable onPress={() => {}}>
-                                    <Icon name='key-outline' type='ionicon' size={24} color={appColors.secondaryColor1} />
+                                    <Icon name='lock-closed-sharp' type='ionicon' size={24} color={isPasswordFocused?appColors.secondaryColor1:appColors.black} />
                                 </Pressable>
                             }
-                            rightIcon={ 
-                                isPasswordCorrect === 'true' ?
-                                <Pressable onPress={() => {}}>
-                                    <Icon name='checkmark-circle-outline' type='ionicon' size={24} color={appColors.green} />
-                                </Pressable>
+                            rightIcon = {
+                                isPasswordShowed ?
+                                    <Pressable onPress={()=>{setIsPasswordShowed(false)}}>
+                                        <Icon type="ionicon" name="eye-off-outline" size={24} color={appColors.gray} />
+                                    </Pressable>
                                 :
-                                isPasswordCorrect === 'false' ?
-                                 <Pressable onPress={() => {}}>
-                                    <Icon name='close-circle-outline' type='ionicon' size={24} color={appColors.red} />
-                                </Pressable>
-                                :
-                                false
+                                <Pressable onPress={()=>{setIsPasswordShowed(true)}}>
+                                        <Icon type="ionicon" name="eye-outline" size={24} color={appColors.secondaryColor1} />
+                                    </Pressable>
                             }
                             value={password}
-                            secureTextEntry
-                        />   
+                            secureTextEntry={!isPasswordShowed}
+                        /> 
+                        {errors.password && <Text style={[formErrorStyle.text]}>{errors.password}</Text>} 
                 </View>   
 
                 <Pressable style={[userLoginStyles.forgotBox]} onPress={() => { navigation.navigate('ResetPassword') } }>
@@ -183,6 +214,9 @@ const loginUser = async (email, username, password) => {
             </View>
               <Text>{/* <Button title="Sign Up" onPress={()=>{navigation.navigate("UserSignup")}} /> */}</Text>
         </ImageBackground>
+
+        <CustomModalActivityIndicator onRequestClose={setIsLoading} isLoading={isLoading} size="large" color={appColors.secondaryColor1} message="Vérification des donnéees..." />
+       
 
         </View>
 </KeyboardAwareScrollView>
