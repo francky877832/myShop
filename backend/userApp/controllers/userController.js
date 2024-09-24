@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-const JWT_SECRET = 'RANDOM_TOKEN_SECRET'
+const JWT_SECRET = 'WINKEL_RANDOM_TOKEN_SECRET'
 const generateToken = (userId) => {
     const token = jwt.sign({ userId : userId }, JWT_SECRET, { expiresIn: '7d' });
     return token;
@@ -20,21 +20,51 @@ function isBcryptHash(pass) {
   return typeof password === 'string' && password.startsWith('$2') && password.length === 60;
 }
 
-exports.signupUser = (req, res, next) => {
-    bcrypt.hash(req.body.password, 10)
-      .then(hash => {
-        const user = new User({
+
+async function generateUniqueUsername() {
+  const baseName = 'winkel';
+  let uniqueUsername = '';
+  let isUnique = false;
+
+  while (!isUnique) {
+    const randomPart = Math.floor(Math.random() * 10000000000); // entre 0 et 9999999999
+    uniqueUsername = `${baseName}${randomPart}`;
+
+    const existingUser = await User.findOne({ username: uniqueUsername });
+
+    if (!existingUser) {
+      isUnique = true;
+    }
+  }
+
+  return uniqueUsername;
+}
+
+
+const signupUser = async (req, res, next) => {
+  console.log(req.body)
+  try
+  {
+   const hash = await bcrypt.hash(req.body.password, 10)
+    
+  const user = new User({
           email: req.body.email,
           password: hash,
-          username : req.body.username,
+          username : await generateUniqueUsername(),
           image : 'new-user.jpg'
-        });
-        user.save()
-          .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-          .catch(error => res.status(400).json({ error }));
-      })
-      .catch(error => res.status(500).json({ error }));
-  };
+    });
+
+        await user.save()
+         
+        return user
+
+    }
+    catch(error)
+    {
+      console.log(error)
+      return null
+    }
+};
 
   exports.loginUser =  (req, res, next) => {
     console.log("LOGIN")
@@ -46,9 +76,18 @@ exports.signupUser = (req, res, next) => {
         .populate('favourites')
         .then( async (user) => {
           
-          console.log(req.query)
-            if (!user) {
-                return res.status(401).json({ error: 'auth/user-not-found--' });
+          //console.log(req.query)
+            if (!user) 
+            {
+                //console.log("ok")
+                const user_tmp = await signupUser({...req, body:req.query}, res, next)
+                if(!user_tmp)
+                {
+                  return res.status(401).json({ error: 'auth/user-not-found--' });
+                }
+
+                user = user_tmp
+                //
             }
             //user.password = await bcrypt.hash('00000000', 10)
             //user.save()
@@ -57,12 +96,12 @@ exports.signupUser = (req, res, next) => {
             if(!isBcryptHash(req.query.password))
             {
               validePassword = await bcrypt.compare(req.query.password, user.password)
-              console.log("validePassword")
+              //console.log("validePassword")
             }
             else
             {
               validePassword = req.query.password.toString() === user.password.toString()
-              console.log(" not validePassword")
+              //console.log(" not validePassword")
             }
               
             if (!validePassword) {
@@ -75,7 +114,7 @@ exports.signupUser = (req, res, next) => {
             }    
 
         })
-        .catch(error => res.status(500).json({ error: error }));
+        .catch(error => res.status(500).json({ error }));
  };
 
  exports.updateUser = async (req, res, next) => {
@@ -105,8 +144,19 @@ exports.signupUser = (req, res, next) => {
     {
       updatedDatas = {...updatedDatas, image:images[0]}
     }
+
+    let match;
+   
+    if(mongoose.Types.ObjectId.isValid(id))
+    {
+      match = { _id: new mongoose.Types.ObjectId(userId) }
+    }
+    else
+    {
+      match = { email: userId } //for resetPassword
+    }
     const updatedUser = await User.findOneAndUpdate(
-      { _id: new mongoose.Types.ObjectId(userId) }, 
+     { ...match },
       { $set: updatedDatas },  
       { new: true, runValidators: true }
     );
@@ -194,8 +244,9 @@ exports.signupUser = (req, res, next) => {
 
 
 exports.getUser = (req, res, next) => {
-    User.findOne({ _id : req.params.id })
+    User.findOne({ email : req.params.email })
     .then((user)=>{
+        //console.log(user)
         res.status(200).json(user);
     })
     .catch(error => res.status(500).json({ error }));

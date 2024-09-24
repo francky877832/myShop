@@ -18,6 +18,7 @@ import SearchResults from '../components/specific/SearchResults';
 import CategoryResults from '../components/specific/CategoryResults';
 import UserLogin from '../components/user/UserLogin';
 import UserSignup from '../components/user/UserSignup';
+import ResetPassword from '../components/user/ResetPassword';
 import PhoneAuth from '../components/specific/PhoneAuth';
 import Followers from '../components/specific/Followers';
 import Orders from '../components/specific/Orders';
@@ -106,7 +107,10 @@ export default function MainNavigation() {
                 <Stack.Screen name="LoaderPage" component={LoaderPage}  options={{ title: <HeaderNavigation title="Laoder"/>, headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : false, tabBarVisible: false, }} />
                 <Stack.Screen name="UserSignup" component={UserSignup}  options={{ title: <HeaderNavigation title="Sign Up"/>, headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="ResetPassword" component={ResetPassword}  options={{ title: <HeaderNavigation title="Reset Password"/>, headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="PhoneAuth" component={PhoneAuth}  options={{ title: <HeaderNavigation title="PhoneAuth"/>, headerShown : true, tabBarVisible: false, }} />
+                   
+              
               </Stack.Navigator>
             </CommentsProvider>
             </OrdersProvider>

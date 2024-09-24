@@ -6,9 +6,9 @@ const {productsUserApp, userUserApp} = require('../middlewares/multer-config');
 
 
 //User Route
-router.post('/signup', userCtrl.signupUser);
+//router.post('/signup', userCtrl.signupUser);
 router.get('/login', userCtrl.loginUser);
-router.get('/users/get/:id', userCtrl.getUser);
+router.get('/users/get/:email', userCtrl.getUser);
 router.get('/users/followers/:id', userCtrl.getUserFollowers);
 router.get('/users/referred/:userId', userCtrl.getReferredUsers);
 

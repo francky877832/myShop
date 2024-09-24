@@ -13,7 +13,7 @@ export const productsListStyles = StyleSheet.create({
     flatlist :
     {
         flexDirection : "column",
-        justifyContent : "center",
+        //justifyContent : "center",
         paddingHorizontal : paddingForProductContainer.horizontal/2,
     },
 

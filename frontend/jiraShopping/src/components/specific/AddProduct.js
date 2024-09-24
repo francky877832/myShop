@@ -24,9 +24,7 @@ import { formatMoney, capitalizeFirstLetter} from '../../utils/commonAppFonction
 import { categoriesStyles } from '../../styles/categoriesStyles';
 
 import { ProductItemContext } from '../../context/ProductItemContext';
-import { FilterContext
-
- } from '../../context/FilterContext';
+import { FilterContext } from '../../context/FilterContext';
 import { server, noImagePath, productsImagesPath } from '../../remote/server';
 import { sendNotifications } from '../../utils/commonAppNetworkFunctions'
 

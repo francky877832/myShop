@@ -1,36 +1,30 @@
 import React, { useState, forwardRef, useRef, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, KeyboardAvoidingView, ImageBackground} from 'react-native';
+import { View, Text, StyleSheet, Pressable, Button, Alert } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import * as SecureStore from 'expo-secure-store';
-
-
-import { appColors, customText, appFont, formErrorStyle } from '../../styles/commonStyles';
+import { appColors, customText, appFont } from '../../styles/commonStyles';
 import { userLoginStyles } from './userLoginStyles';
 
 import { CustomButton } from '../common/CommonSimpleComponents';
-
-import { server } from '../../remote/server';
-import { serialize } from '../../utils/commonAppFonctions'
 import { UserContext } from '../../context/UserContext';
 
 
 import userValidationSchema from '../forms/validations/userValidation';
 import * as Yup from 'yup';
 
-const UserLogin = (props) =>
+const ResetPassword = (props) =>
 {
     const {  } = props
     const route = useRoute()
     const navigation = useNavigation()
-    const {checkEmail, checkPassword, checkUsername, user, setUser, isAuthenticated, setIsAuthenticated, loginUserWithEmailAndPassword} = useContext(UserContext)
+    const {checkEmail, checkPassword, checkUsername, user, setUser, getUser, updateUser, setIsAuthenticated, loginUserWithEmailAndPassword} = useContext(UserContext)
 
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [password1, setPassword1] = useState("")
+    const [password2, setPassword2] = useState("")
 
 
     const [isEmailFocused, setIsEmailFocused] = useState(false)
@@ -42,31 +36,46 @@ const UserLogin = (props) =>
     const [isPasswordCorrect, setIsPasswordCorrect] = useState("")
     const [isUsernameCorrect, setIsUsernameCorrect] = useState("")
 
-
+    const [emailExists, setEmailExists] = useState(false)
     const [errors, setErrors] = useState({});
 
 
-
-//console.log(user)   
-const loginUser = async (email, username, password) => {
+    const  resetUserPassword = async (email) => {
     try
     {
-        const form = {email, password}
-        await userValidationSchema.validate(form, { abortEarly: false });
-
-        const user = await loginUserWithEmailAndPassword(email, username, password)
-        if(!user)
-        {   
-            throw new Error("Aucun utilisateur ne correspond a vos identifiants.")
+        setErrors({});
+        if(!emailExists)
+        {
+            //mongoDb getUser
+           const userExists = await getUser(email)
+           //console.log()
+           setEmailExists(true)
+            if(!userExists)
+            {
+                //return; if not exists
+                Alert.alert('Error', 'Email non trouvée')
+                      
+            }
+            
+            return;
         }
 
-        navigation.replace('Preferences');
-        return;
+        const form = {password}
+        await userValidationSchema.validate(form, { abortEarly: false });
+    /*
+        const formData = new FormData()
+        //password
+        formData.append('password', email);
+          const newUser = await updateUser(email, formData);
+          //console.log(newUser)
+          storeCache('user', {email:newUser.email, username:newUser.username, password:newUser.password})
+    */
+
+          //Rediriger ver UserLogin
     }
     catch(error)
     {
         console.log(error)
-
         if (error instanceof Yup.ValidationError) {
             const formErrors = {};
             error.inner.forEach(err => {
@@ -75,35 +84,12 @@ const loginUser = async (email, username, password) => {
                 //console.log(formErrors)
         setErrors(formErrors);
         }
-        return;
     }
 }
 
-// {errors.images && <Text style={[formErrorStyle.text]}>{errors.images}</Text>}
-/*
-<LinearGradient
-                colors={['#f27a1a', '#ff8a2a', '#ba5c11', '#551b01']} // Ajoutez autant de couleurs que nécessaire
-                locations={[0.2, 0.1, 0.3, 0.7]} // Réglez les pourcentages de chaque couleur
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1, }}
-                style={[{flex:1,}]}
-                >
-                    <View style={[userLoginStyles.titleBox]}>
-                        <Text style={[userLoginStyles.title]}>Connectez-Vous</Text>
-                    </View>
-                </LinearGradient>
-            */
     return(
-<KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
-        <View style={[userLoginStyles.container]}>
-                <ImageBackground source={require('../../assets/images/login_background.jpg')} style={userLoginStyles.backgroundImage}>
-                <View style={[userLoginStyles.cover]}></View>
-
-                <View>
-                    <Text style={userLoginStyles.text}>Connectez-vous</Text>
-                </View>
-
-            <View style={[userLoginStyles.infoContainer]}>
+        <View style={[{flex:1}]}>
+             <View style={[userLoginStyles.infoContainer]}>
                 <View style={[userLoginStyles.credentialContainers]}>
                     <Input placeholder="Votre Email" onChangeText={(text)=>{setEmail(text)}}
                             multiline={false}
@@ -133,11 +119,43 @@ const loginUser = async (email, username, password) => {
                              false
                             }
                             value={email}
-                        /> 
-                        <Text style={[formErrorStyle.text]}>Erreur</Text>  
+                        />   
                 </View>
+{ emailExists &&
+        <View>
+                <View style={[userLoginStyles.credentialContainers]}>
+                    <Input placeholder="Votre Mot De Passe" onChangeText={(pwd)=>{setPassword(pwd)}}
+                            multiline={false}
+                            numberOfLines={1}
+                            placeholderTextColor={appColors.lightWhite}
+                            inputStyle = {[userLoginStyles.input,]}
+                            onFocus={() => setIsPasswordFocused(true)}
+                            onBlur={() => setIsPasswordFocused(false)}
+                            underlineColorAndroid='transparent'
+                            inputContainerStyle={[{borderBottomWidth:1},isPasswordFocused && userLoginStyles.inputFocused,]}
+                            leftIcon={ 
+                                <Pressable onPress={() => {}}>
+                                    <Icon name='key-outline' type='ionicon' size={24} color={appColors.secondaryColor1} />
+                                </Pressable>
+                            }
+                            rightIcon={ 
+                                isPasswordCorrect === 'true' ?
+                                <Pressable onPress={() => {}}>
+                                    <Icon name='checkmark-circle-outline' type='ionicon' size={24} color={appColors.green} />
+                                </Pressable>
+                                :
+                                isPasswordCorrect === 'false' ?
+                                 <Pressable onPress={() => {}}>
+                                    <Icon name='close-circle-outline' type='ionicon' size={24} color={appColors.red} />
+                                </Pressable>
+                                :
+                                false
+                            }
+                            value={password}
+                            secureTextEntry
+                        />   
+                </View> 
 
-                <View style={{height:10}}></View>
 
                 <View style={[userLoginStyles.credentialContainers]}>
                     <Input placeholder="Votre Mot De Passe" onChangeText={(pwd)=>{setPassword(pwd)}}
@@ -170,29 +188,22 @@ const loginUser = async (email, username, password) => {
                             value={password}
                             secureTextEntry
                         />   
-                </View>   
-
-                <Pressable style={[userLoginStyles.forgotBox]} onPress={() => { navigation.navigate('ResetPassword') } }>
-                    <Text style={[customText.text, userLoginStyles.forgotText]}>Mot de passe oublié ?</Text>
-                </Pressable>                 
-            
-                <View style={{height:10}}></View>
-            <CustomButton text="Valider" onPress={()=>{loginUser(email, username, password)}} color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable: userLoginStyles.pressable, text:userLoginStyles.text}} />
-                            
-                            
-            </View>
-              <Text>{/* <Button title="Sign Up" onPress={()=>{navigation.navigate("UserSignup")}} /> */}</Text>
-        </ImageBackground>
-
+                </View> 
         </View>
-</KeyboardAwareScrollView>
-    )
-/*}else{
-    navigation.navigate("Preferences", {user:user})
-}*/
 }
 
 
-export default UserLogin
+               
+
+                    <CustomButton text="Valider" onPress={()=>{resetUserPassword(email)}} color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable: userLoginStyles.pressable, text:userLoginStyles.text}} />
+                </View>
+                    <Button title="Login" onPress={()=>{navigation.navigate("UserLogin")}} />
+
+        </View>
+    )
+}
+
+
+export default ResetPassword
 
 

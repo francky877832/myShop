@@ -18,7 +18,7 @@ exports.getUserLikedProducts  =  async (req, res, next) => {
     const favourites = await Favourite.aggregate(pipeline).exec();
     
 
-        const totalDatas = favourites[0].productDetails.length
+        const totalDatas = favourites[0]?.productDetails.length
         const totalPages = Math.ceil(totalDatas / limit);
         favourites[0]?.productDetails.reverse()
         res.status(200).json({datas:favourites.slice(skip, skip+limit), page:page,totalPages:totalPages,totalDatas:totalDatas});

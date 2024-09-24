@@ -175,7 +175,7 @@ useEffect(()=>{
     //console.log(products)
 })
 
-const [index, setIndex] = useState(1);
+const [index, setIndex] = useState(0);
 
 const [routes] = useState([
     { key: 'products', title: 'Préférences' },
@@ -285,7 +285,7 @@ const renderTabBar = (props) => (
   const categoriesLoader = (props) => {
     //<View><Text>OK</Text></View>
     return (
-      <View style={[{justifyContent:'center', alignItems:'center'}]}>
+      <View style={[{}]}>
           <CustomModalActivityIndicator onRequestClose={setIsLoading} isLoading={isLoading} size="large" color={appColors.secondaryColor1} message="Chargements des données..." />
       </View>
     )
@@ -330,7 +330,7 @@ const renderTabBar = (props) => (
             <View style={[{flex:1,}]}>
                     <View style={{flex:1}}>
                         <TabView  
-                        lazy renderLazyPlaceholder={() => <View><Text>OK</Text></View>  } navigationState={{ index, routes }} renderScene={renderScene} onIndexChange={setIndex} initialLayout={initialLayout} renderTabBar={renderTabBar} />
+                        lazy renderLazyPlaceholder={() => <View style={[{justifyContent:'center',alignItems:'center'}]}><Text>Loading</Text></View>  } navigationState={{ index, routes }} renderScene={renderScene} onIndexChange={setIndex} initialLayout={initialLayout} renderTabBar={renderTabBar} />
                     </View>
   
 

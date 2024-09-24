@@ -6,7 +6,7 @@ const appName = "TheStyle"
 const userSchema = new Schema({
     name: { type: String },
     //surname: { type: String },
-    username: { type: String, required: true, unique: true, default : () => { return `${appName}${(Date.now()).toString().split('').reverse().join('').substring(0,4)}` } },
+    username: { type: String, required: true, unique: true, },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['customer', 'seller', 'admin'], default: 'seller' },

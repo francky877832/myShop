@@ -74,6 +74,7 @@ const UserProvider = ({children}) => {
                 const token = loggedUser.token
                 const user = loggedUser.user
                 //Mis a jour de async storage
+                console.log(user)
                 await SecureStore.setItemAsync('authToken', token);
                 await SecureStore.setItemAsync('user', JSON.stringify({email:user.email, username:user.username, password:user.password}));
                 //console.log(loggedUser)
@@ -138,6 +139,33 @@ const UserProvider = ({children}) => {
         }
     }
 
+    const getUser = async (email) => {
+        try
+        {
+            const response = await fetch(`${server}/api/auth/users/get/${encodeURI(email)}`, {
+                method: 'GET',
+                headers : {
+                    'Content-Type': 'application/json',
+                },
+            })
+
+            if(!response)
+            {
+                throw new Error("Cet email ne'existe pas " + await response.text())
+            }
+            
+            const data = await response.json()
+            //console.log(data)
+            return true
+        }
+        catch(error)
+        {
+            console.log(error)
+            return false
+        }
+
+    }
+
     
 
     
@@ -145,7 +173,7 @@ const UserProvider = ({children}) => {
 
     const filterStateVars = {temporaryAddress, refreshComponent, email, username, password, user, isAuthenticated }
     const filterStateSetters = {setTemporaryAddress, setRefreshComponent, setEmail, setUsername, setPassword, setUser, setIsAuthenticated}
-    const utilsFunctions = { updateUser, checkEmail, checkPassword, checkUsername, loginUserWithEmailAndPassword}
+    const utilsFunctions = { getUser, updateUser, checkEmail, checkPassword, checkUsername, loginUserWithEmailAndPassword}
     return (
         <UserContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}
