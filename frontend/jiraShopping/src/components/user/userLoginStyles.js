@@ -10,23 +10,54 @@ export const userLoginStyles = StyleSheet.create({
         backgroundColor : appColors.lightWhite,
     },
 
+
+    backgroundImage: 
+    {
+        flex: 1,
+        resizeMode: 'cover', // Ajuste l'image pour couvrir tout l'écran
+        //justifyContent: 'center', // Centre le contenu (texte, etc.)
+        alignItems : 'center',
+    },
+    cover : 
+    {
+        position : 'absolute',
+        flex : 1,
+        left : 0,
+        right : 0,
+        top : 0,
+        bottom : 0,
+        backgroundColor : appColors.transparentBlack,
+        zIndex : 99,
+    },
+
+
     pressable :
     {
-        paddingVertical : 20,
+        paddingVertical : 15,
+        borderRadius : 20,
     },
     infoContainer :
     {
-        ...productStyles.card,
         position : 'absolute',
         left : 0,
         right : 0,
         top : screenHeight/4,
-        bottom : 0,
+        height : screenHeight/2,
         backgroundColor : appColors.white,
-        borderTopLeftRadius : 30,
-        borderTopRightRadius : 30,
+        //borderTopLeftRadius : 30,
+        //borderTopRightRadius : 30,
         paddingTop : "15%",
-        paddingHorizontal : 30
+        paddingHorizontal : 30,
+        zIndex : 100,
+      
+         // Ombre sur iOS
+        shadowColor: appColors.black,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        // Ombre sur Android
+        elevation: 80,
+        borderRadius: 10,
     },
     titleBox :
     {

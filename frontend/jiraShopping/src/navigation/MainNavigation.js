@@ -76,7 +76,7 @@ export default function MainNavigation() {
             <NotificationsHandler />
             
             <Stack.Navigator
-              initialRouteName="LoaderPage"
+              initialRouteName="UserLogin"
               screenOptions={annimatedStackTransition(0.9, 250, 200)}
             >
                 <Stack.Screen name="Preferences" component={HomeNavigation} options={{ title: 'Home', headerShown : false, tabBarVisible: true }} />

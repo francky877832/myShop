@@ -26,7 +26,7 @@ import { ProductContext } from '../../context/ProductContext'
 import { useNavigation } from '@react-navigation/native';
 import { ProductItemContext } from '../../context/ProductItemContext';
 import { commonSimpleComponentsStyles } from '../../styles/commonSimpleComponentsStyles';
-import {CustomActivityIndicator, TemporaryNotification} from '../common/CommonSimpleComponents'
+import {CustomActivityIndicator, TemporaryNotification, CustomModalActivityIndicator} from '../common/CommonSimpleComponents'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserFavourites } from '../../store/favourites/favouritesSlice'; 
@@ -82,6 +82,7 @@ const Preferences = (props) => {
     const navigation = useNavigation()
     const isFocused = useIsFocused()
     const [isSearch, setIsSearch] = useState(false) 
+    
     //const [isLoading, setIsLoading]  = useState(true)
     const dispatch = useDispatch();
     const Fav_page = useSelector((state) => state.favourites.page);
@@ -174,7 +175,7 @@ useEffect(()=>{
     //console.log(products)
 })
 
-const [index, setIndex] = useState(0);
+const [index, setIndex] = useState(1);
 
 const [routes] = useState([
     { key: 'products', title: 'Préférences' },
@@ -281,6 +282,15 @@ const renderTabBar = (props) => (
     setText3Width(width);
   };
 
+  const categoriesLoader = (props) => {
+    //<View><Text>OK</Text></View>
+    return (
+      <View style={[{justifyContent:'center', alignItems:'center'}]}>
+          <CustomModalActivityIndicator onRequestClose={setIsLoading} isLoading={isLoading} size="large" color={appColors.secondaryColor1} message="Chargements des données..." />
+      </View>
+    )
+  }
+
     return(
         <View style={preferencesStyles.container}>
               <View style={preferencesStyles.top}>
@@ -320,7 +330,7 @@ const renderTabBar = (props) => (
             <View style={[{flex:1,}]}>
                     <View style={{flex:1}}>
                         <TabView  
-                        lazy renderLazyPlaceholder={() => <View><Text>Loading...</Text></View>} navigationState={{ index, routes }} renderScene={renderScene} onIndexChange={setIndex} initialLayout={initialLayout} renderTabBar={renderTabBar} />
+                        lazy renderLazyPlaceholder={() => <View><Text>OK</Text></View>  } navigationState={{ index, routes }} renderScene={renderScene} onIndexChange={setIndex} initialLayout={initialLayout} renderTabBar={renderTabBar} />
                     </View>
   
 

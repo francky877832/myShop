@@ -44,6 +44,39 @@ const UserSignup = (props) =>
                         }
                         value={email}
                     />
+
+                <View style={[userLoginStyles.credentialContainers]}>
+                    <Input placeholder="Nom De Votre Boutique" onChangeText={(shop)=>{setUsername(shop)}}
+                            multiline={false}
+                            numberOfLines={1}
+                            placeholderTextColor={appColors.lightWhite}
+                            inputStyle = {[userLoginStyles.input,]}
+                            onFocus={() => setIsUsernameFocused(true)}
+                            onBlur={() => setIsUsernameFocused(false)}
+                            underlineColorAndroid='transparent'
+                            inputContainerStyle={[{borderBottomWidth:1},isUsernameFocused && userLoginStyles.inputFocused,]}
+                            leftIcon={ 
+                                <Pressable onPress={() => {}}>
+                                    <Icon name='basket-outline' type='ionicon' size={24} color={appColors.secondaryColor1} />
+                                </Pressable>
+                            }
+                            rightIcon={ 
+                                isUsernameCorrect === 'true'  ?
+                                <Pressable onPress={() => {}}>
+                                    <Icon name='checkmark-circle-outline' type='ionicon' size={24} color={appColors.green} />
+                                </Pressable>
+                                :
+                                isUsernameCorrect === 'false'  ?
+                                 <Pressable onPress={() => {}}>
+                                 <Icon name='close-circle-outline' type='ionicon' size={24} color={appColors.red} />
+                             </Pressable>
+                                :
+                                false
+                            }
+                            value={username}
+                        />   
+                </View> 
+
                     <CustomButton text="Valider" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable: userLoginStyles.pressable, text:userLoginStyles.text}} />
                 </View>
                     <Button title="Login" onPress={()=>{navigation.navigate("UserLogin")}} />

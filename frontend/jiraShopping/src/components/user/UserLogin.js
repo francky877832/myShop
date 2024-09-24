@@ -1,5 +1,5 @@
 import React, { useState, forwardRef, useRef, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, KeyboardAvoidingView} from 'react-native';
+import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, KeyboardAvoidingView, ImageBackground} from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -28,7 +28,7 @@ const UserLogin = (props) =>
     const [password, setPassword] = useState("")
 
 
-    const [isEmailFocused, setIsEmailFocused] = useState(true)
+    const [isEmailFocused, setIsEmailFocused] = useState(false)
     const [isPasswordFocused, setIsPasswordFocused] = useState(false)
     const [isUsernameFocused, setIsUsernameFocused] = useState(false)
     
@@ -53,10 +53,8 @@ const loginUser = async (email, username, password) => {
     })
 }
 
-    return(
-<KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
-        <View style={[userLoginStyles.container]}>
-            <LinearGradient
+/*
+<LinearGradient
                 colors={['#f27a1a', '#ff8a2a', '#ba5c11', '#551b01']} // Ajoutez autant de couleurs que nécessaire
                 locations={[0.2, 0.1, 0.3, 0.7]} // Réglez les pourcentages de chaque couleur
                 start={{ x: 0, y: 0 }}
@@ -67,6 +65,16 @@ const loginUser = async (email, username, password) => {
                         <Text style={[userLoginStyles.title]}>Connectez-Vous</Text>
                     </View>
                 </LinearGradient>
+            */
+    return(
+<KeyboardAwareScrollView style={{flex:1}} resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={{flexGrow:1}} scrollEnabled={true}>
+        <View style={[userLoginStyles.container]}>
+                <ImageBackground source={require('../../assets/images/login_background.jpg')} style={userLoginStyles.backgroundImage}>
+                <View style={[userLoginStyles.cover]}></View>
+
+                <View>
+                    <Text style={userLoginStyles.text}>Connectez-vous</Text>
+                </View>
 
             <View style={[userLoginStyles.infoContainer]}>
                 <View style={[userLoginStyles.credentialContainers]}>
@@ -101,37 +109,7 @@ const loginUser = async (email, username, password) => {
                         />   
                 </View>
 
-                <View style={[userLoginStyles.credentialContainers]}>
-                    <Input placeholder="Nom De Votre Boutique" onChangeText={(shop)=>{setUsername(shop)}}
-                            multiline={false}
-                            numberOfLines={1}
-                            placeholderTextColor={appColors.lightWhite}
-                            inputStyle = {[userLoginStyles.input,]}
-                            onFocus={() => setIsUsernameFocused(true)}
-                            onBlur={() => setIsUsernameFocused(false)}
-                            underlineColorAndroid='transparent'
-                            inputContainerStyle={[{borderBottomWidth:1},isUsernameFocused && userLoginStyles.inputFocused,]}
-                            leftIcon={ 
-                                <Pressable onPress={() => {}}>
-                                    <Icon name='basket-outline' type='ionicon' size={24} color={appColors.secondaryColor1} />
-                                </Pressable>
-                            }
-                            rightIcon={ 
-                                isUsernameCorrect === 'true'  ?
-                                <Pressable onPress={() => {}}>
-                                    <Icon name='checkmark-circle-outline' type='ionicon' size={24} color={appColors.green} />
-                                </Pressable>
-                                :
-                                isUsernameCorrect === 'false'  ?
-                                 <Pressable onPress={() => {}}>
-                                 <Icon name='close-circle-outline' type='ionicon' size={24} color={appColors.red} />
-                             </Pressable>
-                                :
-                                false
-                            }
-                            value={username}
-                        />   
-                </View> 
+                
 
                 <View style={[userLoginStyles.credentialContainers]}>
                     <Input placeholder="Votre Mot De Passe" onChangeText={(pwd)=>{setPassword(pwd)}}
@@ -167,9 +145,12 @@ const loginUser = async (email, username, password) => {
                 </View>                    
             
             <CustomButton text="Valider" onPress={()=>{loginUser(email, username, password)}} color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable: userLoginStyles.pressable, text:userLoginStyles.text}} />
-           
+                            
+                            
             </View>
               <Text>{/* <Button title="Sign Up" onPress={()=>{navigation.navigate("UserSignup")}} /> */}</Text>
+        </ImageBackground>
+
         </View>
 </KeyboardAwareScrollView>
     )

@@ -95,6 +95,8 @@ exports.ProductRenderSkeleton = () => {
   );
 }
 
+
+
 const renderSkeletonStyles = StyleSheet.create({
   container :
   {

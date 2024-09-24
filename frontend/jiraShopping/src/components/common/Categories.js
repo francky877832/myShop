@@ -10,7 +10,7 @@ import { Input } from 'react-native-elements';
 import { appColors, customText, screenHeight } from '../../styles/commonStyles';
 import { categoriesStyles } from '../../styles/categoriesStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
-import { CustomButton, CustomActivityIndicator } from "./CommonSimpleComponents"
+import { CustomButton, CustomActivityIndicator, CustomModalActivityIndicator } from "./CommonSimpleComponents"
 
 import { Icon } from 'react-native-elements';
 
@@ -22,6 +22,8 @@ import { server } from '../../remote/server';
 import { colors } from '../../utils/sampleDatas';
 import { capitalizeFirstLetter } from '../../utils/commonAppFonctions';
 import FiltersSearch from '../specific/FiltersSearch';
+import { ProductRenderSkeleton } from '../common/FlatListCommonComponent'
+
 
 const Categories = (props) => {
     const { params } = props.route
@@ -29,7 +31,7 @@ const Categories = (props) => {
     const goBackTo = params?.datas?.goBackTo || props?.goBackTo
     const goBackOptions = ['AddProduct', 'FiltersSearch']
 //console.log(page)
-    const {setSelectedBrand, selectedColor, setSelectedColor, categories, brands, isLoading} = useContext(ProductItemContext)
+    const {setSelectedBrand, selectedColor, setSelectedColor, categories, brands, isLoading, setIsLoading} = useContext(ProductItemContext)
     const { selectedCategories, updateCategories, setSelectedCategories, resetAllFilters,
         searchCategory,
     } = useContext(FilterContext)
@@ -237,6 +239,13 @@ const getCategory = async (type, cat, subCat) => {
                             contentContainerStyle={[categoriesStyles.flatlist,]}
                             onScroll={handleScroll}
                             scrollEventThrottle={16}
+                            ListHeaderComponent={() => {
+                                /*
+                                if(categories.length <= 0)
+                                {
+                                    return <ProductRenderSkeleton isLoading={isLoading} width={300} height={300} marginBottom={20} /> 
+                                }*/
+                            }}
                         />
                             <View style={[styles.scrollIndicator]}>
                                 <Icon name={isAtBottom ? "chevron-up" : "chevron-down"}  type="ionicon" size={30} color={appColors.secondaryColor4} />
@@ -280,6 +289,13 @@ const getCategory = async (type, cat, subCat) => {
                         }
                     }
                 }
+
+                ListHeaderComponent={() => {
+                   /* if(categories.length <= 0)
+                    {
+                        return <ProductRenderSkeleton isLoading={isLoading} width={300} height={300} marginBottom={20} /> 
+                    }*/
+                }}
                 />
                     
         </View>
@@ -352,9 +368,8 @@ const getCategory = async (type, cat, subCat) => {
             </View>
         }
 
-            {isLoading && 
-                <CustomActivityIndicator styles={{}} /> 
-            }
+            <CustomModalActivityIndicator onRequestClose={setIsLoading} isLoading={isLoading} size="large" color={appColors.secondaryColor1} message="Chargements des données..." />
+
         </View>
     )
 }
