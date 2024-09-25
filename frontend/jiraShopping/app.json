@@ -59,7 +59,22 @@
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]
+        },
+
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "https://jirashoppingbackend.onrender.com",
+              "pathPrefix": "/product"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
         }
+
+
       ],
 
       "useNextNotificationsApi": true,

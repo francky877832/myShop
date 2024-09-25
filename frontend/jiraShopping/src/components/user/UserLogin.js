@@ -5,6 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+import { RadioButton } from 'react-native-paper';
 import * as SecureStore from 'expo-secure-store';
 
 
@@ -30,6 +31,9 @@ const UserLogin = (props) =>
     const route = useRoute()
     const navigation = useNavigation()
     const {checkEmail, checkPassword, checkUsername, user, setUser, updateUser, setIsAuthenticated, loginUserWithEmailAndPassword} = useContext(UserContext)
+
+    const [credentialType, setCredentialType] = React.useState('register');
+
 
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
@@ -132,11 +136,25 @@ const loginUser = async (email, username, password) => {
                 <ImageBackground source={require('../../assets/images/login_background.jpg')} style={userLoginStyles.backgroundImage}>
                 <View style={[userLoginStyles.cover]}></View>
 
-                <View>
-                    <Text style={userLoginStyles.text}>Connectez-vous</Text>
-                </View>
 
             <View style={[userLoginStyles.infoContainer]}>
+
+            <View  style={[userLoginStyles.registerOrLogin]}>  
+                <RadioButton.Group onValueChange={newValue => setCredentialType(newValue)}  value={credentialType} >
+                    <View style={[userLoginStyles.credentialGroup]}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                            <RadioButton value="register" />
+                            <Text>Register</Text>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                            <RadioButton value="login" />
+                            <Text>Login</Text>
+                        </View>
+                    </View>
+                </RadioButton.Group>
+            </View>
+
                 <View style={[userLoginStyles.credentialContainers]}>
                     <Input placeholder="Votre Email" onChangeText={(text)=>{setEmail(text)}}
                             multiline={false}

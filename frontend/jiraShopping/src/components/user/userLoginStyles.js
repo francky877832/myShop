@@ -30,6 +30,17 @@ export const userLoginStyles = StyleSheet.create({
         zIndex : 99,
     },
 
+    registerOrLogin :
+    {
+        flexDirection : 'row',
+    },
+    credentialGroup :
+    {
+        flexDirection : 'row',
+        justifyContent : 'space-around',
+        width : '100%',
+    },
+
 
     pressable :
     {
