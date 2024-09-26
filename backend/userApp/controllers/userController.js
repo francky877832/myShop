@@ -41,29 +41,31 @@ async function generateUniqueUsername() {
 }
 
 
-const signupUser = async (req, res, next) => {
+exports.signupUser = async (req, res, next) => {
   //console.log(req.body)
-  try
-  {
-   const hash = await bcrypt.hash(req.body.password, 10)
-    
-  const user = new User({
-          email: req.body.email,
-          password: hash,
-          username : await generateUniqueUsername(),
-          image : 'new-user.jpg'
-    });
-
-        await user.save()
-         
-        return user
-
-    }
-    catch(error)
+  try {
+    let user;
+    user = await User.findOne({ email: req.body.email })
+    //console.log(user)
+    if(user)
     {
-      console.log(error)
-      return null
+        return res.status(401).json({ error: 'auth/user-already-exists' });
     }
+
+    const hash = await bcrypt.hash(req.body.password, 10);
+    user = new User({
+      email: req.body.email,
+      password: hash,
+      username: await generateUniqueUsername(),
+      image: 'new-user.jpg'
+    });
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'auth/user-created' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'auth/error-creating-user' });
+  }
 };
 
   exports.loginUser =  (req, res, next) => {
@@ -79,15 +81,8 @@ const signupUser = async (req, res, next) => {
           //console.log(req.query)
             if (!user) 
             {
-                //console.log("ok")
-                const user_tmp = await signupUser({...req, body:req.query}, res, next)
-                if(!user_tmp)
-                {
+ 
                   return res.status(401).json({ error: 'auth/user-not-found--' });
-                }
-
-                user = user_tmp
-                //
             }
             //user.password = await bcrypt.hash('00000000', 10)
             //user.save()

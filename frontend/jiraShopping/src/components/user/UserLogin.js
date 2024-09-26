@@ -30,7 +30,7 @@ const UserLogin = (props) =>
     const {  } = props
     const route = useRoute()
     const navigation = useNavigation()
-    const {checkEmail, checkPassword, checkUsername, user, setUser, updateUser, setIsAuthenticated, loginUserWithEmailAndPassword} = useContext(UserContext)
+    const {checkEmail, checkPassword, checkUsername, user, setUser, updateUser, setIsAuthenticated, signupUserWithEmailAndPassword, loginUserWithEmailAndPassword} = useContext(UserContext)
 
     const [credentialType, setCredentialType] = React.useState('register');
 
@@ -55,6 +55,43 @@ const UserLogin = (props) =>
     const [errors, setErrors] = useState({});
 
 
+    const signUpUser = async (email, username, password)  => {
+        try
+        {
+            const form = {email, password, username:email.split('.')[0]}
+            await userValidationSchema.validate(form, { abortEarly: false });
+
+
+            const userCredential  = await auth().createUserWithEmailAndPassword(email, password)
+            signupUserWithEmailAndPassword(email, username, password).then(async ()=> {
+                await loginUser(email, username, password) 
+            })
+        }
+        catch(error)
+        {
+            console.log(error)
+            if (error instanceof Yup.ValidationError) 
+            {
+                const formErrors = {};
+                    error.inner.forEach(err => {
+                        formErrors[err.path] = err.message;
+                });
+                        //console.log(formErrors)
+                setErrors(formErrors);
+            }
+            else
+            {
+                if(error.code)
+                {
+                    Alert.alert("Erreur", getFirebaseErrorMessage(error.code))
+                    return;
+                }
+                Alert.alert("Error", "Une erreur est sruvenue lors de la verificaiton de vos informations. Vérifiez les données fournies.")
+            }
+
+        }
+            
+    }
 
 //console.log(user)   
 const loginUser = async (email, username, password) => {
@@ -62,17 +99,21 @@ const loginUser = async (email, username, password) => {
     {
         setIsLoading(true)
         const formData = new FormData()
-        const form = {email, password, username:email.split('.')[0]}
-        await userValidationSchema.validate(form, { abortEarly: false });
+        
 
         const userCredential = await auth().signInWithEmailAndPassword(email, password);
 
         const firebase_user = userCredential.user;
 
+        //lors de la reinitialisation
         formData.append('password', password); //OR firebase_user.password
         const newUser = await updateUser(email, formData);
 
-        const user = await loginUserWithEmailAndPassword(newUser.email, newUser.username, newUser.password)
+        let user;
+      
+      
+        user = await loginUserWithEmailAndPassword(newUser.email, newUser.username, newUser.password,)
+
 
         if(!firebase_user || !user)
         {   
@@ -92,24 +133,14 @@ const loginUser = async (email, username, password) => {
         
         console.log(error)
 
-        if (error instanceof Yup.ValidationError) 
-        {
-            const formErrors = {};
-            error.inner.forEach(err => {
-                formErrors[err.path] = err.message;
-            });
-                //console.log(formErrors)
-            setErrors(formErrors);
-        }
-        else
-        {
+      
             if(error.code)
             {
-                Alert.alert("Erreur",getFirebaseErrorMessage(error.code))
+                Alert.alert("Erreur", getFirebaseErrorMessage(error.code))
                 return;
             }
             Alert.alert("Error", "Une erreur est sruvenue lors de la verificaiton de vos informations. Vérifiez les données fournies.")
-        }
+        
         return;
     }finally{
         setIsLoading(false)
@@ -226,7 +257,7 @@ const loginUser = async (email, username, password) => {
                 </Pressable>                 
             
                 <View style={{height:10}}></View>
-            <CustomButton text="Valider" onPress={()=>{loginUser(email, username, password)}} color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable: userLoginStyles.pressable, text:userLoginStyles.text}} />
+            <CustomButton text="Valider" onPress={()=>{credentialType==='login' ? loginUser(email, username, password) :  signUpUser(email, username, password);}} color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable: userLoginStyles.pressable, text:userLoginStyles.text}} />
                             
                             
             </View>

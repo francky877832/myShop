@@ -45,11 +45,39 @@ const UserProvider = ({children}) => {
       };
 
 
-      const loginUserWithEmailAndPassword = async (email, username, password) => {
+    const signupUserWithEmailAndPassword = async (email, username, password) => {
+        const user = {
+            email : email,
+            password : password,
+        }
+
+        try {
+          const response = await fetch(`${server}/api/auth/signup`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+          });
+      
+          if (!response.ok) {
+            throw new Error('Erreur lors de l’inscription'+await response.text());
+          }
+      
+          const data = await response.json();
+          console.log('Inscription réussie:', data);
+        } catch (error) {
+          console.error('Erreur:', error);
+        }
+      };
+      
+
+      const loginUserWithEmailAndPassword = async (email, username, password, credentialType) => {
         const user = {
             email : email, //"francky877832@gmail.com",
             username : username, //"francky877832",
             password : password, //"0000000",
+            type : credentialType
         }
     //console.log(JSON.stringify(user))
         try
@@ -97,7 +125,7 @@ const UserProvider = ({children}) => {
         catch(error)
         {
             console.log(error)
-            Alert.alert("Une erreur est survenue", `${error.message} => Verifier vos identifiants.`)
+            //Alert.alert("Une erreur est survenue", `${error.message} => Verifier vos identifiants.`)
             setIsAuthenticated(false);
             return false
         }
@@ -173,7 +201,7 @@ const UserProvider = ({children}) => {
 
     const filterStateVars = {temporaryAddress, refreshComponent, email, username, password, user, isAuthenticated }
     const filterStateSetters = {setTemporaryAddress, setRefreshComponent, setEmail, setUsername, setPassword, setUser, setIsAuthenticated}
-    const utilsFunctions = { getUser, updateUser, checkEmail, checkPassword, checkUsername, loginUserWithEmailAndPassword}
+    const utilsFunctions = { getUser, updateUser, checkEmail, checkPassword, checkUsername, signupUserWithEmailAndPassword, loginUserWithEmailAndPassword}
     return (
         <UserContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

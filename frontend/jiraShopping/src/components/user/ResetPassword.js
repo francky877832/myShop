@@ -95,14 +95,27 @@ const ResetPassword = (props) =>
         //FIREBASE
 
           //Rediriger ver UserLogin
-          navigation.navigate('UserLogin')
+
+          Alert.alert(
+            "Password reset",
+            "Vous allez recevoir un email pour enregistrer votre nouveau mot de passe. Si vous ne le trouvez pas, regardez vos spams.",
+            [
+              
+              {
+                text: "OK", 
+                onPress: () => navigation.navigate('UserLogin'),
+              },
+             
+            ],
+            { cancelable: true }
+          );
     }
     catch(error)
     {
-        if(password1 !== password2)
+       /* if(password1 !== password2)
         {
             Alert.alert("Error", "Vos 2 mots de passe ne correspondent pas.")
-        }
+        }*/
 
         if (error instanceof Yup.ValidationError) 
         {
