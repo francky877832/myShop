@@ -98,10 +98,10 @@ exports.sinceDate = (_date) => {
 }
 
 export const truncateText = (text, numChars, clicked=false) => {
-    if(text.length > numChars)
-        return [text.substring(0, numChars+1), 1, clicked]
+    if(text?.length > numChars)
+        return [text?.substring(0, numChars+1), 1, clicked]
     else
-        return [text.substring(0, numChars+1), 0, clicked]
+        return [text?.substring(0, numChars+1), 0, clicked]
 }
 
 exports.truncateTextAndAddDots = (text, numChars, clicked=false) => {

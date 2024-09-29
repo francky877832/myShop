@@ -128,6 +128,21 @@ export const radioProductStyles = StyleSheet.create({
     imageContainer :
     {
         width:75,
+
+    },
+    soldBox :
+    {
+        //position : 'absolute',
+        width : '100%',
+        //height : '100%',
+        justifyContent : 'Center',
+        alignItems : 'center',
+        top : -100/2,
+        backgroundColor : appColors.clearBlack,
+    },
+    soldText:
+    {
+        color : appColors.white,
     },
     productImage :
     {

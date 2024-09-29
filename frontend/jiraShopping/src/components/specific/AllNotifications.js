@@ -53,7 +53,7 @@ const AllNotifications = () => {
   const navigation = useNavigation()
 
   //GESTION DE LA CACHE ET DU SIDE EFFECT SIMULTANNEMENT
-  useCacheBeforeRemove(navigation, storeCache, ['ALL_NOTIFICATIONS', notifications])
+  //useCacheBeforeRemove(navigation, storeCache, ['ALL_NOTIFICATIONS', notifications])
   const { datas, loadMore, loading, hasMore } = useCacheWithDatas('ALL_NOTIFICATIONS', getCache, getNotifications, [user] ) 
 
 
@@ -183,12 +183,28 @@ const openNotif = async (user, item) => {
       return <NotificationsSkeleton number={5} />
     }
 
+    const updateItem = (item, updates) => {
+      if(Array.isArray(notifications))
+      {
+        
+        setNotifications(prev => {
+            return prev.map(n => {
+                if(n._id===item._id)
+                {
+                  return {...item, ...updates}
+                }
+                return item
+            })
+        })
+
+      }
+    }
    
     return(
         <View style={[notificationsStyles.sceneContainers]}>
             <FlatList
                     data={notifications}
-                    renderItem={ ({item}) => { return(<RenderNotificationItem from="notifications" item={item} openNotif={openNotif} user={user} />)} }
+                    renderItem={ ({item}) => { return(<RenderNotificationItem from="notifications" item={item} updateItem={updateItem} openNotif={openNotif} user={user} />)} }
                     keyExtractor={ (item) => { return Math.random().toString(); } }
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     contentContainerStyle={[notificationsStyles.flatlist]}

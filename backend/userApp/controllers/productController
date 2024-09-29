@@ -11,8 +11,8 @@ const mongoose = require('mongoose');
 exports.addProductUser = (req, res, next) => {
  
   const datas = req.body;
-  console.log(req.files)
-  console.log(req.body.images)
+  //console.log(req.files)
+  //console.log(req.body.images)
   delete datas._id;
  // delete datas.seller;
 
@@ -29,9 +29,9 @@ exports.addProductUser = (req, res, next) => {
  
 
   product.save()
-  .then(() => {
+  .then((newProduct) => {
     
-      res.status(200).json({ message: "Produit cree avec success" });
+      res.status(200).json({ message: "Produit cree avec success", datas:newProduct });
     })
   .catch( (error) => {
       console.log(error)
@@ -74,7 +74,7 @@ exports.updateProduct = async (req, res, next) => {
           return res.status(404).json({ message: 'Product not found or no changes made' });
         }
         
-        res.status(200).json({ message: 'Produit mis a jour avec success' });
+        res.status(200).json({ message: 'Produit mis a jour avec success', datas:updatedProduct });
       }
       catch(error)
       { 

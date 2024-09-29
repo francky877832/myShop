@@ -48,6 +48,28 @@ export const LeftToRightViewBox = ({ show, children, duration, from, to, styles 
   };
 
 
+  export const BottomToTopViewBox = ({ show, children, duration, from, to, styles }) => {
+    const translateY = useSharedValue(from); // initial position (out of screen)
+  
+    useEffect(() => {
+      // Animate to 0 when `show` is true, otherwise back to -300
+      translateY.value = withTiming(show ? to : from, { duration: duration });
+    }, [show]);
+  
+    const animatedStyles = useAnimatedStyle(() => {
+      return {
+        transform: [{ translateY: translateY.value }],
+      };
+    });
+  
+    return (
+      <Animated.View style={[styles, animatedStyles]}>
+        {children}
+      </Animated.View>
+    );
+  };
+
+
   /*
 
    <LeftToRightViewBox show={show3} duration={200} from={0} to={screenWidth/2} styles={{position : 'absolute',}}>

@@ -246,7 +246,8 @@ const showConfirmationRenewProduct = (product) => {
       );
 }
 function displayGrille(origin, product){
-    return origin==="profileShop" && <View style={[productStyles.containerVisibility]}></View>
+   return origin==="profileShop" && <View style={[productStyles.containerVisibility]}></View>
+   //return <View style={[productStyles.containerVisibility]}></View>
 }
 
 function displayGrilleBttom(origin, product){
@@ -274,6 +275,7 @@ function displayGrilleBttom(origin, product){
                         product.visibility==0 &&
                             displayGrille(origin, product)
                         }
+                        
                         {
                             (product.visibility==0 || product.sold==1) &&
                             displayGrilleBttom(origin, product)

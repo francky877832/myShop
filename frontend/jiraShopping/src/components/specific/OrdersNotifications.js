@@ -112,11 +112,29 @@ useEffect(() => {
         return <NotificationsSkeleton number={5} />
     }
 
+
+    const updateItem = (item, updates) => {
+        if(Array.isArray(orders))
+        {
+          
+          setOrders(prev => {
+              return prev.map(n => {
+                  if(n._id===item._id)
+                  {
+                    return {...item, ...updates}
+                  }
+                  return item
+              })
+          })
+  
+        }
+      }
+
     return (
         <View style={[notificationsStyles.sceneContainers]}>
             <FlatList
                     data={orders}
-                    renderItem={ ({item}) => { return(<RenderNotificationItem from="offers" setRead={setRead}
+                    renderItem={ ({item}) => { return(<RenderNotificationItem from="offers" setRead={setRead} updateItem={updateItem}
                             item={{...item,
                                 read : item.group.read,
                             title:"Nouvelle Commande",

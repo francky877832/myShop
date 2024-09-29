@@ -13,7 +13,7 @@ const notificatonSchema = new Schema({
             
             title : { type : String, required : true, default:"Produit" },
             message : { type : String, required : true },
-            type : { type : String, required : true, default:'ON_NEW_LIKE' },
+            type : { type : String, required : true, default:'on_new_like' },
             action : { type : String, required : true },
             datas : { type : Schema.Types.ObjectId, required : false },
             read : { type : Number, enum: [0, 1], default : 0, required : true },

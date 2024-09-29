@@ -1,6 +1,7 @@
 import { StyleSheet, StatusBar } from "react-native";
 import { appColors, appFont, customText, screenHeight } from "./commonStyles";
 import SellerBrand from "../components/common/SellerBrand";
+import { card } from "./filtersStyles";
 
 
 
@@ -68,6 +69,7 @@ export const addProductStyles = StyleSheet.create({
     },
     bottomPicker :
     {
+        ...card,
         position : "absolute",
         left : 0,
         right : 0,

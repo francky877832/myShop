@@ -13,7 +13,10 @@ import * as ImageManipulator from 'expo-image-manipulator';
 
 
 import { appColors, customText, formErrorStyle } from '../../styles/commonStyles';
-import { CustomButton, PriceDetails} from "../common/CommonSimpleComponents"
+import { CustomButton, PriceDetails, CustomModalActivityIndicator} from "../common/CommonSimpleComponents"
+
+import { BottomToTopViewBox } from '../common/AnimatedComponents'
+
 import { screenWidth, screenHeight } from '../../styles/commonStyles';
 import { addProductStyles } from '../../styles/addProductStyles';
 import { searchBarStyles } from '../../styles/searchBarStyles';
@@ -96,7 +99,8 @@ const AddProduct = (props) => {
     const MAX_IMAGES = 6, MIN_IMAGES = 3
 
     const [errors, setErrors] = useState({});
-
+    const [isPostLoading, setIsPostLoading] = useState(false)
+    const [hasAdded, setHasAdded] = useState(false)
 
 //Traitement des donnees et envoie au serveur
 
@@ -109,7 +113,8 @@ const AddProduct = (props) => {
         if (e) {
           e.preventDefault(); // Empêcher le comportement par défaut de la navigation
         }
-    
+    if(!hasAdded)
+    {
         Alert.alert(
           "Attention!",
           "Abandoné l'ajout de produit ?",
@@ -123,6 +128,7 @@ const AddProduct = (props) => {
              }
           ]
         );
+    }
       }, [allowBack, navigation]);
 
 
@@ -176,12 +182,14 @@ const deleteSelectedImage = (uri) => {
 
 //console.log(images)
 const handleCategory = () => {
-    console.log('Its ok')
+    //console.log('Its ok')
 }
 
 const submitProduct = async () => { 
-    
+   // Alert.alert("ok")
+   
     try {
+        setIsPostLoading(true)
        setErrors({});
         //console.log(images)
         const images_ = await resizeImages(images,IMG_MAX_HEIGHT,IMG_MAX_WIDTH)
@@ -193,7 +201,7 @@ const submitProduct = async () => {
             name : valueName,
             description : valueDesc,
 
-            price : route.params.product? route.params.product.price : valuePrice.replace('.',''),
+            price : route.params?.product ? route.params?.product.price : valuePrice.replace('.',''),
             newPrice : valuePrice.replace('.',''),
             offerPrice : valuePrice.replace('.',''),
 
@@ -212,12 +220,12 @@ const submitProduct = async () => {
         }
         //Gestion des images
         //console.log(images)
-        console.log(errors)
+        //console.log(errors)
         const form = { ...datas, images}
         console.log(form)
         await productValidationSchema.validate(form, { abortEarly: false });
 
-/*
+
         images.forEach(async (image, index) => {
             if(image.fileName)
             {
@@ -238,10 +246,11 @@ const submitProduct = async () => {
             formData.append(key, datas[key]);
         });
         
-        //console.log(formData._parts)
+        console.log(formData._parts)
 
         if(!product.name)
         {
+            //console.log("formData._parts")
             const response = await fetch(`${server}/api/datas/products/add`,{
                 method: 'POST',
                 body: formData,
@@ -256,13 +265,18 @@ const submitProduct = async () => {
                 const errorData = await response.json();
                 throw new Error(`Server error: ${errorData.message || 'Unknown error'}`);
             }
+            const res = await response.json()
 
                 if(user.followers.length>0)
                 {
                     user.followers.forEach(async (follower)=>{
-                        await sendNotifications({ user:follower._id, source:"app", model:"PRODUCTS", type:"ON_PRODUCT_CREADTED", datas:product._id })
+                        await sendNotifications({ user:follower._id, source:"app", model:"PRODUCTS", type:"ON_PRODUCT_CREADTED", datas:res.datas._id })
+                        //await sendNotifications({ user:item.seller._id, source:"app", model:"PRODUCTS", type:"ON_NEW_LIKE", datas:item._id })
                     })
                 }
+
+                navigation.navigate('MyShop')
+
         }
         else
         {
@@ -278,28 +292,36 @@ const submitProduct = async () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
-            if(product.favourites.length>0)
-            {
-                product.favourites.forEach(async (likeAdder)=>{
-                    await sendNotifications({ user:likeAdder._id, source:"app", model:"PRODUCTS", type:"ON_PRODUCT_UPDATED", datas:product._id })
-                })
-            }
-        
-
+            
+            
             if (!response.ok) {
                 // Le serveur a répondu avec un code d'état HTTP non 2xx
                 const errorData = await response.json();
                 throw new Error(`Server error: ${errorData.message || 'Unknown error'}`);
             }
+
+             const res = await response.json()
+
+            if(product.favourites.length>0)
+            {
+                product.favourites.forEach(async (likeAdder)=>{
+                    await sendNotifications({ user:likeAdder._id, source:"app", model:"PRODUCTS", type:"ON_PRODUCT_UPDATED", datas:res.datas._id })
+                    //await sendNotifications({ user:item.seller._id, source:"app", model:"PRODUCTS", type:"ON_NEW_LIKE", datas:item._id })
+                })
+            }
+
+            navigation.navigate('MyShop')
+
            
         }
             
            // const responseJson = await response.json();
-*/
-            
+        //setHasAdded(true)
+    
+        
+
     } catch (error) {
-        //console.error("AddProduct", error);
+        console.error("AddProduct", error);
         if (error instanceof Yup.ValidationError) {
             const formErrors = {};
             error.inner.forEach(err => {
@@ -308,6 +330,8 @@ const submitProduct = async () => {
             //console.log(formErrors)
             setErrors(formErrors);
         }
+    } finally {
+        setIsPostLoading(false)
     }
 
 };
@@ -385,7 +409,9 @@ const handleImagePress = (image) => {
         (images.length > 0 ? images.length < MAX_IMAGES ? [...images, ...new Array(MAX_IMAGES-images.length)] : images : [1,2,3,4,5,6])
         .map((item, index)=>{
             let source;
+            //console.log(item)
             source = (!item)?noImagePath:item.uri
+            const uri = source?.startsWith('file') ? source : `${productsImagesPath}/${source}`
 
 
             return (
@@ -393,7 +419,7 @@ const handleImagePress = (image) => {
                     <Pressable style={[addProductStyles.imageBox,{marginRight:10, marginBottom:10,}]}  onPress={() => handleImagePress(source)} key={index}>
                         { images.length > 0  && item!=undefined &&
                             <View style={{}}>
-                                <Image source={{ uri: `${productsImagesPath}/${source}` }} style={{width:98,height:98,}} />
+                                <Image source={{ uri: uri }} style={{width:98,height:98,}} />
                                 <Pressable onPress={()=>{deleteSelectedImage(source);}} style={{width:20,height:20,backgroundColor:appColors.lightBlack,position:"absolute",alignSelf:"flex-end",top:0,}}>
                                     <Icon name="close" type="ionicon" size={18} color={appColors.secondaryColor1} />
                                 </Pressable>
@@ -702,7 +728,8 @@ const handleImagePress = (image) => {
 </KeyboardAwareScrollView>
         
         {cameraOrGalery &&
-            <View style={[addProductStyles.bottomPicker]}>
+            //<LeftToRightViewBox style={[addProductStyles.bottomPicker]}>
+            <BottomToTopViewBox show={cameraOrGalery} duration={500}  from={100} to={0} styles={addProductStyles.bottomPicker}>
                 <Pressable onPress={pickUpImages}>
                     <Icon name="images-outline" type="ionicon" size={24} color={appColors.secondaryColor1} />
                     <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Photos</Text>
@@ -711,23 +738,27 @@ const handleImagePress = (image) => {
                     <Icon name="camera-outline" type="ionicon" size={24} color={appColors.secondaryColor1} />
                     <Text style={[addProductStyles.normalText,{color:appColors.secondaryColor1}]}>Camera</Text>
                 </Pressable>
-            </View>
+            </BottomToTopViewBox>
         }
 
             {showPriceDetails &&
                 <View style={[]}>
-                    <PriceDetails title="Calculatrice De Gains" closePriceDetails={setShowPriceDetails} product={
-                        {
-                            newPrice:parseFloat(valuePrice.split('.').join('')),
+                    <PriceDetails title="Calculatrice De Gains" closePriceDetails={setShowPriceDetails} products={
+                        [{
+                            newPrice:parseInt(valuePrice.split('.').join('')),
                             feesBy:valueFeesBy,
-                            kargoPrice:kargoPrice,
-                        }
+                            kargoPrice:parseInt(kargoPrice.split('.').join('')),
+                        }]
                     } />
                 </View>
             }
         <View style={[addProductStyles.addProductSubmitView,{}]}>
-                <CustomButton text="Publier Le Produit" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={submitProduct} />
+                <CustomButton text="Publier Le Produit" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addProductStyles} onPress={()=>{submitProduct()}} />
         </View>
+
+
+        <CustomModalActivityIndicator onRequestClose={setIsPostLoading} isLoading={isPostLoading} size="large" color={appColors.secondaryColor1} message="Chargements des données..." />
+
 </View>
     )
 }

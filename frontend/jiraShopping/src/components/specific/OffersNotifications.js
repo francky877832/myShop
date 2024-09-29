@@ -35,8 +35,10 @@ const OffersNotifications = (props) => {
     const { setUnreadNotifications } = useContext(OrdersContext)
 
       //GESTION DE LA CACHE ET DU SIDE EFFECT SIMULTANNEMENT
-  useCacheBeforeRemove(navigation, storeCache, ['OFFERS_NOTIFICATIONS', offers])
   //(cacheKey, getCache, loadMoreDatas, parameters)
+
+
+    //useCacheBeforeRemove(navigation, storeCache, ['OFFERS_NOTIFICATIONS', offers])
   const { datas, loadMore, loading, willProccessed, hasMore } = useCacheWithDatas('OFFERS_NOTIFICATIONS', getCache, getOffers, [user] ) 
     
     /*const [isLoading, setIsLoading] = useState(false)
@@ -124,6 +126,25 @@ const openOffer = async (user, item) => {
     }
     
 
+    const updateItem = (item, updates) => {
+      if(Array.isArray(offers))
+      {
+        
+        setOffers(prev => {
+            return prev.map(n => {
+                if(n._id===item._id)
+                {
+                  console.log(updates)
+                  return {...item, ...updates}
+                }
+                else
+                  return item
+            })
+        })
+
+      }
+    }
+
     return (
         <View style={[notificationsStyles.sceneContainers]}>
             <FlatList
@@ -136,7 +157,7 @@ const openOffer = async (user, item) => {
                                                     message : "Vous avez reçu une nouvelle offre. Cliquez pour en savoir plus.",
                                                 }} 
                                                     
-                                            openNotif={openOffer} user={user} />
+                                            openNotif={openOffer} updateItem={updateItem} user={user} />
                         ) 
                     } }
                     keyExtractor={ (item) => { return item._id.toString(); } }

@@ -282,7 +282,7 @@ exports.TemporaryNotification = (props) => {
 exports.PriceDetails = (props) => {
     const {products, title, closePriceDetails} = props
     let product; 
- 
+// console.log(products)
         const totalPrice = calculateTotalPrice(products)
 
         let passed_products = []
@@ -304,10 +304,10 @@ exports.PriceDetails = (props) => {
             return  total + toAdd
            
         }, 0)
-
+//console.log(kargoPrice)
         const feesBy = products.some(p => p.feesBy == 'buyer')
 
-        product = { newPrice:totalPrice, feesBy:feesBy, kargoPrice:kargoPrice, orderQuantity:products.reduce((t,p) => { return t+parseInt(p.orderQuantity||1)}, 0) }
+        product = { newPrice:totalPrice, feesBy:feesBy?'buyer':'seller', kargoPrice:kargoPrice, orderQuantity:products.reduce((t,p) => { return t+parseInt(p.orderQuantity||1)}, 0) }
    
 
 
@@ -339,7 +339,7 @@ exports.PriceDetails = (props) => {
                     <Text  style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle]}>Frais De Transport</Text>
                     <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle, {fontStyle:'italic', fontSize:11}]}>Payé par {product.feesBy==='seller'?'vous':'acheteur'}</Text>
                 </View>
-                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.price, product.feesBy==='seller'?{fontStyle:'italic',fontSize:14}:null]}>{product.feesBy==='buyer'?-formatMoney(product.kargoPrice):'Payé par le vendeur'} </Text>
+                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.price, product.feesBy==='seller'?{fontStyle:'italic',fontSize:14}:null]}>{product.feesBy==='buyer'?`-${formatMoney(product.kargoPrice)} XAF`:'Payé par le vendeur'} </Text>
             </View>
 
             <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine]}>
@@ -349,7 +349,7 @@ exports.PriceDetails = (props) => {
 
             <View  style={[commonSimpleComponentsStyles.priceDetails.priceLine, commonSimpleComponentsStyles.priceDetails.totalPriceLine]}>
                 <Text  style={[customText.text, commonSimpleComponentsStyles.priceDetails.semiTitle, commonSimpleComponentsStyles.priceDetails.totalPriceText]}>Total - Vos Gain</Text>
-                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.price]}>{formatMoney((product.newPrice-product.newPrice*10/100)-transport)}  XAF</Text>
+                <Text style={[customText.text, commonSimpleComponentsStyles.priceDetails.price]}>{formatMoney((product.newPrice-product.newPrice*10/100))}  XAF</Text>
             </View>
 
         </View>

@@ -24,7 +24,7 @@ import { useNavigation } from '@react-navigation/native';
 import { OrdersContext } from '../../context/OrdersContext';
 
 const RenderNotificationItem = (props) =>{
-    const {item, openNotif, user, from} = props
+    const {item, openNotif, updateItem, user, from} = props
     const [date, setDate] = useState(sinceDate(item.updatedAt).join(' '))
     const timeoutRef = useRef(null);
     const [read, setRead] = useState(item.read)
@@ -52,6 +52,7 @@ const RenderNotificationItem = (props) =>{
         }
         
         setRead(1)
+        //updateItem(item, {read:0})
     }
 
     const getIcon = (from) => {

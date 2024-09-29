@@ -220,9 +220,15 @@ const RadioProduct = (props) => {
                                                     <View style={[{}]}>
                                                     <Pressable style={[radioProductStyles.productInfos,{ }]} onPress={()=>{navigation.navigate('ProductDetails', {productDetails:product2})}}>
                                                         <View style={{width:10}}></View>
+
                                                         <View style={[radioProductStyles.imageContainer,{}]}>
+                                                         
                                                             <Image source={{uri: `${productsImagesPath}/${product2.images[0]}`}} style={[radioProductStyles.productImage,{}]} />
+                                                        { product2.sold===1 &&
+                                                            <View style={[radioProductStyles.soldBox]}><Text style={[customText.text, radioProductStyles.soldText ]}>Vendu</Text></View>
+                                                        }
                                                         </View>
+
                                                         <View style={[{left : 10, flexWrap:'wrap', width:'100%', }]}>
                                                             <Text style={[customText.text, ]} numberOfLines={2} >{product2.name.length>25?product2.name.substring(0,25)+'...':product2.name}</Text>
                                                             <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
@@ -248,6 +254,7 @@ const RadioProduct = (props) => {
                                                         </View>
                                                     </View>
                                                 } 
+                                                disabled={(product2.sold===0 && product2.visibility===1)?false:true}
                                                 containerStyle={[radioProductStyles.checkBoxContainer,{}]} 
                                                 textStyle={[customText.text,radioProductStyles.checkBoxText]} 
                                                 checked={selectedProducts[product2._id]} 
