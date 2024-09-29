@@ -58,6 +58,7 @@ const UserLogin = (props) =>
     const signUpUser = async (email, username, password)  => {
         try
         {
+            setIsLoading(true)
             const form = {email, password, username:email.split('.')[0]}
             await userValidationSchema.validate(form, { abortEarly: false });
 
@@ -89,6 +90,8 @@ const UserLogin = (props) =>
                 Alert.alert("Error", "Une erreur est sruvenue lors de la verificaiton de vos informations. Vérifiez les données fournies.")
             }
 
+        }finally{
+            setIsLoading(false)
         }
             
     }
@@ -104,7 +107,13 @@ const loginUser = async (email, username, password) => {
         const userCredential = await auth().signInWithEmailAndPassword(email, password);
 
         const firebase_user = userCredential.user;
-
+        
+        if(!firebase_user)
+        {   
+            const error = new Error('Utilisateur non trouvé');
+            error.code = 'auth/user-not-found';
+            throw error;
+        }
         //lors de la reinitialisation
         formData.append('password', password); //OR firebase_user.password
         const newUser = await updateUser(email, formData);

@@ -158,6 +158,7 @@ const Offers = (props) => {
     const [isLoading, setIsLoading] = useState(true)
     const [isPriceLoading, setIsPriceLoading] = useState(false)
     const [isConfirmLoading, setIsConfirmLoading] = useState(false)
+    const [isFetchLoading, setIsFetchLoading] = useState(false)
     const [hasResponse, setHasResponse] = useState(false)
 
     const [priceError, setPriceError] = useState(false)
@@ -254,6 +255,7 @@ const addOffer = async ()=>{
 
 const fetchUserOffers = async()=>{
     //console.log("Callback")
+    setIsFetchLoading(true)
     const offer = {
         seller : notificationUsers.seller._id, //A supprime
         buyer : notificationUsers.buyer._id,
@@ -274,6 +276,8 @@ const fetchUserOffers = async()=>{
     }catch(error){
         console.log(error)
         Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+    }finally{
+        setIsFetchLoading(false)
     }
 
 }
@@ -452,7 +456,7 @@ useEffect(()=>{
                                             <Icon name='time-sharp' type='ionicon' size={24} color={appColors.secondaryColor1} />
                                             <Text style={[customText.text, ]}>Offre en attente de réponse</Text>
                                         </View>
-                }
+                } 
                 </View>
         </View>
     )

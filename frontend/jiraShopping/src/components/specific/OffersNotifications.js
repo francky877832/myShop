@@ -154,7 +154,10 @@ const openOffer = async (user, item) => {
                         return(
                             <RenderNotificationItem from="offers" item={{...item,
                                                     title:user._id===item.seller._id?item.buyer.username:item.seller.username,
-                                                    message : "Vous avez reçu une nouvelle offre. Cliquez pour en savoir plus.",
+                                                    message : user._id===item.seller._id ?
+                                                    "Vous avez reçu une nouvelle offre. Cliquez pour en savoir plus."
+                                                    :
+                                                     "Vous avez placé une nouvelle offre. Cliquez pour en savoir plus."
                                                 }} 
                                                     
                                             openNotif={openOffer} updateItem={updateItem} user={user} />

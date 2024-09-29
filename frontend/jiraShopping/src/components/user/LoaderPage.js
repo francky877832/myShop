@@ -63,6 +63,10 @@ const LoaderPage = (props) => {
 
                     return;
                 }
+                else
+                {
+                    navigation.replace('UserLogin');
+                }
             }
             catch(error)
             {

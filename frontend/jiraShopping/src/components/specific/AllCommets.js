@@ -291,10 +291,12 @@ export default React.memo(AllCommets)
 const allCommetsStyles = StyleSheet.create({
     container :
     {
-        //flex:1,
+        flex:1,
         backgroundColor : appColors.white,
         heighteight:screenHeight,
         paddingBottom : 70,
+        borderTopWidth : 2,
+        borderColor : appColors.lightWhite
     },
     inputContainer :
     {

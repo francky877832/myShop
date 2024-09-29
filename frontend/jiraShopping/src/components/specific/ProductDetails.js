@@ -312,11 +312,11 @@ const handleBasketPressed = (product) => {
                     </View>
 
                     <View style={[productDetailsStyles.details]}>
-                        <View style={[{ flexDirection: "row" }]}>
+                        <View style={[{ flexDirection: "row", justifyContent:'center', alignItems:'center' }]}>
                             <BadgeIcon name="checkmark-circle-sharp" size={18} color="black" styles={{}} isCard={false} />
                             <Text style={[customText.text, { paddingLeft: 5 }]}>{capitalizeFirstLetter(data.brand)}</Text>
                         </View>
-                        <View style={[{ flexDirection: "row" }]}>
+                        <View style={[{ flexDirection: "row", justifyContent:'center', alignItems:'center' }]}>
                             <View style={{ transform: [{ rotate: "-90deg" }] }}>
                                 <BadgeIcon name="pricetag-outline" size={18} color="black" styles={{}} isCard={false} />
                             </View>

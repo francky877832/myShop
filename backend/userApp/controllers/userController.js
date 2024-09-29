@@ -28,7 +28,7 @@ async function generateUniqueUsername() {
   let isUnique = false;
 
   while (!isUnique) {
-    const randomPart = Math.floor(Math.random() * 10000000000); // entre 0 et 9999999999
+    const randomPart = Math.floor(Math.random() * 10000); // entre 0 et 9999999999
     uniqueUsername = `${baseName}${randomPart}`;
 
     const existingUser = await User.findOne({ username: uniqueUsername });
@@ -58,7 +58,7 @@ exports.signupUser = async (req, res, next) => {
       email: req.body.email,
       password: hash,
       username: await generateUniqueUsername(),
-      image: 'new-user.jpg'
+      image: 'https://www.dropbox.com/scl/fi/41yuy1221z1cklqy2y5jn/new-user.jpg?rlkey=wh4l7xh2ueg6nd3ws3rcfa2zt&st=hecgnuvg&dl=1'//DROPBOX images
     });
     await user.save();
 
@@ -149,7 +149,7 @@ exports.signupUser = async (req, res, next) => {
       });
 
       links = await Promise.all(links)
-    }
+    
       const newImagesNames = links?.map(link => {
         const parts = link.split('/');
         const fileName = parts[parts.length - 1];
@@ -158,7 +158,7 @@ exports.signupUser = async (req, res, next) => {
       })
       //updatedDatas = {...updatedDatas, image:images[0].fileName}
       updatedDatas = {...updatedDatas, image:newImagesNames[0]}
-    
+    }
 
     let match;
    

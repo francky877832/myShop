@@ -50,7 +50,7 @@ const   AccountSettings = (props) => {
     const [hasUploaded, setHasUploaded] = useState(false)
     const [checkEmail, setCheckEmail] = useState(false)
 
-    console.log(`${usersImagesPath}/${user.image}`)
+    //console.log(`${usersImagesPath}/${user.image}`)
     const [pp, setPp] = useState([`${usersImagesPath}/${user.image}`])
     const [ppImage, setPpImage] = useState([])
     const [cameraOrGalery, setCameraOrGalery] = useState(false)
@@ -91,11 +91,10 @@ const   AccountSettings = (props) => {
 useEffect(()=>{
 //Appel de useCallBack
    // Ajouter l'écouteur pour l'événement de retour
-    if(!hasUploaded)
-    {
+   
         const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
         return unsubscribe;
-    }
+    
 }, [navigation, onBackPress, hasUploaded])
 
 

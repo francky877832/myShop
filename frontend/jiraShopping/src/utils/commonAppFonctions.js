@@ -295,7 +295,7 @@ exports.convertWordsToNumbers = (text) => {
     function findNumbers(input) {
         const text = input.replace(/[^a-zA-Z0-9]/g, '');
         console.log(text)
-        const longNumberRegex = /\d{7,}/g;
+        const longNumberRegex = /\d{8,}/g;
         const matches = text.match(longNumberRegex);
 //console.log(matches)
         if (matches) {
@@ -318,8 +318,9 @@ exports.convertWordsToNumbers = (text) => {
 }
 
 exports.containsEmail = (text) => {
-    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b/;
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
     return emailRegex.test(text);
+    //return text
 }
 
 

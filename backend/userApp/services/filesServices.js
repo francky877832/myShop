@@ -3,11 +3,13 @@ const fetch = require('node-fetch');
 const ACCESS_TOKEN = 'sl.B93MZiChn7AZTxp4y_GVSHn_5yC9iZfom5B0Bgk1c1ZJk1XnZ4wrT9yij_cCZEfv5cLWc0S0aYGEUJslNBW_x3o7nJfAo9-J2MomuFXjCOeH1ISHB-ScKXbvW4Oiz267e7NY7Kao2pMWnBopNCdp670'
 
 
-function generateDropboxLink(originalLink) {
-  if (originalLink.includes('dropbox.com')) {
-    return originalLink.replace('dl=0', 'dl=1'); 
+function ensureDlParam(originalLink) {
+  if (originalLink.includes('dl=')) {
+    return originalLink.replace(/([?&])dl=0(&|$)/, '$1dl=1$2');
+  } else {
+    const separator = originalLink.includes('?') ? '&' : '?';
+    return originalLink + `${separator}dl=1`;
   }
-  return originalLink.replace(/([?&])dl=0(&|$)/, '$1dl=1$2');
 }
   
 
