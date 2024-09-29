@@ -2,11 +2,12 @@ const User = require('../models/userModel');
 const PointsHistory = require('../models/pointsHistoryModel');
 
 const Session = require('../models/sessionModel');
+const { uploadToServer } = require('../services/filesServices')
 
 const bcrypt = require('bcryptjs');
-
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+
 
 const JWT_SECRET = 'WINKEL_RANDOM_TOKEN_SECRET'
 const generateToken = (userId) => {
@@ -135,12 +136,29 @@ exports.signupUser = async (req, res, next) => {
         updatedDatas = {...req.body, address:address}
         //console.log(password)
       }
-
-    const images = imageFiles.map((file)=> {return `${file.filename}`})
+//console.log(imageFiles)
+    const images = imageFiles.map((file)=> {return ( {...file, fileName:`${Date.now()}${file.originalname}`} )})
+    let links 
     if(images.length>0)
     {
-      updatedDatas = {...updatedDatas, image:images[0]}
+      links = images.map(async (file) => {
+        const fileName = file.fileName.split(' ').join('_');
+        
+        const sharedLink = await uploadToServer(file.buffer, fileName, 'users');
+        return sharedLink;
+      });
+
+      links = await Promise.all(links)
     }
+      const newImagesNames = links?.map(link => {
+        const parts = link.split('/');
+        const fileName = parts[parts.length - 1];
+        const folderName = parts[parts.length - 2];
+        return `${folderName}/${fileName}`;
+      })
+      //updatedDatas = {...updatedDatas, image:images[0].fileName}
+      updatedDatas = {...updatedDatas, image:newImagesNames[0]}
+    
 
     let match;
    

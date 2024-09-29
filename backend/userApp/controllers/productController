@@ -3,12 +3,15 @@ const fs = require('fs');
 const Product = require('../models/productModel');
 const Comment = require('../models/commentModel');
 const User = require('../models/userModel');
+
 const Fuse = require('fuse.js');
 const { getPipeLineForProducts } = require('./pipelinesForControllers')
 const mongoose = require('mongoose');
 
+const { uploadToServer } = require('../services/filesServices')
 
-exports.addProductUser = (req, res, next) => {
+
+exports.addProductUser = async (req, res, next) => {
  
   const datas = req.body;
   //console.log(req.files)
@@ -18,13 +21,35 @@ exports.addProductUser = (req, res, next) => {
 
   const imageFiles = req.files
   //let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/${file.destination}/${file.filename}`})
-  let imageNames = imageFiles.map((file)=> {return `${file.filename}`})
+  //let imageNames = imageFiles.map((file)=> {return `${file.filename}`})
+
+  const images = imageFiles.map((file)=> {return ( {...file, fileName:`${Date.now()}${file.originalname}`} )})
+    let links 
+    if(images.length>0)
+    {
+      links = images.map(async (file) => {
+        const fileName = file.fileName.split(' ').join('_');
+        
+        const sharedLink = await uploadToServer(file.buffer, fileName, 'products');
+        return sharedLink;
+      });
+
+      links = await Promise.all(links)
+    }
+
+      const newImagesNames = links?.map(link => {
+        const parts = link.split('/');
+        const fileName = parts[parts.length - 1];
+        const folderName = parts[parts.length - 2];
+        return `${folderName}/${fileName}`;
+      })
+
 
   const product = new Product(
     {
       ...datas,
       seller : datas.seller, //req.auth.userId
-      images : imageNames,
+      images : newImagesNames,
     })
  
 

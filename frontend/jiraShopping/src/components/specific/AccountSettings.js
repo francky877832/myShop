@@ -15,6 +15,7 @@ import { UserContext } from '../../context/UserContext';
 import { requestPermissions, pickImages, takePhoto, resizeImages } from '../../utils/utilsFunctions'
 import { useNavigation } from '@react-navigation/native';
 import { server, usersImagesPath } from '../../remote/server';
+import { storeCache } from '../../cache/cacheFunctions';
 
 import auth from '@react-native-firebase/auth';
 //import firestore from '@react-native-firebase/firestore';
@@ -49,7 +50,7 @@ const   AccountSettings = (props) => {
     const [hasUploaded, setHasUploaded] = useState(false)
     const [checkEmail, setCheckEmail] = useState(false)
 
-    //console.log(user)
+    console.log(`${usersImagesPath}/${user.image}`)
     const [pp, setPp] = useState([`${usersImagesPath}/${user.image}`])
     const [ppImage, setPpImage] = useState([])
     const [cameraOrGalery, setCameraOrGalery] = useState(false)
