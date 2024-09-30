@@ -143,11 +143,11 @@ useEffect(()=>{
         }
 
  const renderItem = useCallback(({item}) => { return(
-        <View style={[productDetailsStyles.commentsContainer]}>
+        <View style={[followersStyles]}>
             <Pressable style={[productDetailsStyles.sellerBrand]} onPress={()=>{ handleNavigate(item) }}>
                 <SellerBrand pub={true} onlineDate={item.updatedAt} username={item.username} navigation={navigation} route={route} closeNotif={true} />
             </Pressable>
-            <View style={{height:20}}></View>
+            <View style={{height:1}}></View>
         </View>
     )})
 
@@ -183,7 +183,11 @@ export default React.memo(Followers)
 const followersStyles = StyleSheet.create({
     flatlistContainerView :
     {
-
+        flex : 1,
+        paddingTop : 1,
+        borderTopWidth : 1,
+        borderColor : appColors.lightWhite,
+        backgroundColor : appColors.white
     },
     renderItem :
     {

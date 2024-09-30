@@ -9,9 +9,12 @@ import { profilShopStyles } from '../../styles/profilShopStyles';
 import { appColors,customText, screenWidth} from '../../styles/commonStyles';
 import { sinceDate } from '../../utils/commonAppFonctions';
 import { useRoute } from '@react-navigation/native';
+import { OrdersContext } from '../../context/OrdersContext';
 
 const SellerBrand = (props) => {
     const { pub, onlineDate, certified, pp, username, navigation, route, closeNotif} = props
+    const { unreadNotifications } = useContext(OrdersContext)
+
         const profile = pp || require('../../assets/images/product.png')
     return(
             <View style={[sellerBrandStyles.sellerBrand]}>
@@ -47,7 +50,7 @@ const SellerBrand = (props) => {
                             }
                                 
                                 <Pressable  style={[profilShopStyles.notification, ]}onPress = { ()=>{ navigation.navigate("Notifications");} }>
-                                    <BadgeIcon name="notifications-outline" size={24} color="black" badgeCount={5} styles={badgeIconStyles} />
+                                    <BadgeIcon name="notifications" size={24} color="black" badgeCount={unreadNotifications} styles={badgeIconStyles} />
                                 </Pressable>
                         </View>
                 }

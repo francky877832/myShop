@@ -273,11 +273,20 @@ const fetchUserOffers = async()=>{
                 //console.log(datas)
 
                 Object.keys(datas).length>0 ? setOffers(datas.offers) : null //setOffers(defaultOffer)
+                setIsFetchLoading(false)
     }catch(error){
         console.log(error)
-        Alert.alert("Erreur", "Une erreur est survenue! "+ error,)
+        Alert.alert("Erreur", "Une erreur inconye est survenue! "+ error,
+            [
+                { text: "Ok", onPress: () =>{
+                        navigation.goBack()
+                    }
+                 }
+            ],
+            { cancelable: false }
+        )
     }finally{
-        setIsFetchLoading(false)
+       
     }
 
 }
@@ -357,7 +366,6 @@ useEffect(()=>{
         <View style={[offersStyles.container]}>
 
             <MinifyHorizontalProduct product={product} styles={offersStyles.product} onPress={onPressProduct} />
-
             <FlatList
                     data={offers}
                     renderItem={ ({item}) => { return <OffersItem item={item} seller={offers?.seller} buyer={offers?.buyer} styles={{}} /> } }
@@ -366,11 +374,17 @@ useEffect(()=>{
                     ItemSeparatorComponent ={ (item) => { return <View style={{width:5,}}></View> }}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={[offersStyles.offersContainerFlatlist]}
+                    ListHeaderComponent={() => {
+                        return isFetchLoading && <ActivityIndicator size="large" color={appColors.secondaryColor1}/>
+                    }}
                 />
+
+               
     <View style={[offersStyles.bottom]}>
                 {
                     (offers.at(-1)?.hasGotResponse == 0)
                     ?
+                    !isFetchLoading &&
                     <View style={[offersStyles.inputContainer]}>
                         <Input placeholder="Placer une offre" onChangeText={(text)=>{checkPrice(text)}}
                             ref={inputRef}
@@ -393,7 +407,7 @@ useEffect(()=>{
                                             :
                                             <Pressable onPress={()=>{addOffer()}} >
                                                 { isPriceLoading ?
-                                                     <ActivityIndicator size="large" color={appColors.white}/>
+                                                     <ActivityIndicator size="large" color={appColors.secondaryColor1}/>
                                                     :
                                                     <Icon name='send-sharp' type='ionicon' size={40} color={appColors.secondaryColor1} />
                                                 }

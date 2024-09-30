@@ -24,8 +24,8 @@ import * as Linking from "expo-linking"
 const   Account = (props) => {
     const navigation = useNavigation()
     const {user} = useContext(UserContext)
-    const { bought, sold } = useContext(OrdersContext)
-    
+    const { bought, sold, unreadNotifications } = useContext(OrdersContext)
+
     //console.log(bought)
     const handleBoughtClicked = () => {
         navigation.navigate('Orders', {groupOrder:bought,page:'bought'})
@@ -44,7 +44,7 @@ const   Account = (props) => {
                     <Text style={[accountStyles.text,{fontWeight:"bold"}]}>@{truncateTextAndAddDots(user.username, 15)}</Text>
                     <View style={[accountStyles.firstLineIcons]}>
                         <Pressable  style={[topStyles.notification, ]} onPress = { ()=>{ navigation.navigate("Notifications");} }>
-                            <BadgeIcon name="notifications" size={24} color="black" badgeCount={5} styles={badgeIconStyles} />
+                            <BadgeIcon name="notifications" size={24} color="black" badgeCount={unreadNotifications} styles={badgeIconStyles} />
                         </Pressable>
                     </View>
                 </View>

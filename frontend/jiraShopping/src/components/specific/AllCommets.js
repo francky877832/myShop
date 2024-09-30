@@ -178,6 +178,8 @@ const addComment = async (item) => {
                     await sendNotifications({ user:userToResponse?._id, source:"app", model:"PRODUCTS", type:"ON_RESPONSE_COMMENT", datas:item._id })
                 }
             }
+
+            setInputValue("")
        
         }catch(error){
             console.log(error)
@@ -198,7 +200,7 @@ useEffect(()=>{ //or useFocusEffect(useCallback(,[]))
 
     const fetchData = async () => {
         //setIsLoading(true);
-        console.log("o")
+        //console.log("o")
         await loadMoreComments(product)    
     };
  

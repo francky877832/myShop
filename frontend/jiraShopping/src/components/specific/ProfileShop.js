@@ -49,6 +49,7 @@ const ProfilShop = (props) => {
     const [numFollowings, setNumFollowings] = useState(seller.followings?.length)
     const [numLikes, setNumLikes] = useState(seller.favourite)
     const [numProducts, setNumProducts] = useState(seller.products||0)
+    
 
     const flatListRef = useRef(null);
     const timeoutRef = useRef(null);
@@ -339,8 +340,8 @@ const setFollowers = async (follower, following) => {
                     </Animated.View>
                     
 
-                        <View style={{flex:1, paddingBottom:(user._id === seller._id)?40:0}} {...panResponder.panHandlers}>
-                            <ProductsListWithFilters emptyIcon={emptyIcon} origin="profileShop" updateProfileLike={setNumLikes} minified={true} isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={products} horizontal={false} styles={profilShopStyles} title={`${products?.length} ${products?.length > 1 ? 'Produits' : 'Produit'}`} />
+                        <View style={{flex:1, paddingBottom:(user._id === seller._id)?35:0}} {...panResponder.panHandlers}>
+                            <ProductsListWithFilters emptyIcon={emptyIcon} origin="profileShop" updateProfileLike={setNumLikes} minified={true} isLoading={isLoading} onScroll={handleScroll} onEndReached={loadMoreShopProducts} onEndReachedThreshold={0.3} ref={flatListRef} datas={[...products, ...products, ...products]} horizontal={false} styles={profilShopStyles} title={`${products?.length} ${products?.length > 1 ? 'Produits' : 'Produit'}`} />
                         </View>
 
                     {(user._id === seller._id) &&

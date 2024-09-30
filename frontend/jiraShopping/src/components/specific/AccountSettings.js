@@ -91,10 +91,11 @@ const   AccountSettings = (props) => {
 useEffect(()=>{
 //Appel de useCallBack
    // Ajouter l'écouteur pour l'événement de retour
-   
+   if(!hasUploaded)
+    {
         const unsubscribe = navigation.addListener('beforeRemove', onBackPress);
         return unsubscribe;
-    
+    }
 }, [navigation, onBackPress, hasUploaded])
 
 
@@ -228,6 +229,8 @@ const updateProfil = async () => {
         //MISE EN CACHE
         storeCache('user', {email:newUser.email, username:newUser.username, password:newUser.password})
         setUser(newUser)
+
+        Alert.alert('Success', 'Profil mis à jour avec succès.');
 
        setHasUploaded(true)
 

@@ -1,5 +1,6 @@
 import { StyleSheet, StatusBar } from "react-native";
 import { appColors, appFont } from "./commonStyles";
+import { card } from "./filtersStyles";
 
 
 
@@ -9,7 +10,7 @@ export const profilShopStyles = StyleSheet.create({
     {
         flex : 1,
         top : 0,
-        backgroundColor : appColors.white,
+        backgroundColor : appColors.lightWhite,
         //paddingBottom : StatusBar.currentHeight,
     },
     productContainer : 
@@ -106,19 +107,21 @@ export const profilShopStyles = StyleSheet.create({
     addProduct :
     {
         position : "absolute",
-        bottom : 2,
+        bottom : 0,
         left : 0,
         right : 0,
-        justifyContent : "flex-end",
+        justifyContent : "center",
         alignItems : "center",
-        height : 60,
-        backgroundColor : "rgba(0,0,0,0)",
+        height : 35,
+        backgroundColor : appColors.white,
+        borderTopWidth : 1,
+        borderColor : appColors.lightWhite,
         //paddingVertical : 5,
 
     },
     pressable :
     {
-        paddingVertical : 9,
+        paddingVertical : 5,
         paddingHorizontal : 20,
         borderRadius : 20,
     },
