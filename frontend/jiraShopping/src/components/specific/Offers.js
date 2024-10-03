@@ -261,7 +261,7 @@ const fetchUserOffers = async()=>{
         buyer : notificationUsers.buyer._id,
         product : product._id,
     }
-    console.log(offer)
+    //console.log(offer)
     try{
         //console.log("Ok")
             const response = await fetch(`${server}/api/datas/offers/offer/get?${serialize(offer)}`);            
