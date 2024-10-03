@@ -1,9 +1,9 @@
 import { StyleSheet, } from "react-native";
 import { appColors, appFont, screenWidth, customText, inputTextStyle} from "./commonStyles";
-import { screenHeight } from "./commentsStyles";
+import { screenHeight } from "./commonStyles";
 
 
-export const card  = StyleSheet.create({
+export const card  = {
     borderRadius: 8,
     shadowColor: appColors.black,
     shadowOffset: { width: 0, height: 2 },
@@ -12,8 +12,7 @@ export const card  = StyleSheet.create({
     elevation: 5,
     borderWidth : 1,
     borderColor : appColors.secondaryColor3,
-})
-
+}
 
 export const topHeight = 55
 export const subTopHeight = 55

@@ -5,7 +5,7 @@ import { productStyles } from "./productStyles";
 import { productDetailsStyles } from "./productDetailsStyles";
 
 
-export const card  = StyleSheet.create({
+export const card  = {
         borderRadius: 8,
         shadowColor: appColors.black,
         shadowOffset: { width: 0, height: 2 },
@@ -14,7 +14,7 @@ export const card  = StyleSheet.create({
         elevation: 5,
         borderWidth : 1,
         borderColor : appColors.secondaryColor3,
-    })
+    }
 
 export const filtersSearchStyles = StyleSheet.create({
     container : 
