@@ -1,0 +1,621 @@
+const fs = require('fs');
+
+const Product = require('../models/productModel');
+const Comment = require('../models/commentModel');
+const User = require('../models/userModel');
+
+const Fuse = require('fuse.js');
+const { getPipeLineForProducts } = require('./pipelinesForControllers')
+const mongoose = require('mongoose');
+
+const { uploadToServer } = require('../services/filesServices')
+
+
+exports.addProductUser = async (req, res, next) => {
+ 
+  const datas = req.body;
+  //console.log(req.files)
+  //console.log(req.body.images)
+  delete datas._id;
+ // delete datas.seller;
+
+  const imageFiles = req.files
+  //let imageNames = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/${file.destination}/${file.filename}`})
+  //let imageNames = imageFiles.map((file)=> {return `${file.filename}`})
+
+  const images = imageFiles.map((file)=> {return ( {...file, fileName:`${Date.now()}${file.originalname}`} )})
+    let links 
+    if(images.length>0)
+    {
+      links = images.map(async (file) => {
+        const fileName = file.fileName.split(' ').join('_');
+        
+        const sharedLink = await uploadToServer(file.buffer, fileName, 'products');
+        return sharedLink;
+      });
+
+      links = await Promise.all(links)
+    }
+
+      const newImagesNames = links?.map(link => {
+        const parts = link.split('/');
+        const fileName = parts[parts.length - 1];
+        const folderName = parts[parts.length - 2];
+        return `${folderName}/${fileName}`;
+      })
+
+
+  const product = new Product(
+    {
+      ...datas,
+      seller : datas.seller, //req.auth.userId
+      images : newImagesNames,
+    })
+ 
+
+  product.save()
+  .then((newProduct) => {
+    
+      res.status(200).json({ message: "Produit cree avec success", datas:newProduct });
+    })
+  .catch( (error) => {
+      console.log(error)
+      res.status(400).json({ error: "trop erreur?" });
+    }
+  );
+};
+
+
+
+exports.updateProduct = async (req, res, next) => {
+  //console.log(req.files)
+  //console.log(JSON.parse(req.body.images))
+  const datas = req.body
+  const imageFiles = req.files || []
+  
+  try
+  {
+
+    const oldImages = JSON.parse(datas.images).filter((img)=>{
+            //const isURL = /^(http(s)?:\/\/)?([^\s$.?#].[^\s]*)$/i;
+            return ['http', 'https'].includes(img.split(':')[0])
+        })
+
+    //const newImages = imageFiles.map((file)=> {return `${req.protocol}://${req.get('host')}/${file.destination}/${file.filename}`})
+    const newImages = imageFiles.map((file)=> {return `${file.filename}`})
+
+    //console.log(oldImages)
+    //console.log(newImages)
+    const product = {...req.body, images : [...oldImages, ...newImages]}
+
+    delete datas._id
+    delete datas.seller
+
+
+    
+        const updatedProduct = await Product.updateOne({ _id : req.params.id },{...product, updated:1})
+
+        if (updatedProduct.nModified === 0) {
+          return res.status(404).json({ message: 'Product not found or no changes made' });
+        }
+        
+        res.status(200).json({ message: 'Produit mis a jour avec success', datas:updatedProduct });
+      }
+      catch(error)
+      { 
+          console.log(error)
+          res.status(400).json({error: error});
+      };
+};
+
+
+exports.updateProductVisibility = (req, res, next) => {
+  const datas = req.body 
+  Product.updateOne({ _id : req.params.id }, { visibility : datas.visibility })
+  .then( () => { 
+      res.status(200).json({ message: 'Visibilite du roduit mis a jour avec success' });
+  })
+  .catch( (error) => { 
+      res.status(400).json({error: error});
+   });
+};
+
+
+
+
+exports.removeProduct  = (req, res, next) => {
+  const datas = req.body 
+
+  Product.find({ _id : req.params.id })
+  .then( (product) => {
+//controle de securite
+      for(let i in product.images)
+      {
+          const filename = product.images[i].split('/images/')[1];
+          s.unlink(`./userApp/assets/images/products/${filename}`, () => {})
+      }
+
+      Product.deleteOne({ _id : req.params.id })
+      .then( () => { 
+        res.status(200).json({ message: 'Produit supprime avec succes.'});
+      })
+      .catch( (error) => { 
+        res.status(400).json({ error: error });
+      });
+   })
+  .catch( (error) => { 
+      res.status(400).json({ error: error });
+   });
+};
+
+/*exports.getProducts = async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+  const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 20
+  const skip = (page - 1) * limit;
+  console.log(req.query.page)
+
+  Product.find().skip(skip).limit(limit).exec()
+    .then (async(products) => {
+    //console.log("ok");
+    const totalDatas = await Product.countDocuments().exec();
+    const totalPages = Math.ceil(totalDatas / limit);
+    //console.log("ooooo")
+      res.status(200).json({datas:products, page:page,totalPages:totalPages,totalDatas:totalDatas});
+  })
+  .catch ((error) => {
+    console.log(error)
+      res.status(400).json({ error: error+"go"});
+  });
+};*/
+
+
+exports.getProducts = async (req, res, next) => {
+ 
+  try {
+    const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+    const userId = req.query.user
+    const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
+    const skip = (page - 1) * limit;
+
+    //console.log("page : ", page)
+  
+    // Étape 1 : Pipeline d'agrégation pour les produits
+   
+    const pipeline = getPipeLineForProducts(undefined, skip, limit, { _id: -1 }, userId)
+    // Étape 2 : Exécuter le pipeline d'agrégation pour obtenir les produits avec commentaires
+    const productsWithComments = await Product.aggregate(pipeline).exec();
+//console.log(productsWithComments[0].favourites)
+  //console.log("taille : " , productsWithComments.length)
+    // Étape 3 : Compter le total des produits pour la pagination
+    const totalDatas = await Product.countDocuments().exec();
+    const totalPages = Math.ceil(totalDatas / limit);
+
+    // Retourner la réponse
+    //console.log(productsWithComments[3].likes)
+    res.status(200).json({ datas: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+
+
+
+
+
+exports.getProduct  = async (req, res, next) => {
+
+  const { productId } = req.params
+
+  try {
+   
+    const pipeline = getPipeLineForProducts(undefined, 0, 1, { _id: -1 }, undefined, productId)
+    const productsWithComments = await Product.aggregate(pipeline).exec();
+
+    res.status(200).json({ success : true, datas: productsWithComments[0],});
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ success:false,  message : error.message });
+  }
+
+};
+
+exports.getProductsFromCategories  =async  (req, res, next) => {
+  //console.log(req.query)
+  const {category, } = req.query
+  let subCategory = JSON.parse(req.query.subCategory)[0]
+  let products;
+  try
+  {
+    if(!!subCategory)
+    { console.log("HERE")
+      //console.log([`${category}/${subCategory[0]}`])
+      products = await Product.find({ category : { $in : [`${category}/${subCategory}`] } })
+    }
+    else
+    {
+      //console.log("THERE")
+      products = await Product.find({ category: { $regex: `${category}`, $options: "i" } })
+    }
+    //console.log(JSON.parse(datas.category))
+  
+      //console.log(products)
+      res.status(200).json(products);
+  }catch(error) { 
+      res.status(400).json({ error: error });
+  }
+};
+
+
+/*
+exports.getProductsUser  = (req, res, next) => {
+  console.log("getProductsUser")
+  const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+  const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 20
+  const skip = (page - 1) * limit;
+  //console.log(req.query.page)
+
+  Product.find({ seller : req.params.user }).skip(skip).limit(limit).exec()
+    .then (async(products) => {
+    //console.log("ok");
+    const totalDatas = await Product.countDocuments().exec();
+    const totalPages = Math.ceil(totalDatas / limit);
+    //console.log("ooooo")
+      res.status(200).json({datas:products, page:page,totalPages:totalPages,totalDatas:totalDatas});
+  })
+  .catch ((error) => {
+    console.log(error)
+      res.status(400).json({ error: error+"go"});
+  });
+};
+*/
+
+exports.getProductsUser =  async (req, res, next) => {
+  try
+  {
+    const page = parseInt(req.query.page) || 1; // Page actuelle, par défaut 1
+    const limit = parseInt(req.query.limit) || 5; // Nombre d'éléments par page, par défaut 5
+    const skip = (page - 1) * limit;
+
+
+    const pipeline = getPipeLineForProducts(req.params.user, skip, limit, { sold:1, visibility:-1, _id: -1 }, undefined) //undefined pour ne pas recupere les offres
+    const productsWithComments = await Product.aggregate(pipeline).exec();
+    const totalDatas = await Product.countDocuments({seller : new mongoose.Types.ObjectId(req.params.user)}).exec();
+    const totalPages = Math.ceil(totalDatas / limit);
+
+  
+    res.status(200).json({ products: productsWithComments, page: page, totalPages: totalPages, totalDatas: totalDatas });
+
+  }
+  catch(error)
+  {
+        console.log(error);
+        res.status(400).json({ error: error.message });
+  }
+};
+
+
+
+
+
+
+
+//Cest mieux de gerer cette fonctionnalite cote backend
+exports.getUserProductsFromCategory  = (req, res, next) => {
+  const datas = req.body 
+  Product.find({ user : datas.user, category : datas.category })
+  .then( (products) => { 
+      res.status(200).json(products);
+   })
+  .catch( (error) => { 
+      res.status(400).json({ error: error });
+   });
+};
+
+
+exports.productHasBeenSold = async (req, res, next) => {
+  console.log("productHasBeenSold")
+  try {
+    const {product, sold, visibility} = req.body;
+
+    // Trouver le produit et mettre à jour le champ "sold" à 1
+    const updatedProduct = await Product.findOneAndUpdate(
+      { _id: product },    // Condition de recherche
+      { sold: sold, visibility: visibility },  
+      { new: true }          // Retourne le document mis à jour
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Produit non trouvé.' });
+    }
+
+    res.status(200).json({ message: 'Le produit a été marqué comme vendu.', product: updatedProduct });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la mise à jour du produit.' });
+  }
+};
+
+exports.updateProductViews = async (req, res, next) => {
+  try {
+    const {product,} = req.body;
+
+    const updatedProduct = await Product.findOneAndUpdate(
+      { _id: product },    
+      { $inc: { views: 1 } },  
+      { new: true }  
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Produit non trouvé.' });
+    }
+
+    res.status(200).json({ message: 'Le produit a été marqué comme vu.', product: updatedProduct });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la mise à jour du produit.' });
+  }
+};
+
+
+
+
+//Search products by names, category
+//historique de recherhce
+//resultats de recherches, puis avec filtres
+exports.getSearchedProducts = async (req, res, next) => {
+  //console.log("SERAHC PRODUCTS")
+  //console.log(req.query)
+  const { name, customFilters, user } = req.query;
+  //console.log(customFilters)
+  const page = parseInt(customFilters['page']) || 1; // Page actuelle, par défaut 1
+  const limit = parseInt(customFilters['limit']) || 5; // Nombre d'éléments par page, par défaut 20
+  const skip = (page - 1) * limit;
+  //console.log(req.query.page)
+  //console.log(customFilters)
+//console.log(customFilters['categories'])
+  /* Product.find().skip(skip).limit(limit).exec()
+    .then (async(products) => {
+    //console.log("ok");
+    const totalDatas = await Product.countDocuments().exec();
+    const totalPages = Math.ceil(totalDatas / limit);
+    //console.log("ooooo")
+      res.status(200).json({datas:products, page:page,totalPages:totalPages,totalDatas:totalDatas});
+  })
+  .catch ((error) => {
+    console.log(error)
+      res.status(400).json({ error: error+"go"});
+  });
+};*/
+  let result = []
+  try {
+        let products = []
+        if(customFilters.hasOwnProperty("orderBy"))
+        {
+            let filed = Object.keys(customFilters.orderBy)[0]
+            let sortValue = {[filed]:parseInt(customFilters.orderBy[filed])}
+            //console.log(sortValue)
+
+            const pipeline = getPipeLineForProducts(undefined, 0, 0, sortValue, user)
+            products = await Product.aggregate(pipeline).exec();
+            //conserver l'ordre de sortValue
+            products.forEach((product, index) => {
+              product.sortIndex = index;
+            });
+
+            
+
+        }
+        else
+        {
+          const pipeline = getPipeLineForProducts(undefined, 0, 0, {updatedAt:-1}, user)
+          products = await Product.aggregate(pipeline).exec()
+        }
+
+      const totalDatas = await Product.countDocuments().exec();
+      const totalPages = Math.ceil(totalDatas / limit);
+
+       
+
+    if(!name)
+    {
+      result = products
+      //console.log("vide")
+    }
+    else
+    {
+      const fuse = new Fuse(products, {
+      keys: ['name', 'description', 'category'],
+      threshold: 0.5, // Ajustez ce seuil selon vos besoins
+      });
+      // Effectuer la recherche floue
+      result = fuse.search(name).map(result => result.item);
+    }
+
+    //console.log(result)
+    
+    // Appliquer des filtres personnalisés si nécessaire
+    let filteredResult = result//.slice(skip, limit);
+    //console.log(filteredResult)
+    //console.log(customFilters.minPrice)
+    if (customFilters.categories?.length > 0) {
+      //console.log("THAT")
+      filteredResult = filteredResult.filter(product => {
+        
+          if(customFilters.categories[0].split('/').length == 2)
+          { 
+            return customFilters.categories.includes(product.category);
+          }
+          else
+          {
+            //console.log(product)
+            const escapedCategory = product.category.split('/')[0]
+            const categoryRegex = new RegExp(`^${escapedCategory}`, 'i');
+            //console.log(escapedCategory)
+            return customFilters.categories.some(cat => categoryRegex.test(cat));
+          }
+      
+      })
+      //console.log(filteredResult.length)
+    }
+    if (customFilters.brands?.length > 0) {
+      filteredResult = filteredResult.filter(product => customFilters.brands.includes(product.brand));
+    }
+    if (customFilters.colors?.length > 0) {
+      filteredResult = filteredResult.filter(product => {return customFilters.colors.includes(product.color.toLowerCase())});
+    }
+    if (customFilters.condition?.length > 0) {
+      filteredResult = filteredResult.filter(product => customFilters.condition.includes(product.condition));
+    }
+    if (customFilters.minPrice) {
+      filteredResult = filteredResult.filter(product => customFilters.minPrice <= product.newPrice);
+    }
+    if (customFilters.maxPrice) {
+      filteredResult = filteredResult.filter(product => customFilters.maxPrice >= product.newPrice);
+    }
+      //comme FUSE JS ne conserve pas l'ordre, utiliser la memoire de tri
+      filteredResult.sort((a, b) => a.sortIndex - b.sortIndex);
+    //res.json(filteredResult); 
+    //console.log(skip, skip+limit)
+    //console.log(filteredResult.slice(skip, skip+limit).length)
+
+    /*
+    const productIds = filteredResult.map(product => product._id);
+    const comments = await Comment.find({ product: { $in: productIds } }).sort({_id:-1})
+      .populate('user', 'username')
+      .exec();
+
+    const productsWithComments = filteredResult.map(product => {
+      return {
+        ...product.toObject(),
+        comments: comments.filter(comment => comment.product.toString() === product._id.toString()),
+      };
+    });
+*/
+    // Étape 6 : Appliquer la pagination
+    //console.log(filteredResult.length)
+    //console.log(skip, skip+limit)
+    const paginatedResult = filteredResult.slice(skip, skip + limit);
+    
+
+    res.status(200).json({ datas: paginatedResult, page: page, totalPages: totalPages, totalDatas: totalDatas });
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: err.message });
+  }
+
+}
+
+exports.getProductNumLikes  = (req, res, next) => {
+  Product.findOne({ _id : req.params.id })
+      .then( (product) => { 
+          res.status(200).json(product);
+      })
+      .catch( (error) => { 
+          res.status(400).json({ error: error });
+      });
+};
+
+/*
+exports.updateProductNumLikes  = (req, res, next) => {
+  //const datas = req.body
+  Product.updateOne({ _id : req.params.id }, { $inc : { likes : req.body.updateLikes } } )
+      .then( () => { 
+        //console.log("LIKEE")
+
+          res.status(200).json({ message : (req.body.updateLikes==1) ? "Le produit a recu un nouveau like." : "Le produit a perdu un like." });
+      })
+      .catch( (error) => { 
+          res.status(400).json({ error: error });
+      });
+};
+*/
+
+
+exports.updateProductNumLikes = async (req, res, next) => {
+  try {
+      const { userId, updateLikes } = req.body;
+
+      if (![1, -1].includes(updateLikes)) {
+          return res.status(400).json({ message: "Valeur invalide pour updateLikes. Utilisez 1 ou -1." });
+      }
+
+      let retries = 3;  // Nombre maximum de tentatives de sauvegarde
+      let success = false;
+      let product, seller;
+
+      while (retries > 0 && !success) {
+          try {
+              // 1. Mettre à jour le nombre de likes du produit
+              product = await Product.findOneAndUpdate(
+                  { _id: req.params.id },
+                  { $inc: { likes: updateLikes } },
+                  { new: true }
+              );
+
+              if (!product) {
+                  return res.status(404).json({ message: "Produit non trouvé." });
+              }
+
+              // Empêcher les likes négatifs
+              product.likes = Math.max(1, product.likes);
+
+              // 2. Mettre à jour le champ favourites de l'utilisateur
+              seller = await User.findById(product.seller);
+              if (!seller) {
+                  return res.status(404).json({ message: "Utilisateur non trouvé." });
+              }
+
+              seller.favourite += updateLikes;
+
+              // 3. Ajouter ou retirer l'utilisateur de la liste des favoris
+              const userIndex = product.favourites.findIndex(likeAdderId => likeAdderId.equals(userId));
+
+              if (updateLikes === 1) {
+                  if (userIndex === -1) {
+                      product.favourites.unshift(userId); // Ajouter l'utilisateur s'il n'est pas déjà dans la liste
+                  }
+              } else {
+                  if (userIndex !== -1) {
+                      product.favourites.splice(userIndex, 1); // Retirer l'utilisateur s'il est dans la liste
+                  }
+              }
+
+              // Sauvegarder les changements
+              await seller.save();
+              await product.save();
+              
+              success = true;
+
+          } catch (error) {
+              if (error.name === 'VersionError' && retries > 0) {
+                  retries--;
+                  console.log(`Conflit de version détecté, tentative de nouvelle sauvegarde. Tentatives restantes: ${retries}`);
+              } else {
+                  throw error;
+              }
+          }
+      }
+
+      if (!success) {
+          return res.status(500).json({ message: "Impossible de sauvegarder les modifications après plusieurs tentatives." });
+      }
+
+      // Envoyer une réponse réussie
+      res.status(200).json({
+          message: updateLikes === 1
+              ? "Le produit a reçu un nouveau like et l'utilisateur a été mis à jour."
+              : "Le produit a perdu un like et l'utilisateur a été mis à jour."
+      });
+
+  } catch (error) {
+      console.log(error);
+      res.status(400).json({ error: error.message });
+  }
+};
+
+
+
+

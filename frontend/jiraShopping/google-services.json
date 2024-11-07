@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "455490098053",
+    "project_id": "thestyle-1b789",
+    "storage_bucket": "thestyle-1b789.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:455490098053:android:3bd60ec6f6cc140eb4eaec",
+        "android_client_info": {
+          "package_name": "com.jira877832.jiraShopping"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlZGRPgH95MzGBdGpoDOk6sTpaK8tb9Zg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

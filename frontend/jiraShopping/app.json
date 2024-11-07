@@ -1,0 +1,117 @@
+{
+  "expo": {
+    "scheme": "winkelapp",
+    "name": "jiraShopping",
+    "slug": "jiraShopping",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+      
+    },
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs access to your camera to take photos.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to select photos.",
+        
+        "UIBackgroundModes": ["fetch", "remote-notification"],
+
+
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["winkelapp"]
+          }
+        ],
+        "AssociatedDomains": [
+          "applinks:winkelapp.com"
+        ]
+
+      },
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "bundleIdentifier": "com.jira877832.jiraShopping"
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "package": "com.jira877832.jiraShopping",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "jirashopping-25ee1eaa49ff.herokuapp.com",
+              "pathPrefix": "/product"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        },
+
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "https://jirashoppingbackend.onrender.com",
+              "pathPrefix": "/product"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+
+
+      ],
+
+      "useNextNotificationsApi": true,
+      "notification": {
+        "icon": "./assets/icon.png",
+        "color": "#000000",
+        "priority": "high",
+        "channelId": "default"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "441d6134-6168-400a-a5d5-69821456096d"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/441d6134-6168-400a-a5d5-69821456096d"
+    },
+    "plugins": [
+      "expo-dev-client",
+      "expo-secure-store",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      [
+        "expo-build-properties",
+         {
+          "ios": {
+             "useFrameworks": "static"
+           }
+         }
+       ]
+    ]
+  }
+}
