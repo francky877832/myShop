@@ -1,19 +1,22 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback } from "react";
 
-export const useCacheBeforeRemove = (navigation,  storeCache, parameters) => {
+export const useCacheBeforeRemove = (navigation, storeCache, parameters) => {
   useEffect(() => {
-    const beforeRemoveListener = navigation.addListener('beforeRemove', async (e) => {
-      e.preventDefault();
+    const beforeRemoveListener = navigation.addListener(
+      "beforeRemove",
+      async (e) => {
+        e.preventDefault();
 
-      try {
-        await storeCache(...parameters);
-        //console.log("Données stockées avant la navigation");
-      } catch (error) {
-        console.error("Erreur dans le callBack:", error);
+        try {
+          await storeCache(...parameters);
+          //console.log("Données stockées avant la navigation");
+        } catch (error) {
+          console.error("Erreur dans le callBack:", error);
+        }
+
+        navigation.dispatch(e.data.action);
       }
-
-      navigation.dispatch(e.data.action);
-    });
+    );
 
     return () => {
       beforeRemoveListener();
@@ -21,100 +24,94 @@ export const useCacheBeforeRemove = (navigation,  storeCache, parameters) => {
   }, [navigation, storeCache, ...parameters]);
 };
 
-
 export const useCache = (getCache, parameters) => {
-  const [cacheData, setCacheData] = useState(null); 
+  const [cacheData, setCacheData] = useState(null);
 
   useEffect(() => {
     const fetchCacheData = async () => {
       try {
         const datas = await getCache(...parameters);
-        setCacheData(datas)
+        setCacheData(datas);
       } catch (error) {
-        console.error('Erreur lors de la récupération des données du cache:', error);
+        console.error(
+          "Erreur lors de la récupération des données du cache:",
+          error
+        );
       }
     };
 
     fetchCacheData();
   }, [...parameters]);
 
-  return cacheData; 
+  return cacheData;
 };
 
-
-
 //LORSQU'IL YA PAS DE PAGINATION
-export const useCacheWithDatas = (cacheKey, getCache, loadDatas, parameters) => {
+export const useCacheWithDatas = (
+  cacheKey,
+  getCache,
+  loadDatas,
+  parameters
+) => {
   const [datas, setDatas] = useState([]);
-  const [params, setParams] = useState({})
+  const [params, setParams] = useState({});
   const isCacheLoaded = useRef(false);
-  
-  const [isLoading, setIsLoading] = useState(false)
-  const [willProccessed, setWillProccessed] = useState(true)
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [willProccessed, setWillProccessed] = useState(true);
   const [page, setPage] = useState(1);
-  const limit = 100
-  const [hasMore, setHasMore] = useState(true)
-    //const a = useRef(0)
+  const limit = 100;
+  const [hasMore, setHasMore] = useState(true);
+  //const a = useRef(0)
   const loadMore = useCallback(async () => {
-   // a.current += 1
-    
-      if (isLoading || !hasMore) return; //isLoading || 
-  
-      try 
-      {
-        setIsLoading(true);
-      
-       const newData =  await loadDatas(...parameters, page, limit)
-          if (newData.length > 0) 
-          {
-                if(isCacheLoaded.current)
-                {
-                  setDatas(newData)
-                  isCacheLoaded.current = false; 
-                  //console.log("222")
-                }
-                else
-                {
-                  setDatas((prev)=>[...prev, ...newData])
-                  isCacheLoaded.current = false; 
-                  //console.log('333')
-                }
-                setPage((prevPage) => prevPage + 1);
-                setWillProccessed(false)
-                //setDatas([])
+    // a.current += 1
 
-          } else 
-          {
-              setHasMore(false);
-          }
+    if (isLoading || !hasMore) return; //isLoading ||
 
-      } catch (error) {
-          console.error('Erreur lors de la récupération des données:', error);
-      } finally {
-        //console.log("HERE")
-          setIsLoading(false);
-      }    
-    }, [page, isLoading, hasMore, willProccessed])
+    try {
+      setIsLoading(true);
 
-    useEffect(() => {
-      async function fetchDatas()
-      {
-        /*let offersCache = await getCache(cacheKey);
+      const newData = await loadDatas(...parameters, page, limit);
+      if (newData.length > 0) {
+        if (isCacheLoaded.current) {
+          setDatas(newData);
+          isCacheLoaded.current = false;
+          //console.log("222")
+        } else {
+          setDatas((prev) => [...prev, ...newData]);
+          isCacheLoaded.current = false;
+          //console.log('333')
+        }
+        setPage((prevPage) => prevPage + 1);
+        setWillProccessed(false);
+        //setDatas([])
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données:", error);
+    } finally {
+      //console.log("HERE")
+      setIsLoading(false);
+    }
+  }, [page, isLoading, hasMore, willProccessed]);
+
+  useEffect(() => {
+    async function fetchDatas() {
+      /*let offersCache = await getCache(cacheKey);
       
         if (offersCache) {
           setDatas(offersCache);
           isCacheLoaded.current = true; 
           //console.log('111')
         }*/
-  
-        await loadMore();
-      }
-        
-        fetchDatas()
 
-    }, []);
-//console.log("loading", cacheKey=="OFFERS_NOTIFICATIONS" ? isLoading : null)
-  
-  return { datas, loadMore, loading:isLoading, willProccessed, hasMore };
+      await loadMore();
+    }
+
+    fetchDatas();
+  }, []);
+  //console.log("loading", cacheKey=="OFFERS_NOTIFICATIONS" ? isLoading : null)
+
+  return { datas, loadMore, loading: isLoading, willProccessed, hasMore };
 };
-

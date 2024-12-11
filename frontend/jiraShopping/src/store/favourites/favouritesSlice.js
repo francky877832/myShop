@@ -1,7 +1,7 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { server } from '../../remote/server';
-import { useCallback } from 'react';
-import { sendNotifications } from '../../utils/commonAppNetworkFunctions' 
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { server } from "../../remote/server";
+import { useCallback } from "react";
+import { sendNotifications } from "../../utils/commonAppNetworkFunctions";
 // slices/favouritesSlice.js
 
 const loggedUser = "Francky";
@@ -11,7 +11,7 @@ const loggedUserId = "66715deae5f65636347e7f9e";
 
 // Equivalent de la fonction `addFavourite` dans FavouritesContext
 export const addFavourite = createAsyncThunk(
-  'favourites/addFavourite',
+  "favourites/addFavourite",
   async ({ item, bool, user }, { rejectWithValue }) => {
     try {
       let response = {};
@@ -22,48 +22,62 @@ export const addFavourite = createAsyncThunk(
       };
 
       if (bool) {
-          response = await fetch(`${server}/api/datas/favourites/update/${user._id}`, {
-              method: 'POST',
-              body: JSON.stringify(favourite),
-              headers: { 'Content-Type': 'application/json' },
-          });
-
-          response = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
-              method: 'PUT',
-              body: JSON.stringify({ updateLikes: 1, userId:user._id }),
-              headers: { 'Content-Type': 'application/json' },
-          });
-
-          //console.log(item.seller)
-          //'tem/favour'tes cont'ent les produ'ts brutes de la BDD differencts de ceux de ModifiedProducts
-          if(!item.favourites.some(el => el._id===user._id))
+        response = await fetch(
+          `${server}/api/datas/favourites/update/${user._id}`,
           {
-              await sendNotifications({ user:item.seller._id, source:"app", model:"PRODUCTS", type:"ON_NEW_LIKE", datas:item._id })
+            method: "POST",
+            body: JSON.stringify(favourite),
+            headers: { "Content-Type": "application/json" },
           }
-        
-          
+        );
 
+        response = await fetch(
+          `${server}/api/datas/products/likes/update/${item._id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify({ updateLikes: 1, userId: user._id }),
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        //console.log(item.seller)
+        //'tem/favour'tes cont'ent les produ'ts brutes de la BDD differencts de ceux de ModifiedProducts
+        if (!item.favourites.some((el) => el._id === user._id)) {
+          await sendNotifications({
+            user: item.seller._id,
+            source: "app",
+            model: "PRODUCTS",
+            type: "ON_NEW_LIKE",
+            datas: item._id,
+          });
+        }
       } else {
-          response = await fetch(`${server}/api/datas/favourites/remove/${user._id}`, {
-              method: 'PUT',
-              body: JSON.stringify(favourite),
-              headers: { 'Content-Type': 'application/json' },
-          });
+        response = await fetch(
+          `${server}/api/datas/favourites/remove/${user._id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(favourite),
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
-          response = await fetch(`${server}/api/datas/products/likes/update/${item._id}`, {
-              method: 'PUT',
-              body: JSON.stringify({ updateLikes: -1, userId:user._id }),
-              headers: { 'Content-Type': 'application/json' },
-          });
+        response = await fetch(
+          `${server}/api/datas/products/likes/update/${item._id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify({ updateLikes: -1, userId: user._id }),
+            headers: { "Content-Type": "application/json" },
+          }
+        );
       }
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la requête addFavourite');
+        throw new Error("Erreur lors de la requête addFavourite");
       }
 
       //return { item, bool };
     } catch (error) {
-        console.error(error)
+      console.error(error);
       return rejectWithValue(error.message);
     }
   }
@@ -71,18 +85,22 @@ export const addFavourite = createAsyncThunk(
 
 // Equivalent de la fonction `fetchUserFavourites` dans FavouritesContext
 export const fetchUserFavourites = createAsyncThunk(
-  'favourites/fetchUserFavourites',
+  "favourites/fetchUserFavourites",
   async ({ user, page }, { getState, rejectWithValue }) => {
     //console.log("page")
     //console.log(user)
     try {
-      const response = await fetch(`${server}/api/datas/favourites/get/${user}?page=${page}`);
+      const response = await fetch(
+        `${server}/api/datas/favourites/get/${user}?page=${page}`
+      );
       if (!response.ok) {
-        throw new Error('Erreur lors de la requête Fetch favourite'+await response.text());
+        throw new Error(
+          "Erreur lors de la requête Fetch favourite" + (await response.text())
+        );
       }
       return await response.json();
     } catch (error) {
-        console.error(error)
+      console.error(error);
       return rejectWithValue(error.message);
     }
   }
@@ -90,7 +108,7 @@ export const fetchUserFavourites = createAsyncThunk(
 
 // Slice Redux
 const favouritesSlice = createSlice({
-  name: 'favourites',
+  name: "favourites",
   initialState: {
     favourites: [], // Equivalent de `const [favourites, setFavourites] = useState([])`
     liked: null, // Equivalent de `const [liked, setLikedIcon] = useState()`
@@ -99,19 +117,19 @@ const favouritesSlice = createSlice({
     hasMore: true, // Equivalent de `const [hasMore, setHasMore] = useState(true)`
     page: 1, // Equivalent de `const [page, setPage] = useState(1)`
     error: null,
-    addLike : 0,
-    modifiedProducts : [],
+    addLike: 0,
+    modifiedProducts: [],
   },
   reducers: {
     addLocalFavourite(state, action) {
-        //console.log(action.payload)
-      const {product, user} = action.payload;
+      //console.log(action.payload)
+      const { product, user } = action.payload;
       //console.log(user)
-      if (!state.favourites.some(item => item._id === product._id)) {
+      if (!state.favourites.some((item) => item._id === product._id)) {
         const updatedProduct = {
           ...product,
-          likes : product.likes+1,
-          favourites: [user, ...product.favourites]
+          likes: product.likes + 1,
+          favourites: [user, ...product.favourites],
         };
 
         state.favourites.unshift(updatedProduct);
@@ -119,49 +137,48 @@ const favouritesSlice = createSlice({
         //console.log(product.likes)
       }
       //console.log(state.favourites)
-      state.addLike = state.addLike+1
+      state.addLike = state.addLike + 1;
     },
     // Méthode pour supprimer un produit de la liste des favoris (exemple)
     removeLocalFavourite(state, action) {
-      const {product, user} = action.payload;
+      const { product, user } = action.payload;
 
       const updatedProduct = {
         ...product,
-        likes : product.likes-1,
-        favourites: product.favourites.filter(item => item._id !== user._id)
+        likes: product.likes - 1,
+        favourites: product.favourites.filter((item) => item._id !== user._id),
       };
 
-      const fav = state.favourites.filter(item => item._id !== product._id);
-      const mp = state.modifiedProducts.map(item => {
-          if (item._id === product._id) {
-            return updatedProduct 
-          }
-            return item
-        })
-        
-        state.favourites = fav
-        state.modifiedProducts = mp
-        state.addLike = state.addLike-1
+      const fav = state.favourites.filter((item) => item._id !== product._id);
+      const mp = state.modifiedProducts.map((item) => {
+        if (item._id === product._id) {
+          return updatedProduct;
+        }
+        return item;
+      });
+
+      state.favourites = fav;
+      state.modifiedProducts = mp;
+      state.addLike = state.addLike - 1;
     },
     addModifiedProduct(state, action) {
       //console.log("addModifiedProduct")
-      const product = action.payload
-      const isModifiedProduct = state.modifiedProducts.some(item => item._id === product._id);
-      if(isModifiedProduct)
-      {
-        const mp = state.modifiedProducts.map(item => {
+      const product = action.payload;
+      const isModifiedProduct = state.modifiedProducts.some(
+        (item) => item._id === product._id
+      );
+      if (isModifiedProduct) {
+        const mp = state.modifiedProducts.map((item) => {
           if (item._id === product._id) {
-            return product 
+            return product;
           }
-          return item
-        })
+          return item;
+        });
 
-        state.modifiedProducts = mp
-      }
-      else
-      {
-        const updatedProducts = [product, state.modifiedProducts]
-        state.modifiedProducts = updatedProducts
+        state.modifiedProducts = mp;
+      } else {
+        const updatedProducts = [product, state.modifiedProducts];
+        state.modifiedProducts = updatedProducts;
       }
       //state.favourites = state.modifiedProducts
     },
@@ -183,29 +200,33 @@ const favouritesSlice = createSlice({
     addFavouriteContext(state, action) {
       const { item, bool } = action.payload;
       //console.log(item)
-      const favouriteIds = new Set(state.favourites.map(fav => fav._id));
+      const favouriteIds = new Set(state.favourites.map((fav) => fav._id));
       const isPresent = favouriteIds.has(item._id);
 
       if (bool && !isPresent) {
         state.favourites = [item, ...state.favourites];
       } else if (!bool && isPresent) {
-        state.favourites = state.favourites.filter(fav => fav._id !== item._id);
+        state.favourites = state.favourites.filter(
+          (fav) => fav._id !== item._id
+        );
       }
     },
     updateLocalFavourites(state, action) {
-        const { item, isAdding } = action.payload;
-        const existingIndex = state.favourites.findIndex(fav => fav._id === item._id);
-  
-        if (isAdding) {
-          if (existingIndex === -1) {
-            state.favourites.push(item);
-          }
-        } else {
-          if (existingIndex !== -1) {
-            state.favourites.splice(existingIndex, 1);
-          }
+      const { item, isAdding } = action.payload;
+      const existingIndex = state.favourites.findIndex(
+        (fav) => fav._id === item._id
+      );
+
+      if (isAdding) {
+        if (existingIndex === -1) {
+          state.favourites.push(item);
         }
-      },
+      } else {
+        if (existingIndex !== -1) {
+          state.favourites.splice(existingIndex, 1);
+        }
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -226,8 +247,14 @@ const favouritesSlice = createSlice({
         state.isLoading = false; // Equivalent de `setIsLoading(false)`
         const products = action.payload.datas;
         if (products.length > 0) {
-          state.favourites = [...state.favourites, ...products[0].productDetails]; // Equivalent de `setFavourites([...prevProducts, ...products[0].productDetails])`
-          state.modifiedProducts = [...state.favourites, ...products[0].productDetails]; 
+          state.favourites = [
+            ...state.favourites,
+            ...products[0].productDetails,
+          ]; // Equivalent de `setFavourites([...prevProducts, ...products[0].productDetails])`
+          state.modifiedProducts = [
+            ...state.favourites,
+            ...products[0].productDetails,
+          ];
           state.page += 1; // Equivalent de `setPage((prevPage) => prevPage + 1)`
         } else {
           state.hasMore = false; // Equivalent de `setHasMore(false)`
@@ -241,12 +268,27 @@ const favouritesSlice = createSlice({
 });
 
 export const isProductFavourite = (state, productId) => {
-    return state.favourites.favourites.some(product => product._id === productId);
-  };
-  export const hasBeenModifiedProduct = (state, productId) => {
-    return state.favourites.modifiedProducts.some(product => product._id === productId);
-  };
+  return state.favourites.favourites.some(
+    (product) => product._id === productId
+  );
+};
+export const hasBeenModifiedProduct = (state, productId) => {
+  return state.favourites.modifiedProducts.some(
+    (product) => product._id === productId
+  );
+};
 
-export const { setLikedIcon, setIsLoading, setDisableLikeButton, setPage, setHasMore, addFavouriteContext, updateLocalFavourites,  addLocalFavourite, removeLocalFavourite, addModifiedProduct } = favouritesSlice.actions;
+export const {
+  setLikedIcon,
+  setIsLoading,
+  setDisableLikeButton,
+  setPage,
+  setHasMore,
+  addFavouriteContext,
+  updateLocalFavourites,
+  addLocalFavourite,
+  removeLocalFavourite,
+  addModifiedProduct,
+} = favouritesSlice.actions;
 
 export default favouritesSlice.reducer;

@@ -1,18 +1,18 @@
 // basketSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { API_BACKEND } from '@env';
-import { server } from '../../remote/server';
-import { useDispatch } from 'react-redux';
-import { startTransition } from 'react';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { API_BACKEND } from "@env";
+import { server } from "../../remote/server";
+import { useDispatch } from "react-redux";
+import { startTransition } from "react";
 
 // Initial state
 const initialState = {
-  notifications : {}
+  notifications: {},
 };
 
 // Slice
 const notificationsSlice = createSlice({
-  name: 'notifications',
+  name: "notifications",
   initialState,
   reducers: {
     updateNotifications: (state, action) => {
@@ -20,15 +20,13 @@ const notificationsSlice = createSlice({
 
       const updatedNotifications = {
         ...state.notifications,
-        [name] :  id
-      }
+        [name]: id,
+      };
       //console.log( state.notifications)
-      state.notifications = updatedNotifications
+      state.notifications = updatedNotifications;
     },
-
-    
   },
- /* 
+  /* 
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserBasket.pending, (state) => {
@@ -38,12 +36,8 @@ const notificationsSlice = createSlice({
   */
 });
 
-
-
-
 // Selectors
 export const selectNotifications = (state) => state.notifications.notifications;
 
-
-export const { updateNotifications,  } = notificationsSlice.actions;
+export const { updateNotifications } = notificationsSlice.actions;
 export default notificationsSlice.reducer;

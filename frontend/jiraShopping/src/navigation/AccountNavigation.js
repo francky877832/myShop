@@ -1,43 +1,100 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
-import { View, Text, StyleSheet, StatusBar, Platform } from 'react-native';
-import { NavigationContainer, } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { TransitionPresets } from '@react-navigation/stack';
+import React, { useState, useEffect, createContext, useContext } from "react";
+import { View, Text, StyleSheet, StatusBar, Platform } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { TransitionPresets } from "@react-navigation/stack";
 
-import Account from '../components/specific/Account';
-import AccountSettings from '../components/specific/AccountSettings';
-import PasswordChange from '../components/specific/PasswordChange';
-import Address from '../components/specific/Address';
-import Referral from '../components/specific/Refferal';
-import ReferralDetails from '../components/specific/referralDetails';
-import AboutUs from '../components/specific/AboutUs';
-import AdminPanel from '../components/admin/AdminPanel';
-import HeaderNavigation from '../components/common/HeaderNavigation';
+import Account from "../components/specific/Account";
+import AccountSettings from "../components/specific/AccountSettings";
+import PasswordChange from "../components/specific/PasswordChange";
+import Address from "../components/specific/Address";
+import Referral from "../components/specific/Refferal";
+import ReferralDetails from "../components/specific/referralDetails";
+import AboutUs from "../components/specific/AboutUs";
+import AdminPanel from "../components/admin/AdminPanel";
+import HeaderNavigation from "../components/common/HeaderNavigation";
 
-import {annimatedStackTransition} from './commonNavigationFonctions'
-
+import { annimatedStackTransition } from "./commonNavigationFonctions";
 
 const Stack = createStackNavigator();
 
 export default function AccountNavigation() {
+  return (
+    <Stack.Navigator
+      initialRouteName="AccountHome"
+      screenOptions={annimatedStackTransition(1, 300, 100)}
+    >
+      <Stack.Screen
+        name="AccountHome"
+        component={Account}
+        options={{ title: "Account", headerShown: false, tabBarVisible: true }}
+      />
+      <Stack.Screen
+        name="AccountSettings"
+        component={AccountSettings}
+        options={{
+          title: "Parametre Du Compte",
+          headerShown: true,
+          tabBarVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="PasswordChange"
+        component={PasswordChange}
+        options={{
+          title: "Changer De Mot De Passe",
+          headerShown: true,
+          tabBarVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="Address"
+        component={Address}
+        options={{
+          title: "Mon Adresse",
+          headerShown: true,
+          tabBarVisible: true,
+        }}
+      />
 
-  return ( 
-        <Stack.Navigator 
-          initialRouteName="AccountHome"
-          screenOptions={annimatedStackTransition(1, 300, 100)}
-        >
-            <Stack.Screen name="AccountHome" component={Account} options={{ title: 'Account', headerShown : false, tabBarVisible: true }} />
-            <Stack.Screen name="AccountSettings" component={AccountSettings} options={{ title: 'Parametre Du Compte', headerShown : true, tabBarVisible: true }} />
-            <Stack.Screen name="PasswordChange" component={PasswordChange} options={{ title: 'Changer De Mot De Passe', headerShown : true, tabBarVisible: true }} />
-            <Stack.Screen name="Address" component={Address} options={{ title: 'Mon Adresse', headerShown : true, tabBarVisible: true }} />
+      <Stack.Screen
+        name="Referral"
+        component={Referral}
+        options={{
+          title: "Parrainage",
+          headerShown: true,
+          tabBarVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="ReferralDetails"
+        component={ReferralDetails}
+        options={{
+          title: "Parrainage",
+          headerShown: true,
+          tabBarVisible: true,
+        }}
+      />
 
-            <Stack.Screen name="Referral" component={Referral} options={{ title: 'Parrainage', headerShown : true, tabBarVisible: true }} />
-            <Stack.Screen name="ReferralDetails" component={ReferralDetails} options={{ title: 'Parrainage', headerShown : true, tabBarVisible: true }} />
-            
-            <Stack.Screen name="AdminPanel" component={AdminPanel} options={{ title: 'Panel Admin', headerShown : true, tabBarVisible: true }} />
-            <Stack.Screen name="AboutUs" component={AboutUs} options={{ title: 'A Propos De Nous', headerShown : true, tabBarVisible: true }} />
-        
-        </Stack.Navigator>
-  )
+      <Stack.Screen
+        name="AdminPanel"
+        component={AdminPanel}
+        options={{
+          title: "Panel Admin",
+          headerShown: true,
+          tabBarVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="AboutUs"
+        component={AboutUs}
+        options={{
+          title: "A Propos De Nous",
+          headerShown: true,
+          tabBarVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
 }

@@ -27,7 +27,7 @@ useEffect(() => {
       <SafeAreaProvider>
         <SafeAreaView style={{ flex: 1 }}>
           <StatusBar backgroundColor="#333333" barStyle="light-content" />
-          <MainNavigation />
+          <MainNavigation  />
         </SafeAreaView>
       </SafeAreaProvider>
     </Provider>

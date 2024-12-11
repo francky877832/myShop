@@ -16,13 +16,13 @@ const SearchBar =  forwardRef((props, ref) => {
     return (
         <View style={[searchBarStyles.container, styles.searchBarContainer ]}>
             {!isPrev ? false :
-                    <View>
-                        <Pressable onPress={() => {navigation.goBack();}} style={searchBarStyles.prevButton}>
-                            <Icon name='arrow-back' type='ionicon' color={appColors.secondaryColor5} />
-                        </Pressable>
-                    </View>
-                }
-                <View style={{width:10,}}></View>
+                <View>
+                    <Pressable onPress={() => {navigation.goBack();}} style={searchBarStyles.prevButton}>
+                        <Icon name='arrow-back' type='ionicon' color={appColors.secondaryColor5} />
+                    </Pressable>
+                </View>
+            }
+            <View style={{width:10,}}></View>
             <Input placeholder={placeholder} value={value} onChangeText={onChangeText} ref={ref}
                 inputMode='search'
                 placeholderTextColor={placeholderTextColor}
